@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Customizing matplotlib &mdash; Matplotlib v1.1.0 documentation</title>
+    <title>Customizing matplotlib &mdash; Matplotlib 1.1.1 documentation</title>
+    
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.0',
+        VERSION:     '1.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib v1.1.0 documentation"
+          title="Search within Matplotlib 1.1.1 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib v1.1.0 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
     <link rel="up" title="User’s Guide" href="index.html" />
     <link rel="next" title="Using matplotlib in a python shell" href="shell.html" />
     <link rel="prev" title="Interactive navigation" href="navigation_toolbar.html" /> 
@@ -109,7 +112,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -146,7 +149,7 @@ specific customizations that you do not want to apply elsewhere.</li>
 is something like <tt class="file docutils literal"><span class="pre">/usr/lib/python2.5/site-packages</span></tt> on Linux, and
 maybe <tt class="file docutils literal"><span class="pre">C:\Python25\Lib\site-packages</span></tt> on Windows. Every time you
 install matplotlib, this file will be overwritten, so if you want your
-customizations to be saved, please move this file to you <tt class="file docutils literal"><span class="pre">.matplotlib</span></tt>
+customizations to be saved, please move this file to your <tt class="file docutils literal"><span class="pre">.matplotlib</span></tt>
 directory.</li>
 </ol>
 <p>To display where the currently active <tt class="file docutils literal"><span class="pre">matplotlibrc</span></tt> file was
@@ -187,9 +190,9 @@ matplotlib default settings.</p>
 # This is a sample matplotlib configuration file - you can find a copy
 # of it on your system in
 # site-packages/matplotlib/mpl-data/matplotlibrc.  If you edit it
-# there, please note that it will be overridden in your next install.
+# there, please note that it will be overwritten in your next install.
 # If you want to keep a permanent local copy that will not be
-# over-written, place it in HOME/.matplotlib/matplotlibrc (unix/linux
+# overwritten, place it in HOME/.matplotlib/matplotlibrc (unix/linux
 # like systems) and C:\Documents and Settings\yourname\.matplotlib
 # (win32 systems).
 #
@@ -212,12 +215,23 @@ matplotlib default settings.</p>
 # You can also deploy your own backend outside of matplotlib by
 # referring to the module name (which must be in the PYTHONPATH) as
 # 'module://my_backend'
-backend      : TkAgg
+backend      : GTKAgg
 
-# if you are runing pyplot inside a GUI and your backend choice
-# conflicts, we will automatically try and find a compatible one for
+# If you are using the Qt4Agg backend, you can choose here
+# to use the PyQt4 bindings or the newer PySide bindings to
+# the underlying Qt4 toolkit.
+#backend.qt4 : PyQt4        # PyQt4 | PySide
+
+# Note that this can be overridden by the environment variable
+# QT_API used by Enthought Tool Suite (ETS); valid values are
+# "pyqt" and "pyside".  The "pyqt" setting has the side effect of
+# forcing the use of Version 2 API for QString and QVariant.
+
+# if you are running pyplot inside a GUI and your backend choice
+# conflicts, we will automatically try to find a compatible one for
 # you if backend_fallback is True
 #backend_fallback: True
+
 #interactive  : False
 #toolbar      : toolbar2   # None | classic | toolbar2
 #timezone     : UTC        # a pytz timezone string, eg US/Central or Europe/Paris
@@ -345,6 +359,9 @@ backend      : TkAgg
 #text.hinting : True # If True, text will be hinted, otherwise not.  This only
                      # affects the Agg backend.
 
+#text.antialiased : True # If True (default), the text will be antialiased.
+                         # This only affects the Agg backend.
+
 # The following settings allow you to select the fonts in math mode.
 # They map from a TeX font name to a fontconfig font pattern.
 # These settings are only used if mathtext.fontset is 'custom'.
@@ -378,14 +395,20 @@ backend      : TkAgg
 #axes.grid           : False   # display grid or not
 #axes.titlesize      : large   # fontsize of the axes title
 #axes.labelsize      : medium  # fontsize of the x any y labels
+#axes.labelweight    : normal  # weight of the x and y labels
 #axes.labelcolor     : black
 #axes.axisbelow      : False   # whether axis gridlines and ticks are below
                               # the axes elements (lines, text, etc)
 #axes.formatter.limits : -7, 7 # use scientific notation if log10
                                # of the axis range is smaller than the
                                # first or larger than the second
+#axes.formatter.use_locale : False # When True, format tick labels
+                                   # according to the user's locale.
+                                   # For example, use ',' as a decimal
+                                   # separator in the fr_FR locale.
 #axes.unicode_minus  : True    # use unicode for the minus symbol
-                               # rather than hypen.  See http://en.wikipedia.org/wiki/Plus_sign#Plus_sign
+                               # rather than hyphen.  See
+                               # http://en.wikipedia.org/wiki/Plus_and_minus_signs#Character_codes
 #axes.color_cycle    : b, g, r, c, m, y, k  # color cycle for plot lines
                                             # as list of string colorspecs:
                                             # single letter, long name, or
@@ -398,6 +421,8 @@ backend      : TkAgg
 # see http://matplotlib.sourceforge.net/api/axis_api.html#matplotlib.axis.Tick
 #xtick.major.size     : 4      # major tick size in points
 #xtick.minor.size     : 2      # minor tick size in points
+#xtick.major.width    : 0.5    # major tick width in points
+#xtick.minor.width    : 0.5    # minor tick width in points
 #xtick.major.pad      : 4      # distance to major tick label in points
 #xtick.minor.pad      : 4      # distance to the minor tick label in points
 #xtick.color          : k      # color of the tick labels
@@ -406,6 +431,8 @@ backend      : TkAgg
 
 #ytick.major.size     : 4      # major tick size in points
 #ytick.minor.size     : 2      # minor tick size in points
+#ytick.major.width    : 0.5    # major tick width in points
+#ytick.minor.width    : 0.5    # minor tick width in points
 #ytick.major.pad      : 4      # distance to major tick label in points
 #ytick.minor.pad      : 4      # distance to the minor tick label in points
 #ytick.color          : k      # color of the tick labels
@@ -425,14 +452,21 @@ backend      : TkAgg
 #legend.numpoints     : 2      # the number of points in the legend line
 #legend.fontsize      : large
 #legend.pad           : 0.0    # deprecated; the fractional whitespace inside the legend border
-#legend.borderpad     : 0.5    # border whitspace in fontsize units
+#legend.borderpad     : 0.5    # border whitespace in fontsize units
 #legend.markerscale   : 1.0    # the relative size of legend markers vs. original
 # the following dimensions are in axes coords
-#legend.labelsep      : 0.010  # the vertical space between the legend entries
-#legend.handlelen     : 0.05   # the length of the legend lines
-#legend.handletextsep : 0.02   # the space between the legend line and legend text
-#legend.axespad       : 0.02   # the border between the axes and legend edge
+#legend.labelsep      : 0.010  # deprecated; the vertical space between the legend entries
+#legend.labelspacing  : 0.5    # the vertical space between the legend entries in fraction of fontsize
+#legend.handlelen     : 0.05   # deprecated; the length of the legend lines
+#legend.handlelength  : 2.     # the length of the legend lines in fraction of fontsize
+#legend.handleheight  : 0.7     # the height of the legend handle in fraction of fontsize
+#legend.handletextsep : 0.02   # deprecated; the space between the legend line and legend text
+#legend.handletextpad : 0.8    # the space between the legend line and legend text in fraction of fontsize
+#legend.axespad       : 0.02   # deprecated; the border between the axes and legend edge
+#legend.borderaxespad : 0.5   # the border between the axes and legend edge in fraction of fontsize
+#legend.columnspacing : 2.    # the border between the axes and legend edge in fraction of fontsize
 #legend.shadow        : False
+#legend.frameon       : True   # whether or not to draw a frame around legend
 
 ### FIGURE
 # See http://matplotlib.sourceforge.net/api/figure_api.html#matplotlib.figure.Figure
@@ -441,7 +475,7 @@ backend      : TkAgg
 #figure.facecolor : 0.75    # figure facecolor; 0.75 is scalar gray
 #figure.edgecolor : white   # figure edgecolor
 
-# The figure subplot parameters.  All dimensions are fraction of the
+# The figure subplot parameters.  All dimensions are a fraction of the
 # figure width or height
 #figure.subplot.left    : 0.125  # the left side of the subplots of the figure
 #figure.subplot.right   : 0.9    # the right side of the subplots of the figure
@@ -513,7 +547,11 @@ backend      : TkAgg
 # svg backend params
 #svg.image_inline : True       # write raster image data directly into the svg file
 #svg.image_noscale : False     # suppress scaling of raster data embedded in SVG
-#svg.embed_char_paths : True       # embed character outlines in the SVG file
+#svg.fonttype : 'path'         # How to handle SVG fonts:
+#    'none': Assume fonts are installed on the machine where the SVG will be viewed.
+#    'path': Embed characters as paths -- supported by most SVG renderers
+#    'svgfont': Embed characters as SVG fonts -- supported only by Chrome,
+#               Opera and Safari
 
 # docstring params
 #docstring.hardcopy = False  # set this when you want to generate hardcopy docstring
@@ -600,8 +638,8 @@ backend      : TkAgg
     </div>
     <div class="footer">
         &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Feb 23, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Last updated on Aug 10, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Legend guide &mdash; Matplotlib v1.1.0 documentation</title>
+    <title>Legend guide &mdash; Matplotlib 1.1.1 documentation</title>
+    
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.0',
+        VERSION:     '1.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,12 +26,12 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib v1.1.0 documentation"
+          title="Search within Matplotlib 1.1.1 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib v1.1.0 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
     <link rel="up" title="User’s Guide" href="index.html" />
     <link rel="next" title="Event handling and picking" href="event_handling.html" />
-    <link rel="prev" title="Customizing Location of Subplot Using GridSpec" href="gridspec.html" /> 
+    <link rel="prev" title="Tight Layout guide" href="tight_layout_guide.html" /> 
   </head>
   <body>
 <!-- Piwik -->
@@ -69,7 +72,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
           <a href="event_handling.html" title="Event handling and picking"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="gridspec.html" title="Customizing Location of Subplot Using GridSpec"
+          <a href="tight_layout_guide.html" title="Tight Layout guide"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../search.html">search</a>|&nbsp;</li>
@@ -94,13 +97,19 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <li><a class="reference internal" href="#multicolumn-legend">Multicolumn Legend</a></li>
 <li><a class="reference internal" href="#legend-location">Legend location</a></li>
 <li><a class="reference internal" href="#multiple-legend">Multiple Legend</a></li>
+<li><a class="reference internal" href="#legend-of-complex-plots">Legend of Complex Plots</a><ul>
+<li><a class="reference internal" href="#artist-container">Artist Container</a></li>
+<li><a class="reference internal" href="#legend-handler">Legend Handler</a></li>
+<li><a class="reference internal" href="#implement-a-custom-handler">Implement a Custom Handler</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="gridspec.html"
-                        title="previous chapter">Customizing Location of Subplot Using GridSpec</a></p>
+  <p class="topless"><a href="tight_layout_guide.html"
+                        title="previous chapter">Tight Layout guide</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="event_handling.html"
                         title="next chapter">Event handling and picking</a></p>
@@ -112,7 +121,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -132,8 +141,8 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
             
   <div class="section" id="legend-guide">
 <span id="plotting-guide-legend"></span><h1>Legend guide<a class="headerlink" href="#legend-guide" title="Permalink to this headline">¶</a></h1>
-<p>Do not proceed unless you already have read <a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend"><tt class="xref py py-func docutils literal"><span class="pre">legend()</span></tt></a> and
-<a class="reference internal" href="../api/artist_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.legend.Legend</span></tt></a>!</p>
+<p>Do not proceed unless you already have read <a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend"><tt class="xref py py-func docutils literal"><span class="pre">legend()</span></tt></a>
+and <a class="reference internal" href="../api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.legend.Legend</span></tt></a>!</p>
 <div class="section" id="what-to-be-displayed">
 <h2>What to be displayed<a class="headerlink" href="#what-to-be-displayed" title="Permalink to this headline">¶</a></h2>
 <p>The legend command has a following call signature:</p>
@@ -153,42 +162,43 @@ For example, <em>ax.legend()</em> is equivalent to:</p>
 <p>The <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.get_legend_handles_labels" title="matplotlib.axes.Axes.get_legend_handles_labels"><tt class="xref py py-meth docutils literal"><span class="pre">get_legend_handles_labels()</span></tt></a> method
 returns a tuple of two lists, i.e., list of artists and list of labels
 (python string).  However, it does not return all of its child
-artists. It returns all artists in <em>ax.lines</em> and <em>ax.patches</em> and
-some artists in <em>ax.collection</em> which are instance of
-<a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><tt class="xref py py-class docutils literal"><span class="pre">LineCollection</span></tt></a> or
-<a class="reference internal" href="../api/collections_api.html#matplotlib.collections.RegularPolyCollection" title="matplotlib.collections.RegularPolyCollection"><tt class="xref py py-class docutils literal"><span class="pre">RegularPolyCollection</span></tt></a>.  The label
-attributes (returned by get_label() method) of collected artists are
-used as text labels. If label attribute is empty string or starts with
-&#8220;_&#8221;, that artist will be ignored.</p>
+artists. It returns artists that are currently supported by matplotlib.</p>
+<p>For matplotlib v1.0 and earlier, the supported artists are as follows.</p>
 <blockquote>
-<div><ul>
-<li><p class="first">Note that not all kind of artists are supported by the legend. The
-following is the list of artists that are currently supported.</p>
-<ul class="simple">
+<div><ul class="simple">
 <li><a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a></li>
 <li><a class="reference internal" href="../api/artist_api.html#matplotlib.patches.Patch" title="matplotlib.patches.Patch"><tt class="xref py py-class docutils literal"><span class="pre">Patch</span></tt></a></li>
 <li><a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><tt class="xref py py-class docutils literal"><span class="pre">LineCollection</span></tt></a></li>
 <li><a class="reference internal" href="../api/collections_api.html#matplotlib.collections.RegularPolyCollection" title="matplotlib.collections.RegularPolyCollection"><tt class="xref py py-class docutils literal"><span class="pre">RegularPolyCollection</span></tt></a></li>
-</ul>
-<p>Unfortunately, there is no easy workaround when you need legend for
-an artist not in the above list (You may use one of the supported
-artist as a proxy. See below), or customize it beyond what is
-supported by <a class="reference internal" href="../api/artist_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.legend.Legend</span></tt></a>.</p>
-</li>
-<li><p class="first">Remember that some <em>pyplot</em> commands return artist not supported by
-legend, e.g., <a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.fill_between" title="matplotlib.pyplot.fill_between"><tt class="xref py py-func docutils literal"><span class="pre">fill_between()</span></tt></a> returns
-<a class="reference internal" href="../api/collections_api.html#matplotlib.collections.PolyCollection" title="matplotlib.collections.PolyCollection"><tt class="xref py py-class docutils literal"><span class="pre">PolyCollection</span></tt></a> that is not
-supported. Or some return multiple artists. For example,
-<a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><tt class="xref py py-func docutils literal"><span class="pre">plot()</span></tt></a> returns list of
-<a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a> instances, and
-<a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.errorbar" title="matplotlib.pyplot.errorbar"><tt class="xref py py-func docutils literal"><span class="pre">errorbar()</span></tt></a> returns a length 3 tuple of
-<a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a> instances.</p>
-</li>
-<li><p class="first">The legend does not care about the axes that given artists belongs,
-i.e., the artists may belong to other axes or even none.</p>
-</li>
+<li><a class="reference internal" href="../api/collections_api.html#matplotlib.collections.CircleCollection" title="matplotlib.collections.CircleCollection"><tt class="xref py py-class docutils literal"><span class="pre">CircleCollection</span></tt></a></li>
 </ul>
 </div></blockquote>
+<p>And, <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.get_legend_handles_labels" title="matplotlib.axes.Axes.get_legend_handles_labels"><tt class="xref py py-meth docutils literal"><span class="pre">get_legend_handles_labels()</span></tt></a> returns
+all artists in <em>ax.lines</em>, <em>ax.patches</em> and
+artists in <em>ax.collection</em> which are instance of
+<a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><tt class="xref py py-class docutils literal"><span class="pre">LineCollection</span></tt></a> or
+<a class="reference internal" href="../api/collections_api.html#matplotlib.collections.RegularPolyCollection" title="matplotlib.collections.RegularPolyCollection"><tt class="xref py py-class docutils literal"><span class="pre">RegularPolyCollection</span></tt></a>.  The label
+attributes (returned by get_label() method) of collected artists are
+used as text labels. If label attribute is empty string or starts with
+&#8220;_&#8221;, those artists will be ignored.</p>
+<p>Therefore, plots drawn by some <em>pyplot</em> commands are not supported by
+legend.  For example, <a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.fill_between" title="matplotlib.pyplot.fill_between"><tt class="xref py py-func docutils literal"><span class="pre">fill_between()</span></tt></a> creates
+<a class="reference internal" href="../api/collections_api.html#matplotlib.collections.PolyCollection" title="matplotlib.collections.PolyCollection"><tt class="xref py py-class docutils literal"><span class="pre">PolyCollection</span></tt></a> that is not
+supported. Also support is limted for some commands that creat
+multiple artists. For example, <a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.errorbar" title="matplotlib.pyplot.errorbar"><tt class="xref py py-func docutils literal"><span class="pre">errorbar()</span></tt></a>
+creates multiples <a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a> instances.</p>
+<p>Unfortunately, there is no easy workaround when you need legend for an
+artist not supported by matplotlib (You may use one of the supported
+artist as a proxy. See below)</p>
+<p>In newer version of matplotlib (v1.1 and later), the matplotlib
+internals are revised to support</p>
+<blockquote>
+<div><ul class="simple">
+<li>complex plots that creates multiple artists (e.g., bar, errorbar, etc)</li>
+<li>custom legend handles</li>
+</ul>
+</div></blockquote>
+<p>See below for details of new functionality.</p>
 <div class="section" id="adjusting-the-order-of-legend-items">
 <h3>Adjusting the Order of Legend items<a class="headerlink" href="#adjusting-the-order-of-legend-items" title="Permalink to this headline">¶</a></h3>
 <p>When you want to customize the list of artists to be displayed in the
@@ -254,39 +264,39 @@ for example.</p>
 <col width="32%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">String</th>
+<tr class="row-odd"><th class="head">String</th>
 <th class="head">Number</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td>upper right</td>
+<tr class="row-even"><td>upper right</td>
 <td>1</td>
 </tr>
-<tr><td>upper left</td>
+<tr class="row-odd"><td>upper left</td>
 <td>2</td>
 </tr>
-<tr><td>lower left</td>
+<tr class="row-even"><td>lower left</td>
 <td>3</td>
 </tr>
-<tr><td>lower right</td>
+<tr class="row-odd"><td>lower right</td>
 <td>4</td>
 </tr>
-<tr><td>right</td>
+<tr class="row-even"><td>right</td>
 <td>5</td>
 </tr>
-<tr><td>center left</td>
+<tr class="row-odd"><td>center left</td>
 <td>6</td>
 </tr>
-<tr><td>center right</td>
+<tr class="row-even"><td>center right</td>
 <td>7</td>
 </tr>
-<tr><td>lower center</td>
+<tr class="row-odd"><td>lower center</td>
 <td>8</td>
 </tr>
-<tr><td>upper center</td>
+<tr class="row-even"><td>upper center</td>
 <td>9</td>
 </tr>
-<tr><td>center</td>
+<tr class="row-odd"><td>center</td>
 <td>10</td>
 </tr>
 </tbody>
@@ -301,7 +311,7 @@ coordinates (even for the bbox instance) are considered as normalized
 axes coordinates.</p>
 <p>For example, if you want your axes legend located at the figure corner
 (instead of the axes corner):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">l</span> <span class="o">=</span> <span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">transform</span><span class="o">=</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">transFigure</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">l</span> <span class="o">=</span> <span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bbox_transform</span><span class="o">=</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">transFigure</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Also, you can place above or outer right-hand side of the axes,</p>
@@ -322,7 +332,7 @@ axes coordinates.</p>
 <span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>[<a class="reference external" href="../plot_directive/users/plotting/examples/simple_legend01.py">source code</a>, <a class="reference external" href="../plot_directive/users/plotting/examples/simple_legend01.hires.png">hires.png</a>, <a class="reference external" href="../plot_directive/users/plotting/examples/simple_legend01.pdf">pdf</a>]</p>
+<p>(<a class="reference external" href="../users/plotting/examples/simple_legend01.py">Source code</a>, <a class="reference external" href="../users/plotting/examples/simple_legend01.png">png</a>, <a class="reference external" href="../users/plotting/examples/simple_legend01.hires.png">hires.png</a>, <a class="reference external" href="../users/plotting/examples/simple_legend01.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="../_images/simple_legend01.png" src="../_images/simple_legend01.png" />
 </div>
@@ -352,9 +362,131 @@ legend.</p>
 <span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>[<a class="reference external" href="../plot_directive/users/plotting/examples/simple_legend02.py">source code</a>, <a class="reference external" href="../plot_directive/users/plotting/examples/simple_legend02.hires.png">hires.png</a>, <a class="reference external" href="../plot_directive/users/plotting/examples/simple_legend02.pdf">pdf</a>]</p>
+<p>(<a class="reference external" href="../users/plotting/examples/simple_legend02.py">Source code</a>, <a class="reference external" href="../users/plotting/examples/simple_legend02.png">png</a>, <a class="reference external" href="../users/plotting/examples/simple_legend02.hires.png">hires.png</a>, <a class="reference external" href="../users/plotting/examples/simple_legend02.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="../_images/simple_legend02.png" src="../_images/simple_legend02.png" />
+</div>
+</div>
+<div class="section" id="legend-of-complex-plots">
+<span id="legend-complex-plots"></span><h2>Legend of Complex Plots<a class="headerlink" href="#legend-of-complex-plots" title="Permalink to this headline">¶</a></h2>
+<p>In matplotlib v1.1 and later, the legend is
+improved to support more plot commands and ease the customization.</p>
+<div class="section" id="artist-container">
+<h3>Artist Container<a class="headerlink" href="#artist-container" title="Permalink to this headline">¶</a></h3>
+<p>The Artist Container is simple class (derived from tuple) that
+contains multiple artists. This is introduced primarily to support
+legends for complex plot commands that create multiple artists.</p>
+<p>Axes instances now have a &#8220;containers&#8221; attribute (which is a list, and
+this is only intended to be used for generating a legend).  The items
+in this attribute are also returned by
+<a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.get_legend_handles_labels" title="matplotlib.axes.Axes.get_legend_handles_labels"><tt class="xref py py-meth docutils literal"><span class="pre">get_legend_handles_labels()</span></tt></a>.</p>
+<p>For example, &#8220;bar&#8221; command creates a series of Rectangle
+patches. Previously, it returned a list of these patches. With the
+current change, it creates a container object of these rectangle
+patches (and these patches are added to Axes.patches attribute as
+before) and return it instead. As the container class is derived from
+a tuple, it should be backward-compatible.  Furthermore, the container
+object is added to the Axes.containers attributes so that legend
+command can properly create a legend for the bar. Thus, you may do</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b1</span> <span class="o">=</span> <span class="n">bar</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s">&quot;Bar 1&quot;</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b1</span> <span class="o">=</span> <span class="n">bar</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">([</span><span class="n">b1</span><span class="p">],</span> <span class="p">[</span><span class="s">&quot;Bar 1&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>At this time of writing, however, only &#8220;bar&#8221;, &#8220;errorbar&#8221;, and &#8220;stem&#8221; are
+supported (hopefully the list will increase). Here is an example.</p>
+<p>(<a class="reference external" href="../mpl_examples/pylab_examples/legend_demo4.py">Source code</a>, <a class="reference external" href="../mpl_examples/pylab_examples/legend_demo4.png">png</a>, <a class="reference external" href="../mpl_examples/pylab_examples/legend_demo4.hires.png">hires.png</a>, <a class="reference external" href="../mpl_examples/pylab_examples/legend_demo4.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/legend_demo41.png" src="../_images/legend_demo41.png" />
+</div>
+</div>
+<div class="section" id="legend-handler">
+<h3>Legend Handler<a class="headerlink" href="#legend-handler" title="Permalink to this headline">¶</a></h3>
+<p>One of the changes is that drawing of legend handles has been delegated to
+legend handlers. For example, <a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a>
+instances are handled by
+<tt class="xref py py-class docutils literal"><span class="pre">HandlerLine2D</span></tt>.  The mapping
+between the artists and their corresponding handlers are defined in a
+handler_map of the legend. The handler_map is a dictionary of
+key-handler pair, where key can be an artist instance or its
+class. And the handler is a Handler instance.</p>
+<p>Let&#8217;s consider the following sample code,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">legend</span><span class="p">([</span><span class="n">p_1</span><span class="p">,</span> <span class="n">p_2</span><span class="p">,</span><span class="o">...</span><span class="p">,</span> <span class="n">p_i</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="p">[</span><span class="s">&quot;Test 1&quot;</span><span class="p">,</span> <span class="s">&quot;Test 2&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="s">&quot;Test i&quot;</span><span class="p">,</span><span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>For each <em>p_i</em>, matplotlib</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>check if <em>p_i</em> is in the handler_map</li>
+<li>if not, iterate over type(p_i).mro() until a matching key is found
+in the handler_map</li>
+</ol>
+</div></blockquote>
+<p>Unless specified, the defaul handler_map is used. Below is a partial
+list of key-handler pairs included in the default handler map.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Line2D : legend_handler.HandlerLine2D()</li>
+<li>Patch : legend_handler.HandlerPatch()</li>
+<li>LineCollection : legend_handler.HandlerLineCollection()</li>
+<li>...</li>
+</ul>
+</div></blockquote>
+<p>The legend() command takes an optional argument of &#8220;handler_map&#8221;. When
+provided, the default handler map will be updated (using dict.update
+method) with the provided one.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">p1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot;ro&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;test1&quot;</span><span class="p">)</span>
+<span class="n">p2</span><span class="p">,</span> <span class="o">=</span> <span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="s">&quot;b+&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;test2&quot;</span><span class="p">)</span>
+
+<span class="n">my_handler</span> <span class="o">=</span> <span class="n">HandlerLine2D</span><span class="p">(</span><span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">legend</span><span class="p">(</span><span class="n">handler_map</span><span class="o">=</span><span class="p">{</span><span class="n">Line2D</span><span class="p">:</span><span class="n">my_handler</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The above example will use <em>my_handler</em> for any Line2D
+instances (p1 and p2).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">legend</span><span class="p">(</span><span class="n">handler_map</span><span class="o">=</span><span class="p">{</span><span class="n">p1</span><span class="p">:</span><span class="n">HandlerLine2D</span><span class="p">(</span><span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)})</span>
+</pre></div>
+</div>
+<p>In the above example, only <em>p1</em> will be handled by <em>my_handler</em>, while
+others will be handled by default handlers.</p>
+<p>The curent default handler_map has handlers for errorbar and bar
+plots. Also, it includes an entry for <cite>tuple</cite> which is mapped to
+<cite>HandlerTuple</cite>. It simply plots over all the handles for items in the
+given tuple. For example,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">p1a</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="s">&quot;ro&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s">&quot;r&quot;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s">&quot;r&quot;</span><span class="p">)</span> <span class="c"># red filled circle</span>
+<span class="n">p1b</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="s">&quot;w+&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s">&quot;w&quot;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c"># white cross</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">p1a</span><span class="p">,</span> <span class="p">(</span><span class="n">p1a</span><span class="p">,</span> <span class="n">p1b</span><span class="p">)],</span> <span class="p">[</span><span class="s">&quot;Attr A&quot;</span><span class="p">,</span> <span class="s">&quot;Attr A+B&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../users/legend_guide-1.py">Source code</a>, <a class="reference external" href="../users/legend_guide-1.png">png</a>, <a class="reference external" href="../users/legend_guide-1.hires.png">hires.png</a>, <a class="reference external" href="../users/legend_guide-1.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/legend_guide-1.png" src="../_images/legend_guide-1.png" />
+</div>
+</div>
+<div class="section" id="implement-a-custom-handler">
+<h3>Implement a Custom Handler<a class="headerlink" href="#implement-a-custom-handler" title="Permalink to this headline">¶</a></h3>
+<p>Handler can be any callable object with following signature.</p>
+<div class="highlight-python"><pre>def __call__(self, legend, orig_handle,
+             fontsize,
+             handlebox):</pre>
+</div>
+<p>Where <em>legend</em> is the legend itself, <em>orig_handle</em> is the original
+plot (<em>p_i</em> in the above example), <em>fontsize</em> is the fontsize in
+pixles, and <em>handlebox</em> is a OffsetBox instance. Within the call, you
+create relevant artists (using relevant properties from the <em>legend</em>
+and/or <em>orig_handle</em>) and add them into the handlebox. The artists
+needs to be scaled according to the fontsize (note that the size is in
+pixel, i.e., this is dpi-scaled value). See <tt class="xref py py-mod docutils literal"><span class="pre">legend_handler</span></tt>
+for more details.</p>
 </div>
 </div>
 </div>
@@ -378,7 +510,7 @@ legend.</p>
           <a href="event_handling.html" title="Event handling and picking"
              >next</a> |</li>
         <li class="right" >
-          <a href="gridspec.html" title="Customizing Location of Subplot Using GridSpec"
+          <a href="tight_layout_guide.html" title="Tight Layout guide"
              >previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../search.html">search</a>|&nbsp;</li>
@@ -391,8 +523,8 @@ legend.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Feb 23, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Last updated on Aug 10, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
