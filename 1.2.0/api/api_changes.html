@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>API Changes &mdash; Matplotlib 1.2.0rc2 documentation</title>
+    <title>API Changes &mdash; Matplotlib 1.2.0rc3 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2.0rc2',
+        VERSION:     '1.2.0rc3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.2.0rc2 documentation"
+          title="Search within Matplotlib 1.2.0rc3 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.2.0rc2 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0rc3 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="configuration" href="matplotlib_configuration_api.html" />
     <link rel="prev" title="Plotting commands summary" href="pyplot_summary.html" /> 
@@ -204,6 +204,18 @@ help figure out possible sources of the changes you are experiencing.</p>
 <div class="section" id="changes-in-1-2-x">
 <h2>Changes in 1.2.x<a class="headerlink" href="#changes-in-1-2-x" title="Permalink to this headline">¶</a></h2>
 <ul>
+<li><p class="first">The <tt class="docutils literal"><span class="pre">classic</span></tt> option of the rc parameter <tt class="docutils literal"><span class="pre">toolbar</span></tt> is deprecated
+and will be removed in the next release.</p>
+</li>
+<li><p class="first">The <tt class="xref py py-meth docutils literal"><span class="pre">isvector()</span></tt> method has been removed since it
+is no longer functional.</p>
+</li>
+<li><p class="first">The <tt class="xref py py-obj docutils literal"><span class="pre">rasterization_zorder</span></tt> property on <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-obj docutils literal"><span class="pre">Axes</span></tt></a> a
+zorder below which artists are rasterized.  This has defaulted to
+-30000.0, but it now defaults to <tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt>, meaning no artists will be
+rasterized.  In order to rasterize artists below a given zorder
+value, <tt class="xref py py-obj docutils literal"><span class="pre">set_rasterization_zorder</span></tt> must be explicitly called.</p>
+</li>
 <li><p class="first">In <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.scatter" title="matplotlib.axes.Axes.scatter"><tt class="xref py py-meth docutils literal"><span class="pre">scatter()</span></tt></a>, and <tt class="xref py py-obj docutils literal"><span class="pre">scatter</span></tt>,
 when specifying a marker using a tuple, the angle is now specified
 in degrees, not radians.</p>
@@ -303,9 +315,9 @@ For instance:</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first">One can now easily get a transform which goes from one transform&#8217;s coordinate system
-to another, in an optimized way, using the new subtract method on a transform. For instance,
-to go from data coordinates to axes coordinates:</p>
+<li><p class="first">One can now easily get a transform which goes from one transform&#8217;s coordinate
+system to another, in an optimized way, using the new subtract method on a
+transform. For instance, to go from data coordinates to axes coordinates:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data2ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">transData</span> <span class="o">-</span> <span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span>
@@ -315,9 +327,9 @@ to go from data coordinates to axes coordinates:</p>
 <span class="go">2</span>
 </pre></div>
 </div>
-<p>for versions before 1.2 this could only be achieved in a sub-optimal way, using
-<tt class="docutils literal"><span class="pre">ax.transData</span> <span class="pre">+</span> <span class="pre">ax.transAxes.inverted()</span></tt> (depth is a new concept, but had it existed
-it would return 4 for this example).</p>
+<p>for versions before 1.2 this could only be achieved in a sub-optimal way,
+using <tt class="docutils literal"><span class="pre">ax.transData</span> <span class="pre">+</span> <span class="pre">ax.transAxes.inverted()</span></tt> (depth is a new concept,
+but had it existed it would return 4 for this example).</p>
 </li>
 <li><p class="first"><tt class="docutils literal"><span class="pre">twinx</span></tt> and <tt class="docutils literal"><span class="pre">twiny</span></tt> now returns an instance of SubplotBase if
 parent axes is an instance of SubplotBase.</p>
@@ -330,6 +342,9 @@ removed for the next release.</p>
 <li><p class="first"><a class="reference internal" href="colors_api.html#matplotlib.colors.ColorConverter" title="matplotlib.colors.ColorConverter"><tt class="xref py py-class docutils literal"><span class="pre">ColorConverter</span></tt></a>,
 <a class="reference internal" href="colors_api.html#matplotlib.colors.Colormap" title="matplotlib.colors.Colormap"><tt class="xref py py-class docutils literal"><span class="pre">Colormap</span></tt></a> and
 <a class="reference internal" href="colors_api.html#matplotlib.colors.Normalize" title="matplotlib.colors.Normalize"><tt class="xref py py-class docutils literal"><span class="pre">Normalize</span></tt></a> now subclasses <tt class="docutils literal"><span class="pre">object</span></tt></p>
+</li>
+<li><p class="first">ContourSet instances no longer have a <tt class="docutils literal"><span class="pre">transform</span></tt> attribute. Instead,
+access the transform with the <tt class="docutils literal"><span class="pre">get_transform</span></tt> method.</p>
 </li>
 </ul>
 </div>
@@ -2161,7 +2176,7 @@ Jeremy:
     </div>
     <div class="footer">
         &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on Sep 19, 2012.
+      Last updated on Nov 07, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
