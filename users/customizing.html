@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Customizing matplotlib &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>Customizing matplotlib &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="User’s Guide" href="index.html" />
     <link rel="next" title="Using matplotlib in a python shell" href="shell.html" />
     <link rel="prev" title="Interactive navigation" href="navigation_toolbar.html" /> 
@@ -210,12 +210,13 @@ matplotlib default settings.</p>
 
 #### CONFIGURATION BEGINS HERE
 
-# the default backend; one of GTK GTKAgg GTKCairo CocoaAgg FltkAgg
-# MacOSX QtAgg Qt4Agg TkAgg WX WXAgg Agg Cairo GDK PS PDF SVG Template
+# the default backend; one of GTK GTKAgg GTKCairo GTK3Agg GTK3Cairo
+# CocoaAgg FltkAgg MacOSX QtAgg Qt4Agg TkAgg WX WXAgg Agg Cairo GDK PS
+# PDF SVG Template
 # You can also deploy your own backend outside of matplotlib by
 # referring to the module name (which must be in the PYTHONPATH) as
 # 'module://my_backend'
-backend      : GTKAgg
+backend      : TkAgg
 
 # If you are using the Qt4Agg backend, you can choose here
 # to use the PyQt4 bindings or the newer PySide bindings to
@@ -233,7 +234,7 @@ backend      : GTKAgg
 #backend_fallback: True
 
 #interactive  : False
-#toolbar      : toolbar2   # None | classic | toolbar2
+#toolbar      : toolbar2   # None | toolbar2  ("classic" is deprecated)
 #timezone     : UTC        # a pytz timezone string, eg US/Central or Europe/Paris
 
 # Where your matplotlib data lives if you installed to a non-default
@@ -242,11 +243,11 @@ backend      : GTKAgg
 
 
 ### LINES
-# See http://matplotlib.sourceforge.net/api/artist_api.html#module-matplotlib.lines for more
+# See http://matplotlib.org/api/artist_api.html#module-matplotlib.lines for more
 # information on line properties.
 #lines.linewidth   : 1.0     # line width in points
 #lines.linestyle   : -       # solid line
-#lines.color       : blue
+#lines.color       : blue    # has no affect on plot(); see axes.color_cycle
 #lines.marker      : None    # the default marker
 #lines.markeredgewidth  : 0.5     # the line width around the marker symbol
 #lines.markersize  : 6            # markersize, in points
@@ -259,7 +260,7 @@ backend      : GTKAgg
 ### PATCHES
 # Patches are graphical objects that fill 2D space, like polygons or
 # circles.  See
-# http://matplotlib.sourceforge.net/api/artist_api.html#module-matplotlib.patches
+# http://matplotlib.org/api/artist_api.html#module-matplotlib.patches
 # information on patch properties
 #patch.linewidth        : 1.0     # edge width in points
 #patch.facecolor        : blue
@@ -269,7 +270,7 @@ backend      : GTKAgg
 ### FONT
 #
 # font properties used by text.Text.  See
-# http://matplotlib.sourceforge.net/api/font_manager_api.html for more
+# http://matplotlib.org/api/font_manager_api.html for more
 # information on font properties.  The 6 font properties used for font
 # matching are given below with their default values.
 #
@@ -320,7 +321,7 @@ backend      : GTKAgg
 
 ### TEXT
 # text properties used by text.Text.  See
-# http://matplotlib.sourceforge.net/api/artist_api.html#module-matplotlib.text for more
+# http://matplotlib.org/api/artist_api.html#module-matplotlib.text for more
 # information on text properties
 
 #text.color          : black
@@ -356,8 +357,19 @@ backend      : GTKAgg
                              # correction off.  None will try and
                              # guess based on your dvipng version
 
-#text.hinting : True # If True, text will be hinted, otherwise not.  This only
-                     # affects the Agg backend.
+#text.hinting : 'auto' # May be one of the following:
+                       #   'none': Perform no hinting
+                       #   'auto': Use freetype's autohinter
+                       #   'native': Use the hinting information in the
+                       #             font file, if available, and if your
+                       #             freetype library supports it
+                       #   'either': Use the native hinting information,
+                       #             or the autohinter if none is available.
+                       # For backward compatibility, this value may also be
+                       # True === 'auto' or False === 'none'.
+text.hinting_factor : 8 # Specifies the amount of softness for hinting in the
+                         # horizontal direction.  A value of 1 will hint to full
+                         # pixels.  A value of 2 will hint to half pixels etc.
 
 #text.antialiased : True # If True (default), the text will be antialiased.
                          # This only affects the Agg backend.
@@ -387,7 +399,7 @@ backend      : GTKAgg
 ### AXES
 # default face and edge color, default tick sizes,
 # default fontsizes for ticklabels, and so on.  See
-# http://matplotlib.sourceforge.net/api/axes_api.html#module-matplotlib.axes
+# http://matplotlib.org/api/axes_api.html#module-matplotlib.axes
 #axes.hold           : True    # whether to clear the axes by default on
 #axes.facecolor      : white   # axes background color
 #axes.edgecolor      : black   # axes edge color
@@ -406,6 +418,8 @@ backend      : GTKAgg
                                    # according to the user's locale.
                                    # For example, use ',' as a decimal
                                    # separator in the fr_FR locale.
+#axes.formatter.use_mathtext : False # When True, use mathtext for scientific
+                                     # notation.
 #axes.unicode_minus  : True    # use unicode for the minus symbol
                                # rather than hyphen.  See
                                # http://en.wikipedia.org/wiki/Plus_and_minus_signs#Character_codes
@@ -418,7 +432,7 @@ backend      : GTKAgg
 #axes3d.grid         : True    # display grid on 3d axes
 
 ### TICKS
-# see http://matplotlib.sourceforge.net/api/axis_api.html#matplotlib.axis.Tick
+# see http://matplotlib.org/api/axis_api.html#matplotlib.axis.Tick
 #xtick.major.size     : 4      # major tick size in points
 #xtick.minor.size     : 2      # minor tick size in points
 #xtick.major.width    : 0.5    # major tick width in points
@@ -427,7 +441,7 @@ backend      : GTKAgg
 #xtick.minor.pad      : 4      # distance to the minor tick label in points
 #xtick.color          : k      # color of the tick labels
 #xtick.labelsize      : medium # fontsize of the tick labels
-#xtick.direction      : in     # direction: in or out
+#xtick.direction      : in     # direction: in, out, or inout
 
 #ytick.major.size     : 4      # major tick size in points
 #ytick.minor.size     : 2      # minor tick size in points
@@ -437,13 +451,14 @@ backend      : GTKAgg
 #ytick.minor.pad      : 4      # distance to the minor tick label in points
 #ytick.color          : k      # color of the tick labels
 #ytick.labelsize      : medium # fontsize of the tick labels
-#ytick.direction      : in     # direction: in or out
+#ytick.direction      : in     # direction: in, out, or inout
 
 
 ### GRIDS
 #grid.color       :   black   # grid color
 #grid.linestyle   :   :       # dotted
 #grid.linewidth   :   0.5     # in points
+#grid.alpha       :   1.0     # transparency, between 0.0 and 1.0
 
 ### Legend
 #legend.fancybox      : False  # if True, use a rounded box for the
@@ -469,11 +484,13 @@ backend      : GTKAgg
 #legend.frameon       : True   # whether or not to draw a frame around legend
 
 ### FIGURE
-# See http://matplotlib.sourceforge.net/api/figure_api.html#matplotlib.figure.Figure
+# See http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
 #figure.figsize   : 8, 6    # figure size in inches
 #figure.dpi       : 80      # figure dots per inch
 #figure.facecolor : 0.75    # figure facecolor; 0.75 is scalar gray
 #figure.edgecolor : white   # figure edgecolor
+#figure.autolayout : False  # When True, automatically adjust subplot
+                            # parameters to make the plot fit the figure
 
 # The figure subplot parameters.  All dimensions are a fraction of the
 # figure width or height
@@ -519,12 +536,12 @@ backend      : GTKAgg
 # the default savefig params can be different from the display params
 # Eg, you may want a higher resolution, or to make the figure
 # background white
-#savefig.dpi       : 100      # figure dots per inch
-#savefig.facecolor : white    # figure facecolor when saving
-#savefig.edgecolor : white    # figure edgecolor when saving
-#savefig.extension : auto     # what extension to use for savefig('foo'), or 'auto'
-
-#cairo.format      : png      # png, ps, pdf, svg
+#savefig.dpi        : 100      # figure dots per inch
+#savefig.facecolor  : white    # figure facecolor when saving
+#savefig.edgecolor  : white    # figure edgecolor when saving
+#savefig.format     : png      # png, ps, pdf, svg
+#savefig.bbox       : standard # 'tight' or 'standard'.
+#savefig.pad_inches : 0.1      # Padding to be used when bbox is set to 'tight'
 
 # tk backend params
 #tk.window_focus   : False    # Maintain shell focus for TkAgg
@@ -587,19 +604,24 @@ backend      : GTKAgg
 #keymap.pan : p                      # pan mnemonic
 #keymap.zoom : o                     # zoom mnemonic
 #keymap.save : s                     # saving current figure
+#keymap.quit : ctrl+w                # close the current figure
 #keymap.grid : g                     # switching on/off a grid in current axes
 #keymap.yscale : l                   # toggle scaling of y-axes ('log'/'linear')
 #keymap.xscale : L, k                # toggle scaling of x-axes ('log'/'linear')
 #keymap.all_axes : a                 # enable all axes
 
-# Control downloading of example data. Various examples download some
-# data from the Matplotlib git repository to avoid distributing extra
-# files, but sometimes you want to avoid that. In that case set
-# examples.download to False and examples.directory to the directory
-# where you have a checkout of https://github.com/matplotlib/sample_data
-
-#examples.download : True  # False to bypass downloading mechanism
-#examples.directory : ''   # directory to look in if download is false
+###ANIMATION settings
+#animation.writer : ffmpeg         # MovieWriter 'backend' to use
+#animation.codec : mp4             # Codec to use for writing movie
+#animation.bitrate: -1             # Controls size/quality tradeoff for movie.
+                                   # -1 implies let utility auto-determine
+#animation.frame_format: 'png'     # Controls frame format used by temp files
+#animation.ffmpeg_path: 'ffmpeg'   # Path to ffmpeg binary. Without full path
+                                   # $PATH is searched
+#animation.ffmpeg_args: ''         # Additional arugments to pass to mencoder
+#animation.mencoder_path: 'ffmpeg' # Path to mencoder binary. Without full path
+                                   # $PATH is searched
+#animation.mencoder_args: ''       # Additional arugments to pass to mencoder
 </pre>
 </div>
 </div>
@@ -637,8 +659,8 @@ backend      : GTKAgg
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

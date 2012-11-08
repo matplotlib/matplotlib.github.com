@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>path &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>path &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="pyplot" href="pyplot_api.html" />
     <link rel="prev" title="nxutils" href="nxutils_api.html" /> 
@@ -291,6 +291,19 @@ before performing the test.</p>
 <dd><p>Returns <em>True</em> if the path contains the given point.</p>
 <p>If <em>transform</em> is not <em>None</em>, the path will be transformed
 before performing the test.</p>
+<p><em>radius</em> allows the path to be made slightly larger or
+smaller.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.path.Path.contains_points">
+<tt class="descname">contains_points</tt><big>(</big><em>points</em>, <em>transform=None</em>, <em>radius=0.0</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.contains_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a bool array which is <em>True</em> if the path contains the
+corresponding point.</p>
+<p>If <em>transform</em> is not <em>None</em>, the path will be transformed
+before performing the test.</p>
+<p><em>radius</em> allows the path to be made slightly larger or
+smaller.</p>
 </dd></dl>
 
 <dl class="method">
@@ -495,15 +508,42 @@ determined based on the delta between <em>theta1</em> and <em>theta2</em>.</p>
 
 <dl class="function">
 <dt id="matplotlib.path.get_path_collection_extents">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">get_path_collection_extents</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#matplotlib.path.get_path_collection_extents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a sequence of <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> objects, returns the bounding
-box that encapsulates all of them.</p>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">get_path_collection_extents</tt><big>(</big><em>master_transform</em>, <em>paths</em>, <em>transforms</em>, <em>offsets</em>, <em>offset_transform</em><big>)</big><a class="headerlink" href="#matplotlib.path.get_path_collection_extents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> objects,
+<a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">Transform</span></tt></a> objects and offsets, as
+found in a <a class="reference internal" href="collections_api.html#matplotlib.collections.PathCollection" title="matplotlib.collections.PathCollection"><tt class="xref py py-class docutils literal"><span class="pre">PathCollection</span></tt></a>,
+returns the bounding box that encapsulates all of them.</p>
+<p><em>master_transform</em> is a global transformation to apply to all paths</p>
+<p><em>paths</em> is a sequence of <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instances.</p>
+<p><em>transforms</em> is a sequence of
+<a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Affine2D" title="matplotlib.transforms.Affine2D"><tt class="xref py py-class docutils literal"><span class="pre">Affine2D</span></tt></a> instances.</p>
+<p><em>offsets</em> is a sequence of (x, y) offsets (or an Nx2 array)</p>
+<p><em>offset_transform</em> is a <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Affine2D" title="matplotlib.transforms.Affine2D"><tt class="xref py py-class docutils literal"><span class="pre">Affine2D</span></tt></a>
+to apply to the offsets before applying the offset to the path.</p>
+<p>The way that <em>paths</em>, <em>transforms</em> and <em>offsets</em> are combined
+follows the same method as for collections.  Each is iterated over
+independently, so if you have 3 paths, 2 transforms and 1 offset,
+their combinations are as follows:</p>
+<blockquote>
+<div>(A, A, A), (B, B, A), (C, A, A)</div></blockquote>
 </dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.get_path_extents">
 <tt class="descclassname">matplotlib.path.</tt><tt class="descname">get_path_extents</tt><big>(</big><em>path</em>, <em>trans</em><big>)</big><a class="headerlink" href="#matplotlib.path.get_path_extents" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="matplotlib.path.get_paths_extents">
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">get_paths_extents</tt><big>(</big><em>paths</em>, <em>transforms=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#matplotlib.path.get_paths_extents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> objects and optional
+<a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">Transform</span></tt></a> objects, returns the
+bounding box that encapsulates all of them.</p>
+<p><em>paths</em> is a sequence of <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instances.</p>
+<p><em>transforms</em> is an optional sequence of
+<a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Affine2D" title="matplotlib.transforms.Affine2D"><tt class="xref py py-class docutils literal"><span class="pre">Affine2D</span></tt></a> instances to apply to
+each path.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.path_in_path">
@@ -523,6 +563,11 @@ box that encapsulates all of them.</p>
 <dl class="function">
 <dt id="matplotlib.path.point_in_path_collection">
 <tt class="descclassname">matplotlib.path.</tt><tt class="descname">point_in_path_collection</tt><big>(</big><em>x</em>, <em>y</em>, <em>r</em>, <em>trans</em>, <em>paths</em>, <em>transforms</em>, <em>offsets</em>, <em>offsetTrans</em>, <em>filled</em><big>)</big><a class="headerlink" href="#matplotlib.path.point_in_path_collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="matplotlib.path.points_in_path">
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">points_in_path</tt><big>(</big><em>points</em>, <em>path</em>, <em>trans</em><big>)</big><a class="headerlink" href="#matplotlib.path.points_in_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -559,8 +604,8 @@ box that encapsulates all of them.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

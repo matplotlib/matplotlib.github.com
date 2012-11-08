@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # A matplotlib based game of Pong illustrating one way to write interactive
-# animation which are easily ported to multiply backends
+# animation which are easily ported to multiple backends
 # pipong.py was written by Paul Ivanov <http://pirsquared.org>
+
+from __future__ import print_function
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -200,7 +202,7 @@ class Game(object):
 
         if self.cnt==50000:
             # just so we don't get carried away
-            print "...and you've been playing for too long!!!"
+            print("...and you've been playing for too long!!!")
             plt.close()
 
         self.cnt += 1

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Adding new scales and projections to matplotlib &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>Adding new scales and projections to matplotlib &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib Developers’ Guide" href="index.html" />
     <link rel="next" title="Docs outline" href="outline.html" />
     <link rel="prev" title="Working with transformations" href="transformations.html" /> 
@@ -189,8 +189,9 @@ in <a class="reference internal" href="#module-matplotlib.scale" title="matplotl
 </div>
 <div class="section" id="creating-a-new-projection">
 <span id="creating-new-projection"></span><h2>Creating a new projection<a class="headerlink" href="#creating-a-new-projection" title="Permalink to this headline">¶</a></h2>
-<p>Adding a new projection consists of defining a subclass of
-<a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></tt></a>, that includes the following elements:</p>
+<p>Adding a new projection consists of defining a projection axes which
+subclasses <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></tt></a> and includes the following
+elements:</p>
 <blockquote>
 <div><ul class="simple">
 <li>A transformation from data coordinates into display coordinates.</li>
@@ -214,8 +215,29 @@ this for polar plots in <a class="reference internal" href="#module-matplotlib.p
 <li>Any additional methods for additional convenience or features.</li>
 </ul>
 </div></blockquote>
-<p>Once the class is defined, it must be registered with matplotlib
-so that the user can select it.</p>
+<p>Once the projection axes is defined, it can be used in one of two ways:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">By defining the class attribute <tt class="docutils literal"><span class="pre">name</span></tt>, the projection axes can be
+registered with <tt class="xref py py-func docutils literal"><span class="pre">matplotlib.projections.register_projection()</span></tt>
+and subsequently simply invoked by name:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s">&#39;my_proj_name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">For more complex, parameterisable projections, a generic &#8220;projection&#8221;
+object may be defined which includes the method <tt class="docutils literal"><span class="pre">_as_mpl_axes</span></tt>.
+<tt class="docutils literal"><span class="pre">_as_mpl_axes</span></tt> should take no arguments and return the projection&#8217;s
+axes subclass and a dictionary of additional arguments to pass to the
+subclass&#8217; <tt class="docutils literal"><span class="pre">__init__</span></tt> method.  Subsequently a parameterised projection
+can be initialised with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">MyProjection</span><span class="p">(</span><span class="n">param1</span><span class="o">=</span><span class="n">param1_value</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>where MyProjection is an object which implements a <tt class="docutils literal"><span class="pre">_as_mpl_axes</span></tt> method.</p>
+</li>
+</ul>
+</div></blockquote>
 <p>A full-fledged and heavily annotated example is in
 <tt class="file docutils literal"><span class="pre">examples/api/custom_projection_example.py</span></tt>.  The polar plot
 functionality in <a class="reference internal" href="#module-matplotlib.projections.polar" title="matplotlib.projections.polar"><tt class="xref py py-mod docutils literal"><span class="pre">matplotlib.projections.polar</span></tt></a> may also be of
@@ -371,6 +393,14 @@ scale: <tt class="docutils literal"><span class="pre">[2,</span> <span class="pr
 <p class="last">will place 8 logarithmically spaced minor ticks between
 each major tick.</p>
 </dd>
+<dt><em>linscalex</em>/<em>linscaley</em>:</dt>
+<dd>This allows the linear range (-<em>linthresh</em> to <em>linthresh</em>)
+to be stretched relative to the logarithmic range.  Its
+value is the number of decades to use for each half of the
+linear range.  For example, when <em>linscale</em> == 1.0 (the
+default), the space used for the positive and negative
+halves of the linear range will be equal to one decade in
+the logarithmic range.</dd>
 </dl>
 <dl class="method">
 <dt id="matplotlib.scale.SymmetricalLogScale.get_transform">
@@ -451,6 +481,21 @@ returned.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="matplotlib.projections.process_projection_requirements">
+<tt class="descclassname">matplotlib.projections.</tt><tt class="descname">process_projection_requirements</tt><big>(</big><em>figure</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.projections.process_projection_requirements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle the args/kwargs to for add_axes/add_subplot/gca,
+returning:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">axes_proj_class</span><span class="p">,</span> <span class="n">proj_class_kwargs</span><span class="p">,</span> <span class="n">proj_stack_key</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which can be used for new axes initialization/identification.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>kwargs</strong> is modified in place.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="matplotlib.projections.projection_factory">
 <tt class="descclassname">matplotlib.projections.</tt><tt class="descname">projection_factory</tt><big>(</big><em>projection</em>, <em>figure</em>, <em>rect</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.projections.projection_factory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a new projection instance.</p>
@@ -460,10 +505,61 @@ returned.</p>
 the location of the axes within the figure.</p>
 <p>Any other kwargs are passed along to the specific projection
 constructor being used.</p>
+<p class="deprecated">
+<span class="versionmodified">Deprecated since version 1.3.</span></p>
 </dd></dl>
 
 <div class="section" id="module-matplotlib.projections.polar">
 <span id="matplotlib-projections-polar"></span><h4>matplotlib.projections.polar<a class="headerlink" href="#module-matplotlib.projections.polar" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="matplotlib.projections.polar.InvertedPolarTransform">
+<em class="property">class </em><tt class="descclassname">matplotlib.projections.polar.</tt><tt class="descname">InvertedPolarTransform</tt><big>(</big><em>axis=None</em>, <em>use_rmin=True</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.InvertedPolarTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Transform</span></tt></a></p>
+<p>The inverse of the polar transform, mapping Cartesian
+coordinate space <em>x</em> and <em>y</em> back to <em>theta</em> and <em>r</em>.</p>
+<dl class="method">
+<dt id="matplotlib.projections.polar.InvertedPolarTransform.inverted">
+<tt class="descname">inverted</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.InvertedPolarTransform.inverted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the corresponding inverse transformation.</p>
+<p>The return value of this method should be treated as
+temporary.  An update to <em>self</em> does not cause a corresponding
+update to its inverted copy.</p>
+<p><tt class="docutils literal"><span class="pre">x</span> <span class="pre">===</span> <span class="pre">self.inverted().transform(self.transform(x))</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.projections.polar.InvertedPolarTransform.transform_non_affine">
+<tt class="descname">transform_non_affine</tt><big>(</big><em>xy</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.InvertedPolarTransform.transform_non_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs only the non-affine part of the transformation.</p>
+<p><tt class="docutils literal"><span class="pre">transform(values)</span></tt> is always equivalent to
+<tt class="docutils literal"><span class="pre">transform_affine(transform_non_affine(values))</span></tt>.</p>
+<p>In non-affine transformations, this is generally equivalent to
+<tt class="docutils literal"><span class="pre">transform(values)</span></tt>.  In affine transformations, this is
+always a no-op.</p>
+<p>Accepts a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">input_dims</span></tt>) and
+returns a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">output_dims</span></tt>).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="matplotlib.projections.polar.PolarAffine">
+<em class="property">class </em><tt class="descclassname">matplotlib.projections.polar.</tt><tt class="descname">PolarAffine</tt><big>(</big><em>scale_transform</em>, <em>limits</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAffine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transformations.html#matplotlib.transforms.Affine2DBase" title="matplotlib.transforms.Affine2DBase"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Affine2DBase</span></tt></a></p>
+<p>The affine part of the polar projection.  Scales the output so
+that maximum radius rests on the edge of the axes circle.</p>
+<p><em>limits</em> is the view limit of the data.  The only part of
+its bounds that is used is ymax (for the radius maximum).
+The theta range is always fixed to (0, 2pi).</p>
+<dl class="method">
+<dt id="matplotlib.projections.polar.PolarAffine.get_matrix">
+<tt class="descname">get_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAffine.get_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Affine transformation array for the affine part
+of this transform.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="matplotlib.projections.polar.PolarAxes">
 <em class="property">class </em><tt class="descclassname">matplotlib.projections.polar.</tt><tt class="descname">PolarAxes</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes" title="Permalink to this definition">¶</a></dt>
@@ -487,9 +583,14 @@ update to its inverted copy.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="matplotlib.projections.polar.PolarAxes.InvertedPolarTransform.transform">
-<tt class="descname">transform</tt><big>(</big><em>xy</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.InvertedPolarTransform.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs the transformation on the given array of values.</p>
+<dt id="matplotlib.projections.polar.PolarAxes.InvertedPolarTransform.transform_non_affine">
+<tt class="descname">transform_non_affine</tt><big>(</big><em>xy</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.InvertedPolarTransform.transform_non_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs only the non-affine part of the transformation.</p>
+<p><tt class="docutils literal"><span class="pre">transform(values)</span></tt> is always equivalent to
+<tt class="docutils literal"><span class="pre">transform_affine(transform_non_affine(values))</span></tt>.</p>
+<p>In non-affine transformations, this is generally equivalent to
+<tt class="docutils literal"><span class="pre">transform(values)</span></tt>.  In affine transformations, this is
+always a no-op.</p>
 <p>Accepts a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">input_dims</span></tt>) and
 returns a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">output_dims</span></tt>).</p>
 </dd></dl>
@@ -508,7 +609,8 @@ The theta range is always fixed to (0, 2pi).</p>
 <dl class="method">
 <dt id="matplotlib.projections.polar.PolarAxes.PolarAffine.get_matrix">
 <tt class="descname">get_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.PolarAffine.get_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the underlying transformation matrix as a numpy array.</p>
+<dd><p>Get the Affine transformation array for the affine part
+of this transform.</p>
 </dd></dl>
 
 </dd></dl>
@@ -532,19 +634,6 @@ update to its inverted copy.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="matplotlib.projections.polar.PolarAxes.PolarTransform.transform">
-<tt class="descname">transform</tt><big>(</big><em>tr</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.PolarTransform.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs only the non-affine part of the transformation.</p>
-<p><tt class="docutils literal"><span class="pre">transform(values)</span></tt> is always equivalent to
-<tt class="docutils literal"><span class="pre">transform_affine(transform_non_affine(values))</span></tt>.</p>
-<p>In non-affine transformations, this is generally equivalent to
-<tt class="docutils literal"><span class="pre">transform(values)</span></tt>.  In affine transformations, this is
-always a no-op.</p>
-<p>Accepts a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">input_dims</span></tt>) and
-returns a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">output_dims</span></tt>).</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="matplotlib.projections.polar.PolarAxes.PolarTransform.transform_non_affine">
 <tt class="descname">transform_non_affine</tt><big>(</big><em>tr</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.PolarTransform.transform_non_affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs only the non-affine part of the transformation.</p>
@@ -558,19 +647,9 @@ returns a numpy array of shape (N x <tt class="xref py py-attr docutils literal"
 </dd></dl>
 
 <dl class="method">
-<dt id="matplotlib.projections.polar.PolarAxes.PolarTransform.transform_path">
-<tt class="descname">transform_path</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.PolarTransform.transform_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a copy of path, transformed only by the non-affine
-part of this transform.</p>
-<p><em>path</em>: a <a class="reference internal" href="../api/path_api.html#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instance.</p>
-<p><tt class="docutils literal"><span class="pre">transform_path(path)</span></tt> is equivalent to
-<tt class="docutils literal"><span class="pre">transform_path_affine(transform_path_non_affine(values))</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="matplotlib.projections.polar.PolarAxes.PolarTransform.transform_path_non_affine">
 <tt class="descname">transform_path_non_affine</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.PolarTransform.transform_path_non_affine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a copy of path, transformed only by the non-affine
+<dd><p>Returns a path, transformed only by the non-affine
 part of this transform.</p>
 <p><em>path</em>: a <a class="reference internal" href="../api/path_api.html#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instance.</p>
 <p><tt class="docutils literal"><span class="pre">transform_path(path)</span></tt> is equivalent to
@@ -720,7 +799,7 @@ labels to use at each radius.</p>
 <td>[ &#8216;center&#8217; | &#8216;right&#8217; | &#8216;left&#8217; ]</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="../api/artist_api.html#matplotlib.artist.Artist.set_label" title="matplotlib.artist.Artist.set_label"><tt class="xref py py-meth docutils literal"><span class="pre">label</span></tt></a></td>
-<td>any string</td>
+<td>string or anything printable with &#8216;%s&#8217; conversion.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="../api/artist_api.html#matplotlib.text.Text.set_linespacing" title="matplotlib.text.Text.set_linespacing"><tt class="xref py py-meth docutils literal"><span class="pre">linespacing</span></tt></a></td>
 <td>float (multiple of font size)</td>
@@ -795,69 +874,6 @@ labels to use at each radius.</p>
 </table>
 </div></blockquote>
 <p>ACCEPTS: sequence of floats</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="matplotlib.projections.polar.PolarAxes.set_rscale">
-<tt class="descclassname">PolarAxes.</tt><tt class="descname">set_rscale</tt><big>(</big><em>value</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.set_rscale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call signature:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">set_yscale</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Set the scaling of the y-axis: &#8216;linear&#8217; | &#8216;log&#8217; | &#8216;symlog&#8217;</p>
-<p>ACCEPTS: [&#8216;linear&#8217; | &#8216;log&#8217; | &#8216;symlog&#8217;]</p>
-<p>Different kwargs are accepted, depending on the scale:
-&#8216;linear&#8217;</p>
-<blockquote>
-<div><p>&#8216;log&#8217;</p>
-<blockquote>
-<div><dl class="docutils">
-<dt><em>basex</em>/<em>basey</em>:</dt>
-<dd>The base of the logarithm</dd>
-<dt><em>nonposx</em>/<em>nonposy</em>: [&#8216;mask&#8217; | &#8216;clip&#8217; ]</dt>
-<dd>non-positive values in <em>x</em> or <em>y</em> can be masked as
-invalid, or clipped to a very small positive number</dd>
-<dt><em>subsx</em>/<em>subsy</em>:</dt>
-<dd><p class="first">Where to place the subticks between each major tick.
-Should be a sequence of integers.  For example, in a log10
-scale: <tt class="docutils literal"><span class="pre">[2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8,</span> <span class="pre">9]</span></tt></p>
-<p class="last">will place 8 logarithmically spaced minor ticks between
-each major tick.</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>&#8216;symlog&#8217;</p>
-<blockquote>
-<div><dl class="docutils">
-<dt><em>basex</em>/<em>basey</em>:</dt>
-<dd>The base of the logarithm</dd>
-<dt><em>linthreshx</em>/<em>linthreshy</em>:</dt>
-<dd>The range (-<em>x</em>, <em>x</em>) within which the plot is linear (to
-avoid having the plot go to infinity around zero).</dd>
-<dt><em>subsx</em>/<em>subsy</em>:</dt>
-<dd><p class="first">Where to place the subticks between each major tick.
-Should be a sequence of integers.  For example, in a log10
-scale: <tt class="docutils literal"><span class="pre">[2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8,</span> <span class="pre">9]</span></tt></p>
-<p class="last">will place 8 logarithmically spaced minor ticks between
-each major tick.</p>
-</dd>
-</dl>
-</div></blockquote>
-</div></blockquote>
-</dd></dl>
-
-<dl class="method">
-<dt id="matplotlib.projections.polar.PolarAxes.set_rticks">
-<tt class="descclassname">PolarAxes.</tt><tt class="descname">set_rticks</tt><big>(</big><em>ticks</em>, <em>minor=False</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarAxes.set_rticks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the y ticks with list of <em>ticks</em></p>
-<p>ACCEPTS: sequence of floats</p>
-<p>Keyword arguments:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt><em>minor</em>: [ <em>False</em> | <em>True</em> ]</dt>
-<dd>Sets the minor ticks if <em>True</em></dd>
-</dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -963,7 +979,7 @@ and 0.95 is inside the axes.</p>
 <td>[ &#8216;center&#8217; | &#8216;right&#8217; | &#8216;left&#8217; ]</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="../api/artist_api.html#matplotlib.artist.Artist.set_label" title="matplotlib.artist.Artist.set_label"><tt class="xref py py-meth docutils literal"><span class="pre">label</span></tt></a></td>
-<td>any string</td>
+<td>string or anything printable with &#8216;%s&#8217; conversion.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="../api/artist_api.html#matplotlib.text.Text.set_linespacing" title="matplotlib.text.Text.set_linespacing"><tt class="xref py py-meth docutils literal"><span class="pre">linespacing</span></tt></a></td>
 <td>float (multiple of font size)</td>
@@ -1042,6 +1058,68 @@ and 0.95 is inside the axes.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="matplotlib.projections.polar.PolarTransform">
+<em class="property">class </em><tt class="descclassname">matplotlib.projections.polar.</tt><tt class="descname">PolarTransform</tt><big>(</big><em>axis=None</em>, <em>use_rmin=True</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Transform</span></tt></a></p>
+<p>The base polar transform.  This handles projection <em>theta</em> and
+<em>r</em> into Cartesian coordinate space <em>x</em> and <em>y</em>, but does not
+perform the ultimate affine transformation into the correct
+position.</p>
+<dl class="method">
+<dt id="matplotlib.projections.polar.PolarTransform.inverted">
+<tt class="descname">inverted</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarTransform.inverted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the corresponding inverse transformation.</p>
+<p>The return value of this method should be treated as
+temporary.  An update to <em>self</em> does not cause a corresponding
+update to its inverted copy.</p>
+<p><tt class="docutils literal"><span class="pre">x</span> <span class="pre">===</span> <span class="pre">self.inverted().transform(self.transform(x))</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.projections.polar.PolarTransform.transform_non_affine">
+<tt class="descname">transform_non_affine</tt><big>(</big><em>tr</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarTransform.transform_non_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs only the non-affine part of the transformation.</p>
+<p><tt class="docutils literal"><span class="pre">transform(values)</span></tt> is always equivalent to
+<tt class="docutils literal"><span class="pre">transform_affine(transform_non_affine(values))</span></tt>.</p>
+<p>In non-affine transformations, this is generally equivalent to
+<tt class="docutils literal"><span class="pre">transform(values)</span></tt>.  In affine transformations, this is
+always a no-op.</p>
+<p>Accepts a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">input_dims</span></tt>) and
+returns a numpy array of shape (N x <tt class="xref py py-attr docutils literal"><span class="pre">output_dims</span></tt>).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.projections.polar.PolarTransform.transform_path_non_affine">
+<tt class="descname">transform_path_non_affine</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.PolarTransform.transform_path_non_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a path, transformed only by the non-affine
+part of this transform.</p>
+<p><em>path</em>: a <a class="reference internal" href="../api/path_api.html#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instance.</p>
+<p><tt class="docutils literal"><span class="pre">transform_path(path)</span></tt> is equivalent to
+<tt class="docutils literal"><span class="pre">transform_path_affine(transform_path_non_affine(values))</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="matplotlib.projections.polar.RadialLocator">
+<em class="property">class </em><tt class="descclassname">matplotlib.projections.polar.</tt><tt class="descname">RadialLocator</tt><big>(</big><em>base</em><big>)</big><a class="headerlink" href="#matplotlib.projections.polar.RadialLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../api/ticker_api.html#matplotlib.ticker.Locator" title="matplotlib.ticker.Locator"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.ticker.Locator</span></tt></a></p>
+<p>Used to locate radius ticks.</p>
+<p>Ensures that all ticks are strictly positive.  For all other
+tasks, it delegates to the base
+<a class="reference internal" href="../api/ticker_api.html#matplotlib.ticker.Locator" title="matplotlib.ticker.Locator"><tt class="xref py py-class docutils literal"><span class="pre">Locator</span></tt></a> (which may be different
+depending on the scale of the <em>r</em>-axis.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="matplotlib.projections.polar.ThetaFormatter">
+<em class="property">class </em><tt class="descclassname">matplotlib.projections.polar.</tt><tt class="descname">ThetaFormatter</tt><a class="headerlink" href="#matplotlib.projections.polar.ThetaFormatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../api/ticker_api.html#matplotlib.ticker.Formatter" title="matplotlib.ticker.Formatter"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.ticker.Formatter</span></tt></a></p>
+<p>Used to format the <em>theta</em> tick labels.  Converts the native
+unit of radians into degrees and adds a degree symbol.</p>
+</dd></dl>
+
 </div>
 </div>
 </div>
@@ -1078,8 +1156,8 @@ and 0.95 is inside the axes.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

@@ -1,7 +1,8 @@
 # For detailed comments on animation and the techniqes used here, see
 # the wiki entry http://www.scipy.org/Cookbook/Matplotlib/Animations
 
-import os, sys
+from __future__ import print_function
+
 import matplotlib
 matplotlib.use('QtAgg') # qt3 example
 
@@ -14,12 +15,9 @@ TRUE  = 1
 FALSE = 0
 ITERS = 1000
 
-import pylab as p
 import matplotlib.pyplot as plt
-import numpy as np
 import time
 import pipong
-from numpy.random import randn, randint
 
 class BlitQT(QObject):
     def __init__(self):
@@ -39,4 +37,4 @@ app.tstart = time.time()
 app.startTimer(10)
 
 plt.show()
-print 'FPS:' , app.animation.cnt/(time.time()-app.tstart)
+print('FPS:' , app.animation.cnt/(time.time()-app.tstart))

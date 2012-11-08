@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>colorbar &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>colorbar &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="colors" href="colors_api.html" />
     <link rel="prev" title="collections" href="collections_api.html" /> 
@@ -160,9 +160,19 @@ use <a class="reference internal" href="figure_api.html#matplotlib.figure.Figure
 <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar"><tt class="xref py py-func docutils literal"><span class="pre">colorbar()</span></tt></a> to make your colorbar.</p>
 <dl class="method">
 <dt id="matplotlib.colorbar.Colorbar.add_lines">
-<tt class="descname">add_lines</tt><big>(</big><em>CS</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.Colorbar.add_lines" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_lines</tt><big>(</big><em>CS</em>, <em>erase=True</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.Colorbar.add_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the lines from a non-filled
 <tt class="xref py py-class docutils literal"><span class="pre">ContourSet</span></tt> to the colorbar.</p>
+<p>Set <em>erase</em> to False if these lines should be added to
+any pre-existing lines.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.colorbar.Colorbar.on_mappable_changed">
+<tt class="descname">on_mappable_changed</tt><big>(</big><em>mappable</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.Colorbar.on_mappable_changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates this colorbar to match the mappable&#8217;s properties.</p>
+<p>Typically this is automatically registered as an event handler
+by <a class="reference internal" href="#matplotlib.colorbar.colorbar_factory" title="matplotlib.colorbar.colorbar_factory"><tt class="xref py py-func docutils literal"><span class="pre">colorbar_factory()</span></tt></a> and should not be called manually.</p>
 </dd></dl>
 
 <dl class="method">
@@ -187,7 +197,7 @@ or contour plot to which this colorbar belongs is changed.</p>
 
 <dl class="class">
 <dt id="matplotlib.colorbar.ColorbarBase">
-<em class="property">class </em><tt class="descclassname">matplotlib.colorbar.</tt><tt class="descname">ColorbarBase</tt><big>(</big><em>ax</em>, <em>cmap=None</em>, <em>norm=None</em>, <em>alpha=None</em>, <em>values=None</em>, <em>boundaries=None</em>, <em>orientation='vertical'</em>, <em>extend='neither'</em>, <em>spacing='uniform'</em>, <em>ticks=None</em>, <em>format=None</em>, <em>drawedges=False</em>, <em>filled=True</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.ColorbarBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">matplotlib.colorbar.</tt><tt class="descname">ColorbarBase</tt><big>(</big><em>ax</em>, <em>cmap=None</em>, <em>norm=None</em>, <em>alpha=None</em>, <em>values=None</em>, <em>boundaries=None</em>, <em>orientation='vertical'</em>, <em>extend='neither'</em>, <em>spacing='uniform'</em>, <em>ticks=None</em>, <em>format=None</em>, <em>drawedges=False</em>, <em>filled=True</em>, <em>extendfrac=None</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.ColorbarBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="cm_api.html#matplotlib.cm.ScalarMappable" title="matplotlib.cm.ScalarMappable"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.cm.ScalarMappable</span></tt></a></p>
 <p>Draw a colorbar in an existing axes.</p>
 <p>This is a base class for the <a class="reference internal" href="#matplotlib.colorbar.Colorbar" title="matplotlib.colorbar.Colorbar"><tt class="xref py py-class docutils literal"><span class="pre">Colorbar</span></tt></a> class, which is the
@@ -211,7 +221,8 @@ use:</p>
 <dt><tt class="xref py py-attr docutils literal"><span class="pre">ax</span></tt></dt>
 <dd>the Axes instance in which the colorbar is drawn</dd>
 <dt><tt class="xref py py-attr docutils literal"><span class="pre">lines</span></tt></dt>
-<dd>a LineCollection if lines were drawn, otherwise None</dd>
+<dd>a list of LineCollection if lines were drawn, otherwise
+an empty list</dd>
 <dt><tt class="xref py py-attr docutils literal"><span class="pre">dividers</span></tt></dt>
 <dd>a LineCollection if <em>drawedges</em> is True, otherwise None</dd>
 </dl>
@@ -219,8 +230,12 @@ use:</p>
 <p>Useful public methods are <a class="reference internal" href="#matplotlib.colorbar.ColorbarBase.set_label" title="matplotlib.colorbar.ColorbarBase.set_label"><tt class="xref py py-meth docutils literal"><span class="pre">set_label()</span></tt></a> and <a class="reference internal" href="#matplotlib.colorbar.ColorbarBase.add_lines" title="matplotlib.colorbar.ColorbarBase.add_lines"><tt class="xref py py-meth docutils literal"><span class="pre">add_lines()</span></tt></a>.</p>
 <dl class="method">
 <dt id="matplotlib.colorbar.ColorbarBase.add_lines">
-<tt class="descname">add_lines</tt><big>(</big><em>levels</em>, <em>colors</em>, <em>linewidths</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.ColorbarBase.add_lines" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_lines</tt><big>(</big><em>levels</em>, <em>colors</em>, <em>linewidths</em>, <em>erase=True</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.ColorbarBase.add_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw lines on the colorbar.</p>
+<p><em>colors</em> and <em>linewidths</em> must be scalars or
+sequences the same length as <em>levels</em>.</p>
+<p>Set <em>erase</em> to False to add lines without first
+removing any previously added lines.</p>
 </dd></dl>
 
 <dl class="method">
@@ -267,6 +282,26 @@ and do all the drawing.</p>
 called whenever the tick locator and/or tick formatter changes.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="matplotlib.colorbar.ColorbarPatch">
+<em class="property">class </em><tt class="descclassname">matplotlib.colorbar.</tt><tt class="descname">ColorbarPatch</tt><big>(</big><em>ax</em>, <em>mappable</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.ColorbarPatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#matplotlib.colorbar.Colorbar" title="matplotlib.colorbar.Colorbar"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.colorbar.Colorbar</span></tt></a></p>
+<p>A Colorbar which is created using <a class="reference internal" href="artist_api.html#matplotlib.patches.Patch" title="matplotlib.patches.Patch"><tt class="xref py py-class docutils literal"><span class="pre">Patch</span></tt></a>
+rather than the default <tt class="xref py py-func docutils literal"><span class="pre">pcolor()</span></tt>.</p>
+<p>It uses a list of Patch instances instead of a
+<a class="reference internal" href="collections_api.html#matplotlib.collections.PatchCollection" title="matplotlib.collections.PatchCollection"><tt class="xref py py-class docutils literal"><span class="pre">PatchCollection</span></tt></a> because the
+latter does not allow the hatch pattern to vary among the
+members of the collection.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="matplotlib.colorbar.colorbar_factory">
+<tt class="descclassname">matplotlib.colorbar.</tt><tt class="descname">colorbar_factory</tt><big>(</big><em>cax</em>, <em>mappable</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.colorbar.colorbar_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a colorbar on the given axes for the given mappable.</p>
+<p>Typically, for automatic colorbar placement given only a mappable use
+<a class="reference internal" href="figure_api.html#matplotlib.figure.Figure.colorbar" title="matplotlib.figure.Figure.colorbar"><tt class="xref py py-meth docutils literal"><span class="pre">colorbar()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -437,8 +472,8 @@ the anchor point of the colorbar parent axes</td>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

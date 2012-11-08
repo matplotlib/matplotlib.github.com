@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>API Changes &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>API Changes &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="configuration" href="matplotlib_configuration_api.html" />
     <link rel="prev" title="Plotting commands summary" href="pyplot_summary.html" /> 
@@ -89,6 +89,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
   <h3><a href="../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">API Changes</a><ul>
+<li><a class="reference internal" href="#changes-in-1-2-x">Changes in 1.2.x</a></li>
 <li><a class="reference internal" href="#changes-in-1-1-x">Changes in 1.1.x</a></li>
 <li><a class="reference internal" href="#changes-beyond-0-99-x">Changes beyond 0.99.x</a></li>
 <li><a class="reference internal" href="#changes-in-0-99">Changes in 0.99</a></li>
@@ -200,6 +201,153 @@ list may help describe what changes may be necessary in your code or
 help figure out possible sources of the changes you are experiencing.</p>
 <p>For new features that were added to matplotlib, please see
 <a class="reference internal" href="../users/whats_new.html#whats-new"><em>What&#8217;s new in matplotlib</em></a>.</p>
+<div class="section" id="changes-in-1-2-x">
+<h2>Changes in 1.2.x<a class="headerlink" href="#changes-in-1-2-x" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">The <tt class="docutils literal"><span class="pre">classic</span></tt> option of the rc parameter <tt class="docutils literal"><span class="pre">toolbar</span></tt> is deprecated
+and will be removed in the next release.</p>
+</li>
+<li><p class="first">The <tt class="xref py py-meth docutils literal"><span class="pre">isvector()</span></tt> method has been removed since it
+is no longer functional.</p>
+</li>
+<li><p class="first">The <tt class="xref py py-obj docutils literal"><span class="pre">rasterization_zorder</span></tt> property on <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-obj docutils literal"><span class="pre">Axes</span></tt></a> a
+zorder below which artists are rasterized.  This has defaulted to
+-30000.0, but it now defaults to <tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt>, meaning no artists will be
+rasterized.  In order to rasterize artists below a given zorder
+value, <tt class="xref py py-obj docutils literal"><span class="pre">set_rasterization_zorder</span></tt> must be explicitly called.</p>
+</li>
+<li><p class="first">In <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.scatter" title="matplotlib.axes.Axes.scatter"><tt class="xref py py-meth docutils literal"><span class="pre">scatter()</span></tt></a>, and <tt class="xref py py-obj docutils literal"><span class="pre">scatter</span></tt>,
+when specifying a marker using a tuple, the angle is now specified
+in degrees, not radians.</p>
+</li>
+<li><p class="first">Using <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.twinx" title="matplotlib.axes.Axes.twinx"><tt class="xref py py-meth docutils literal"><span class="pre">twinx()</span></tt></a> or
+<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.twiny" title="matplotlib.axes.Axes.twiny"><tt class="xref py py-meth docutils literal"><span class="pre">twiny()</span></tt></a> no longer overrides the current locaters
+and formatters on the axes.</p>
+</li>
+<li><p class="first">In <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.contourf" title="matplotlib.axes.Axes.contourf"><tt class="xref py py-meth docutils literal"><span class="pre">contourf()</span></tt></a>, the handling of the <em>extend</em>
+kwarg has changed.  Formerly, the extended ranges were mapped
+after to 0, 1 after being normed, so that they always corresponded
+to the extreme values of the colormap.  Now they are mapped
+outside this range so that they correspond to the special
+colormap values determined by the
+<a class="reference internal" href="colors_api.html#matplotlib.colors.Colormap.set_under" title="matplotlib.colors.Colormap.set_under"><tt class="xref py py-meth docutils literal"><span class="pre">set_under()</span></tt></a> and
+<a class="reference internal" href="colors_api.html#matplotlib.colors.Colormap.set_over" title="matplotlib.colors.Colormap.set_over"><tt class="xref py py-meth docutils literal"><span class="pre">set_over()</span></tt></a> methods, which
+default to the colormap end points.</p>
+</li>
+<li><p class="first">The new rc parameter <tt class="docutils literal"><span class="pre">savefig.format</span></tt> replaces <tt class="docutils literal"><span class="pre">cairo.format</span></tt> and
+<tt class="docutils literal"><span class="pre">savefig.extension</span></tt>, and sets the default file format used by
+<a class="reference internal" href="figure_api.html#matplotlib.figure.Figure.savefig" title="matplotlib.figure.Figure.savefig"><tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.figure.Figure.savefig()</span></tt></a>.</p>
+</li>
+<li><p class="first">In <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.pie" title="matplotlib.pyplot.pie"><tt class="xref py py-meth docutils literal"><span class="pre">pie()</span></tt></a> and <tt class="xref py py-meth docutils literal"><span class="pre">pie()</span></tt>, one can
+now set the radius of the pie; setting the <em>radius</em> to &#8216;None&#8217; (the default
+value), will result in a pie with a radius of 1 as before.</p>
+</li>
+<li><p class="first">Use of <a class="reference internal" href="../devel/add_new_projection.html#matplotlib.projections.projection_factory" title="matplotlib.projections.projection_factory"><tt class="xref py py-func docutils literal"><span class="pre">projection_factory()</span></tt></a> is now deprecated
+in favour of axes class identification using
+<a class="reference internal" href="../devel/add_new_projection.html#matplotlib.projections.process_projection_requirements" title="matplotlib.projections.process_projection_requirements"><tt class="xref py py-func docutils literal"><span class="pre">process_projection_requirements()</span></tt></a> followed by
+direct axes class invocation (at the time of writing, functions which do this
+are: <a class="reference internal" href="figure_api.html#matplotlib.figure.Figure.add_axes" title="matplotlib.figure.Figure.add_axes"><tt class="xref py py-meth docutils literal"><span class="pre">add_axes()</span></tt></a>,
+<a class="reference internal" href="figure_api.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot"><tt class="xref py py-meth docutils literal"><span class="pre">add_subplot()</span></tt></a> and
+<a class="reference internal" href="figure_api.html#matplotlib.figure.Figure.gca" title="matplotlib.figure.Figure.gca"><tt class="xref py py-meth docutils literal"><span class="pre">gca()</span></tt></a>). Therefore:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">key</span> <span class="o">=</span> <span class="n">figure</span><span class="o">.</span><span class="n">_make_key</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">ispolar</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;polar&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">projection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;projection&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">ispolar</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">projection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">projection</span> <span class="o">!=</span> <span class="s">&#39;polar&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ValuError</span><span class="p">(</span><span class="s">&#39;polar and projection args are inconsistent&#39;</span><span class="p">)</span>
+    <span class="n">projection</span> <span class="o">=</span> <span class="s">&#39;polar&#39;</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">projection_factory</span><span class="p">(</span><span class="n">projection</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_key</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="c"># is now</span>
+
+<span class="n">projection_class</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> \
+                   <span class="n">process_projection_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">projection_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This change means that third party objects can expose themselves as
+matplotlib axes by providing a <tt class="docutils literal"><span class="pre">_as_mpl_axes</span></tt> method. See
+<a class="reference internal" href="../devel/add_new_projection.html#adding-new-scales"><em>Adding new scales and projections to matplotlib</em></a> for more detail.</p>
+</li>
+<li><p class="first">A new keyword <em>extendfrac</em> in <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar"><tt class="xref py py-meth docutils literal"><span class="pre">colorbar()</span></tt></a> and
+<a class="reference internal" href="colorbar_api.html#matplotlib.colorbar.ColorbarBase" title="matplotlib.colorbar.ColorbarBase"><tt class="xref py py-class docutils literal"><span class="pre">ColorbarBase</span></tt></a> allows one to control the size of
+the triangular minimum and maximum extensions on colorbars.</p>
+</li>
+<li><p class="first">A new keyword <em>capthick</em> in <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.errorbar" title="matplotlib.pyplot.errorbar"><tt class="xref py py-meth docutils literal"><span class="pre">errorbar()</span></tt></a> has been
+added as an intuitive alias to the <em>markeredgewidth</em> and <em>mew</em> keyword
+arguments, which indirectly controlled the thickness of the caps on
+the errorbars.  For backwards compatibility, specifying either of the
+original keyword arguments will override any value provided by
+<em>capthick</em>.</p>
+</li>
+<li><p class="first">Transform subclassing behaviour is now subtly changed. If your transform
+implements a non-affine transformation, then it should override the
+<tt class="docutils literal"><span class="pre">transform_non_affine</span></tt> method, rather than the generic <tt class="docutils literal"><span class="pre">transform</span></tt> method.
+Previously transforms would define <tt class="docutils literal"><span class="pre">transform</span></tt> and then copy the
+method into <tt class="docutils literal"><span class="pre">transform_non_affine</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyTransform</span><span class="p">(</span><span class="n">mtrans</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="n">transform_non_affine</span> <span class="o">=</span> <span class="n">transform</span>
+</pre></div>
+</div>
+<p>This approach will no longer function correctly and should be changed to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyTransform</span><span class="p">(</span><span class="n">mtrans</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Artists no longer have <tt class="docutils literal"><span class="pre">x_isdata</span></tt> or <tt class="docutils literal"><span class="pre">y_isdata</span></tt> attributes; instead
+any artist&#8217;s transform can be interrogated with
+<tt class="docutils literal"><span class="pre">artist_instance.get_transform().contains_branch(ax.transData)</span></tt></p>
+</li>
+<li><p class="first">Lines added to an axes now take into account their transform when updating the
+data and view limits. This means transforms can now be used as a pre-transform.
+For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="kn">as</span> <span class="nn">mtrans</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">transform</span><span class="o">=</span><span class="n">mtrans</span><span class="o">.</span><span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">transData</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">viewLim</span><span class="p">)</span>
+<span class="go">Bbox(&#39;array([[  0.,   0.],\n       [ 90.,  90.]])&#39;)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">One can now easily get a transform which goes from one transform&#8217;s coordinate
+system to another, in an optimized way, using the new subtract method on a
+transform. For instance, to go from data coordinates to axes coordinates:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">transData</span> <span class="o">-</span> <span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">transData</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+<span class="go">3, 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">data2ax</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>for versions before 1.2 this could only be achieved in a sub-optimal way,
+using <tt class="docutils literal"><span class="pre">ax.transData</span> <span class="pre">+</span> <span class="pre">ax.transAxes.inverted()</span></tt> (depth is a new concept,
+but had it existed it would return 4 for this example).</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">twinx</span></tt> and <tt class="docutils literal"><span class="pre">twiny</span></tt> now returns an instance of SubplotBase if
+parent axes is an instance of SubplotBase.</p>
+</li>
+<li><p class="first">All Qt3-based backends are now deprecated due to the lack of py3k bindings.
+Qt and QtAgg backends will continue to work in v1.2.x for py2.6
+and py2.7. It is anticipated that the Qt3 support will be completely
+removed for the next release.</p>
+</li>
+<li><p class="first"><a class="reference internal" href="colors_api.html#matplotlib.colors.ColorConverter" title="matplotlib.colors.ColorConverter"><tt class="xref py py-class docutils literal"><span class="pre">ColorConverter</span></tt></a>,
+<a class="reference internal" href="colors_api.html#matplotlib.colors.Colormap" title="matplotlib.colors.Colormap"><tt class="xref py py-class docutils literal"><span class="pre">Colormap</span></tt></a> and
+<a class="reference internal" href="colors_api.html#matplotlib.colors.Normalize" title="matplotlib.colors.Normalize"><tt class="xref py py-class docutils literal"><span class="pre">Normalize</span></tt></a> now subclasses <tt class="docutils literal"><span class="pre">object</span></tt></p>
+</li>
+<li><p class="first">ContourSet instances no longer have a <tt class="docutils literal"><span class="pre">transform</span></tt> attribute. Instead,
+access the transform with the <tt class="docutils literal"><span class="pre">get_transform</span></tt> method.</p>
+</li>
+</ul>
+</div>
 <div class="section" id="changes-in-1-1-x">
 <h2>Changes in 1.1.x<a class="headerlink" href="#changes-in-1-1-x" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -2027,8 +2175,8 @@ Jeremy:
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

@@ -9,13 +9,13 @@ api example code: custom_projection_example.py
 
 ::
 
+    from __future__ import unicode_literals
+    
     from matplotlib.axes import Axes
-    from matplotlib import cbook
     from matplotlib.patches import Circle
     from matplotlib.path import Path
-    from matplotlib.ticker import Formatter, Locator, NullLocator, FixedLocator, NullFormatter
-    from matplotlib.transforms import Affine2D, Affine2DBase, Bbox, \
-        BboxTransformTo, IdentityTransform, Transform, TransformWrapper
+    from matplotlib.ticker import NullLocator, Formatter, FixedLocator
+    from matplotlib.transforms import Affine2D, BboxTransformTo, Transform
     from matplotlib.projections import register_projection
     import matplotlib.spines as mspines
     import matplotlib.axis as maxis
@@ -291,7 +291,7 @@ api example code: custom_projection_example.py
             else:
                 ew = 'W'
             # \u00b0 : degree symbol
-            return u'%f\u00b0%s, %f\u00b0%s' % (abs(lat), ns, abs(long), ew)
+            return '%f\u00b0%s, %f\u00b0%s' % (abs(lat), ns, abs(long), ew)
     
         class DegreeFormatter(Formatter):
             """
@@ -305,7 +305,7 @@ api example code: custom_projection_example.py
                 degrees = (x / np.pi) * 180.0
                 degrees = round(degrees / self._round_to) * self._round_to
                 # \u00b0 : degree symbol
-                return u"%d\u00b0" % degrees
+                return "%d\u00b0" % degrees
     
         def set_longitude_grid(self, degrees):
             """
@@ -319,7 +319,7 @@ api example code: custom_projection_example.py
             # by degrees.
             number = (360.0 / degrees) + 1
             self.xaxis.set_major_locator(
-                FixedLocator(
+                plt.FixedLocator(
                     np.linspace(-np.pi, np.pi, number, True)[1:-1]))
             # Set the formatter to display the tick labels in degrees,
             # rather than radians.
@@ -457,14 +457,15 @@ api example code: custom_projection_example.py
     # it.
     register_projection(HammerAxes)
     
-    # Now make a simple example using the custom projection.
-    from pylab import *
+    if __name__ == '__main__':
+        import matplotlib.pyplot as plt
+        # Now make a simple example using the custom projection.
+        plt.subplot(111, projection="custom_hammer")
+        p = plt.plot([-1, 1, 1], [-1, -1, 1], "o-")
+        plt.grid(True)
     
-    subplot(111, projection="custom_hammer")
-    p = plot([-1, 1, 1], [-1, -1, 1], "o-")
-    grid(True)
+        plt.show()
     
-    show()
     
 
 Keywords: python, matplotlib, pylab, example, codex (see :ref:`how-to-search-examples`)

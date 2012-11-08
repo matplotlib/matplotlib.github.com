@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>user_interfaces example code: svg_histogram.py &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>user_interfaces example code: svg_histogram.py &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../../index.html" /> 
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../../index.html" /> 
   </head>
   <body>
 <!-- Piwik -->
@@ -112,19 +112,38 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <span class="sd">Demonstrate how to create an interactive histogram, in which bars</span>
 <span class="sd">are hidden or shown by cliking on legend markers.</span>
 
-<span class="sd">The interactivity is encoded in ecmascript and inserted in the SVG code</span>
-<span class="sd">in a post-processing step. To render the image, open it in a web</span>
-<span class="sd">browser. SVG is supported in most web browsers used by Linux and OSX</span>
-<span class="sd">users. Windows IE9 supports SVG, but earlier versions do not.</span>
+<span class="sd">The interactivity is encoded in ecmascript (javascript) and inserted in</span>
+<span class="sd">the SVG code in a post-processing step. To render the image, open it in</span>
+<span class="sd">a web browser. SVG is supported in most web browsers used by Linux and</span>
+<span class="sd">OSX users. Windows IE9 supports SVG, but earlier versions do not.</span>
+
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+<span class="sd">The matplotlib backend lets us assign ids to each object. This is the</span>
+<span class="sd">mechanism used here to relate matplotlib objects created in python and</span>
+<span class="sd">the corresponding SVG constructs that are parsed in the second step.</span>
+<span class="sd">While flexible, ids are cumbersome to use for large collection of</span>
+<span class="sd">objects. Two mechanisms could be used to simplify things:</span>
+<span class="sd"> * systematic grouping of objects into SVG &lt;g&gt; tags,</span>
+<span class="sd"> * assingning classes to each SVG object according to its origin.</span>
+
+<span class="sd">For example, instead of modifying the properties of each individual bar,</span>
+<span class="sd">the bars from the `hist` function could either be grouped in</span>
+<span class="sd">a PatchCollection, or be assigned a class=&quot;hist_##&quot; attribute.</span>
+
+<span class="sd">CSS could also be used more extensively to replace repetitive markup</span>
+<span class="sd">troughout the generated SVG.</span>
 
 <span class="sd">__author__=&quot;david.huard@gmail.com&quot;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
 <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;svg.embed_char_paths&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
 
@@ -134,15 +153,6 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <span class="n">ET</span><span class="o">.</span><span class="n">register_namespace</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="s">&quot;http://www.w3.org/2000/svg&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">python2js</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a string representation of a python dictionary in</span>
-<span class="sd">    ecmascript object syntax.&quot;&quot;&quot;</span>
-
-    <span class="n">objs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">key</span> <span class="o">+</span> <span class="s">&#39;:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="p">)</span>
-
-    <span class="k">return</span> <span class="s">&#39;{&#39;</span> <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">objs</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;}&#39;</span>
 
 
 <span class="c"># --- Create histogram, legend and title ---</span>
@@ -170,6 +180,10 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_patches</span><span class="p">()):</span>
     <span class="n">t</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s">&#39;leg_patch_</span><span class="si">%d</span><span class="s">&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">)</span>
 
+<span class="c"># Set ids for the text patches</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()):</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s">&#39;leg_text_</span><span class="si">%d</span><span class="s">&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">)</span>
+
 <span class="c"># Save SVG in a fake file object.</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&quot;svg&quot;</span><span class="p">)</span>
@@ -184,10 +198,15 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_patches</span><span class="p">()):</span>
     <span class="n">el</span> <span class="o">=</span> <span class="n">xmlid</span><span class="p">[</span><span class="s">&#39;leg_patch_</span><span class="si">%d</span><span class="s">&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">]</span>
     <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;cursor&#39;</span><span class="p">,</span> <span class="s">&#39;pointer&#39;</span><span class="p">)</span>
-    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;opacity&#39;</span><span class="p">,</span> <span class="s">&#39;1.0&#39;</span><span class="p">)</span>
-    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;onclick&#39;</span><span class="p">,</span> <span class="s">&quot;toggle_element(evt, &#39;hist_</span><span class="si">%d</span><span class="s">&#39;)&quot;</span><span class="o">%</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;onclick&#39;</span><span class="p">,</span> <span class="s">&quot;toggle_hist(this)&quot;</span><span class="p">)</span>
 
-<span class="c"># Create script defining the function `toggle_element`.</span>
+<span class="c"># Add attributes to the text objects.</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()):</span>
+    <span class="n">el</span> <span class="o">=</span> <span class="n">xmlid</span><span class="p">[</span><span class="s">&#39;leg_text_</span><span class="si">%d</span><span class="s">&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;cursor&#39;</span><span class="p">,</span> <span class="s">&#39;pointer&#39;</span><span class="p">)</span>
+    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;onclick&#39;</span><span class="p">,</span> <span class="s">&quot;toggle_hist(this)&quot;</span><span class="p">)</span>
+
+<span class="c"># Create script defining the function `toggle_hist`.</span>
 <span class="c"># We create a global variable `container` that stores the patches id</span>
 <span class="c"># belonging to each histogram. Then a function &quot;toggle_element&quot; sets the</span>
 <span class="c"># visibility attribute of all patches of each histogram and the opacity</span>
@@ -198,36 +217,45 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <span class="s">&lt;![CDATA[</span>
 <span class="s">var container = </span><span class="si">%s</span><span class="s"></span>
 
-<span class="s">function toggle_element(evt, element) {</span>
+<span class="s">function toggle(oid, attribute, values) {</span>
+<span class="s">    /* Toggle the style attribute of an object between two values.</span>
 
-<span class="s">    var names = container[element]</span>
-<span class="s">    var el, state;</span>
+<span class="s">    Parameters</span>
+<span class="s">    ----------</span>
+<span class="s">    oid : str</span>
+<span class="s">      Object identifier.</span>
+<span class="s">    attribute : str</span>
+<span class="s">      Name of syle attribute.</span>
+<span class="s">    values : [on state, off state]</span>
+<span class="s">      The two values that are switched between.</span>
+<span class="s">    */</span>
+<span class="s">    var obj = document.getElementById(oid);</span>
+<span class="s">    var a = obj.style[attribute];</span>
 
-<span class="s">    state = evt.target.getAttribute(&quot;opacity&quot;) == 1.0 ||</span>
-<span class="s">                evt.target.getAttribute(&quot;opacity&quot;) == null;</span>
+<span class="s">    a = (a == values[0] || a == &quot;&quot;) ? values[1] : values[0];</span>
+<span class="s">    obj.style[attribute] = a;</span>
+<span class="s">    }</span>
 
-<span class="s">    if (state) {</span>
-<span class="s">        evt.target.setAttribute(&quot;opacity&quot;, 0.5);</span>
+<span class="s">function toggle_hist(obj) {</span>
 
-<span class="s">        for (var i=0; i &lt; names.length; i++) {</span>
-<span class="s">            el = document.getElementById(names[i]);</span>
-<span class="s">            el.setAttribute(&quot;visibility&quot;,&quot;hidden&quot;);</span>
-<span class="s">            }</span>
-<span class="s">        }</span>
+<span class="s">    var num = obj.id.slice(-1);</span>
 
-<span class="s">    else {</span>
-<span class="s">        evt.target.setAttribute(&quot;opacity&quot;, 1);</span>
+<span class="s">    toggle(&#39;leg_patch_&#39; + num, &#39;opacity&#39;, [1, 0.3]);</span>
+<span class="s">    toggle(&#39;leg_text_&#39; + num, &#39;opacity&#39;, [1, 0.5]);</span>
 
-<span class="s">        for (var i=0; i &lt; names.length; i++) {</span>
-<span class="s">            el = document.getElementById(names[i]);</span>
-<span class="s">            el.setAttribute(&quot;visibility&quot;,&quot;visible&quot;);</span>
-<span class="s">            }</span>
+<span class="s">    var names = container[&#39;hist_&#39;+num]</span>
 
-<span class="s">        };</span>
+<span class="s">    for (var i=0; i &lt; names.length; i++) {</span>
+<span class="s">        toggle(names[i], &#39;opacity&#39;, [1,0])</span>
 <span class="s">    };</span>
+<span class="s">    }</span>
 <span class="s">]]&gt;</span>
 <span class="s">&lt;/script&gt;</span>
-<span class="s">&quot;&quot;&quot;</span><span class="o">%</span><span class="n">python2js</span><span class="p">(</span><span class="n">hist_patches</span><span class="p">)</span>
+<span class="s">&quot;&quot;&quot;</span><span class="o">%</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hist_patches</span><span class="p">)</span>
+
+<span class="c"># Add a transition effect</span>
+<span class="n">css</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getchildren</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">css</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">css</span><span class="o">.</span><span class="n">text</span> <span class="o">+</span> <span class="s">&quot;g {-webkit-transition:opacity 0.4s ease-out;-moz-transition:opacity 0.4s ease-out;}&quot;</span>
 
 <span class="c"># Insert the script and save to file.</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ET</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="n">script</span><span class="p">))</span>
@@ -262,8 +290,8 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

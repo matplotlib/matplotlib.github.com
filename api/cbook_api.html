@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>cbook &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>cbook &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="cm (colormap)" href="cm_api.html" />
     <link rel="prev" title="matplotlib.type1font" href="type1font.html" /> 
@@ -139,14 +139,13 @@ from the Python Cookbook &#8211; hence the name cbook</p>
 item of the bunch; a dictionary&#8217;s OK for that, but a small do- nothing
 class is even handier, and prettier to use.  Whenever you want to
 group a few variables:</p>
-<blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">point</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">datum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">squared</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">point</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">datum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">squared</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">point</span><span class="o">.</span><span class="n">datum</span>
+
+<span class="go">By: Alex Martelli</span>
+<span class="go">From: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52308</span>
 </pre></div>
 </div>
-<p>By: Alex Martelli
-From: <a class="reference external" href="http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52308">http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52308</a></p>
-</div></blockquote>
 </dd></dl>
 
 <dl class="class">
@@ -154,24 +153,27 @@ From: <a class="reference external" href="http://aspn.activestate.com/ASPN/Cookb
 <em class="property">class </em><tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">CallbackRegistry</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle registering and disconnecting for a set of signals and
 callbacks:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">oneat</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">print</span> <span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="n">x</span>
-
-<span class="k">def</span> <span class="nf">ondrink</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">print</span> <span class="s">&#39;drink&#39;</span><span class="p">,</span> <span class="n">x</span>
-
-<span class="n">callbacks</span> <span class="o">=</span> <span class="n">CallbackRegistry</span><span class="p">()</span>
-
-<span class="n">ideat</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="n">oneat</span><span class="p">)</span>
-<span class="n">iddrink</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;drink&#39;</span><span class="p">,</span> <span class="n">ondrink</span><span class="p">)</span>
-
-<span class="c">#tmp = callbacks.connect(&#39;drunk&#39;, ondrink) # this will raise a ValueError</span>
-
-<span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;drink&#39;</span><span class="p">,</span> <span class="mi">123</span><span class="p">)</span>    <span class="c"># will call oneat</span>
-<span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="mi">456</span><span class="p">)</span>      <span class="c"># will call ondrink</span>
-<span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;be merry&#39;</span><span class="p">,</span> <span class="mi">456</span><span class="p">)</span> <span class="c"># nothing will be called</span>
-<span class="n">callbacks</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="n">ideat</span><span class="p">)</span>        <span class="c"># disconnect oneat</span>
-<span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="mi">456</span><span class="p">)</span>      <span class="c"># nothing will be called</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">oneat</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">print</span> <span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">ondrink</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">print</span> <span class="s">&#39;drink&#39;</span><span class="p">,</span> <span class="n">x</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="n">CallbackRegistry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">callbacks</span> <span class="o">=</span> <span class="n">CallbackRegistry</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">id_eat</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="n">oneat</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">id_drink</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;drink&#39;</span><span class="p">,</span> <span class="n">ondrink</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;drink&#39;</span><span class="p">,</span> <span class="mi">123</span><span class="p">)</span>
+<span class="go">drink 123</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="mi">456</span><span class="p">)</span>
+<span class="go">eat 456</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;be merry&#39;</span><span class="p">,</span> <span class="mi">456</span><span class="p">)</span> <span class="c"># nothing will be called</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">callbacks</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="n">id_eat</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">callbacks</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s">&#39;eat&#39;</span><span class="p">,</span> <span class="mi">456</span><span class="p">)</span>      <span class="c"># nothing will be called</span>
 </pre></div>
 </div>
 <p>In practice, one should always disconnect all callbacks when they
@@ -186,36 +188,22 @@ references to bound methods directly, so we need to create a proxy
 object to handle weak references to bound methods (or regular free
 functions).  This technique was shared by Peter Parente on his
 <a class="reference external" href="http://mindtrove.info/articles/python-weak-references/">&#8220;Mindtrove&#8221; blog</a>.</p>
-<dl class="class">
-<dt id="matplotlib.cbook.CallbackRegistry.BoundMethodProxy">
-<em class="property">class </em><tt class="descname">BoundMethodProxy</tt><big>(</big><em>cb</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry.BoundMethodProxy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Our own proxy object which enables weak references to bound and unbound
-methods and arbitrary callables. Pulls information about the function,
-class, and instance out of a bound method. Stores a weak reference to the
-instance to support garbage collection.</p>
-<p>&#64;organization: IBM Corporation
-&#64;copyright: Copyright (c) 2005, 2006 IBM Corporation
-&#64;license: The BSD License</p>
-<p>Minor bugfixes by Michael Droettboom</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="matplotlib.cbook.CallbackRegistry.connect">
-<tt class="descclassname">CallbackRegistry.</tt><tt class="descname">connect</tt><big>(</big><em>s</em>, <em>func</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry.connect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">connect</tt><big>(</big><em>s</em>, <em>func</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>register <em>func</em> to be called when a signal <em>s</em> is generated
 func will be called</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="matplotlib.cbook.CallbackRegistry.disconnect">
-<tt class="descclassname">CallbackRegistry.</tt><tt class="descname">disconnect</tt><big>(</big><em>cid</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry.disconnect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">disconnect</tt><big>(</big><em>cid</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>disconnect the callback registered with callback id <em>cid</em></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="matplotlib.cbook.CallbackRegistry.process">
-<tt class="descclassname">CallbackRegistry.</tt><tt class="descname">process</tt><big>(</big><em>s</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry.process" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process</tt><big>(</big><em>s</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.CallbackRegistry.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>process signal <em>s</em>.  All of the functions registered to receive
 callbacks on <em>s</em> will be called with <em>*args</em> and <em>**kwargs</em></p>
 </dd></dl>
@@ -239,24 +227,25 @@ using <a class="reference internal" href="#matplotlib.cbook.Grouper.joined" titl
 using the object as an iterator.</p>
 <p>The objects being joined must be hashable and weak-referenceable.</p>
 <p>For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="n">Grouper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-<span class="gp">... </span>            <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
 <span class="gp">... </span>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">Foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="s">&#39;abcdef&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Grouper</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<span class="go">[[d, e], [a, b, c]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">joined</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span> <span class="o">=</span> <span class="n">Grouper</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">grp</span><span class="p">))</span>
+<span class="go">[(d, e), (a, b, c)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">joined</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">joined</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">joined</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">joined</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">joined</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="go">False</span>
 </pre></div>
 </div>
@@ -365,7 +354,7 @@ arguments.</p>
 
 <dl class="attribute">
 <dt id="matplotlib.cbook.Scheduler.idlelock">
-<tt class="descname">idlelock</tt><em class="property"> = &lt;thread.lock object at 0x207b4f0&gt;</em><a class="headerlink" href="#matplotlib.cbook.Scheduler.idlelock" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">idlelock</tt><em class="property"> = &lt;thread.lock object at 0x24605b0&gt;</em><a class="headerlink" href="#matplotlib.cbook.Scheduler.idlelock" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -511,8 +500,8 @@ occurring later than the current position are discarded</p>
 <tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">align_iterators</tt><big>(</big><em>func</em>, <em>*iterables</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.align_iterators" title="Permalink to this definition">¶</a></dt>
 <dd><p>This generator takes a bunch of iterables that are ordered by func
 It sends out ordered tuples:</p>
-<blockquote>
-<div>(func(row), [rows from all iterators matching func(row)])</div></blockquote>
+<div class="highlight-python"><pre>(func(row), [rows from all iterators matching func(row)])</pre>
+</div>
 <p>It is used by <a class="reference internal" href="mlab_api.html#matplotlib.mlab.recs_join" title="matplotlib.mlab.recs_join"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.mlab.recs_join()</span></tt></a> to join record arrays</p>
 </dd></dl>
 
@@ -617,14 +606,13 @@ is True require an exact case match.</p>
 
 <dl class="function">
 <dt id="matplotlib.cbook.flatten">
-<tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">flatten</tt><big>(</big><em>seq</em>, <em>scalarp=&lt;function is_scalar_or_string at 0x2746398&gt;</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.flatten" title="Permalink to this definition">¶</a></dt>
-<dd><p>this generator flattens nested containers such as</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">=</span><span class="p">(</span> <span class="p">(</span><span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="s">&#39;Hunter&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">23</span><span class="p">),</span> <span class="p">[[[[</span><span class="mi">42</span><span class="p">,(</span><span class="mi">5</span><span class="p">,</span><span class="mi">23</span><span class="p">)]]]])</span>
-</pre></div>
-</div>
-<p>so that</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">l</span><span class="p">):</span> <span class="k">print</span> <span class="n">i</span><span class="p">,</span>
-<span class="go">John Hunter 1 23 42 5 23</span>
+<tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">flatten</tt><big>(</big><em>seq</em>, <em>scalarp=&lt;function is_scalar_or_string at 0x2b20d70&gt;</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of flattened nested containers</p>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="n">flatten</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="p">((</span><span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;Hunter&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">),</span> <span class="p">[[([</span><span class="mi">42</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">23</span><span class="p">)],</span> <span class="p">)]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+<span class="go">[&#39;John&#39;, &#39;Hunter&#39;, 1, 23, 42, 5, 23]</span>
 </pre></div>
 </div>
 <p>By: Composite of Holger Krekel and Luther Blissett
@@ -642,21 +630,10 @@ and return the files as a list of strings</p>
 <dl class="function">
 <dt id="matplotlib.cbook.get_sample_data">
 <tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">get_sample_data</tt><big>(</big><em>fname</em>, <em>asfileobj=True</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.get_sample_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the cachedirectory ~/.matplotlib/sample_data for a sample_data
-file.  If it does not exist, fetch it with urllib from the mpl git repo</p>
-<blockquote>
-<div><a class="reference external" href="https://raw.github.com/matplotlib/sample_data/master">https://raw.github.com/matplotlib/sample_data/master</a></div></blockquote>
-<p>and store it in the cachedir.</p>
-<p>If asfileobj is True, a file object will be returned.  Else the
-path to the file as a string will be returned</p>
-<p>To add a datafile to this directory, you need to check out
-sample_data from matplotlib git:</p>
-<div class="highlight-python"><pre>git clone git@github.com:matplotlib/sample_data</pre>
-</div>
-<p>and git add the data file you want to support.  This is primarily
-intended for use in mpl examples that need custom data.</p>
-<p>To bypass all downloading, set the rc parameter examples.download to False
-and examples.directory to the directory where we should look.</p>
+<dd><p>Return a sample data file.  <em>fname</em> is a path relative to the
+<tt class="xref py py-obj docutils literal"><span class="pre">mpl-data/sample_data</span></tt> directory.  If <em>asfileobj</em> is <tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt>
+return a file object, otherwise just a file path.</p>
+<p>If the filename ends in .gz, the file is implicitly ungzipped.</p>
 </dd></dl>
 
 <dl class="function">
@@ -695,7 +672,8 @@ it from there</p>
 <dl class="function">
 <dt id="matplotlib.cbook.is_scalar_or_string">
 <tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">is_scalar_or_string</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.is_scalar_or_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return whether the given object is a scalar or string like.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.cbook.is_sequence_of_strings">
@@ -719,13 +697,6 @@ it from there</p>
 <dt id="matplotlib.cbook.issubclass_safe">
 <tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">issubclass_safe</tt><big>(</big><em>x</em>, <em>klass</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.issubclass_safe" title="Permalink to this definition">¶</a></dt>
 <dd><p>return issubclass(x, klass) and return False on a TypeError</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="matplotlib.cbook.isvector">
-<tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">isvector</tt><big>(</big><em>X</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.isvector" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function has been moved to matplotlib.mlab &#8211; please import
-it from there</p>
 </dd></dl>
 
 <dl class="function">
@@ -794,7 +765,7 @@ it from there</p>
 
 <dl class="function">
 <dt id="matplotlib.cbook.print_cycles">
-<tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">print_cycles</tt><big>(</big><em>objects</em>, <em>outstream=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x7f6fe89151e0&gt;</em>, <em>show_progress=False</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.print_cycles" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">matplotlib.cbook.</tt><tt class="descname">print_cycles</tt><big>(</big><em>objects</em>, <em>outstream=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x7ff69ad6b1e0&gt;</em>, <em>show_progress=False</em><big>)</big><a class="headerlink" href="#matplotlib.cbook.print_cycles" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt><em>objects</em></dt>
 <dd>A list of objects to find cycles in.  It is often useful to
@@ -855,7 +826,7 @@ d and keys, with values from d.</p>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></p>
 <p>override repr when returning a list of matplotlib artists to
 prevent long, meaningless output.  This is meant to be used for a
-homogeneous list of a give type</p>
+homogeneous list of a given type</p>
 </dd></dl>
 
 <dl class="function">
@@ -1009,8 +980,8 @@ it from there</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

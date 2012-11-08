@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>figure &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>figure &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="font_manager" href="font_manager_api.html" />
     <link rel="prev" title="dates" href="dates_api.html" /> 
@@ -143,11 +143,19 @@ contains all the plot elements.  The following classes are defined</p>
 <dt id="matplotlib.figure.AxesStack">
 <em class="property">class </em><tt class="descclassname">matplotlib.figure.</tt><tt class="descname">AxesStack</tt><a class="headerlink" href="#matplotlib.figure.AxesStack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="cbook_api.html#matplotlib.cbook.Stack" title="matplotlib.cbook.Stack"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.cbook.Stack</span></tt></a></p>
-<p>Specialization of the Stack to handle all
-tracking of Axes in a Figure.  This requires storing
-key, (ind, axes) pairs. The key is based on the args and kwargs
-used in generating the Axes. ind is a serial number for tracking
-the order in which axes were added.</p>
+<p>Specialization of the Stack to handle all tracking of Axes in a Figure.
+This stack stores <tt class="docutils literal"><span class="pre">key,</span> <span class="pre">(ind,</span> <span class="pre">axes)</span></tt> pairs, where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>key</strong> should be a hash of the args and kwargs
+used in generating the Axes.</li>
+<li><strong>ind</strong> is a serial number for tracking the order
+in which axes were added.</li>
+</ul>
+</div></blockquote>
+<p>The AxesStack is a callable, where <tt class="docutils literal"><span class="pre">ax_stack()</span></tt> returns
+the current axes. Alternatively the <a class="reference internal" href="#matplotlib.figure.AxesStack.current_key_axes" title="matplotlib.figure.AxesStack.current_key_axes"><tt class="xref py py-meth docutils literal"><span class="pre">current_key_axes()</span></tt></a> will
+return the current key and associated axes.</p>
 <dl class="method">
 <dt id="matplotlib.figure.AxesStack.add">
 <tt class="descname">add</tt><big>(</big><em>key</em>, <em>a</em><big>)</big><a class="headerlink" href="#matplotlib.figure.AxesStack.add" title="Permalink to this definition">¶</a></dt>
@@ -165,7 +173,16 @@ return <em>None</em>.</p>
 <dl class="method">
 <dt id="matplotlib.figure.AxesStack.bubble">
 <tt class="descname">bubble</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#matplotlib.figure.AxesStack.bubble" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Move the given axes, which must already exist in the
+stack, to the top.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.figure.AxesStack.current_key_axes">
+<tt class="descname">current_key_axes</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.figure.AxesStack.current_key_axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of <tt class="docutils literal"><span class="pre">(key,</span> <span class="pre">axes)</span></tt> for the active axes.</p>
+<p>If no axes exists on the stack, then returns <tt class="docutils literal"><span class="pre">(None,</span> <span class="pre">None)</span></tt>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="matplotlib.figure.AxesStack.get">
@@ -177,13 +194,14 @@ If it is not present, return None.</p>
 <dl class="method">
 <dt id="matplotlib.figure.AxesStack.remove">
 <tt class="descname">remove</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#matplotlib.figure.AxesStack.remove" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Remove the axes from the stack.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="matplotlib.figure.Figure">
-<em class="property">class </em><tt class="descclassname">matplotlib.figure.</tt><tt class="descname">Figure</tt><big>(</big><em>figsize=None</em>, <em>dpi=None</em>, <em>facecolor=None</em>, <em>edgecolor=None</em>, <em>linewidth=0.0</em>, <em>frameon=True</em>, <em>subplotpars=None</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">matplotlib.figure.</tt><tt class="descname">Figure</tt><big>(</big><em>figsize=None</em>, <em>dpi=None</em>, <em>facecolor=None</em>, <em>edgecolor=None</em>, <em>linewidth=0.0</em>, <em>frameon=True</em>, <em>subplotpars=None</em>, <em>tight_layout=None</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="artist_api.html#matplotlib.artist.Artist" title="matplotlib.artist.Artist"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.artist.Artist</span></tt></a></p>
 <p>The Figure instance supports callbacks through a <em>callbacks</em>
 attribute which is a <a class="reference internal" href="cbook_api.html#matplotlib.cbook.CallbackRegistry" title="matplotlib.cbook.CallbackRegistry"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.cbook.CallbackRegistry</span></tt></a>
@@ -198,7 +216,7 @@ the callback will be called with <tt class="docutils literal"><span class="pre">
 <dd>For multiple figure images, the figure will make composite
 images depending on the renderer option_image_nocomposite
 function.  If suppressComposite is True|False, this will
-override the renderer</dd>
+override the renderer.</dd>
 <dt><em>figsize</em></dt>
 <dd>w,h tuple in inches</dd>
 <dt><em>dpi</em></dt>
@@ -213,6 +231,10 @@ override the renderer</dd>
 <dd>If <em>False</em>, suppress drawing the figure frame</dd>
 <dt><em>subplotpars</em></dt>
 <dd>A <a class="reference internal" href="#matplotlib.figure.SubplotParams" title="matplotlib.figure.SubplotParams"><tt class="xref py py-class docutils literal"><span class="pre">SubplotParams</span></tt></a> instance, defaults to rc</dd>
+<dt><em>tight_layout</em></dt>
+<dd>If <em>False</em> use <em>subplotpars</em>; if <em>True</em> adjust subplot
+parameters using <a class="reference internal" href="#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><tt class="xref py py-meth docutils literal"><span class="pre">tight_layout()</span></tt></a>.  Defaults to
+rc <tt class="docutils literal"><span class="pre">figure.autolayout</span></tt>.</dd>
 </dl>
 <dl class="method">
 <dt id="matplotlib.figure.Figure.add_axes">
@@ -343,7 +365,7 @@ will be returned.</p>
 <td>an id string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_label" title="matplotlib.artist.Artist.set_label"><tt class="xref py py-meth docutils literal"><span class="pre">label</span></tt></a></td>
-<td>any string</td>
+<td>string or anything printable with &#8216;%s&#8217; conversion.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_lod" title="matplotlib.artist.Artist.set_lod"><tt class="xref py py-meth docutils literal"><span class="pre">lod</span></tt></a></td>
 <td>[True | False]</td>
@@ -442,10 +464,18 @@ will be returned.</p>
 <tt class="descname">add_subplot</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.add_subplot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a subplot.  Examples:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>            <span class="c"># equivalent but more general</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">,</span> <span class="n">axisbg</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>  <span class="c"># add subplot with red background</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <span class="c"># add a polar subplot</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>              <span class="c"># add Subplot instance sub</span>
+
+<span class="c"># equivalent but more general</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c"># add subplot with red background</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">,</span> <span class="n">axisbg</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+
+<span class="c"># add a polar subplot</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s">&#39;polar&#39;</span><span class="p">)</span>
+
+<span class="c"># add Subplot instance sub</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><em>kwargs</em> are legal <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-class docutils literal"><span class="pre">Axes</span></tt></a> kwargs plus
@@ -546,7 +576,7 @@ return it.</p>
 <td>an id string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_label" title="matplotlib.artist.Artist.set_label"><tt class="xref py py-meth docutils literal"><span class="pre">label</span></tt></a></td>
-<td>any string</td>
+<td>string or anything printable with &#8216;%s&#8217; conversion.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_lod" title="matplotlib.artist.Artist.set_lod"><tt class="xref py py-meth docutils literal"><span class="pre">lod</span></tt></a></td>
 <td>[True | False]</td>
@@ -761,8 +791,8 @@ the anchor point of the colorbar parent axes</td>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="17%" />
-<col width="83%" />
+<col width="19%" />
+<col width="81%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Property</th>
@@ -776,18 +806,36 @@ If not &#8216;neither&#8217;, make pointed end(s) for out-of-
 range values.  These are set for a given colormap
 using the colormap set_under and set_over methods.</td>
 </tr>
-<tr class="row-odd"><td><em>spacing</em></td>
+<tr class="row-odd"><td><em>extendfrac</em></td>
+<td>[ <em>None</em> | &#8216;auto&#8217; | length | lengths ]
+If set to <em>None</em>, both the minimum and maximum
+triangular colorbar extensions with have a length of
+5% of the interior colorbar length (this is the
+default setting). If set to &#8216;auto&#8217;, makes the
+triangular colorbar extensions the same lengths as
+the interior boxes (when <em>spacing</em> is set to
+&#8216;uniform&#8217;) or the same lengths as the respective
+adjacent interior boxes (when <em>spacing</em> is set to
+&#8216;proportional&#8217;). If a scalar, indicates the length
+of both the minimum and maximum triangular colorbar
+extensions as a fraction of the interior colorbar
+length. A two-element sequence of fractions may also
+be given, indicating the lengths of the minimum and
+maximum colorbar extensions respectively as a
+fraction of the interior colorbar length.</td>
+</tr>
+<tr class="row-even"><td><em>spacing</em></td>
 <td>[ &#8216;uniform&#8217; | &#8216;proportional&#8217; ]
 Uniform spacing gives each discrete color the same
 space; proportional makes the space proportional to
 the data interval.</td>
 </tr>
-<tr class="row-even"><td><em>ticks</em></td>
+<tr class="row-odd"><td><em>ticks</em></td>
 <td>[ None | list of ticks | Locator object ]
 If None, ticks are determined automatically from the
 input.</td>
 </tr>
-<tr class="row-odd"><td><em>format</em></td>
+<tr class="row-even"><td><em>format</em></td>
 <td>[ None | format string | Formatter object ]
 If None, the
 <a class="reference internal" href="ticker_api.html#matplotlib.ticker.ScalarFormatter" title="matplotlib.ticker.ScalarFormatter"><tt class="xref py py-class docutils literal"><span class="pre">ScalarFormatter</span></tt></a> is used.
@@ -796,7 +844,7 @@ used. An alternative
 <a class="reference internal" href="ticker_api.html#matplotlib.ticker.Formatter" title="matplotlib.ticker.Formatter"><tt class="xref py py-class docutils literal"><span class="pre">Formatter</span></tt></a> object may be
 given instead.</td>
 </tr>
-<tr class="row-even"><td><em>drawedges</em></td>
+<tr class="row-odd"><td><em>drawedges</em></td>
 <td>[ False | True ] If true, draw lines at color
 boundaries.</td>
 </tr>
@@ -840,6 +888,18 @@ colorbar is too wide) use a smaller value of <em>shrink</em>.</p>
 <p>For more precise control, you can manually specify the positions of
 the axes objects in which the mappable and the colorbar are drawn.  In
 this case, do not use any of the axes properties kwargs.</p>
+<p>It is known that some vector graphics viewer (svg and pdf) renders white gaps
+between segments of the colorbar. This is due to bugs in the viewers not
+matplotlib. As a workaround the colorbar can be rendered with overlapping
+segments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cbar</span> <span class="o">=</span> <span class="n">colorbar</span><span class="p">()</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">solids</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s">&quot;face&quot;</span><span class="p">)</span>
+<span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>However this has negative consequences in other circumstances. Particularly with
+semi transparent images (alpha &lt; 1) and colorbar extensions and is not enabled
+by default see (issue #1188).</p>
 <dl class="docutils">
 <dt>returns:</dt>
 <dd><a class="reference internal" href="colorbar_api.html#matplotlib.colorbar.Colorbar" title="matplotlib.colorbar.Colorbar"><tt class="xref py py-class docutils literal"><span class="pre">Colorbar</span></tt></a> instance; see also its base class,
@@ -959,7 +1019,9 @@ fill the entire figure, you can define an
 <dt id="matplotlib.figure.Figure.gca">
 <tt class="descname">gca</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.gca" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the current axes, creating one if necessary</p>
-<p>The following kwargs are supported</p>
+<p>The following kwargs are supported for ensuring the returned axes
+adheres to the given projection etc., and for axes creation if
+the active axes does not exist:</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
@@ -1045,7 +1107,7 @@ fill the entire figure, you can define an
 <td>an id string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_label" title="matplotlib.artist.Artist.set_label"><tt class="xref py py-meth docutils literal"><span class="pre">label</span></tt></a></td>
-<td>any string</td>
+<td>string or anything printable with &#8216;%s&#8217; conversion.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_lod" title="matplotlib.artist.Artist.set_lod"><tt class="xref py py-meth docutils literal"><span class="pre">lod</span></tt></a></td>
 <td>[True | False]</td>
@@ -1189,6 +1251,12 @@ fill the entire figure, you can define an
 <dt id="matplotlib.figure.Figure.get_size_inches">
 <tt class="descname">get_size_inches</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.get_size_inches" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.figure.Figure.get_tight_layout">
+<tt class="descname">get_tight_layout</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.get_tight_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Boolean flag, True to use :meth`tight_layout` when drawing.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="matplotlib.figure.Figure.get_tightbbox">
@@ -1355,9 +1423,10 @@ See LINK (FIXME) for details.</p>
 <tt class="descname">savefig</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.savefig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current figure.</p>
 <p>Call signature:</p>
-<div class="highlight-python"><pre>savefig(fname, dpi=None, facecolor='w', edgecolor='w',
-        orientation='portrait', papertype=None, format=None,
-        transparent=False, bbox_inches=None, pad_inches=0.1):</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">,</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;portrait&#39;</span><span class="p">,</span> <span class="n">papertype</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+        <span class="n">transparent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>The output formats available depend on the backend being used.</p>
 <p>Arguments:</p>
@@ -1370,8 +1439,7 @@ such as <a class="reference internal" href="backend_pdf_api.html#matplotlib.back
 <p>If <em>format</em> is <em>None</em> and <em>fname</em> is a string, the output
 format is deduced from the extension of the filename. If
 the filename has no extension, the value of the rc parameter
-<tt class="docutils literal"><span class="pre">savefig.extension</span></tt> is used. If that value is &#8216;auto&#8217;,
-the backend determines the extension.</p>
+<tt class="docutils literal"><span class="pre">savefig.format</span></tt> is used.</p>
 <p class="last">If <em>fname</em> is not a string, remember to specify <em>format</em> to
 ensure that the correct backend is used.</p>
 </dd>
@@ -1487,6 +1555,26 @@ from the shell</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="matplotlib.figure.Figure.set_tight_layout">
+<tt class="descname">set_tight_layout</tt><big>(</big><em>tight</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.set_tight_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set whether <a class="reference internal" href="#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><tt class="xref py py-meth docutils literal"><span class="pre">tight_layout()</span></tt></a> is used upon drawing.
+If None, the rcParams[&#8216;figure.autolayout&#8217;] value will be set.</p>
+<p>ACCEPTS: [True | False | None]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.figure.Figure.show">
+<tt class="descname">show</tt><big>(</big><em>warn=True</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>If using a GUI backend with pyplot, display the figure window.</p>
+<p>If the figure was not created using
+<a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><tt class="xref py py-func docutils literal"><span class="pre">figure()</span></tt></a>, it will lack a
+<a class="reference internal" href="backend_bases_api.html#matplotlib.backend_bases.FigureManagerBase" title="matplotlib.backend_bases.FigureManagerBase"><tt class="xref py py-class docutils literal"><span class="pre">FigureManagerBase</span></tt></a>, and
+will raise an AttributeError.</p>
+<p>For non-GUI backends, this does nothing, in which case
+a warning will be issued if <em>warn</em> is True (default).</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="matplotlib.figure.Figure.subplots_adjust">
 <tt class="descname">subplots_adjust</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.subplots_adjust" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call signature:</p>
@@ -1596,7 +1684,7 @@ of the other arguments.</p>
 <td>[ &#8216;center&#8217; | &#8216;right&#8217; | &#8216;left&#8217; ]</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_label" title="matplotlib.artist.Artist.set_label"><tt class="xref py py-meth docutils literal"><span class="pre">label</span></tt></a></td>
-<td>any string</td>
+<td>string or anything printable with &#8216;%s&#8217; conversion.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_linespacing" title="matplotlib.text.Text.set_linespacing"><tt class="xref py py-meth docutils literal"><span class="pre">linespacing</span></tt></a></td>
 <td>float (multiple of font size)</td>
@@ -1674,7 +1762,7 @@ of the other arguments.</p>
 
 <dl class="method">
 <dt id="matplotlib.figure.Figure.tight_layout">
-<tt class="descname">tight_layout</tt><big>(</big><em>renderer=None</em>, <em>pad=1.2</em>, <em>h_pad=None</em>, <em>w_pad=None</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.tight_layout" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">tight_layout</tt><big>(</big><em>renderer=None</em>, <em>pad=1.08</em>, <em>h_pad=None</em>, <em>w_pad=None</em>, <em>rect=None</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.tight_layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adjust subplot parameters to give specified padding.</p>
 <p>Parameters:</p>
 <blockquote>
@@ -1685,6 +1773,10 @@ as a fraction of the font-size.</dd>
 <dt><em>h_pad</em>, <em>w_pad</em> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd>padding (height/width) between edges of adjacent subplots.
 Defaults to <tt class="xref py py-obj docutils literal"><span class="pre">pad_inches</span></tt>.</dd>
+<dt><em>rect</em> <span class="classifier-delimiter">:</span> <span class="classifier">if rect is given, it is interpreted as a rectangle</span></dt>
+<dd>(left, bottom, right, top) in the normalized figure
+coordinate that the whole subplots area (including
+labels) will fit into. Default is (0, 0, 1, 1).</dd>
 </dl>
 </div></blockquote>
 </dd></dl>
@@ -1797,8 +1889,8 @@ eg</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

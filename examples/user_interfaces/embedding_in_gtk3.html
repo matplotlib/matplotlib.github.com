@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>user_interfaces example code: embedding_in_gtk3.py &mdash; Matplotlib 1.1.1 documentation</title>
+    <title>user_interfaces example code: embedding_in_gtk3.py &mdash; Matplotlib 1.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.1.1',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.1.1 documentation"
+          title="Search within Matplotlib 1.2.0 documentation"
           href="../../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.1.1 documentation" href="../../index.html" /> 
+    <link rel="top" title="Matplotlib 1.2.0 documentation" href="../../index.html" /> 
   </head>
   <body>
 <!-- Piwik -->
@@ -107,21 +107,18 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <p>[<a class="reference external" href="embedding_in_gtk3.py">source code</a>]</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">demonstrate adding a FigureCanvasGTK/GTKAgg widget to a gtk.ScrolledWindow</span>
+<span class="sd">demonstrate adding a FigureCanvasGTK3Agg widget to a Gtk.ScrolledWindow</span>
+<span class="sd">using GTK3 accessed via pygobject</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">gtk</span>
+<span class="kn">from</span> <span class="nn">gi.repository</span> <span class="kn">import</span> <span class="n">Gtk</span>
 
 <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">arange</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_gtk3agg</span> <span class="kn">import</span> <span class="n">FigureCanvasGTK3Agg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
 
-<span class="c"># uncomment to select /GTK/GTKAgg/GTKCairo</span>
-<span class="c">#from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_gtkagg</span> <span class="kn">import</span> <span class="n">FigureCanvasGTKAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
-<span class="c">#from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas</span>
-
-<span class="n">win</span> <span class="o">=</span> <span class="n">gtk</span><span class="o">.</span><span class="n">Window</span><span class="p">()</span>
-<span class="n">win</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;destroy&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">gtk</span><span class="o">.</span><span class="n">main_quit</span><span class="p">())</span>
+<span class="n">win</span> <span class="o">=</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">Window</span><span class="p">()</span>
+<span class="n">win</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;delete-event&quot;</span><span class="p">,</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">main_quit</span> <span class="p">)</span>
 <span class="n">win</span><span class="o">.</span><span class="n">set_default_size</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span>
 <span class="n">win</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&quot;Embedding in GTK&quot;</span><span class="p">)</span>
 
@@ -131,20 +128,17 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <span class="n">s</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
 <span class="n">a</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
 
-<span class="n">sw</span> <span class="o">=</span> <span class="n">gtk</span><span class="o">.</span><span class="n">ScrolledWindow</span><span class="p">()</span>
+<span class="n">sw</span> <span class="o">=</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">ScrolledWindow</span><span class="p">()</span>
 <span class="n">win</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">sw</span><span class="p">)</span>
 <span class="c"># A scrolled window border goes outside the scrollbars and viewport</span>
 <span class="n">sw</span><span class="o">.</span><span class="n">set_border_width</span> <span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="c"># policy: ALWAYS, AUTOMATIC, NEVER</span>
-<span class="n">sw</span><span class="o">.</span><span class="n">set_policy</span> <span class="p">(</span><span class="n">hscrollbar_policy</span><span class="o">=</span><span class="n">gtk</span><span class="o">.</span><span class="n">POLICY_AUTOMATIC</span><span class="p">,</span>
-               <span class="n">vscrollbar_policy</span><span class="o">=</span><span class="n">gtk</span><span class="o">.</span><span class="n">POLICY_ALWAYS</span><span class="p">)</span>
 
-<span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvas</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c"># a gtk.DrawingArea</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvas</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c"># a Gtk.DrawingArea</span>
 <span class="n">canvas</span><span class="o">.</span><span class="n">set_size_request</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">)</span>
 <span class="n">sw</span><span class="o">.</span><span class="n">add_with_viewport</span> <span class="p">(</span><span class="n">canvas</span><span class="p">)</span>
 
 <span class="n">win</span><span class="o">.</span><span class="n">show_all</span><span class="p">()</span>
-<span class="n">gtk</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+<span class="n">Gtk</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Keywords: python, matplotlib, pylab, example, codex (see <a class="reference internal" href="../../faq/howto_faq.html#how-to-search-examples"><em>Search examples</em></a>)</p>
@@ -174,8 +168,8 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, John Hunter, Darren Dale, Michael Droettboom.
-      Last updated on Sep 17, 2012.
+        &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
+      Last updated on Nov 08, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

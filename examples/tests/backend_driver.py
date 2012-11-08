@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+
+from __future__ import print_function, division
 """
 This is used to drive many of the examples across the backends, for
 regression testing, and comparing backend efficiency.
@@ -7,11 +9,10 @@ You can specify the backends to be tested either via the --backends
 switch, which takes a comma-separated list, or as separate arguments,
 e.g.
 
-    python backend_driver.py agg ps cairo.png cairo.ps
+    python backend_driver.py agg ps
 
-would test the agg and ps backends, and the cairo backend with output
-to png and ps files. If no arguments are given, a default list of
-backends will be tested.
+would test the agg and ps backends. If no arguments are given, a
+default list of backends will be tested.
 
 Interspersed with the backend arguments can be switches for the Python
 interpreter executing the tests. If entering such arguments causes an
@@ -19,14 +20,12 @@ option parsing error with the driver script, separate them from driver
 switches with a --.
 """
 
-from __future__ import division
 import os, time, sys, glob, string
 from optparse import OptionParser
 import matplotlib.rcsetup as rcsetup
 from matplotlib.cbook import Bunch, dedent
 
 all_backends = list(rcsetup.all_backends)  # to leave the original list alone
-all_backends.extend(['cairo.png', 'cairo.ps', 'cairo.pdf', 'cairo.svg'])
 
 # actual physical directory for each dir
 dirs = dict(pylab = os.path.join('..', 'pylab_examples'),
@@ -160,6 +159,7 @@ files['pylab'] = [
     'pcolor_log.py',
     'pcolor_small.py',
     'pie_demo.py',
+    'pie_demo2.py',
     'plotfile_demo.py',
     'polar_bar.py',
     'polar_demo.py',
@@ -285,7 +285,7 @@ def report_missing(dir, flist):
     missing = list(pyfiles-flist-exclude)
     missing.sort()
     if missing:
-        print '%s files not tested: %s'%(dir, ', '.join(missing))
+        print ('%s files not tested: %s'%(dir, ', '.join(missing)))
 
 def report_all_missing(directories):
     for f in directories:
@@ -323,7 +323,7 @@ def drive(backend, directories, python=['python'], switches = []):
     if os.path.exists(path):
         import glob
         for fname in os.listdir(path):
-            os.unlink(os.path.join(path,fname))
+            os.unlink(os.path.join(path, fname))
     else:
         os.mkdir(backend)
     failures = []
@@ -338,34 +338,35 @@ def drive(backend, directories, python=['python'], switches = []):
         fpath, fname = os.path.split(fullpath)
 
         if fname in exclude:
-            print '\tSkipping %s, known to fail on backend: %s'%backend
+            print ('\tSkipping %s, known to fail on backend: %s'%backend)
             continue
 
         basename, ext = os.path.splitext(fname)
-        outfile = os.path.join(path,basename)
+        outfile = os.path.join(path, basename)
         tmpfile_name = '_tmp_%s.py' % basename
-        tmpfile = file(tmpfile_name, 'w')
+        tmpfile = open(tmpfile_name, 'w')
 
-        for line in file(fullpath):
+        future_imports = 'from __future__ import division, print_function'
+        for line in open(fullpath):
             line_lstrip = line.lstrip()
             if line_lstrip.startswith("#"):
                 tmpfile.write(line)
-            else:
-                break
+            elif 'unicode_literals' in line:
+                future_imports = future_imports + ', unicode_literals'
 
         tmpfile.writelines((
-            'from __future__ import division\n',
+            future_imports+'\n',
             'import sys\n',
-            'sys.path.append("%s")\n'%fpath,
+            'sys.path.append("%s")\n' % fpath.replace('\\', '\\\\'),
             'import matplotlib\n',
             'matplotlib.use("%s")\n' % backend,
             'from pylab import savefig\n',
             'import numpy\n',
             'numpy.seterr(invalid="ignore")\n',
             ))
-        for line in file(fullpath):
+        for line in open(fullpath):
             line_lstrip = line.lstrip()
-            if (line_lstrip.startswith('from __future__ import division') or
+            if (line_lstrip.startswith('from __future__ import') or
                 line_lstrip.startswith('matplotlib.use') or
                 line_lstrip.startswith('savefig') or
                 line_lstrip.startswith('show')):
@@ -381,7 +382,7 @@ def drive(backend, directories, python=['python'], switches = []):
         program = [x % {'name': basename} for x in python]
         ret = run(program + [tmpfile_name] + switches)
         end_time = time.time()
-        print (end_time - start_time), ret
+        print ("%s %s" % ((end_time - start_time), ret))
         #os.system('%s %s %s' % (python, tmpfile_name, ' '.join(switches)))
         os.remove(tmpfile_name)
         if ret:
@@ -405,8 +406,7 @@ def parse_options():
                   help=dedent('''
       Run tests only for these backends; comma-separated list of
       one or more of: agg, ps, svg, pdf, template, cairo,
-      cairo.png, cairo.ps, cairo.pdf, cairo.svg. Default is everything
-      except cairo.'''))
+      Default is everything except cairo.'''))
     op.add_option('--clean', action='store_true', dest='clean',
                   help='Remove result directories, run no tests')
     op.add_option('-c', '--coverage', action='store_true', dest='coverage',
@@ -418,7 +418,7 @@ def parse_options():
     switches = [x for x in args if x.startswith('--')]
     backends = [x.lower() for x in args if not x.startswith('--')]
     if options.backends:
-        backends += map(string.lower, options.backends.split(','))
+        backends += [be.lower() for be in options.backends.split(',')]
 
     result = Bunch(
         dirs = options.dirs.split(','),
@@ -430,7 +430,7 @@ def parse_options():
     if 'pylab_examples' in result.dirs:
         result.dirs[result.dirs.index('pylab_examples')] = 'pylab'
     #print result
-    return result
+    return (result)
 
 if __name__ == '__main__':
     times = {}
@@ -443,28 +443,28 @@ if __name__ == '__main__':
         for d in localdirs:
             if d.lower() not in all_backends_set:
                 continue
-            print 'removing %s'%d
+            print ('removing %s'%d)
             for fname in glob.glob(os.path.join(d, '*')):
                 os.remove(fname)
             os.rmdir(d)
         for fname in glob.glob('_tmp*.py'):
             os.remove(fname)
 
-        print 'all clean...'
+        print ('all clean...')
         raise SystemExit
     if options.coverage:
         python = ['coverage.py', '-x']
     elif options.valgrind:
         python = ['valgrind', '--tool=memcheck', '--leak-check=yes',
-                  '--log-file=%(name)s', 'python']
+                  '--log-file=%(name)s', sys.executable]
     elif sys.platform == 'win32':
         python = [sys.executable]
     else:
-        python = ['python']
+        python = [sys.executable]
 
     report_all_missing(options.dirs)
     for backend in options.backends:
-        print 'testing %s %s' % (backend, ' '.join(options.switches))
+        print ('testing %s %s' % (backend, ' '.join(options.switches)))
         t0 = time.time()
         failures[backend] = \
             drive(backend, options.dirs, python, options.switches)
@@ -473,10 +473,10 @@ if __name__ == '__main__':
 
     # print times
     for backend, elapsed in times.items():
-        print 'Backend %s took %1.2f minutes to complete' % (backend, elapsed)
+        print ('Backend %s took %1.2f minutes to complete' % (backend, elapsed))
         failed = failures[backend]
         if failed:
-            print '  Failures: ', failed
+            print ('  Failures: %s' % failed)
         if 'template' in times:
-            print '\ttemplate ratio %1.3f, template residual %1.3f' % (
-                elapsed/times['template'], elapsed-times['template'])
+            print ('\ttemplate ratio %1.3f, template residual %1.3f' % (
+                elapsed/times['template'], elapsed-times['template']))

@@ -8,24 +8,13 @@ event_handling example code: data_browser.py
 ::
 
     import numpy as np
-    from pylab import figure, show
     
-    
-    X = np.random.rand(100, 200)
-    xs = np.mean(X, axis=1)
-    ys = np.std(X, axis=1)
-    
-    fig = figure()
-    ax = fig.add_subplot(211)
-    ax.set_title('click on point to plot time series')
-    line, = ax.plot(xs, ys, 'o', picker=5)  # 5 points tolerance
-    ax2 = fig.add_subplot(212)
     
     class PointBrowser:
         """
         Click on a point to select and highlight it -- the data that
         generated the point will be shown in the lower axes.  Use the 'n'
-        and 'p' keys to browse through the next and pervious points
+        and 'p' keys to browse through the next and previous points
         """
         def __init__(self):
             self.lastind = 0
@@ -83,12 +72,26 @@ event_handling example code: data_browser.py
             fig.canvas.draw()
     
     
-    browser = PointBrowser()
+    if __name__ == '__main__':
+        import matplotlib.pyplot as plt
     
-    fig.canvas.mpl_connect('pick_event', browser.onpick)
-    fig.canvas.mpl_connect('key_press_event', browser.onpress)
+        X = np.random.rand(100, 200)
+        xs = np.mean(X, axis=1)
+        ys = np.std(X, axis=1)
     
-    show()
+        fig = plt.figure()
+        ax = fig.add_subplot(211)
+        ax.set_title('click on point to plot time series')
+        line, = ax.plot(xs, ys, 'o', picker=5)  # 5 points tolerance
+        ax2 = fig.add_subplot(212)
+    
+        browser = PointBrowser()
+    
+        fig.canvas.mpl_connect('pick_event', browser.onpick)
+        fig.canvas.mpl_connect('key_press_event', browser.onpress)
+    
+        plt.show()
+    
     
 
 Keywords: python, matplotlib, pylab, example, codex (see :ref:`how-to-search-examples`)

@@ -21,8 +21,8 @@ set
         >>> setp(line)
 
     set operates on a single instance or a list of instances.  If you are
-    in quey mode introspecting the possible values, only the first
-    instance in the sequnce is used.  When actually setting values, all
+    in query mode introspecting the possible values, only the first
+    instance in the sequence is used.  When actually setting values, all
     the instances will be set.  Eg, suppose you have a list of two lines,
     the following will make both lines thicker and red
 
@@ -52,7 +52,7 @@ get:
         color = b
         ... long listing skipped ...
 
-Alisases:
+Aliases:
 
   To reduce keystrokes in interactive mode, a number of properties
   have short aliases, eg 'lw' for 'linewidth' and 'mec' for
@@ -64,6 +64,7 @@ Alisases:
 
 """
 
+from __future__ import print_function
 from pylab import *
 
 
@@ -77,20 +78,20 @@ setp(l1, linewidth=2, color='r')  # line1 is thick and red
 setp(l2, linewidth=1, color='g')  # line2 is thicker and green
 
 
-print 'Line setters'
+print ('Line setters')
 setp(l1)
-print 'Line getters'
+print ('Line getters')
 getp(l1)
 
-print 'Rectangle setters'
+print ('Rectangle setters')
 setp(gca().patch)
-print 'Rectangle getters'
+print ('Rectangle getters')
 getp(gca().patch)
 
 t = title('Hi mom')
-print 'Text setters'
+print ('Text setters')
 setp(t)
-print 'Text getters'
+print ('Text getters')
 getp(t)
 
 show()

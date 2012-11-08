@@ -1,20 +1,21 @@
-plt.rcParams['savefig.facecolor'] = "0.8"
-plt.rcParams['figure.figsize'] = 4, 3
+import matplotlib.pyplot as plt
+import numpy as np
 
-fig, axes_list = plt.subplots(2, 1)
-for ax in axes_list.flat:
-    ax.set(xlabel="x-label", ylabel="y-label", title="before tight_layout")
-    ax.locator_params(nbins=3)
+x = y = np.linspace(0., 2*np.pi, 100)
+X, Y = np.meshgrid(x, y)
+Z = np.cos(X) * np.sin(0.5*Y)
 
-plt.show()
+clevs = [-.75, -.5, -.25, 0., .25, .5, .75]
+cmap = plt.cm.get_cmap(name='jet', lut=8)
 
-plt.rcParams['savefig.facecolor'] = "0.8"
-plt.rcParams['figure.figsize'] = 4, 3
+ax1 = plt.subplot(211)
+cs1 = plt.contourf(x, y, Z, clevs, cmap=cmap, extend='both')
+cb1 = plt.colorbar(orientation='horizontal', extendfrac=None)
+cb1.set_label('Default length colorbar extensions')
 
-fig, axes_list = plt.subplots(2, 1)
-for ax in axes_list.flat:
-    ax.set(xlabel="x-label", ylabel="y-label", title="after tight_layout")
-    ax.locator_params(nbins=3)
+ax2 = plt.subplot(212)
+cs2 = plt.contourf(x, y, Z, clevs, cmap=cmap, extend='both')
+cb2 = plt.colorbar(orientation='horizontal', extendfrac='auto')
+cb2.set_label('Custom length colorbar extensions')
 
-plt.tight_layout()
 plt.show()
