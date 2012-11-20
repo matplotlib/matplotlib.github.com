@@ -31,7 +31,7 @@
     <link rel="top" title="Matplotlib 1.2.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib Developers’ Guide" href="index.html" />
     <link rel="next" title="Doing a matplolib release" href="release_guide.html" />
-    <link rel="prev" title="git resources" href="gitwash/git_resources.html" /> 
+    <link rel="prev" title="Testing" href="testing.html" /> 
   </head>
   <body>
 <!-- Piwik -->
@@ -79,7 +79,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
           <a href="release_guide.html" title="Doing a matplolib release"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="gitwash/git_resources.html" title="git resources"
+          <a href="testing.html" title="Testing"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../search.html">search</a>|&nbsp;</li>
@@ -97,11 +97,11 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
   <ul>
 <li><a class="reference internal" href="#">Documenting matplotlib</a><ul>
 <li><a class="reference internal" href="#getting-started">Getting started</a></li>
-<li><a class="reference internal" href="#organization-of-matplotlib-s-documentation">Organization of matplotlib&#8217;s documentation</a></li>
-<li><a class="reference internal" href="#formatting">Formatting</a><ul>
-<li><a class="reference internal" href="#docstrings">Docstrings</a></li>
+<li><a class="reference internal" href="#organization-of-matplotlib-s-documentation">Organization of matplotlib&#8217;s documentation</a><ul>
+<li><a class="reference internal" href="#docstrings">docstrings</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#formatting">Formatting</a></li>
 <li><a class="reference internal" href="#figures">Figures</a><ul>
 <li><a class="reference internal" href="#dynamically-generated-figures">Dynamically generated figures</a><ul>
 <li><a class="reference internal" href="#module-matplotlib.sphinxext.plot_directive">Plot directive documentation</a><ul>
@@ -126,8 +126,8 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="gitwash/git_resources.html"
-                        title="previous chapter">git resources</a></p>
+  <p class="topless"><a href="testing.html"
+                        title="previous chapter">Testing</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="release_guide.html"
                         title="next chapter">Doing a matplolib release</a></p>
@@ -191,6 +191,82 @@ file name (the .rst extension is not necessary) in the table of contents.
 It is also possible to include other documents through the use of an include
 statement, such as:</p>
 <div class="highlight-python"><pre>.. include:: ../../TODO</pre>
+</div>
+<div class="section" id="docstrings">
+<h3>docstrings<a class="headerlink" href="#docstrings" title="Permalink to this headline">¶</a></h3>
+<p>In addition to the &#8220;narrative&#8221; documentation described above,
+matplotlib also defines its API reference documentation in docstrings.
+For the most part, these are standard Python docstrings, but
+matplotlib also includes some features to better support documenting
+getters and setters.</p>
+<p>Matplotlib uses artist introspection of docstrings to support
+properties.  All properties that you want to support through <tt class="docutils literal"><span class="pre">setp</span></tt>
+and <tt class="docutils literal"><span class="pre">getp</span></tt> should have a <tt class="docutils literal"><span class="pre">set_property</span></tt> and <tt class="docutils literal"><span class="pre">get_property</span></tt>
+method in the <a class="reference internal" href="../api/artist_api.html#matplotlib.artist.Artist" title="matplotlib.artist.Artist"><tt class="xref py py-class docutils literal"><span class="pre">Artist</span></tt></a> class.  Yes, this is
+not ideal given python properties or enthought traits, but it is a
+historical legacy for now.  The setter methods use the docstring with
+the ACCEPTS token to indicate the type of argument the method accepts.
+Eg. in <a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.lines.Line2D</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># in lines.py</span>
+<span class="k">def</span> <span class="nf">set_linestyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">linestyle</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the linestyle of the line</span>
+
+<span class="sd">    ACCEPTS: [ &#39;-&#39; | &#39;--&#39; | &#39;-.&#39; | &#39;:&#39; | &#39;steps&#39; | &#39;None&#39; | &#39; &#39; | &#39;&#39; ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Since matplotlib uses a lot of pass-through <tt class="docutils literal"><span class="pre">kwargs</span></tt>, eg. in every
+function that creates a line (<a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><tt class="xref py py-func docutils literal"><span class="pre">plot()</span></tt></a>,
+<a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.semilogx" title="matplotlib.pyplot.semilogx"><tt class="xref py py-func docutils literal"><span class="pre">semilogx()</span></tt></a>,
+<a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.semilogy" title="matplotlib.pyplot.semilogy"><tt class="xref py py-func docutils literal"><span class="pre">semilogy()</span></tt></a>, etc...), it can be difficult for
+the new user to know which <tt class="docutils literal"><span class="pre">kwargs</span></tt> are supported.  Matplotlib uses
+a docstring interpolation scheme to support documentation of every
+function that takes a <tt class="docutils literal"><span class="pre">**kwargs</span></tt>.  The requirements are:</p>
+<ol class="arabic simple">
+<li>single point of configuration so changes to the properties don&#8217;t
+require multiple docstring edits.</li>
+<li>as automated as possible so that as properties change, the docs
+are updated automagically.</li>
+</ol>
+<p>The functions <tt class="xref py py-attr docutils literal"><span class="pre">matplotlib.artist.kwdocd</span></tt> and
+<a class="reference internal" href="../api/artist_api.html#matplotlib.artist.kwdoc" title="matplotlib.artist.kwdoc"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.artist.kwdoc()</span></tt></a> to facilitate this.  They combine
+python string interpolation in the docstring with the matplotlib
+artist introspection facility that underlies <tt class="docutils literal"><span class="pre">setp</span></tt> and <tt class="docutils literal"><span class="pre">getp</span></tt>.
+The <tt class="docutils literal"><span class="pre">kwdocd</span></tt> is a single dictionary that maps class name to a
+docstring of <tt class="docutils literal"><span class="pre">kwargs</span></tt>.  Here is an example from
+<a class="reference internal" href="../api/artist_api.html#module-matplotlib.lines" title="matplotlib.lines"><tt class="xref py py-mod docutils literal"><span class="pre">matplotlib.lines</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># in lines.py</span>
+<span class="n">artist</span><span class="o">.</span><span class="n">kwdocd</span><span class="p">[</span><span class="s">&#39;Line2D&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">artist</span><span class="o">.</span><span class="n">kwdoc</span><span class="p">(</span><span class="n">Line2D</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then in any function accepting <a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a>
+pass-through <tt class="docutils literal"><span class="pre">kwargs</span></tt>, eg. <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.plot()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># in axes.py</span>
+<span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Some stuff omitted</span>
+
+<span class="sd">    The kwargs are Line2D properties:</span>
+<span class="sd">    %(Line2D)s</span>
+
+<span class="sd">    kwargs scalex and scaley, if defined, are passed on</span>
+<span class="sd">    to autoscale_view to determine whether the x and y axes are</span>
+<span class="sd">    autoscaled; default True.  See Axes.autoscale_view for more</span>
+<span class="sd">    information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">plot</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span> <span class="o">%</span> <span class="n">artist</span><span class="o">.</span><span class="n">kwdocd</span>
+</pre></div>
+</div>
+<p>Note there is a problem for <a class="reference internal" href="../api/artist_api.html#matplotlib.artist.Artist" title="matplotlib.artist.Artist"><tt class="xref py py-class docutils literal"><span class="pre">Artist</span></tt></a>
+<tt class="docutils literal"><span class="pre">__init__</span></tt> methods, eg. <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.patches.Patch.__init__()</span></tt>,
+which supports <tt class="docutils literal"><span class="pre">Patch</span></tt> <tt class="docutils literal"><span class="pre">kwargs</span></tt>, since the artist inspector cannot
+work until the class is fully defined and we can&#8217;t modify the
+<tt class="docutils literal"><span class="pre">Patch.__init__.__doc__</span></tt> docstring outside the class definition.
+There are some some manual hacks in this case, violating the
+&#8220;single entry point&#8221; requirement above &#8211; see the
+<tt class="docutils literal"><span class="pre">artist.kwdocd['Patch']</span></tt> setting in <a class="reference internal" href="../api/artist_api.html#module-matplotlib.patches" title="matplotlib.patches"><tt class="xref py py-mod docutils literal"><span class="pre">matplotlib.patches</span></tt></a>.</p>
 </div>
 </div>
 <div class="section" id="formatting">
@@ -313,9 +389,6 @@ create a references to a term in the glossary with the <tt class="docutils liter
 entries in the <a class="reference external" href="http://sphinx.pocoo.org/markup/para.html#index-generating-markup">index</a> need to be explicitly added.</p>
 </li>
 </ul>
-<div class="section" id="docstrings">
-<h3>Docstrings<a class="headerlink" href="#docstrings" title="Permalink to this headline">¶</a></h3>
-<p>In addition to the aforementioned formatting suggestions:</p>
 <ul>
 <li><p class="first">Please limit the text width of docstrings to 70 characters.</p>
 </li>
@@ -328,7 +401,6 @@ definition list for autogenerated sections of docstrings.</p>
 </div>
 </li>
 </ul>
-</div>
 </div>
 <div class="section" id="figures">
 <h2>Figures<a class="headerlink" href="#figures" title="Permalink to this headline">¶</a></h2>
@@ -596,35 +668,35 @@ path is shown.</p>
    :parts: 2</pre>
 </div>
 <p class="graphviz">
-<img src="../_images/inheritance-273b7526e8075783c1372c1a48907d38b2219fa8.png" alt="Inheritance diagram of matplotlib.patches, matplotlib.lines, matplotlib.text" usemap="#inheritance03ab0131b5" class="inheritance"/>
+<img src="../_images/inheritance-1e25ce560109efaf1cc34bef9ef49edae78be09e.png" alt="Inheritance diagram of matplotlib.patches, matplotlib.lines, matplotlib.text" usemap="#inheritance03ab0131b5" class="inheritance"/>
 <map id="inheritance03ab0131b5" name="inheritance03ab0131b5">
-<area shape="rect" id="node1" href="../api/artist_api.html#matplotlib.patches.CirclePolygon" title="patches.CirclePolygon" alt="" coords="600,4,753,28"/>
-<area shape="rect" id="node2" href="../api/artist_api.html#matplotlib.patches.RegularPolygon" title="patches.RegularPolygon" alt="" coords="376,4,540,28"/>
-<area shape="rect" id="node4" href="../api/artist_api.html#matplotlib.patches.FancyArrowPatch" title="patches.FancyArrowPatch" alt="" coords="371,51,545,75"/>
-<area shape="rect" id="node28" href="../api/artist_api.html#matplotlib.patches.ConnectionPatch" title="patches.ConnectionPatch" alt="" coords="590,51,763,75"/>
-<area shape="rect" id="node5" href="../api/artist_api.html#matplotlib.patches.Patch" title="patches.Patch" alt="" coords="221,260,326,284"/>
-<area shape="rect" id="node14" href="../api/artist_api.html#matplotlib.patches.Wedge" title="patches.Wedge" alt="" coords="402,97,514,121"/>
-<area shape="rect" id="node16" href="../api/artist_api.html#matplotlib.patches.Arrow" title="patches.Arrow" alt="" coords="405,144,511,168"/>
-<area shape="rect" id="node19" href="../api/artist_api.html#matplotlib.patches.Polygon" title="patches.Polygon" alt="" coords="398,190,518,214"/>
-<area shape="rect" id="node24" href="../api/artist_api.html#matplotlib.patches.PathPatch" title="patches.PathPatch" alt="" coords="392,237,524,260"/>
-<area shape="rect" id="node34" href="../api/artist_api.html#matplotlib.patches.Ellipse" title="patches.Ellipse" alt="" coords="403,283,513,307"/>
-<area shape="rect" id="node36" href="../api/artist_api.html#matplotlib.patches.FancyBboxPatch" title="patches.FancyBboxPatch" alt="" coords="373,329,543,353"/>
-<area shape="rect" id="node38" href="../api/artist_api.html#matplotlib.patches.Rectangle" title="patches.Rectangle" alt="" coords="393,376,523,400"/>
-<area shape="rect" id="node41" href="../api/artist_api.html#matplotlib.patches.YAArrow" title="patches.YAArrow" alt="" coords="398,422,518,446"/>
-<area shape="rect" id="node47" href="../api/artist_api.html#matplotlib.patches.Shadow" title="patches.Shadow" alt="" coords="398,469,518,493"/>
-<area shape="rect" id="node7" href="../api/artist_api.html#matplotlib.lines.VertexSelector" title="lines.VertexSelector" alt="" coords="20,469,161,493"/>
-<area shape="rect" id="node8" href="../api/artist_api.html#matplotlib.text.TextWithDash" title="text.TextWithDash" alt="" coords="394,515,522,539"/>
-<area shape="rect" id="node9" href="../api/artist_api.html#matplotlib.text.Text" title="text.Text" alt="" coords="238,515,309,539"/>
-<area shape="rect" id="node21" href="../api/artist_api.html#matplotlib.text.Annotation" title="text.Annotation" alt="" coords="401,562,515,585"/>
-<area shape="rect" id="node12" href="../api/artist_api.html#matplotlib.artist.Artist" title="artist.Artist" alt="" coords="46,515,134,539"/>
-<area shape="rect" id="node31" href="../api/artist_api.html#matplotlib.lines.Line2D" title="lines.Line2D" alt="" coords="227,562,320,585"/>
-<area shape="rect" id="node18" href="../api/artist_api.html#matplotlib.patches.ConnectionStyle" title="patches.ConnectionStyle" alt="" coords="5,422,176,446"/>
-<area shape="rect" id="node45" href="../api/artist_api.html#matplotlib.patches.FancyArrow" title="patches.FancyArrow" alt="" coords="606,190,747,214"/>
-<area shape="rect" id="node26" href="../api/artist_api.html#matplotlib.patches.ArrowStyle" title="patches.ArrowStyle" alt="" coords="22,376,159,400"/>
-<area shape="rect" id="node27" href="../api/artist_api.html#matplotlib.text.OffsetFrom" title="text.OffsetFrom" alt="" coords="33,329,147,353"/>
-<area shape="rect" id="node30" href="../api/artist_api.html#matplotlib.patches.BoxStyle" title="patches.BoxStyle" alt="" coords="28,283,153,307"/>
-<area shape="rect" id="node33" href="../api/artist_api.html#matplotlib.patches.Arc" title="patches.Arc" alt="" coords="630,259,723,283"/>
-<area shape="rect" id="node43" href="../api/artist_api.html#matplotlib.patches.Circle" title="patches.Circle" alt="" coords="624,306,729,329"/>
+<area shape="rect" id="node1" href="../api/artist_api.html#matplotlib.patches.YAArrow" title="patches.YAArrow" alt="" coords="398,4,518,28"/>
+<area shape="rect" id="node2" href="../api/artist_api.html#matplotlib.patches.Patch" title="patches.Patch" alt="" coords="221,260,326,284"/>
+<area shape="rect" id="node4" href="../api/artist_api.html#matplotlib.patches.FancyBboxPatch" title="patches.FancyBboxPatch" alt="" coords="373,51,543,75"/>
+<area shape="rect" id="node7" href="../api/artist_api.html#matplotlib.patches.Ellipse" title="patches.Ellipse" alt="" coords="403,97,513,121"/>
+<area shape="rect" id="node10" href="../api/artist_api.html#matplotlib.patches.Polygon" title="patches.Polygon" alt="" coords="398,144,518,168"/>
+<area shape="rect" id="node12" href="../api/artist_api.html#matplotlib.patches.RegularPolygon" title="patches.RegularPolygon" alt="" coords="376,190,540,214"/>
+<area shape="rect" id="node24" href="../api/artist_api.html#matplotlib.patches.FancyArrowPatch" title="patches.FancyArrowPatch" alt="" coords="371,237,545,260"/>
+<area shape="rect" id="node26" href="../api/artist_api.html#matplotlib.patches.Wedge" title="patches.Wedge" alt="" coords="402,283,514,307"/>
+<area shape="rect" id="node34" href="../api/artist_api.html#matplotlib.patches.PathPatch" title="patches.PathPatch" alt="" coords="392,329,524,353"/>
+<area shape="rect" id="node36" href="../api/artist_api.html#matplotlib.patches.Arrow" title="patches.Arrow" alt="" coords="405,376,511,400"/>
+<area shape="rect" id="node40" href="../api/artist_api.html#matplotlib.patches.Rectangle" title="patches.Rectangle" alt="" coords="393,422,523,446"/>
+<area shape="rect" id="node46" href="../api/artist_api.html#matplotlib.patches.Shadow" title="patches.Shadow" alt="" coords="398,469,518,493"/>
+<area shape="rect" id="node6" href="../api/artist_api.html#matplotlib.patches.Circle" title="patches.Circle" alt="" coords="624,51,729,75"/>
+<area shape="rect" id="node18" href="../api/artist_api.html#matplotlib.patches.Arc" title="patches.Arc" alt="" coords="630,97,723,121"/>
+<area shape="rect" id="node9" href="../api/artist_api.html#matplotlib.patches.FancyArrow" title="patches.FancyArrow" alt="" coords="606,144,747,168"/>
+<area shape="rect" id="node15" href="../api/artist_api.html#matplotlib.patches.CirclePolygon" title="patches.CirclePolygon" alt="" coords="600,190,753,214"/>
+<area shape="rect" id="node14" href="../api/artist_api.html#matplotlib.patches.ConnectionStyle" title="patches.ConnectionStyle" alt="" coords="5,469,176,493"/>
+<area shape="rect" id="node17" href="../api/artist_api.html#matplotlib.patches.ArrowStyle" title="patches.ArrowStyle" alt="" coords="22,422,159,446"/>
+<area shape="rect" id="node20" href="../api/artist_api.html#matplotlib.text.Text" title="text.Text" alt="" coords="238,515,309,539"/>
+<area shape="rect" id="node30" href="../api/artist_api.html#matplotlib.text.Annotation" title="text.Annotation" alt="" coords="401,515,515,539"/>
+<area shape="rect" id="node32" href="../api/artist_api.html#matplotlib.text.TextWithDash" title="text.TextWithDash" alt="" coords="394,562,522,585"/>
+<area shape="rect" id="node21" href="../api/artist_api.html#matplotlib.artist.Artist" title="artist.Artist" alt="" coords="46,515,134,539"/>
+<area shape="rect" id="node28" href="../api/artist_api.html#matplotlib.lines.Line2D" title="lines.Line2D" alt="" coords="227,562,320,585"/>
+<area shape="rect" id="node23" href="../api/artist_api.html#matplotlib.patches.ConnectionPatch" title="patches.ConnectionPatch" alt="" coords="590,237,763,260"/>
+<area shape="rect" id="node42" href="../api/artist_api.html#matplotlib.lines.VertexSelector" title="lines.VertexSelector" alt="" coords="20,376,161,400"/>
+<area shape="rect" id="node44" href="../api/artist_api.html#matplotlib.patches.BoxStyle" title="patches.BoxStyle" alt="" coords="28,329,153,353"/>
+<area shape="rect" id="node45" href="../api/artist_api.html#matplotlib.text.OffsetFrom" title="text.OffsetFrom" alt="" coords="33,283,147,307"/>
 </map>
 </p>
 </div>
@@ -679,7 +751,7 @@ C-c C-r rst-shift-region-right
           <a href="release_guide.html" title="Doing a matplolib release"
              >next</a> |</li>
         <li class="right" >
-          <a href="gitwash/git_resources.html" title="git resources"
+          <a href="testing.html" title="Testing"
              >previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../search.html">search</a>|&nbsp;</li>
@@ -692,7 +764,7 @@ C-c C-r rst-shift-region-right
     </div>
     <div class="footer">
         &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on Nov 13, 2012.
+      Last updated on Nov 20, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

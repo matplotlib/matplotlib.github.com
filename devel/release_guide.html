@@ -100,6 +100,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <li><a class="reference internal" href="#branching">Branching</a></li>
 <li><a class="reference internal" href="#packaging">Packaging</a></li>
 <li><a class="reference internal" href="#release-candidate-testing">Release candidate testing</a></li>
+<li><a class="reference internal" href="#documentation-updates">Documentation updates</a></li>
 <li><a class="reference internal" href="#announcing">Announcing</a></li>
 </ul>
 </li>
@@ -143,7 +144,6 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <ul class="simple">
 <li>Edit <tt class="file docutils literal"><span class="pre">__init__.py</span></tt> and bump the version number</li>
 </ul>
-<p>When doing a release</p>
 <div class="section" id="testing">
 <span id="release-testing"></span><h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -180,11 +180,14 @@ release after the fact, just track down the commit hash, and:</p>
 </div>
 <p>Tags allow developers to quickly checkout different releases by name,
 and also provides source download via zip and tarball on github.</p>
+<p>Then push the tags to the main repository:</p>
+<div class="highlight-python"><pre>git push upstream v1.0.1</pre>
+</div>
 </div>
 <div class="section" id="packaging">
 <span id="release-packaging"></span><h2>Packaging<a class="headerlink" href="#packaging" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Make sure the <tt class="file docutils literal"><span class="pre">MANIFEST.in</span></tt> us up to date and remove
+<li>Make sure the <tt class="file docutils literal"><span class="pre">MANIFEST.in</span></tt> is up to date and remove
 <tt class="file docutils literal"><span class="pre">MANIFEST</span></tt> so it will be rebuilt by MANIFEST.in</li>
 <li>run <tt class="xref py py-obj docutils literal"><span class="pre">git</span> <span class="pre">clean</span></tt> in the mpl git directory before building the sdist</li>
 <li>unpack the sdist and make sure you can build from that directory</li>
@@ -208,8 +211,29 @@ releases.</li>
 developer rights, you should see an &#8220;Upload a new file&#8221; section
 there.</p>
 </div>
+<div class="section" id="documentation-updates">
+<span id="release-announcing"></span><h2>Documentation updates<a class="headerlink" href="#documentation-updates" title="Permalink to this headline">¶</a></h2>
+<p>The built documentation exists in the <a class="reference external" href="https://github.com/matplotlib/matplotlib.github.com/">matplotlib.github.com</a> repository.
+Pushing changes to master automatically updates the website.</p>
+<p>In the matplotlib source repository, build the documentation:</p>
+<div class="highlight-python"><pre>cd doc
+python make.py html
+python make.py latex</pre>
+</div>
+<p>Then copy the build products into your local checkout of the
+<tt class="xref py py-obj docutils literal"><span class="pre">matplotlib.github.com</span></tt> repository (assuming here to be checked out in
+<tt class="xref py py-obj docutils literal"><span class="pre">com</span></tt>:</p>
+<div class="highlight-python"><pre>cp -r build/html/* ~/matplotlib.github.com
+cp build/latex/Matplotlib.pdf ~/matplotlib.github.com</pre>
+</div>
+<p>Then, from the <tt class="xref py py-obj docutils literal"><span class="pre">matplotlib.github.com</span></tt> directory, commit and push the
+changes upstream:</p>
+<div class="highlight-python"><pre>git commit -m "Updating for v1.0.1"
+git push upstream master</pre>
+</div>
+</div>
 <div class="section" id="announcing">
-<span id="release-announcing"></span><h2>Announcing<a class="headerlink" href="#announcing" title="Permalink to this headline">¶</a></h2>
+<h2>Announcing<a class="headerlink" href="#announcing" title="Permalink to this headline">¶</a></h2>
 <p>Announce the release on matplotlib-announce, matplotlib-users and
 matplotlib-devel.  Include a summary of highlights from the CHANGELOG
 and/or post the whole CHANGELOG since the last release.</p>
@@ -248,7 +272,7 @@ and/or post the whole CHANGELOG since the last release.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on Nov 13, 2012.
+      Last updated on Nov 20, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
