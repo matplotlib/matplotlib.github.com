@@ -118,6 +118,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Circle</span>
 <span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -380,25 +381,25 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
         <span class="n">Axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
     <span class="n">set_ylim</span> <span class="o">=</span> <span class="n">set_xlim</span>
 
-    <span class="k">def</span> <span class="nf">format_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">format_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override this method to change how the values are displayed in</span>
 <span class="sd">        the status bar.</span>
 
 <span class="sd">        In this case, we want them to be displayed in degrees N/S/E/W.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">long</span> <span class="o">=</span> <span class="nb">long</span> <span class="o">*</span> <span class="p">(</span><span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span> <span class="o">*</span> <span class="p">(</span><span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span> <span class="o">*</span> <span class="p">(</span><span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">lat</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="n">ns</span> <span class="o">=</span> <span class="s">&#39;N&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ns</span> <span class="o">=</span> <span class="s">&#39;S&#39;</span>
-        <span class="k">if</span> <span class="nb">long</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lon</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="n">ew</span> <span class="o">=</span> <span class="s">&#39;E&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ew</span> <span class="o">=</span> <span class="s">&#39;W&#39;</span>
         <span class="c"># \u00b0 : degree symbol</span>
-        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%f</span><span class="se">\u00b0</span><span class="si">%s</span><span class="s">, </span><span class="si">%f</span><span class="se">\u00b0</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="n">ns</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">long</span><span class="p">),</span> <span class="n">ew</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%f</span><span class="se">\u00b0</span><span class="si">%s</span><span class="s">, </span><span class="si">%f</span><span class="se">\u00b0</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="n">ns</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="n">ew</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">DegreeFormatter</span><span class="p">(</span><span class="n">Formatter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -503,9 +504,10 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
         <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">is_separable</span> <span class="o">=</span> <span class="bp">False</span>
 
-        <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ll</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ll</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Override the transform method to implement the custom transform.</span>
+<span class="sd">            Override the transform_non_affine method to implement the custom</span>
+<span class="sd">            transform.</span>
 
 <span class="sd">            The input and output are Nx2 numpy arrays.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -529,10 +531,25 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
         <span class="c"># differently-sized array, any transform that requires</span>
         <span class="c"># changing the length of the data array must happen within</span>
         <span class="c"># ``transform_path``.</span>
-        <span class="k">def</span> <span class="nf">transform_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-            <span class="n">vertices</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">vertices</span>
+        <span class="k">def</span> <span class="nf">transform_path_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
             <span class="n">ipath</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">interpolated</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">_interpolation_steps</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">ipath</span><span class="o">.</span><span class="n">vertices</span><span class="p">),</span> <span class="n">ipath</span><span class="o">.</span><span class="n">codes</span><span class="p">)</span>
+        <span class="n">transform_path_non_affine</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> \
+                <span class="n">Transform</span><span class="o">.</span><span class="n">transform_path_non_affine</span><span class="o">.</span><span class="n">__doc__</span>
+
+        <span class="k">if</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&lt;</span> <span class="s">&#39;1.2&#39;</span><span class="p">:</span>
+            <span class="c"># Note: For compatibility with matplotlib v1.1 and older, you&#39;ll</span>
+            <span class="c"># need to explicitly implement a ``transform`` method as well.</span>
+            <span class="c"># Otherwise a ``NotImplementedError`` will be raised. This isn&#39;t</span>
+            <span class="c"># necessary for v1.2 and newer, however.</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="n">transform_non_affine</span>
+
+            <span class="c"># Similarly, we need to explicitly override ``transform_path`` if</span>
+            <span class="c"># compatibility with older matplotlib versions is needed. With v1.2</span>
+            <span class="c"># and newer, only overriding the ``transform_path_non_affine``</span>
+            <span class="c"># method is sufficient.</span>
+            <span class="n">transform_path</span> <span class="o">=</span> <span class="n">transform_path_non_affine</span>
+            <span class="n">transform_path</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">Transform</span><span class="o">.</span><span class="n">transform_path</span><span class="o">.</span><span class="n">__doc__</span>
 
         <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">HammerAxes</span><span class="o">.</span><span class="n">InvertedHammerTransform</span><span class="p">()</span>
@@ -543,7 +560,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
         <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">is_separable</span> <span class="o">=</span> <span class="bp">False</span>
 
-        <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 
@@ -553,7 +570,12 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
             <span class="n">longitude</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">z</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">z</span><span class="o">*</span><span class="n">z</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)))</span>
             <span class="n">latitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">z</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">longitude</span><span class="p">,</span> <span class="n">latitude</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">transform</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">Transform</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">__doc__</span>
+        <span class="n">transform_non_affine</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">Transform</span><span class="o">.</span><span class="n">transform_non_affine</span><span class="o">.</span><span class="n">__doc__</span>
+
+        <span class="c"># As before, we need to implement the &quot;transform&quot; method for</span>
+        <span class="c"># compatibility with matplotlib v1.1 and older.</span>
+        <span class="k">if</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&lt;</span> <span class="s">&#39;1.2&#39;</span><span class="p">:</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="n">transform_non_affine</span>
 
         <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="c"># The inverse of the inverse is the original transform... ;)</span>
@@ -603,7 +625,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
     </div>
     <div class="footer">
         &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on Dec 02, 2012.
+      Last updated on Dec 13, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

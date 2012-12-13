@@ -113,163 +113,164 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
   <div class="section" id="old-animation-example-code-movie-demo-py">
 <span id="old-animation-movie-demo"></span><h1>old_animation example code: movie_demo.py<a class="headerlink" href="#old-animation-example-code-movie-demo-py" title="Permalink to this headline">¶</a></h1>
 <p>[<a class="reference external" href="movie_demo.py">source code</a>]</p>
-<div class="highlight-python"><pre>#!/usr/bin/python
-#
-# Josh Lifton 2004
-#
-# Permission is hereby granted to use and abuse this document
-# so long as proper attribution is given.
-#
-# This Python script demonstrates how to use the numarray package
-# to generate and handle large arrays of data and how to use the
-# matplotlib package to generate plots from the data and then save
-# those plots as images.  These images are then stitched together
-# by Mencoder to create a movie of the plotted data.  This script
-# is for demonstration purposes only and is not intended to be
-# for general use.  In particular, you will likely need to modify
-# the script to suit your own needs.
-#
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
+<span class="c">#</span>
+<span class="c"># Josh Lifton 2004</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted to use and abuse this document</span>
+<span class="c"># so long as proper attribution is given.</span>
+<span class="c">#</span>
+<span class="c"># This Python script demonstrates how to use the numarray package</span>
+<span class="c"># to generate and handle large arrays of data and how to use the</span>
+<span class="c"># matplotlib package to generate plots from the data and then save</span>
+<span class="c"># those plots as images.  These images are then stitched together</span>
+<span class="c"># by Mencoder to create a movie of the plotted data.  This script</span>
+<span class="c"># is for demonstration purposes only and is not intended to be</span>
+<span class="c"># for general use.  In particular, you will likely need to modify</span>
+<span class="c"># the script to suit your own needs.</span>
+<span class="c">#</span>
 
-from __future__ import print_function
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt   # For plotting graphs.
-import numpy as np
-import subprocess                 # For issuing commands to the OS.
-import os
-import sys                        # For determining the Python version.
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>   <span class="c"># For plotting graphs.</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>                 <span class="c"># For issuing commands to the OS.</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>                        <span class="c"># For determining the Python version.</span>
 
-#
-# Print the version information for the machine, OS,
-# Python interpreter, and matplotlib.  The version of
-# Mencoder is printed when it is called.
-#
-print('Executing on', os.uname())
-print('Python version', sys.version)
-print('matplotlib version', matplotlib.__version__)
+<span class="c">#</span>
+<span class="c"># Print the version information for the machine, OS,</span>
+<span class="c"># Python interpreter, and matplotlib.  The version of</span>
+<span class="c"># Mencoder is printed when it is called.</span>
+<span class="c">#</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;Executing on&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">uname</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;Python version&#39;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;matplotlib version&#39;</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 
-not_found_msg = """
-The mencoder command was not found;
-mencoder is used by this script to make an avi file from a set of pngs.
-It is typically not installed by default on linux distros because of
-legal restrictions, but it is widely available.
-"""
+<span class="n">not_found_msg</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">The mencoder command was not found;</span>
+<span class="s">mencoder is used by this script to make an avi file from a set of pngs.</span>
+<span class="s">It is typically not installed by default on linux distros because of</span>
+<span class="s">legal restrictions, but it is widely available.</span>
+<span class="s">&quot;&quot;&quot;</span>
 
-try:
-    subprocess.check_call(['mencoder'])
-except subprocess.CalledProcessError:
-    print("mencoder command was found")
-    pass # mencoder is found, but returns non-zero exit as expected
-    # This is a quick and dirty check; it leaves some spurious output
-    # for the user to puzzle over.
-except OSError:
-    print not_found_msg
-    sys.exit("quitting\n")
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s">&#39;mencoder&#39;</span><span class="p">])</span>
+<span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;mencoder command was found&quot;</span><span class="p">)</span>
+    <span class="k">pass</span> <span class="c"># mencoder is found, but returns non-zero exit as expected</span>
+    <span class="c"># This is a quick and dirty check; it leaves some spurious output</span>
+    <span class="c"># for the user to puzzle over.</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">not_found_msg</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;quitting</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
 
 
-#
-# First, let's create some data to work with.  In this example
-# we'll use a normalized Gaussian waveform whose mean and
-# standard deviation both increase linearly with time.  Such a
-# waveform can be thought of as a propagating system that loses
-# coherence over time, as might happen to the probability
-# distribution of a clock subjected to independent, identically
-# distributed Gaussian noise at each time step.
-#
+<span class="c">#</span>
+<span class="c"># First, let&#39;s create some data to work with.  In this example</span>
+<span class="c"># we&#39;ll use a normalized Gaussian waveform whose mean and</span>
+<span class="c"># standard deviation both increase linearly with time.  Such a</span>
+<span class="c"># waveform can be thought of as a propagating system that loses</span>
+<span class="c"># coherence over time, as might happen to the probability</span>
+<span class="c"># distribution of a clock subjected to independent, identically</span>
+<span class="c"># distributed Gaussian noise at each time step.</span>
+<span class="c">#</span>
 
-print('Initializing data set...')   # Let the user know what's happening.
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;Initializing data set...&#39;</span><span class="p">)</span>   <span class="c"># Let the user know what&#39;s happening.</span>
 
-# Initialize variables needed to create and store the example data set.
-numberOfTimeSteps = 100   # Number of frames we want in the movie.
-x = np.arange(-10,10,0.01)   # Values to be plotted on the x-axis.
-mean = -6                 # Initial mean of the Gaussian.
-stddev = 0.2              # Initial standard deviation.
-meaninc = 0.1             # Mean increment.
-stddevinc = 0.1           # Standard deviation increment.
+<span class="c"># Initialize variables needed to create and store the example data set.</span>
+<span class="n">numberOfTimeSteps</span> <span class="o">=</span> <span class="mi">100</span>   <span class="c"># Number of frames we want in the movie.</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mf">0.01</span><span class="p">)</span>   <span class="c"># Values to be plotted on the x-axis.</span>
+<span class="n">mean</span> <span class="o">=</span> <span class="o">-</span><span class="mi">6</span>                 <span class="c"># Initial mean of the Gaussian.</span>
+<span class="n">stddev</span> <span class="o">=</span> <span class="mf">0.2</span>              <span class="c"># Initial standard deviation.</span>
+<span class="n">meaninc</span> <span class="o">=</span> <span class="mf">0.1</span>             <span class="c"># Mean increment.</span>
+<span class="n">stddevinc</span> <span class="o">=</span> <span class="mf">0.1</span>           <span class="c"># Standard deviation increment.</span>
 
-# Create an array of zeros and fill it with the example data.
-y = np.zeros((numberOfTimeSteps,len(x)), float)
-for i in range(numberOfTimeSteps) :
-    y[i] = (1/np.sqrt(2*np.pi*stddev))*np.exp(-((x-mean)**2)/(2*stddev))
-    mean = mean + meaninc
-    stddev = stddev + stddevinc
+<span class="c"># Create an array of zeros and fill it with the example data.</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numberOfTimeSteps</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="nb">float</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numberOfTimeSteps</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">stddev</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">stddev</span><span class="p">))</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span> <span class="o">+</span> <span class="n">meaninc</span>
+    <span class="n">stddev</span> <span class="o">=</span> <span class="n">stddev</span> <span class="o">+</span> <span class="n">stddevinc</span>
 
-print('Done.')                       # Let the user know what's happening.
+<span class="k">print</span><span class="p">(</span><span class="s">&#39;Done.&#39;</span><span class="p">)</span>                       <span class="c"># Let the user know what&#39;s happening.</span>
 
-#
-# Now that we have an example data set (x,y) to work with, we can
-# start graphing it and saving the images.
-#
+<span class="c">#</span>
+<span class="c"># Now that we have an example data set (x,y) to work with, we can</span>
+<span class="c"># start graphing it and saving the images.</span>
+<span class="c">#</span>
 
-for i in range(len(y)) :
-    #
-    # The next four lines are just like MATLAB.
-    #
-    plt.plot(x,y[i],'b.')
-    plt.axis((x[0],x[-1],-0.25,1))
-    plt.xlabel('time (ms)')
-    plt.ylabel('probability density function')
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="p">:</span>
+    <span class="c">#</span>
+    <span class="c"># The next four lines are just like MATLAB.</span>
+    <span class="c">#</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&#39;b.&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;time (ms)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;probability density function&#39;</span><span class="p">)</span>
 
-    #
-    # Notice the use of LaTeX-like markup.
-    #
-    plt.title(r'$\cal{N}(\mu, \sigma^2)$', fontsize=20)
+    <span class="c">#</span>
+    <span class="c"># Notice the use of LaTeX-like markup.</span>
+    <span class="c">#</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">r&#39;$\cal{N}(\mu, \sigma^2)$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-    #
-    # The file name indicates how the image will be saved and the
-    # order it will appear in the movie.  If you actually wanted each
-    # graph to be displayed on the screen, you would include commands
-    # such as show() and draw() here.  See the matplotlib
-    # documentation for details.  In this case, we are saving the
-    # images directly to a file without displaying them.
-    #
-    filename = str('%03d' % i) + '.png'
-    plt.savefig(filename, dpi=100)
+    <span class="c">#</span>
+    <span class="c"># The file name indicates how the image will be saved and the</span>
+    <span class="c"># order it will appear in the movie.  If you actually wanted each</span>
+    <span class="c"># graph to be displayed on the screen, you would include commands</span>
+    <span class="c"># such as show() and draw() here.  See the matplotlib</span>
+    <span class="c"># documentation for details.  In this case, we are saving the</span>
+    <span class="c"># images directly to a file without displaying them.</span>
+    <span class="c">#</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%03d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;.png&#39;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
-    #
-    # Let the user know what's happening.
-    #
-    print('Wrote file', filename)
+    <span class="c">#</span>
+    <span class="c"># Let the user know what&#39;s happening.</span>
+    <span class="c">#</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Wrote file&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
-    #
-    # Clear the figure to make way for the next image.
-    #
-    plt.clf()
+    <span class="c">#</span>
+    <span class="c"># Clear the figure to make way for the next image.</span>
+    <span class="c">#</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
 
-#
-# Now that we have graphed images of the dataset, we will stitch them
-# together using Mencoder to create a movie.  Each image will become
-# a single frame in the movie.
-#
-# We want to use Python to make what would normally be a command line
-# call to Mencoder.  Specifically, the command line call we want to
-# emulate is (without the initial '#'):
-# mencoder mf://*.png -mf type=png:w=800:h=600:fps=25 -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi
-# See the MPlayer and Mencoder documentation for details.
-#
+<span class="c">#</span>
+<span class="c"># Now that we have graphed images of the dataset, we will stitch them</span>
+<span class="c"># together using Mencoder to create a movie.  Each image will become</span>
+<span class="c"># a single frame in the movie.</span>
+<span class="c">#</span>
+<span class="c"># We want to use Python to make what would normally be a command line</span>
+<span class="c"># call to Mencoder.  Specifically, the command line call we want to</span>
+<span class="c"># emulate is (without the initial &#39;#&#39;):</span>
+<span class="c"># mencoder mf://*.png -mf type=png:w=800:h=600:fps=25 -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o output.avi</span>
+<span class="c"># See the MPlayer and Mencoder documentation for details.</span>
+<span class="c">#</span>
 
-command = ('mencoder',
-           'mf://*.png',
-           '-mf',
-           'type=png:w=800:h=600:fps=25',
-           '-ovc',
-           'lavc',
-           '-lavcopts',
-           'vcodec=mpeg4',
-           '-oac',
-           'copy',
-           '-o',
-           'output.avi')
+<span class="n">command</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;mencoder&#39;</span><span class="p">,</span>
+           <span class="s">&#39;mf://*.png&#39;</span><span class="p">,</span>
+           <span class="s">&#39;-mf&#39;</span><span class="p">,</span>
+           <span class="s">&#39;type=png:w=800:h=600:fps=25&#39;</span><span class="p">,</span>
+           <span class="s">&#39;-ovc&#39;</span><span class="p">,</span>
+           <span class="s">&#39;lavc&#39;</span><span class="p">,</span>
+           <span class="s">&#39;-lavcopts&#39;</span><span class="p">,</span>
+           <span class="s">&#39;vcodec=mpeg4&#39;</span><span class="p">,</span>
+           <span class="s">&#39;-oac&#39;</span><span class="p">,</span>
+           <span class="s">&#39;copy&#39;</span><span class="p">,</span>
+           <span class="s">&#39;-o&#39;</span><span class="p">,</span>
+           <span class="s">&#39;output.avi&#39;</span><span class="p">)</span>
 
-#os.spawnvp(os.P_WAIT, 'mencoder', command)
+<span class="c">#os.spawnvp(os.P_WAIT, &#39;mencoder&#39;, command)</span>
 
-print("\n\nabout to execute:\n%s\n\n" % ' '.join(command))
-subprocess.check_call(command)
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">about to execute:</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+<span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
 
-print("\n\n The movie was written to 'output.avi'")
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s"> The movie was written to &#39;output.avi&#39;&quot;</span><span class="p">)</span>
 
-print("\n\n You may want to delete *.png now.\n\n")</pre>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s"> You may want to delete *.png now.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Keywords: python, matplotlib, pylab, example, codex (see <a class="reference internal" href="../../faq/howto_faq.html#how-to-search-examples"><em>Search examples</em></a>)</p>
 </div>
@@ -300,7 +301,7 @@ print("\n\n You may want to delete *.png now.\n\n")</pre>
     </div>
     <div class="footer">
         &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on Dec 02, 2012.
+      Last updated on Dec 13, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
