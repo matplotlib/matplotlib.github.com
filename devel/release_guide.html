@@ -82,6 +82,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
           <a href="documenting_mpl.html" title="Documenting matplotlib"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
         <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
@@ -100,7 +101,8 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <li><a class="reference internal" href="#testing">Testing</a></li>
 <li><a class="reference internal" href="#branching">Branching</a></li>
 <li><a class="reference internal" href="#packaging">Packaging</a></li>
-<li><a class="reference internal" href="#release-candidate-testing">Release candidate testing</a></li>
+<li><a class="reference internal" href="#posting-files">Posting files</a></li>
+<li><a class="reference internal" href="#update-pypi">Update PyPI</a></li>
 <li><a class="reference internal" href="#documentation-updates">Documentation updates</a></li>
 <li><a class="reference internal" href="#announcing">Announcing</a></li>
 </ul>
@@ -141,7 +143,7 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
             
   <div class="section" id="doing-a-matplolib-release">
 <span id="release-guide"></span><h1>Doing a matplolib release<a class="headerlink" href="#doing-a-matplolib-release" title="Permalink to this headline">¶</a></h1>
-<p>A guide for developers who are doing a matplotlib release</p>
+<p>A guide for developers who are doing a matplotlib release.</p>
 <ul class="simple">
 <li>Edit <tt class="file docutils literal"><span class="pre">__init__.py</span></tt> and bump the version number</li>
 </ul>
@@ -163,7 +165,8 @@ backends</li>
 <div class="section" id="branching">
 <span id="release-branching"></span><h2>Branching<a class="headerlink" href="#branching" title="Permalink to this headline">¶</a></h2>
 <p>Once all the tests are passing and you are ready to do a release, you
-need to create a release branch:</p>
+need to create a release branch.  These only need to be created when
+the second part of the version number changes:</p>
 <div class="highlight-python"><pre>git checkout -b v1.1.x
 git push git@github.com:matplotlib/matplotlib.git v1.1.x</pre>
 </div>
@@ -177,12 +180,12 @@ please <tt class="xref py py-obj docutils literal"><span class="pre">git</span> 
 affiliate your name with it. A reasonable tag message would be something
 like <tt class="docutils literal"><span class="pre">v1.1.0</span> <span class="pre">Release</span> <span class="pre">Candidate</span> <span class="pre">1</span> <span class="pre">(September</span> <span class="pre">24,</span> <span class="pre">2011)</span></tt>. To tag a
 release after the fact, just track down the commit hash, and:</p>
-<div class="highlight-python"><pre>git tag -a v1.0.1 a9f3f3a50745</pre>
+<div class="highlight-python"><pre>git tag -a v1.0.1rc1 a9f3f3a50745</pre>
 </div>
 <p>Tags allow developers to quickly checkout different releases by name,
 and also provides source download via zip and tarball on github.</p>
 <p>Then push the tags to the main repository:</p>
-<div class="highlight-python"><pre>git push upstream v1.0.1</pre>
+<div class="highlight-python"><pre>git push upstream v1.0.1rc1</pre>
 </div>
 </div>
 <div class="section" id="packaging">
@@ -198,7 +201,7 @@ or off any platform specific build options you need.  Importantly,
 you also need to make sure that you delete the <tt class="file docutils literal"><span class="pre">build</span></tt> dir
 after any changes to <tt class="file docutils literal"><span class="pre">setup.cfg</span></tt> before rebuilding since cruft
 in the <tt class="file docutils literal"><span class="pre">build</span></tt> dir can get carried along.</li>
-<li>on windows, unix2dos the rc file</li>
+<li>On windows, unix2dos the rc file.</li>
 <li>We have a Makefile for the OS X builds in the mpl source dir
 <tt class="file docutils literal"><span class="pre">release/osx</span></tt>, so use this to prepare the OS X releases.</li>
 <li>We have a Makefile for the win32 mingw builds in the mpl source dir
@@ -206,16 +209,106 @@ in the <tt class="file docutils literal"><span class="pre">build</span></tt> dir
 releases.</li>
 </ul>
 </div>
-<div class="section" id="release-candidate-testing">
-<span id="id1"></span><h2>Release candidate testing<a class="headerlink" href="#release-candidate-testing" title="Permalink to this headline">¶</a></h2>
-<p>Post the release candidates tarballs to the <a class="reference external" href="https://github.com/matplotlib/matplotlib/downloads">matplotlib download page</a>.  If you have
-developer rights, you should see an &#8220;Upload a new file&#8221; section
-there.</p>
+<div class="section" id="posting-files">
+<h2>Posting files<a class="headerlink" href="#posting-files" title="Permalink to this headline">¶</a></h2>
+<p>Our current method is for the release manager to collect all of the
+binaries from the platform builders and post the files online on
+Sourceforge.  It is also possible that those building the binaries
+could upload to directly to Sourceforge.</p>
+<p>There are many ways to upload files to Sourceforge (<tt class="xref py py-obj docutils literal"><span class="pre">scp</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">rsync</span></tt>,
+<tt class="xref py py-obj docutils literal"><span class="pre">sftp</span></tt>, and a web interface) described in <a class="reference external" href="https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download">Sourceforge Release File
+System documentation</a>.
+Below, we will use <tt class="xref py py-obj docutils literal"><span class="pre">sftp</span></tt>.</p>
+<ol class="arabic">
+<li><p class="first">Create a directory containing all of the release files and <tt class="xref py py-obj docutils literal"><span class="pre">cd</span></tt> to it.</p>
+</li>
+<li><p class="first"><tt class="xref py py-obj docutils literal"><span class="pre">sftp</span></tt> to Sourceforge:</p>
+<div class="highlight-python"><pre>sftp USERNAME@frs.sourceforge.net:/home/frs/project/matplotlib/matplotlib</pre>
+</div>
+</li>
+<li><p class="first">Make a new directory for the release and move to it:</p>
+<div class="highlight-python"><pre>mkdir matplotlib-1.1.0rc1
+cd matplotlib-1.1.0rc1</pre>
+</div>
+</li>
+<li><p class="first">Upload all of the files in the current directory on your local machine:</p>
+<div class="highlight-python"><pre>put *</pre>
+</div>
+</li>
+</ol>
+<p>If this release is a final release, the default download for the
+matplotlib project should also be updated.  Login to Sourceforge and
+visit the <a class="reference external" href="https://sourceforge.net/projects/matplotlib/files/matplotlib/">matplotlib files page</a>.
+Navigate to the tarball of the release you just updated, click on
+&#8220;Details&#8221; icon (it looks like a lower case <tt class="docutils literal"><span class="pre">i</span></tt>), and make it the
+default download for all platforms.</p>
+<p>There is a list of direct links to downloads on matplotlib&#8217;s main
+website.  This needs to be manually generated and updated every time
+new files are posted.</p>
+<ol class="arabic">
+<li><p class="first">Clone the matplotlib documentation repository and <tt class="xref py py-obj docutils literal"><span class="pre">cd</span></tt> into it:</p>
+<div class="highlight-python"><pre>git clone git@github.com:matplotlib/matplotlib.github.com.git
+cd matplotlib.github.com</pre>
+</div>
+</li>
+<li><p class="first">Update the list of downloads that you want to display by editing
+the <tt class="xref py py-obj docutils literal"><span class="pre">downloads.txt</span></tt> file.  Generally, this should contain the last two
+final releases and any active release candidates.</p>
+</li>
+<li><p class="first">Update the downloads webpage by running the <tt class="xref py py-obj docutils literal"><span class="pre">update_downloads.py</span></tt>
+script.  This script requires <tt class="xref py py-obj docutils literal"><span class="pre">paramiko</span></tt> (for <tt class="xref py py-obj docutils literal"><span class="pre">sftp</span></tt> support) and
+<tt class="xref py py-obj docutils literal"><span class="pre">jinja2</span></tt> for templating.  Both of these dependencies can be
+installed using pip:</p>
+<div class="highlight-python"><pre>pip install paramiko
+pip install jinja2</pre>
+</div>
+<p>Then update the download page:</p>
+<div class="highlight-python"><pre>./update_downloads.py</pre>
+</div>
+<p>You will be prompted for your Sourceforge username and password.</p>
+</li>
+<li><p class="first">Commit the changes and push them up to github:</p>
+<div class="highlight-python"><pre>git commit -m "Updating download list"
+git push</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="update-pypi">
+<h2>Update PyPI<a class="headerlink" href="#update-pypi" title="Permalink to this headline">¶</a></h2>
+<p>Once the tarball has been posted on Sourceforge, you can register a
+link to the new release on PyPI.  This should only be done with final
+(non-release-candidate) releases, since doing so will hide any
+available stable releases.</p>
+<p>You may need to set up your <tt class="xref py py-obj docutils literal"><span class="pre">pypirc</span></tt> file as described in the
+<a class="reference external" href="http://docs.python.org/2/distutils/packageindex.html">distutils register command documentation</a>.</p>
+<p>Then updating the record on PyPI is as simple as:</p>
+<div class="highlight-python"><pre>python setup.py register</pre>
+</div>
+<p>This will hide any previous releases automatically.</p>
 </div>
 <div class="section" id="documentation-updates">
-<span id="release-announcing"></span><h2>Documentation updates<a class="headerlink" href="#documentation-updates" title="Permalink to this headline">¶</a></h2>
+<h2>Documentation updates<a class="headerlink" href="#documentation-updates" title="Permalink to this headline">¶</a></h2>
 <p>The built documentation exists in the <a class="reference external" href="https://github.com/matplotlib/matplotlib.github.com/">matplotlib.github.com</a> repository.
 Pushing changes to master automatically updates the website.</p>
+<p>The documentation is organized by version.  At the root of the tree is
+always the documentation for the latest stable release.  Under that,
+there are directories containing the documentation for older versions
+as well as the bleeding edge release version called <tt class="xref py py-obj docutils literal"><span class="pre">dev</span></tt> (usually
+based on what&#8217;s on master in the github repository, but it may also
+temporarily be a staging area for proposed changes).  There is also a
+symlink directory with the name of the most recently released version
+that points to the root.  With each new release, these directories may
+need to be reorganized accordingly.  Any time these version
+directories are added or removed, the <tt class="xref py py-obj docutils literal"><span class="pre">versions.html</span></tt> file (which
+contains a list of the available documentation versions for the user)
+must also be updated.</p>
+<p>To make sure everyone&#8217;s hard work gets credited, regenerate the github
+stats.  <tt class="xref py py-obj docutils literal"><span class="pre">cd</span></tt> into the tools directory and run:</p>
+<div class="highlight-python"><pre>python github_stats.py $TAG &gt; ../doc/users/github_stats.rst</pre>
+</div>
+<p>where <tt class="xref py py-obj docutils literal"><span class="pre">$TAG</span></tt> is the tag of the last major release.  This will generate
+stats for all work done since that release.</p>
 <p>In the matplotlib source repository, build the documentation:</p>
 <div class="highlight-python"><pre>cd doc
 python make.py html
@@ -235,9 +328,10 @@ git push upstream master</pre>
 </div>
 <div class="section" id="announcing">
 <h2>Announcing<a class="headerlink" href="#announcing" title="Permalink to this headline">¶</a></h2>
-<p>Announce the release on matplotlib-announce, matplotlib-users and
-matplotlib-devel.  Include a summary of highlights from the CHANGELOG
-and/or post the whole CHANGELOG since the last release.</p>
+<p>Announce the release on matplotlib-announce, matplotlib-users, and
+matplotlib-devel.  Final (non-release-candidate) versions should also
+be announced on python-announce.  Include a summary of highlights from
+the CHANGELOG and/or post the whole CHANGELOG since the last release.</p>
 </div>
 </div>
 
@@ -263,6 +357,7 @@ and/or post the whole CHANGELOG since the last release.</p>
           <a href="documenting_mpl.html" title="Documenting matplotlib"
              >previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
         <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
@@ -274,7 +369,7 @@ and/or post the whole CHANGELOG since the last release.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on Dec 13, 2012.
+      Last updated on Jan 08, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
