@@ -10,6 +10,7 @@ import paramiko
 
 import base64
 import getpass
+import io
 import os
 import socket
 import sys
@@ -85,10 +86,10 @@ def get_file_listings(hostname, username, password, hostkey, versions):
 
 def generate_download_page(files):
     from jinja2 import Template
-    with open("downloads.tpl.html", "r") as fd:
+    with io.open("downloads.tpl.html", "r", encoding='utf-8') as fd:
         t = Template(fd.read())
     stream = t.stream(files=files)
-    with open("downloads.html", "wb") as fd:
+    with io.open("downloads.html", "w", encoding='utf-8') as fd:
         stream.dump(fd)
 
 
