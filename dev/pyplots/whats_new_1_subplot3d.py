@@ -28,3 +28,4 @@ ax.plot_wireframe(X, Y, Z, rstride=10, cstride=10)
 
 plt.show()
 
+plt.savefig("test.pdf")
