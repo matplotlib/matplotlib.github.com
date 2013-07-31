@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>afm (Adobe Font Metrics interface) &mdash; Matplotlib 1.3.0rc2 documentation</title>
+    <title>afm (Adobe Font Metrics interface) &mdash; Matplotlib 1.3.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.3.0rc2',
+        VERSION:     '1.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.3.0rc2 documentation"
+          title="Search within Matplotlib 1.3.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.3.0rc2 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.3.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="animation" href="animation_api.html" />
     <link rel="prev" title="The top level matplotlib module" href="matplotlib_configuration_api.html" /> 
@@ -138,23 +136,27 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <div class="section" id="module-matplotlib.afm">
 <span id="matplotlib-afm"></span><h2><a class="reference internal" href="#module-matplotlib.afm" title="matplotlib.afm"><tt class="xref py py-mod docutils literal"><span class="pre">matplotlib.afm</span></tt></a><a class="headerlink" href="#module-matplotlib.afm" title="Permalink to this headline">¶</a></h2>
 <p>This is a python interface to Adobe Font Metrics Files.  Although a
-number of other python implementations exist (and may be more complete
-than mine) I decided not to go with them because either they were
-either</p>
+number of other python implementations exist, and may be more complete
+than this, it was decided not to go with them because they were
+either:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li>copyrighted or used a non-BSD compatible license</li>
-<li>had too many dependencies and I wanted a free standing lib</li>
-<li>Did more than I needed and it was easier to write my own than
-figure out how to just get what I needed from theirs</li>
+<li>had too many dependencies and a free standing lib was needed</li>
+<li>Did more than needed and it was easier to write afresh rather than
+figure out how to get just what was needed.</li>
 </ol>
 </div></blockquote>
 <p>It is pretty easy to use, and requires only built-in python libs:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">afm</span> <span class="kn">import</span> <span class="n">AFM</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;ptmr8a.afm&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">afm</span> <span class="o">=</span> <span class="n">AFM</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os.path</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">afm_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;datapath&#39;</span><span class="p">],</span> 
+<span class="gp">... </span>                        <span class="s">&#39;fonts&#39;</span><span class="p">,</span> <span class="s">&#39;afm&#39;</span><span class="p">,</span> <span class="s">&#39;ptmr8a.afm&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib.afm</span> <span class="kn">import</span> <span class="n">AFM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">afm</span> <span class="o">=</span> <span class="n">AFM</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">afm_fname</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">afm</span><span class="o">.</span><span class="n">string_width_height</span><span class="p">(</span><span class="s">&#39;What the heck?&#39;</span><span class="p">)</span>
-<span class="go">(6220.0, 683)</span>
+<span class="go">(6220.0, 694)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">afm</span><span class="o">.</span><span class="n">get_fontname</span><span class="p">()</span>
 <span class="go">&#39;Times-Roman&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">afm</span><span class="o">.</span><span class="n">get_kern_dist</span><span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">)</span>
@@ -163,14 +165,8 @@ figure out how to just get what I needed from theirs</li>
 <span class="go">-92.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">afm</span><span class="o">.</span><span class="n">get_bbox_char</span><span class="p">(</span><span class="s">&#39;!&#39;</span><span class="p">)</span>
 <span class="go">[130, -9, 238, 676]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">afm</span><span class="o">.</span><span class="n">get_bbox_font</span><span class="p">()</span>
-<span class="go">[-168, -218, 1000, 898]</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>AUTHOR:</dt>
-<dd>John D. Hunter &lt;<a class="reference external" href="mailto:jdh2358&#37;&#52;&#48;gmail&#46;com">jdh2358<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</dd>
-</dl>
 <dl class="class">
 <dt id="matplotlib.afm.AFM">
 <em class="property">class </em><tt class="descclassname">matplotlib.afm.</tt><tt class="descname">AFM</tt><big>(</big><em>fh</em><big>)</big><a class="headerlink" href="#matplotlib.afm.AFM" title="Permalink to this definition">¶</a></dt>
@@ -349,9 +345,9 @@ is a (<em>dhead</em>, <em>dcmetrics</em>, <em>dkernpairs</em>, <em>dcomposite</e
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on Jun 10, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2013 The matplotlib development team.
+      Last updated on Jul 31, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

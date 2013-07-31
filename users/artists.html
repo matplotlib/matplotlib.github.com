@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Artist tutorial &mdash; Matplotlib 1.2.1 documentation</title>
+    <title>Artist tutorial &mdash; Matplotlib 1.3.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2.1',
+        VERSION:     '1.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,9 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.2.1 documentation"
+          title="Search within Matplotlib 1.3.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.2.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.3.0 documentation" href="../index.html" />
     <link rel="up" title="User’s Guide" href="index.html" />
     <link rel="next" title="Customizing Location of Subplot Using GridSpec" href="gridspec.html" />
     <link rel="prev" title="Image tutorial" href="image_tutorial.html" /> 
@@ -80,11 +80,9 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
           <a href="image_tutorial.html" title="Image tutorial"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" accesskey="U">User&#8217;s Guide</a> &raquo;</li> 
@@ -153,8 +151,24 @@ talking to user interface toolkits like <a class="reference external" href="http
 the <tt class="docutils literal"><span class="pre">Artist</span></tt> handles all the high level constructs like representing
 and laying out the figure, text, and lines.  The typical user will
 spend 95% of his time working with the <tt class="docutils literal"><span class="pre">Artists</span></tt>.</p>
-<p>There are two types of <tt class="docutils literal"><span class="pre">Artists</span></tt>: primitives and containers.  The primitives represent the standard graphical objects we want to paint onto our canvas: <a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a>, <a class="reference internal" href="../api/artist_api.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle"><tt class="xref py py-class docutils literal"><span class="pre">Rectangle</span></tt></a>, <a class="reference internal" href="../api/artist_api.html#matplotlib.text.Text" title="matplotlib.text.Text"><tt class="xref py py-class docutils literal"><span class="pre">Text</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">AxesImage</span></tt>, etc., and the containers are places to put them (<a class="reference internal" href="../api/axis_api.html#matplotlib.axis.Axis" title="matplotlib.axis.Axis"><tt class="xref py py-class docutils literal"><span class="pre">Axis</span></tt></a>, <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-class docutils literal"><span class="pre">Axes</span></tt></a> and <a class="reference internal" href="../api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><tt class="xref py py-class docutils literal"><span class="pre">Figure</span></tt></a>).  The standard use is to create a <a class="reference internal" href="../api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><tt class="xref py py-class docutils literal"><span class="pre">Figure</span></tt></a> instance, use the <tt class="docutils literal"><span class="pre">Figure</span></tt> to create one or more <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-class docutils literal"><span class="pre">Axes</span></tt></a> or <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Subplot" title="matplotlib.axes.Subplot"><tt class="xref py py-class docutils literal"><span class="pre">Subplot</span></tt></a> instances, and use the <tt class="docutils literal"><span class="pre">Axes</span></tt> instance helper methods to create the primitives.  In the example below, we create a <tt class="docutils literal"><span class="pre">Figure</span></tt> instance using <a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.figure()</span></tt></a>, which is a convenience method for instantiating <tt class="docutils literal"><span class="pre">Figure</span></tt> instances and connecting them with your user interface or drawing toolkit <tt class="docutils literal"><span class="pre">FigureCanvas</span></tt>.  As we will discuss below, this is not necessary &#8211; you
-can work directly with PostScript, PDF Gtk+, or wxPython <tt class="docutils literal"><span class="pre">FigureCanvas</span></tt> instances, instantiate your <tt class="docutils literal"><span class="pre">Figures</span></tt> directly and connect them yourselves &#8211; but since we are focusing here on the <tt class="docutils literal"><span class="pre">Artist</span></tt> API we&#8217;ll let <a class="reference internal" href="../api/pyplot_api.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><tt class="xref py py-mod docutils literal"><span class="pre">pyplot</span></tt></a> handle some of those details for us:</p>
+<p>There are two types of <tt class="docutils literal"><span class="pre">Artists</span></tt>: primitives and containers.  The primitives
+represent the standard graphical objects we want to paint onto our canvas:
+<a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-class docutils literal"><span class="pre">Line2D</span></tt></a>, <a class="reference internal" href="../api/artist_api.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle"><tt class="xref py py-class docutils literal"><span class="pre">Rectangle</span></tt></a>,
+<a class="reference internal" href="../api/artist_api.html#matplotlib.text.Text" title="matplotlib.text.Text"><tt class="xref py py-class docutils literal"><span class="pre">Text</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">AxesImage</span></tt>, etc., and
+the containers are places to put them (<a class="reference internal" href="../api/axis_api.html#matplotlib.axis.Axis" title="matplotlib.axis.Axis"><tt class="xref py py-class docutils literal"><span class="pre">Axis</span></tt></a>,
+<a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-class docutils literal"><span class="pre">Axes</span></tt></a> and <a class="reference internal" href="../api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><tt class="xref py py-class docutils literal"><span class="pre">Figure</span></tt></a>).  The
+standard use is to create a <a class="reference internal" href="../api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><tt class="xref py py-class docutils literal"><span class="pre">Figure</span></tt></a> instance, use
+the <tt class="docutils literal"><span class="pre">Figure</span></tt> to create one or more <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><tt class="xref py py-class docutils literal"><span class="pre">Axes</span></tt></a> or
+<a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Subplot" title="matplotlib.axes.Subplot"><tt class="xref py py-class docutils literal"><span class="pre">Subplot</span></tt></a> instances, and use the <tt class="docutils literal"><span class="pre">Axes</span></tt> instance
+helper methods to create the primitives.  In the example below, we create a
+<tt class="docutils literal"><span class="pre">Figure</span></tt> instance using <a class="reference internal" href="../api/pyplot_api.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.figure()</span></tt></a>, which is a
+convenience method for instantiating <tt class="docutils literal"><span class="pre">Figure</span></tt> instances and connecting them
+with your user interface or drawing toolkit <tt class="docutils literal"><span class="pre">FigureCanvas</span></tt>.  As we will
+discuss below, this is not necessary &#8211; you can work directly with PostScript,
+PDF Gtk+, or wxPython <tt class="docutils literal"><span class="pre">FigureCanvas</span></tt> instances, instantiate your <tt class="docutils literal"><span class="pre">Figures</span></tt>
+directly and connect them yourselves &#8211; but since we are focusing here on the
+<tt class="docutils literal"><span class="pre">Artist</span></tt> API we&#8217;ll let <a class="reference internal" href="../api/pyplot_api.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><tt class="xref py py-mod docutils literal"><span class="pre">pyplot</span></tt></a> handle some of those details
+for us:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c"># two rows, one column, first plot</span>
@@ -172,8 +186,8 @@ graphics primitives (<a class="reference internal" href="../api/artist_api.html#
 <a class="reference internal" href="../api/artist_api.html#matplotlib.text.Text" title="matplotlib.text.Text"><tt class="xref py py-class docutils literal"><span class="pre">Text</span></tt></a>,
 <a class="reference internal" href="../api/artist_api.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle"><tt class="xref py py-class docutils literal"><span class="pre">Rectangle</span></tt></a>,
 <tt class="xref py py-class docutils literal"><span class="pre">Image</span></tt>, respectively).  These helper methods
-will take your data (eg. <tt class="docutils literal"><span class="pre">numpy</span></tt> arrays and strings) and create
-primitive <tt class="docutils literal"><span class="pre">Artist</span></tt> instances as needed (eg. <tt class="docutils literal"><span class="pre">Line2D</span></tt>), add them to
+will take your data (e.g., <tt class="docutils literal"><span class="pre">numpy</span></tt> arrays and strings) and create
+primitive <tt class="docutils literal"><span class="pre">Artist</span></tt> instances as needed (e.g., <tt class="docutils literal"><span class="pre">Line2D</span></tt>), add them to
 the relevant containers, and draw them when requested.  Most of you
 are probably familiar with the <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Subplot" title="matplotlib.axes.Subplot"><tt class="xref py py-class docutils literal"><span class="pre">Subplot</span></tt></a>,
 which is just a special case of an <tt class="docutils literal"><span class="pre">Axes</span></tt> that lives on a regular
@@ -243,7 +257,7 @@ figures.  Likewise, each <a class="reference internal" href="../api/axes_api.htm
 plot, has a <tt class="docutils literal"><span class="pre">Rectangle</span></tt> instance that determines the color,
 transparency, and other properties of the Axes.  These instances are
 stored as member variables <tt class="xref py py-attr docutils literal"><span class="pre">Figure.patch</span></tt> and <tt class="xref py py-attr docutils literal"><span class="pre">Axes.patch</span></tt> (&#8220;Patch&#8221; is a name inherited from
-MATLAB, and is a 2D &#8220;patch&#8221; of color on the figure, eg. rectangles,
+MATLAB, and is a 2D &#8220;patch&#8221; of color on the figure, e.g., rectangles,
 circles and polygons).  Every matplotlib <tt class="docutils literal"><span class="pre">Artist</span></tt> has the following
 properties</p>
 <table border="1" class="docutils">
@@ -282,7 +296,7 @@ properties</p>
 <td>The figure instance the artist lives in, possibly None</td>
 </tr>
 <tr class="row-even"><td>label</td>
-<td>A text label (eg. for auto-labeling)</td>
+<td>A text label (e.g., for auto-labeling)</td>
 </tr>
 <tr class="row-odd"><td>picker</td>
 <td>A python object that controls object picking</td>
@@ -316,7 +330,7 @@ inspect the <tt class="docutils literal"><span class="pre">Artist</span></tt> pr
 <a class="reference internal" href="../api/artist_api.html#matplotlib.artist.getp" title="matplotlib.artist.getp"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.artist.getp()</span></tt></a> function (simply
 <tt class="xref py py-func docutils literal"><span class="pre">getp()</span></tt> in pylab), which lists the properties
 and their values.  This works for classes derived from <tt class="docutils literal"><span class="pre">Artist</span></tt> as
-well, eg. <tt class="docutils literal"><span class="pre">Figure</span></tt> and <tt class="docutils literal"><span class="pre">Rectangle</span></tt>.  Here are the <tt class="docutils literal"><span class="pre">Figure</span></tt> rectangle
+well, e.g., <tt class="docutils literal"><span class="pre">Figure</span></tt> and <tt class="docutils literal"><span class="pre">Rectangle</span></tt>.  Here are the <tt class="docutils literal"><span class="pre">Figure</span></tt> rectangle
 properties mentioned above:</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [149]: </span><span class="n">matplotlib</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">getp</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
 <span class="go">    alpha = 1.0</span>
@@ -483,7 +497,7 @@ determines the shape, background and border of the plotting region:</p>
 <span class="n">rect</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s">&#39;green&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>When you call a plotting method, eg. the canonical
+<p>When you call a plotting method, e.g., the canonical
 <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> and pass in arrays or lists of
 values, the method will create a <a class="reference internal" href="../api/artist_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.lines.Line2D()</span></tt></a>
 instance, update the line with all the <tt class="docutils literal"><span class="pre">Line2D</span></tt> properties passed as
@@ -705,7 +719,18 @@ also stores the data and view intervals used in auto-scaling, panning
 and zooming, as well as the <a class="reference internal" href="../api/ticker_api.html#matplotlib.ticker.Locator" title="matplotlib.ticker.Locator"><tt class="xref py py-class docutils literal"><span class="pre">Locator</span></tt></a> and
 <a class="reference internal" href="../api/ticker_api.html#matplotlib.ticker.Formatter" title="matplotlib.ticker.Formatter"><tt class="xref py py-class docutils literal"><span class="pre">Formatter</span></tt></a> instances which control where
 the ticks are placed and how they are represented as strings.</p>
-<p>Each <tt class="docutils literal"><span class="pre">Axis</span></tt> object contains a <tt class="xref py py-attr docutils literal"><span class="pre">label</span></tt> attribute (this is what <tt class="xref py py-mod docutils literal"><span class="pre">pylab</span></tt> modifies in calls to <tt class="xref py py-func docutils literal"><span class="pre">xlabel()</span></tt> and <tt class="xref py py-func docutils literal"><span class="pre">ylabel()</span></tt>) as well as a list of major and minor ticks.  The ticks are <a class="reference internal" href="../api/axis_api.html#matplotlib.axis.XTick" title="matplotlib.axis.XTick"><tt class="xref py py-class docutils literal"><span class="pre">XTick</span></tt></a> and <a class="reference internal" href="../api/axis_api.html#matplotlib.axis.YTick" title="matplotlib.axis.YTick"><tt class="xref py py-class docutils literal"><span class="pre">YTick</span></tt></a> instances, which contain the actual line and text primitives that render the ticks and ticklabels.  Because the ticks are dynamically created as needed (eg. when panning and zooming), you should access the lists of major and minor ticks through their accessor methods <a class="reference internal" href="../api/axis_api.html#matplotlib.axis.Axis.get_major_ticks" title="matplotlib.axis.Axis.get_major_ticks"><tt class="xref py py-meth docutils literal"><span class="pre">get_major_ticks()</span></tt></a> and <a class="reference internal" href="../api/axis_api.html#matplotlib.axis.Axis.get_minor_ticks" title="matplotlib.axis.Axis.get_minor_ticks"><tt class="xref py py-meth docutils literal"><span class="pre">get_minor_ticks()</span></tt></a>.  Although the ticks contain all the primitives and will be covered below, the <tt class="docutils literal"><span class="pre">Axis</span></tt> methods contain accessor methods to return the tick lines, tick labels, tick locations etc.:</p>
+<p>Each <tt class="docutils literal"><span class="pre">Axis</span></tt> object contains a <tt class="xref py py-attr docutils literal"><span class="pre">label</span></tt> attribute
+(this is what <tt class="xref py py-mod docutils literal"><span class="pre">pylab</span></tt> modifies in calls to
+<tt class="xref py py-func docutils literal"><span class="pre">xlabel()</span></tt> and <tt class="xref py py-func docutils literal"><span class="pre">ylabel()</span></tt>) as well
+as a list of major and minor ticks.  The ticks are
+<a class="reference internal" href="../api/axis_api.html#matplotlib.axis.XTick" title="matplotlib.axis.XTick"><tt class="xref py py-class docutils literal"><span class="pre">XTick</span></tt></a> and <a class="reference internal" href="../api/axis_api.html#matplotlib.axis.YTick" title="matplotlib.axis.YTick"><tt class="xref py py-class docutils literal"><span class="pre">YTick</span></tt></a> instances,
+which contain the actual line and text primitives that render the ticks and
+ticklabels.  Because the ticks are dynamically created as needed (e.g., when
+panning and zooming), you should access the lists of major and minor ticks
+through their accessor methods <a class="reference internal" href="../api/axis_api.html#matplotlib.axis.Axis.get_major_ticks" title="matplotlib.axis.Axis.get_major_ticks"><tt class="xref py py-meth docutils literal"><span class="pre">get_major_ticks()</span></tt></a>
+and <a class="reference internal" href="../api/axis_api.html#matplotlib.axis.Axis.get_minor_ticks" title="matplotlib.axis.Axis.get_minor_ticks"><tt class="xref py py-meth docutils literal"><span class="pre">get_minor_ticks()</span></tt></a>.  Although the ticks contain
+all the primitives and will be covered below, the <tt class="docutils literal"><span class="pre">Axis</span></tt> methods contain
+accessor methods to return the tick lines, tick labels, tick locations etc.:</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [285]: </span><span class="n">axis</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span>
 
 <span class="gp">In [286]: </span><span class="n">axis</span><span class="o">.</span><span class="n">get_ticklocs</span><span class="p">()</span>
@@ -925,19 +950,17 @@ dollar signs and colors them green on the right side of the yaxis</p>
           <a href="image_tutorial.html" title="Image tutorial"
              >previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" >User&#8217;s Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on May 29, 2013.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2013 The matplotlib development team.
+      Last updated on Jul 31, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

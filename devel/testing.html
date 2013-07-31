@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Testing &mdash; Matplotlib 1.2.1 documentation</title>
+    <title>Testing &mdash; Matplotlib 1.3.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2.1',
+        VERSION:     '1.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,9 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.2.1 documentation"
+          title="Search within Matplotlib 1.3.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.2.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.3.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib Developers’ Guide" href="index.html" />
     <link rel="next" title="Documenting matplotlib" href="documenting_mpl.html" />
     <link rel="prev" title="git resources" href="gitwash/git_resources.html" /> 
@@ -80,11 +80,9 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
           <a href="gitwash/git_resources.html" title="git resources"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" accesskey="U">The Matplotlib Developers&#8217; Guide</a> &raquo;</li> 
@@ -183,7 +181,7 @@ The script can take any of the usual <a class="reference external" href="http://
 </table>
 <p>To run a single test from the command line, you can provide a
 dot-separated path to the module followed by the function separated by
-a colon, eg.  (this is assuming the test is installed):</p>
+a colon, e.g., (this is assuming the test is installed):</p>
 <div class="highlight-python"><pre>python tests.py matplotlib.tests.test_simplification:test_clipping</pre>
 </div>
 <p>An alternative implementation that does not look at command line
@@ -211,7 +209,7 @@ example, here is a test from <tt class="xref py py-mod docutils literal"><span c
 </div>
 <p>Nose determines which functions are tests by searching for functions
 beginning with &#8220;test&#8221; in their name.</p>
-<p>If the test as side effects that need to be cleaned up, such as
+<p>If the test has side effects that need to be cleaned up, such as
 creating figures using the pyplot interface, use the <tt class="docutils literal"><span class="pre">&#64;cleanup</span></tt>
 decorator:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">matplotlib.testing.decorators</span> <span class="kn">import</span> <span class="n">cleanup</span>
@@ -259,10 +257,15 @@ it:</p>
 <p>The first time this test is run, there will be no baseline image to
 compare against, so the test will fail.  Copy the output images (in
 this case <tt class="xref py py-obj docutils literal"><span class="pre">result_images/test_category/spines_axes_positions.*</span></tt>) to
-the <tt class="xref py py-obj docutils literal"><span class="pre">baseline_images</span></tt> tree in the source directory (in this case
-<tt class="xref py py-obj docutils literal"><span class="pre">lib/matplotlib/tests/baseline_images/test_category</span></tt>) and put them
-under source code revision control (with <tt class="xref py py-obj docutils literal"><span class="pre">git</span> <span class="pre">add</span></tt>).  When rerunning
-the tests, they should now pass.</p>
+the correct subdirectory of <tt class="xref py py-obj docutils literal"><span class="pre">baseline_images</span></tt> tree in the source
+directory (in this case
+<tt class="xref py py-obj docutils literal"><span class="pre">lib/matplotlib/tests/baseline_images/test_category</span></tt>).  Note carefully
+the <tt class="xref py py-obj docutils literal"><span class="pre">*</span></tt> at the end: this will copy only the images we need to include
+in the <tt class="xref py py-obj docutils literal"><span class="pre">git</span></tt> repository.  The files ending in <tt class="xref py py-obj docutils literal"><span class="pre">_pdf.png</span></tt> and
+<tt class="xref py py-obj docutils literal"><span class="pre">_svg.png</span></tt> are converted from the <tt class="xref py py-obj docutils literal"><span class="pre">pdf</span></tt> and <tt class="xref py py-obj docutils literal"><span class="pre">svg</span></tt> originals on the fly
+and do not need to be in the respository.  Put these new files under
+source code revision control (with <tt class="xref py py-obj docutils literal"><span class="pre">git</span> <span class="pre">add</span></tt>).  When rerunning the
+tests, they should now pass.</p>
 <p>There are two optional keyword arguments to the <tt class="xref py py-obj docutils literal"><span class="pre">image_comparison</span></tt>
 decorator:</p>
 <blockquote>
@@ -311,8 +314,8 @@ this module to the list of default tests, append its name to
 <h2>Using tox<a class="headerlink" href="#using-tox" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="http://tox.testrun.org/">Tox</a> is a tool for running tests against
 multiple Python environments, including multiple versions of Python
-(e.g.: 2.6, 2.7, 3.2, etc.) and even different Python implementations
-altogether (e.g.: CPython, PyPy, Jython, etc.)</p>
+(e.g., 2.6, 2.7, 3.2, etc.) and even different Python implementations
+altogether (e.g., CPython, PyPy, Jython, etc.)</p>
 <p>Testing all 4 versions of Python (2.6, 2.7, 3.1, and 3.2) requires
 having four versions of Python installed on your system and on the
 PATH. Depending on your operating system, you may want to use your
@@ -336,7 +339,7 @@ parallelized version of tox called <tt class="docutils literal"><span class="pre
 </pre></div>
 </div>
 <p>Tox is configured using a file called <tt class="docutils literal"><span class="pre">tox.ini</span></tt>. You may need to
-edit this file if you want to add new environments to test (e.g.:
+edit this file if you want to add new environments to test (e.g.,
 <tt class="docutils literal"><span class="pre">py33</span></tt>) or if you want to tweak the dependencies or the way the
 tests are run. For more info on the <tt class="docutils literal"><span class="pre">tox.ini</span></tt> file, see the <a class="reference external" href="http://tox.testrun.org/latest/config.html">Tox
 Configuration Specification</a>.</p>
@@ -387,19 +390,17 @@ example</a>.</p>
           <a href="gitwash/git_resources.html" title="git resources"
              >previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" >The Matplotlib Developers&#8217; Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on May 29, 2013.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2013 The matplotlib development team.
+      Last updated on Jul 31, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

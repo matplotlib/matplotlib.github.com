@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>figure &mdash; Matplotlib 1.2.1 documentation</title>
+    <title>figure &mdash; Matplotlib 1.3.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2.1',
+        VERSION:     '1.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,9 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.2.1 documentation"
+          title="Search within Matplotlib 1.3.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.2.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.3.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="font_manager" href="font_manager_api.html" />
     <link rel="prev" title="dates" href="dates_api.html" /> 
@@ -80,11 +80,9 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
           <a href="dates_api.html" title="dates"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" accesskey="U">The Matplotlib API</a> &raquo;</li> 
@@ -208,7 +206,7 @@ If it is not present, return None.</p>
 
 <dl class="class">
 <dt id="matplotlib.figure.Figure">
-<em class="property">class </em><tt class="descclassname">matplotlib.figure.</tt><tt class="descname">Figure</tt><big>(</big><em>figsize=None</em>, <em>dpi=None</em>, <em>facecolor=None</em>, <em>edgecolor=None</em>, <em>linewidth=0.0</em>, <em>frameon=True</em>, <em>subplotpars=None</em>, <em>tight_layout=None</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">matplotlib.figure.</tt><tt class="descname">Figure</tt><big>(</big><em>figsize=None</em>, <em>dpi=None</em>, <em>facecolor=None</em>, <em>edgecolor=None</em>, <em>linewidth=0.0</em>, <em>frameon=None</em>, <em>subplotpars=None</em>, <em>tight_layout=None</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="artist_api.html#matplotlib.artist.Artist" title="matplotlib.artist.Artist"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.artist.Artist</span></tt></a></p>
 <p>The Figure instance supports callbacks through a <em>callbacks</em>
 attribute which is a <a class="reference internal" href="cbook_api.html#matplotlib.cbook.CallbackRegistry" title="matplotlib.cbook.CallbackRegistry"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.cbook.CallbackRegistry</span></tt></a>
@@ -240,8 +238,11 @@ override the renderer.</dd>
 <dd>A <a class="reference internal" href="#matplotlib.figure.SubplotParams" title="matplotlib.figure.SubplotParams"><tt class="xref py py-class docutils literal"><span class="pre">SubplotParams</span></tt></a> instance, defaults to rc</dd>
 <dt><em>tight_layout</em></dt>
 <dd>If <em>False</em> use <em>subplotpars</em>; if <em>True</em> adjust subplot
-parameters using <a class="reference internal" href="#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><tt class="xref py py-meth docutils literal"><span class="pre">tight_layout()</span></tt></a>.  Defaults to
-rc <tt class="docutils literal"><span class="pre">figure.autolayout</span></tt>.</dd>
+parameters using <a class="reference internal" href="#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><tt class="xref py py-meth docutils literal"><span class="pre">tight_layout()</span></tt></a> with default padding.
+When providing a dict containing the keys <tt class="xref py py-obj docutils literal"><span class="pre">pad</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">w_pad</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">h_pad</span></tt>
+and <tt class="xref py py-obj docutils literal"><span class="pre">rect</span></tt>, the default <a class="reference internal" href="#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><tt class="xref py py-meth docutils literal"><span class="pre">tight_layout()</span></tt></a> paddings will be
+overridden.
+Defaults to rc <tt class="docutils literal"><span class="pre">figure.autolayout</span></tt>.</dd>
 </dl>
 <dl class="method">
 <dt id="matplotlib.figure.Figure.add_axes">
@@ -266,10 +267,10 @@ to <a class="reference internal" href="#matplotlib.figure.Figure.add_axes" title
 </div>
 <p>If the figure already has an axes with the same parameters,
 then it will simply make that axes current and return it.  If
-you do not want this behavior, e.g. you want to force the
+you do not want this behavior, e.g., you want to force the
 creation of a new Axes, you must use a unique set of args and
 kwargs.  The axes <tt class="xref py py-attr docutils literal"><span class="pre">label</span></tt>
-attribute has been exposed for this purpose.  Eg., if you want
+attribute has been exposed for this purpose.  e.g., if you want
 two axes that are otherwise identical to be added to the
 figure, make sure you give them unique labels:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;axes1&#39;</span><span class="p">)</span>
@@ -383,23 +384,29 @@ will be returned.</p>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_navigate_mode" title="matplotlib.axes.Axes.set_navigate_mode"><tt class="xref py py-meth docutils literal"><span class="pre">navigate_mode</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_picker" title="matplotlib.artist.Artist.set_picker"><tt class="xref py py-meth docutils literal"><span class="pre">picker</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects"><tt class="xref py py-meth docutils literal"><span class="pre">path_effects</span></tt></a></td>
+<td>unknown</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_picker" title="matplotlib.artist.Artist.set_picker"><tt class="xref py py-meth docutils literal"><span class="pre">picker</span></tt></a></td>
 <td>[None|float|boolean|callable]</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><tt class="xref py py-meth docutils literal"><span class="pre">position</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><tt class="xref py py-meth docutils literal"><span class="pre">position</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_rasterization_zorder" title="matplotlib.axes.Axes.set_rasterization_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">rasterization_zorder</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_rasterization_zorder" title="matplotlib.axes.Axes.set_rasterization_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">rasterization_zorder</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_rasterized" title="matplotlib.artist.Artist.set_rasterized"><tt class="xref py py-meth docutils literal"><span class="pre">rasterized</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_rasterized" title="matplotlib.artist.Artist.set_rasterized"><tt class="xref py py-meth docutils literal"><span class="pre">rasterized</span></tt></a></td>
 <td>[True | False | None]</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_sketch_params" title="matplotlib.artist.Artist.set_sketch_params"><tt class="xref py py-meth docutils literal"><span class="pre">sketch_params</span></tt></a></td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_snap" title="matplotlib.artist.Artist.set_snap"><tt class="xref py py-meth docutils literal"><span class="pre">snap</span></tt></a></td>
 <td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_title" title="matplotlib.axes.Axes.set_title"><tt class="xref py py-meth docutils literal"><span class="pre">title</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_transform" title="matplotlib.artist.Artist.set_transform"><tt class="xref py py-meth docutils literal"><span class="pre">transform</span></tt></a></td>
 <td><a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">Transform</span></tt></a> instance</td>
@@ -414,7 +421,7 @@ will be returned.</p>
 <td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlabel" title="matplotlib.axes.Axes.set_xlabel"><tt class="xref py py-meth docutils literal"><span class="pre">xlabel</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><tt class="xref py py-meth docutils literal"><span class="pre">xlim</span></tt></a></td>
 <td>length 2 sequence of floats</td>
@@ -435,7 +442,7 @@ will be returned.</p>
 <td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylabel" title="matplotlib.axes.Axes.set_ylabel"><tt class="xref py py-meth docutils literal"><span class="pre">ylabel</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><tt class="xref py py-meth docutils literal"><span class="pre">ylim</span></tt></a></td>
 <td>length 2 sequence of floats</td>
@@ -594,23 +601,29 @@ return it.</p>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_navigate_mode" title="matplotlib.axes.Axes.set_navigate_mode"><tt class="xref py py-meth docutils literal"><span class="pre">navigate_mode</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_picker" title="matplotlib.artist.Artist.set_picker"><tt class="xref py py-meth docutils literal"><span class="pre">picker</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects"><tt class="xref py py-meth docutils literal"><span class="pre">path_effects</span></tt></a></td>
+<td>unknown</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_picker" title="matplotlib.artist.Artist.set_picker"><tt class="xref py py-meth docutils literal"><span class="pre">picker</span></tt></a></td>
 <td>[None|float|boolean|callable]</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><tt class="xref py py-meth docutils literal"><span class="pre">position</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><tt class="xref py py-meth docutils literal"><span class="pre">position</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_rasterization_zorder" title="matplotlib.axes.Axes.set_rasterization_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">rasterization_zorder</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_rasterization_zorder" title="matplotlib.axes.Axes.set_rasterization_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">rasterization_zorder</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_rasterized" title="matplotlib.artist.Artist.set_rasterized"><tt class="xref py py-meth docutils literal"><span class="pre">rasterized</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_rasterized" title="matplotlib.artist.Artist.set_rasterized"><tt class="xref py py-meth docutils literal"><span class="pre">rasterized</span></tt></a></td>
 <td>[True | False | None]</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_sketch_params" title="matplotlib.artist.Artist.set_sketch_params"><tt class="xref py py-meth docutils literal"><span class="pre">sketch_params</span></tt></a></td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_snap" title="matplotlib.artist.Artist.set_snap"><tt class="xref py py-meth docutils literal"><span class="pre">snap</span></tt></a></td>
 <td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_title" title="matplotlib.axes.Axes.set_title"><tt class="xref py py-meth docutils literal"><span class="pre">title</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_transform" title="matplotlib.artist.Artist.set_transform"><tt class="xref py py-meth docutils literal"><span class="pre">transform</span></tt></a></td>
 <td><a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">Transform</span></tt></a> instance</td>
@@ -625,7 +638,7 @@ return it.</p>
 <td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlabel" title="matplotlib.axes.Axes.set_xlabel"><tt class="xref py py-meth docutils literal"><span class="pre">xlabel</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><tt class="xref py py-meth docutils literal"><span class="pre">xlim</span></tt></a></td>
 <td>length 2 sequence of floats</td>
@@ -646,7 +659,7 @@ return it.</p>
 <td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylabel" title="matplotlib.axes.Axes.set_ylabel"><tt class="xref py py-meth docutils literal"><span class="pre">ylabel</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><tt class="xref py py-meth docutils literal"><span class="pre">ylim</span></tt></a></td>
 <td>length 2 sequence of floats</td>
@@ -712,7 +725,7 @@ a gui widget is tracking the axes in the figure.</p>
 
 <dl class="method">
 <dt id="matplotlib.figure.Figure.colorbar">
-<tt class="descname">colorbar</tt><big>(</big><em>mappable</em>, <em>cax=None</em>, <em>ax=None</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.colorbar" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">colorbar</tt><big>(</big><em>mappable</em>, <em>cax=None</em>, <em>ax=None</em>, <em>use_gridspec=True</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.colorbar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a colorbar for a ScalarMappable instance, <em>mappable</em>.</p>
 <p>Documentation for the pylab thin wrapper:</p>
 <p>Add a colorbar to a plot.</p>
@@ -743,8 +756,9 @@ default to the current image.</dd>
 <dt><em>cax</em></dt>
 <dd>None | axes object into which the colorbar will be drawn</dd>
 <dt><em>ax</em></dt>
-<dd>None | parent axes object from which space for a new
-colorbar axes will be stolen</dd>
+<dd>None | parent axes object(s) from which space for a new
+colorbar axes will be stolen. If a list of axes is given
+they will all be resized to make room for the colorbar axes.</dd>
 <dt><em>use_gridspec</em></dt>
 <dd>False | If <em>cax</em> is None, a new <em>cax</em> is created as an instance of
 Axes. If <em>ax</em> is an instance of Subplot and <em>use_gridspec</em> is True,
@@ -789,7 +803,8 @@ the anchor point of the colorbar axes</td>
 </tr>
 <tr class="row-even"><td><em>panchor</em></td>
 <td>(1.0, 0.5) if vertical; (0.5, 0.0) if horizontal;
-the anchor point of the colorbar parent axes</td>
+the anchor point of the colorbar parent axes. If
+False, the parent axes&#8217; anchor will be unchanged</td>
 </tr>
 </tbody>
 </table>
@@ -798,8 +813,8 @@ the anchor point of the colorbar parent axes</td>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="19%" />
-<col width="81%" />
+<col width="18%" />
+<col width="82%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Property</th>
@@ -831,27 +846,33 @@ be given, indicating the lengths of the minimum and
 maximum colorbar extensions respectively as a
 fraction of the interior colorbar length.</td>
 </tr>
-<tr class="row-even"><td><em>spacing</em></td>
+<tr class="row-even"><td><em>extendrect</em></td>
+<td>[ <em>False</em> | <em>True</em> ]
+If <em>False</em> the minimum and maximum colorbar extensions
+will be triangular (the default). If <em>True</em> the
+extensions will be rectangular.</td>
+</tr>
+<tr class="row-odd"><td><em>spacing</em></td>
 <td>[ &#8216;uniform&#8217; | &#8216;proportional&#8217; ]
 Uniform spacing gives each discrete color the same
 space; proportional makes the space proportional to
 the data interval.</td>
 </tr>
-<tr class="row-odd"><td><em>ticks</em></td>
+<tr class="row-even"><td><em>ticks</em></td>
 <td>[ None | list of ticks | Locator object ]
 If None, ticks are determined automatically from the
 input.</td>
 </tr>
-<tr class="row-even"><td><em>format</em></td>
+<tr class="row-odd"><td><em>format</em></td>
 <td>[ None | format string | Formatter object ]
 If None, the
 <a class="reference internal" href="ticker_api.html#matplotlib.ticker.ScalarFormatter" title="matplotlib.ticker.ScalarFormatter"><tt class="xref py py-class docutils literal"><span class="pre">ScalarFormatter</span></tt></a> is used.
-If a format string is given, e.g. &#8216;%.3f&#8217;, that is
+If a format string is given, e.g., &#8216;%.3f&#8217;, that is
 used. An alternative
 <a class="reference internal" href="ticker_api.html#matplotlib.ticker.Formatter" title="matplotlib.ticker.Formatter"><tt class="xref py py-class docutils literal"><span class="pre">Formatter</span></tt></a> object may be
 given instead.</td>
 </tr>
-<tr class="row-odd"><td><em>drawedges</em></td>
+<tr class="row-even"><td><em>drawedges</em></td>
 <td>[ False | True ] If true, draw lines at color
 boundaries.</td>
 </tr>
@@ -904,9 +925,9 @@ segments:</p>
 <span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>However this has negative consequences in other circumstances. Particularly with
-semi transparent images (alpha &lt; 1) and colorbar extensions and is not enabled
-by default see (issue #1188).</p>
+<p>However this has negative consequences in other circumstances. Particularly
+with semi transparent images (alpha &lt; 1) and colorbar extensions and is not
+enabled by default see (issue #1188).</p>
 <dl class="docutils">
 <dt>returns:</dt>
 <dd><a class="reference internal" href="colorbar_api.html#matplotlib.colorbar.Colorbar" title="matplotlib.colorbar.Colorbar"><tt class="xref py py-class docutils literal"><span class="pre">Colorbar</span></tt></a> instance; see also its base class,
@@ -971,8 +992,8 @@ this is available only after the figure is drawn</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="13%" />
-<col width="87%" />
+<col width="14%" />
+<col width="86%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Keyword</th>
@@ -984,18 +1005,19 @@ this is available only after the figure is drawn</p>
 <td>An integer, the <em>x</em> and <em>y</em> image offset in pixels</td>
 </tr>
 <tr class="row-odd"><td>cmap</td>
-<td>a <a class="reference internal" href="colors_api.html#matplotlib.colors.Colormap" title="matplotlib.colors.Colormap"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.colors.Colormap</span></tt></a> instance, eg cm.jet.
-If <em>None</em>, default to the rc <tt class="docutils literal"><span class="pre">image.cmap</span></tt> value</td>
+<td>a <a class="reference internal" href="colors_api.html#matplotlib.colors.Colormap" title="matplotlib.colors.Colormap"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.colors.Colormap</span></tt></a> instance, eg
+cm.jet. If <em>None</em>, default to the rc <tt class="docutils literal"><span class="pre">image.cmap</span></tt>
+value</td>
 </tr>
 <tr class="row-even"><td>norm</td>
 <td>a <a class="reference internal" href="colors_api.html#matplotlib.colors.Normalize" title="matplotlib.colors.Normalize"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.colors.Normalize</span></tt></a> instance. The
 default is normalization().  This scales luminance -&gt; 0-1</td>
 </tr>
 <tr class="row-odd"><td>vmin|vmax</td>
-<td>are used to scale a luminance image to 0-1.  If either is
-<em>None</em>, the min and max of the luminance values will be
-used.  Note if you pass a norm instance, the settings for
-<em>vmin</em> and <em>vmax</em> will be ignored.</td>
+<td>are used to scale a luminance image to 0-1.  If either
+is <em>None</em>, the min and max of the luminance values will
+be used.  Note if you pass a norm instance, the settings
+for <em>vmin</em> and <em>vmax</em> will be ignored.</td>
 </tr>
 <tr class="row-even"><td>alpha</td>
 <td>the alpha blending value, default is <em>None</em></td>
@@ -1125,23 +1147,29 @@ the active axes does not exist:</p>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_navigate_mode" title="matplotlib.axes.Axes.set_navigate_mode"><tt class="xref py py-meth docutils literal"><span class="pre">navigate_mode</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_picker" title="matplotlib.artist.Artist.set_picker"><tt class="xref py py-meth docutils literal"><span class="pre">picker</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects"><tt class="xref py py-meth docutils literal"><span class="pre">path_effects</span></tt></a></td>
+<td>unknown</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_picker" title="matplotlib.artist.Artist.set_picker"><tt class="xref py py-meth docutils literal"><span class="pre">picker</span></tt></a></td>
 <td>[None|float|boolean|callable]</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><tt class="xref py py-meth docutils literal"><span class="pre">position</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><tt class="xref py py-meth docutils literal"><span class="pre">position</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_rasterization_zorder" title="matplotlib.axes.Axes.set_rasterization_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">rasterization_zorder</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_rasterization_zorder" title="matplotlib.axes.Axes.set_rasterization_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">rasterization_zorder</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_rasterized" title="matplotlib.artist.Artist.set_rasterized"><tt class="xref py py-meth docutils literal"><span class="pre">rasterized</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_rasterized" title="matplotlib.artist.Artist.set_rasterized"><tt class="xref py py-meth docutils literal"><span class="pre">rasterized</span></tt></a></td>
 <td>[True | False | None]</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_sketch_params" title="matplotlib.artist.Artist.set_sketch_params"><tt class="xref py py-meth docutils literal"><span class="pre">sketch_params</span></tt></a></td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_snap" title="matplotlib.artist.Artist.set_snap"><tt class="xref py py-meth docutils literal"><span class="pre">snap</span></tt></a></td>
 <td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_title" title="matplotlib.axes.Axes.set_title"><tt class="xref py py-meth docutils literal"><span class="pre">title</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_transform" title="matplotlib.artist.Artist.set_transform"><tt class="xref py py-meth docutils literal"><span class="pre">transform</span></tt></a></td>
 <td><a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">Transform</span></tt></a> instance</td>
@@ -1156,7 +1184,7 @@ the active axes does not exist:</p>
 <td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlabel" title="matplotlib.axes.Axes.set_xlabel"><tt class="xref py py-meth docutils literal"><span class="pre">xlabel</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><tt class="xref py py-meth docutils literal"><span class="pre">xlim</span></tt></a></td>
 <td>length 2 sequence of floats</td>
@@ -1177,7 +1205,7 @@ the active axes does not exist:</p>
 <td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylabel" title="matplotlib.axes.Axes.set_ylabel"><tt class="xref py py-meth docutils literal"><span class="pre">ylabel</span></tt></a></td>
-<td>str</td>
+<td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><tt class="xref py py-meth docutils literal"><span class="pre">ylim</span></tt></a></td>
 <td>length 2 sequence of floats</td>
@@ -1311,7 +1339,7 @@ manager) selects a point.</p>
 <tt class="descname">hold</tt><big>(</big><em>b=None</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.hold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the hold state.  If hold is None (default), toggle the
 hold state.  Else set the hold state to boolean value b.</p>
-<p>Eg:</p>
+<p>e.g.:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">hold</span><span class="p">()</span>      <span class="c"># toggle hold</span>
 <span class="n">hold</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>  <span class="c"># hold is on</span>
 <span class="n">hold</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span> <span class="c"># hold is off</span>
@@ -1361,7 +1389,7 @@ created with <em>prop</em>. If <em>None</em>, use rc settings.</dd>
 <dd>The number of points in the legend line, default is 4</dd>
 <dt><em>scatterpoints</em>: integer</dt>
 <dd>The number of points in the legend line, default is 4</dd>
-<dt><em>scatteroffsets</em>: list of floats</dt>
+<dt><em>scatteryoffsets</em>: list of floats</dt>
 <dd>a list of yoffsets for scatter symbols in legend</dd>
 <dt><em>markerscale</em>: [ <em>None</em> | scalar ]</dt>
 <dd>The relative size of legend markers vs. original. If <em>None</em>, use rc
@@ -1384,8 +1412,8 @@ parameters. The dimensions of these values are given as a fraction
 of the fontsize. Values from rcParams will be used if None.</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="20%" />
-<col width="80%" />
+<col width="24%" />
+<col width="76%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Keyword</th>
@@ -1432,7 +1460,8 @@ See LINK (FIXME) for details.</p>
 <p>Call signature:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">,</span>
         <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;portrait&#39;</span><span class="p">,</span> <span class="n">papertype</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-        <span class="n">transparent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">transparent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The output formats available depend on the backend being used.</p>
@@ -1477,6 +1506,10 @@ This is useful, for example, for displaying
 a plot on top of a colored background on a web page.  The
 transparency of these patches will be restored to their
 original values upon exit of this function.</dd>
+<dt><em>frameon</em>:</dt>
+<dd>If <em>True</em>, the figure patch will be colored, if <em>False</em>, the
+figure background will be transparent.  If not provided, the
+rcParam &#8216;savefig.frameon&#8217; will be used.</dd>
 <dt><em>bbox_inches</em>:</dt>
 <dd>Bbox in inches. Only the given portion of the figure is
 saved. If &#8216;tight&#8217;, try to figure out the tight bbox of
@@ -1566,7 +1599,10 @@ from the shell</p>
 <tt class="descname">set_tight_layout</tt><big>(</big><em>tight</em><big>)</big><a class="headerlink" href="#matplotlib.figure.Figure.set_tight_layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set whether <a class="reference internal" href="#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><tt class="xref py py-meth docutils literal"><span class="pre">tight_layout()</span></tt></a> is used upon drawing.
 If None, the rcParams[&#8216;figure.autolayout&#8217;] value will be set.</p>
-<p>ACCEPTS: [True | False | None]</p>
+<p>When providing a dict containing the keys <tt class="xref py py-obj docutils literal"><span class="pre">pad</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">w_pad</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">h_pad</span></tt>
+and <tt class="xref py py-obj docutils literal"><span class="pre">rect</span></tt>, the default <a class="reference internal" href="#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><tt class="xref py py-meth docutils literal"><span class="pre">tight_layout()</span></tt></a> paddings will be
+overridden.</p>
+<p>ACCEPTS: [True | False | dict | None ]</p>
 </dd></dl>
 
 <dl class="method">
@@ -1633,8 +1669,8 @@ of the other arguments.</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="29%" />
-<col width="71%" />
+<col width="25%" />
+<col width="75%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Property</th>
@@ -1676,7 +1712,7 @@ of the other arguments.</p>
 <td>a callable function</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_family" title="matplotlib.text.Text.set_family"><tt class="xref py py-meth docutils literal"><span class="pre">family</span></tt></a> or fontfamily or fontname or name</td>
-<td>[ FONTNAME | &#8216;serif&#8217; | &#8216;sans-serif&#8217; | &#8216;cursive&#8217; | &#8216;fantasy&#8217; | &#8216;monospace&#8217; ]</td>
+<td>[FONTNAME | &#8216;serif&#8217; | &#8216;sans-serif&#8217; | &#8216;cursive&#8217; | &#8216;fantasy&#8217; |                   &#8216;monospace&#8217; ]</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_figure" title="matplotlib.artist.Artist.set_figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure</span></tt></a></td>
 <td>a <a class="reference internal" href="#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.figure.Figure</span></tt></a> instance</td>
@@ -1702,7 +1738,7 @@ of the other arguments.</p>
 <tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_multialignment" title="matplotlib.text.Text.set_multialignment"><tt class="xref py py-meth docutils literal"><span class="pre">multialignment</span></tt></a></td>
 <td>[&#8216;left&#8217; | &#8216;right&#8217; | &#8216;center&#8217; ]</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_path_effects" title="matplotlib.text.Text.set_path_effects"><tt class="xref py py-meth docutils literal"><span class="pre">path_effects</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects"><tt class="xref py py-meth docutils literal"><span class="pre">path_effects</span></tt></a></td>
 <td>unknown</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_picker" title="matplotlib.artist.Artist.set_picker"><tt class="xref py py-meth docutils literal"><span class="pre">picker</span></tt></a></td>
@@ -1721,45 +1757,48 @@ of the other arguments.</p>
 <td>unknown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_size" title="matplotlib.text.Text.set_size"><tt class="xref py py-meth docutils literal"><span class="pre">size</span></tt></a> or fontsize</td>
-<td>[ size in points | &#8216;xx-small&#8217; | &#8216;x-small&#8217; | &#8216;small&#8217; | &#8216;medium&#8217; | &#8216;large&#8217; | &#8216;x-large&#8217; | &#8216;xx-large&#8217; ]</td>
+<td>[size in points | &#8216;xx-small&#8217; | &#8216;x-small&#8217; | &#8216;small&#8217; |                   &#8216;medium&#8217; | &#8216;large&#8217; | &#8216;x-large&#8217; | &#8216;xx-large&#8217; ]</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_snap" title="matplotlib.artist.Artist.set_snap"><tt class="xref py py-meth docutils literal"><span class="pre">snap</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_sketch_params" title="matplotlib.artist.Artist.set_sketch_params"><tt class="xref py py-meth docutils literal"><span class="pre">sketch_params</span></tt></a></td>
 <td>unknown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_stretch" title="matplotlib.text.Text.set_stretch"><tt class="xref py py-meth docutils literal"><span class="pre">stretch</span></tt></a> or fontstretch</td>
-<td>[ a numeric value in range 0-1000 | &#8216;ultra-condensed&#8217; | &#8216;extra-condensed&#8217; | &#8216;condensed&#8217; | &#8216;semi-condensed&#8217; | &#8216;normal&#8217; | &#8216;semi-expanded&#8217; | &#8216;expanded&#8217; | &#8216;extra-expanded&#8217; | &#8216;ultra-expanded&#8217; ]</td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_snap" title="matplotlib.artist.Artist.set_snap"><tt class="xref py py-meth docutils literal"><span class="pre">snap</span></tt></a></td>
+<td>unknown</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_style" title="matplotlib.text.Text.set_style"><tt class="xref py py-meth docutils literal"><span class="pre">style</span></tt></a> or fontstyle</td>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_stretch" title="matplotlib.text.Text.set_stretch"><tt class="xref py py-meth docutils literal"><span class="pre">stretch</span></tt></a> or fontstretch</td>
+<td>[a numeric value in range 0-1000 | &#8216;ultra-condensed&#8217; |                   &#8216;extra-condensed&#8217; | &#8216;condensed&#8217; | &#8216;semi-condensed&#8217; |                   &#8216;normal&#8217; | &#8216;semi-expanded&#8217; | &#8216;expanded&#8217; | &#8216;extra-expanded&#8217; |                   &#8216;ultra-expanded&#8217; ]</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_style" title="matplotlib.text.Text.set_style"><tt class="xref py py-meth docutils literal"><span class="pre">style</span></tt></a> or fontstyle</td>
 <td>[ &#8216;normal&#8217; | &#8216;italic&#8217; | &#8216;oblique&#8217;]</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_text" title="matplotlib.text.Text.set_text"><tt class="xref py py-meth docutils literal"><span class="pre">text</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_text" title="matplotlib.text.Text.set_text"><tt class="xref py py-meth docutils literal"><span class="pre">text</span></tt></a></td>
 <td>string or anything printable with &#8216;%s&#8217; conversion.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_transform" title="matplotlib.artist.Artist.set_transform"><tt class="xref py py-meth docutils literal"><span class="pre">transform</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_transform" title="matplotlib.artist.Artist.set_transform"><tt class="xref py py-meth docutils literal"><span class="pre">transform</span></tt></a></td>
 <td><a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">Transform</span></tt></a> instance</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_url" title="matplotlib.artist.Artist.set_url"><tt class="xref py py-meth docutils literal"><span class="pre">url</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_url" title="matplotlib.artist.Artist.set_url"><tt class="xref py py-meth docutils literal"><span class="pre">url</span></tt></a></td>
 <td>a url string</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_variant" title="matplotlib.text.Text.set_variant"><tt class="xref py py-meth docutils literal"><span class="pre">variant</span></tt></a> or fontvariant</td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_variant" title="matplotlib.text.Text.set_variant"><tt class="xref py py-meth docutils literal"><span class="pre">variant</span></tt></a> or fontvariant</td>
 <td>[ &#8216;normal&#8217; | &#8216;small-caps&#8217; ]</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_verticalalignment" title="matplotlib.text.Text.set_verticalalignment"><tt class="xref py py-meth docutils literal"><span class="pre">verticalalignment</span></tt></a> or va or ma</td>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_verticalalignment" title="matplotlib.text.Text.set_verticalalignment"><tt class="xref py py-meth docutils literal"><span class="pre">verticalalignment</span></tt></a> or va or ma</td>
 <td>[ &#8216;center&#8217; | &#8216;top&#8217; | &#8216;bottom&#8217; | &#8216;baseline&#8217; ]</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_visible" title="matplotlib.artist.Artist.set_visible"><tt class="xref py py-meth docutils literal"><span class="pre">visible</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_visible" title="matplotlib.artist.Artist.set_visible"><tt class="xref py py-meth docutils literal"><span class="pre">visible</span></tt></a></td>
 <td>[True | False]</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_weight" title="matplotlib.text.Text.set_weight"><tt class="xref py py-meth docutils literal"><span class="pre">weight</span></tt></a> or fontweight</td>
-<td>[ a numeric value in range 0-1000 | &#8216;ultralight&#8217; | &#8216;light&#8217; | &#8216;normal&#8217; | &#8216;regular&#8217; | &#8216;book&#8217; | &#8216;medium&#8217; | &#8216;roman&#8217; | &#8216;semibold&#8217; | &#8216;demibold&#8217; | &#8216;demi&#8217; | &#8216;bold&#8217; | &#8216;heavy&#8217; | &#8216;extra bold&#8217; | &#8216;black&#8217; ]</td>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_weight" title="matplotlib.text.Text.set_weight"><tt class="xref py py-meth docutils literal"><span class="pre">weight</span></tt></a> or fontweight</td>
+<td>[a numeric value in range 0-1000 | &#8216;ultralight&#8217; | &#8216;light&#8217; |                   &#8216;normal&#8217; | &#8216;regular&#8217; | &#8216;book&#8217; | &#8216;medium&#8217; | &#8216;roman&#8217; |                   &#8216;semibold&#8217; | &#8216;demibold&#8217; | &#8216;demi&#8217; | &#8216;bold&#8217; | &#8216;heavy&#8217; |                   &#8216;extra bold&#8217; | &#8216;black&#8217; ]</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_x" title="matplotlib.text.Text.set_x"><tt class="xref py py-meth docutils literal"><span class="pre">x</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_x" title="matplotlib.text.Text.set_x"><tt class="xref py py-meth docutils literal"><span class="pre">x</span></tt></a></td>
 <td>float</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_y" title="matplotlib.text.Text.set_y"><tt class="xref py py-meth docutils literal"><span class="pre">y</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.text.Text.set_y" title="matplotlib.text.Text.set_y"><tt class="xref py py-meth docutils literal"><span class="pre">y</span></tt></a></td>
 <td>float</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_zorder" title="matplotlib.artist.Artist.set_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">zorder</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_zorder" title="matplotlib.artist.Artist.set_zorder"><tt class="xref py py-meth docutils literal"><span class="pre">zorder</span></tt></a></td>
 <td>any number</td>
 </tr>
 </tbody>
@@ -1850,7 +1889,6 @@ eg</p>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-
 <span class="c"># make a figure with the proper aspect for an array</span>
 <span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">figaspect</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
@@ -1887,19 +1925,17 @@ eg</p>
           <a href="dates_api.html" title="dates"
              >previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" >The Matplotlib API</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on May 29, 2013.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2013 The matplotlib development team.
+      Last updated on Jul 31, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

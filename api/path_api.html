@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>path &mdash; Matplotlib 1.2.1 documentation</title>
+    <title>path &mdash; Matplotlib 1.3.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2.1',
+        VERSION:     '1.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,12 +24,12 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.2.1 documentation"
+          title="Search within Matplotlib 1.3.0 documentation"
           href="../_static/opensearch.xml"/>
-    <link rel="top" title="Matplotlib 1.2.1 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 1.3.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="pyplot" href="pyplot_api.html" />
-    <link rel="prev" title="nxutils" href="nxutils_api.html" /> 
+    <link rel="prev" title="mlab" href="mlab_api.html" /> 
   </head>
   <body>
 <!-- Piwik -->
@@ -77,14 +77,12 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
           <a href="pyplot_api.html" title="pyplot"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="nxutils_api.html" title="nxutils"
+          <a href="mlab_api.html" title="mlab"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" accesskey="U">The Matplotlib API</a> &raquo;</li> 
@@ -102,8 +100,8 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="nxutils_api.html"
-                        title="previous chapter">nxutils</a></p>
+  <p class="topless"><a href="mlab_api.html"
+                        title="previous chapter">mlab</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="pyplot_api.html"
                         title="next chapter">pyplot</a></p>
@@ -137,10 +135,18 @@ if ("matplotlib.sourceforge.net" == document.location.hostname ||
 <h1>path<a class="headerlink" href="#path" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-matplotlib.path">
 <span id="matplotlib-path"></span><h2><a class="reference internal" href="#module-matplotlib.path" title="matplotlib.path"><tt class="xref py py-mod docutils literal"><span class="pre">matplotlib.path</span></tt></a><a class="headerlink" href="#module-matplotlib.path" title="Permalink to this headline">¶</a></h2>
-<p>Contains a class for managing paths (polylines).</p>
+<p>A module for dealing with the polylines used throughout matplotlib.</p>
+<p>The primary class for polyline handling in matplotlib is <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a>.
+Almost all vector drawing makes use of Paths somewhere in the drawing
+pipeline.</p>
+<p>Whilst a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instance itself cannot be drawn, there exists
+<a class="reference internal" href="artist_api.html#matplotlib.artist.Artist" title="matplotlib.artist.Artist"><tt class="xref py py-class docutils literal"><span class="pre">Artist</span></tt></a> subclasses which can be used for
+convenient Path visualisation - the two most frequently used of these are
+<a class="reference internal" href="artist_api.html#matplotlib.patches.PathPatch" title="matplotlib.patches.PathPatch"><tt class="xref py py-class docutils literal"><span class="pre">PathPatch</span></tt></a> and
+<a class="reference internal" href="collections_api.html#matplotlib.collections.PathCollection" title="matplotlib.collections.PathCollection"><tt class="xref py py-class docutils literal"><span class="pre">PathCollection</span></tt></a>.</p>
 <dl class="class">
 <dt id="matplotlib.path.Path">
-<em class="property">class </em><tt class="descclassname">matplotlib.path.</tt><tt class="descname">Path</tt><big>(</big><em>vertices</em>, <em>codes=None</em>, <em>_interpolation_steps=1</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">matplotlib.path.</tt><tt class="descname">Path</tt><big>(</big><em>vertices</em>, <em>codes=None</em>, <em>_interpolation_steps=1</em>, <em>closed=False</em>, <em>readonly=False</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p><a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> represents a series of possibly disconnected,
 possibly closed, line and curve segments.</p>
@@ -202,9 +208,9 @@ polyline.</p>
 </div></blockquote>
 <p>Users of Path objects should not access the vertices and codes
 arrays directly.  Instead, they should use <a class="reference internal" href="#matplotlib.path.Path.iter_segments" title="matplotlib.path.Path.iter_segments"><tt class="xref py py-meth docutils literal"><span class="pre">iter_segments()</span></tt></a>
-to get the vertex/code pairs.  This is important, since many
-<a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> objects, as an optimization, do not store a <em>codes</em>
-at all, but have a default one provided for them by
+or <a class="reference internal" href="#matplotlib.path.Path.cleaned" title="matplotlib.path.Path.cleaned"><tt class="xref py py-meth docutils literal"><span class="pre">cleaned()</span></tt></a> to get the vertex/code pairs.  This is important,
+since many <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> objects, as an optimization, do not store a
+<em>codes</em> at all, but have a default one provided for them by
 <a class="reference internal" href="#matplotlib.path.Path.iter_segments" title="matplotlib.path.Path.iter_segments"><tt class="xref py py-meth docutils literal"><span class="pre">iter_segments()</span></tt></a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -214,22 +220,46 @@ made up front in the constructor that will not change when the
 data changes.</p>
 </div>
 <p>Create a new path with the given vertices and codes.</p>
-<p><em>vertices</em> is an Nx2 numpy float array, masked array or Python
-sequence.</p>
-<p><em>codes</em> is an N-length numpy array or Python sequence of type
-<a class="reference internal" href="#matplotlib.path.Path.code_type" title="matplotlib.path.Path.code_type"><tt class="xref py py-attr docutils literal"><span class="pre">matplotlib.path.Path.code_type</span></tt></a>.</p>
-<p>These two arrays must have the same length in the first
-dimension.</p>
-<p>If <em>codes</em> is None, <em>vertices</em> will be treated as a series of
-line segments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>vertices</strong> : array_like</p>
+<blockquote>
+<div><p>The <tt class="docutils literal"><span class="pre">(n,</span> <span class="pre">2)</span></tt> float array, masked array or sequence of pairs
+representing the vertices of the path.</p>
 <p>If <em>vertices</em> contains masked values, they will be converted
 to NaNs which are then handled correctly by the Agg
 PathIterator and other consumers of path data, such as
 <a class="reference internal" href="#matplotlib.path.Path.iter_segments" title="matplotlib.path.Path.iter_segments"><tt class="xref py py-meth docutils literal"><span class="pre">iter_segments()</span></tt></a>.</p>
-<p><em>interpolation_steps</em> is used as a hint to certain projections,
-such as Polar, that this path should be linearly interpolated
-immediately before drawing.  This attribute is primarily an
-implementation detail and is not intended for public use.</p>
+</div></blockquote>
+<p><strong>codes</strong> : {None, array_like}, optional</p>
+<blockquote>
+<div><p>n-length array integers representing the codes of the path.
+If not None, codes must be the same length as vertices.
+If None, <em>vertices</em> will be treated as a series of line segments.</p>
+</div></blockquote>
+<p><strong>_interpolation_steps</strong> : int, optional</p>
+<blockquote>
+<div><p>Used as a hint to certain projections, such as Polar, that this
+path should be linearly interpolated immediately before drawing.
+This attribute is primarily an implementation detail and is not
+intended for public use.</p>
+</div></blockquote>
+<p><strong>closed</strong> : bool, optional</p>
+<blockquote>
+<div><p>If <em>codes</em> is None and closed is True, vertices will be treated as
+line segments of a closed polygon.</p>
+</div></blockquote>
+<p><strong>readonly</strong> : bool, optional</p>
+<blockquote class="last">
+<div><p>Makes the path behave in an immutable way and sets the vertices
+and codes as read-only arrays.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="matplotlib.path.Path.CLOSEPOLY">
 <tt class="descname">CLOSEPOLY</tt><em class="property"> = 79</em><a class="headerlink" href="#matplotlib.path.Path.CLOSEPOLY" title="Permalink to this definition">¶</a></dt>
@@ -256,9 +286,11 @@ implementation detail and is not intended for public use.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="matplotlib.path.Path.NUM_VERTICES">
-<tt class="descname">NUM_VERTICES</tt><em class="property"> = [1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]</em><a class="headerlink" href="#matplotlib.path.Path.NUM_VERTICES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="matplotlib.path.Path.NUM_VERTICES_FOR_CODE">
+<tt class="descname">NUM_VERTICES_FOR_CODE</tt><em class="property"> = {0: 1, 1: 1, 2: 1, 3: 2, 4: 3, 79: 1}</em><a class="headerlink" href="#matplotlib.path.Path.NUM_VERTICES_FOR_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary mapping Path codes to the number of vertices that the
+code expects.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="matplotlib.path.Path.STOP">
@@ -268,7 +300,7 @@ implementation detail and is not intended for public use.</p>
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.arc">
 <em class="property">classmethod </em><tt class="descname">arc</tt><big>(</big><em>theta1</em>, <em>theta2</em>, <em>n=None</em>, <em>is_wedge=False</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.arc" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns an arc on the unit circle from angle
+<dd><p>Return an arc on the unit circle from angle
 <em>theta1</em> to angle <em>theta2</em> (in degrees).</p>
 <p>If <em>n</em> is provided, it is the number of spline segments to make.
 If <em>n</em> is not provided, the number of spline segments is
@@ -276,6 +308,25 @@ determined based on the delta between <em>theta1</em> and <em>theta2</em>.</p>
 <blockquote>
 <div>Masionobe, L.  2003.  <a class="reference external" href="http://www.spaceroots.org/documents/ellipse/index.html">Drawing an elliptical arc using
 polylines, quadratic or cubic Bezier curves</a>.</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.path.Path.cleaned">
+<tt class="descname">cleaned</tt><big>(</big><em>transform=None</em>, <em>remove_nans=False</em>, <em>clip=None</em>, <em>quantize=False</em>, <em>simplify=False</em>, <em>curves=False</em>, <em>stroke_width=1.0</em>, <em>snap=False</em>, <em>sketch=None</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.cleaned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleans up the path according to the parameters returning a new
+Path instance.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">See <a class="reference internal" href="#matplotlib.path.Path.iter_segments" title="matplotlib.path.Path.iter_segments"><tt class="xref py py-meth docutils literal"><span class="pre">iter_segments()</span></tt></a> for details of the keyword arguments.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>Path instance with cleaned up vertices and codes.</strong> :</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -292,6 +343,17 @@ to the outside of the box.</p>
 <dt id="matplotlib.path.Path.code_type">
 <tt class="descname">code_type</tt><a class="headerlink" href="#matplotlib.path.Path.code_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">uint8</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="matplotlib.path.Path.codes">
+<tt class="descname">codes</tt><a class="headerlink" href="#matplotlib.path.Path.codes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of codes in the <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a> as a 1-D numpy array.  Each
+code is one of <a class="reference internal" href="#matplotlib.path.Path.STOP" title="matplotlib.path.Path.STOP"><tt class="xref py py-obj docutils literal"><span class="pre">STOP</span></tt></a>, <a class="reference internal" href="#matplotlib.path.Path.MOVETO" title="matplotlib.path.Path.MOVETO"><tt class="xref py py-obj docutils literal"><span class="pre">MOVETO</span></tt></a>, <a class="reference internal" href="#matplotlib.path.Path.LINETO" title="matplotlib.path.Path.LINETO"><tt class="xref py py-obj docutils literal"><span class="pre">LINETO</span></tt></a>, <a class="reference internal" href="#matplotlib.path.Path.CURVE3" title="matplotlib.path.Path.CURVE3"><tt class="xref py py-obj docutils literal"><span class="pre">CURVE3</span></tt></a>, <a class="reference internal" href="#matplotlib.path.Path.CURVE4" title="matplotlib.path.Path.CURVE4"><tt class="xref py py-obj docutils literal"><span class="pre">CURVE4</span></tt></a>
+or <a class="reference internal" href="#matplotlib.path.Path.CLOSEPOLY" title="matplotlib.path.Path.CLOSEPOLY"><tt class="xref py py-obj docutils literal"><span class="pre">CLOSEPOLY</span></tt></a>.  For codes that correspond to more than one
+vertex (<a class="reference internal" href="#matplotlib.path.Path.CURVE3" title="matplotlib.path.Path.CURVE3"><tt class="xref py py-obj docutils literal"><span class="pre">CURVE3</span></tt></a> and <a class="reference internal" href="#matplotlib.path.Path.CURVE4" title="matplotlib.path.Path.CURVE4"><tt class="xref py py-obj docutils literal"><span class="pre">CURVE4</span></tt></a>), that code will be repeated so
+that the length of <tt class="xref py py-obj docutils literal"><span class="pre">self.vertices</span></tt> and <tt class="xref py py-obj docutils literal"><span class="pre">self.codes</span></tt> is always
+the same.</p>
 </dd></dl>
 
 <dl class="method">
@@ -324,6 +386,20 @@ smaller.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="matplotlib.path.Path.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.path.Path.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a shallow copy of the <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a>, which will share the
+vertices and codes with the source <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.path.Path.deepcopy">
+<tt class="descname">deepcopy</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.path.Path.deepcopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deepcopy of the <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a>.  The <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a> will not be
+readonly, even if the source <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a> is.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="matplotlib.path.Path.get_extents">
 <tt class="descname">get_extents</tt><big>(</big><em>transform=None</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.get_extents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the extents (<em>xmin</em>, <em>ymin</em>, <em>xmax</em>, <em>ymax</em>) of the
@@ -331,6 +407,12 @@ path.</p>
 <p>Unlike computing the extents on the <em>vertices</em> alone, this
 algorithm will take into account the curves and deal with
 control points appropriately.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="matplotlib.path.Path.has_nonfinite">
+<tt class="descname">has_nonfinite</tt><a class="headerlink" href="#matplotlib.path.Path.has_nonfinite" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt> if the vertices array has nonfinite values.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -369,46 +451,84 @@ That is, if one path completely encloses the other,
 
 <dl class="method">
 <dt id="matplotlib.path.Path.iter_segments">
-<tt class="descname">iter_segments</tt><big>(</big><em>transform=None</em>, <em>remove_nans=True</em>, <em>clip=None</em>, <em>snap=False</em>, <em>stroke_width=1.0</em>, <em>simplify=None</em>, <em>curves=True</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.iter_segments" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">iter_segments</tt><big>(</big><em>transform=None</em>, <em>remove_nans=True</em>, <em>clip=None</em>, <em>snap=False</em>, <em>stroke_width=1.0</em>, <em>simplify=None</em>, <em>curves=True</em>, <em>sketch=None</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.iter_segments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterates over all of the curve segments in the path.  Each
 iteration returns a 2-tuple (<em>vertices</em>, <em>code</em>), where
 <em>vertices</em> is a sequence of 1 - 3 coordinate pairs, and <em>code</em> is
 one of the <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> codes.</p>
 <p>Additionally, this method can provide a number of standard
 cleanups and conversions to the path.</p>
-<dl class="docutils">
-<dt><em>transform</em>: if not None, the given affine transformation will</dt>
-<dd>be applied to the path.</dd>
-<dt><em>remove_nans</em>: if True, will remove all NaNs from the path and</dt>
-<dd>insert MOVETO commands to skip over them.</dd>
-<dt><em>clip</em>: if not None, must be a four-tuple (x1, y1, x2, y2)</dt>
-<dd>defining a rectangle in which to clip the path.</dd>
-<dt><em>snap</em>: if None, auto-snap to pixels, to reduce</dt>
-<dd>fuzziness of rectilinear lines.  If True, force snapping, and
-if False, don&#8217;t snap.</dd>
-<dt><em>stroke_width</em>: the width of the stroke being drawn.  Needed</dt>
-<dd>as a hint for the snapping algorithm.</dd>
-<dt><em>simplify</em>: if True, perform simplification, to remove</dt>
-<dd>vertices that do not affect the appearance of the path.  If
-False, perform no simplification.  If None, use the
-should_simplify member variable.</dd>
-<dt><em>curves</em>: If True, curve segments will be returned as curve</dt>
-<dd>segments.  If False, all curves will be converted to line
-segments.</dd>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>transform</strong> : None or <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><tt class="xref py py-class docutils literal"><span class="pre">Transform</span></tt></a> instance</p>
+<blockquote>
+<div><p>If not None, the given affine transformation will
+be applied to the path.</p>
+</div></blockquote>
+<p><strong>remove_nans</strong> : {False, True}, optional</p>
+<blockquote>
+<div><p>If True, will remove all NaNs from the path and
+insert MOVETO commands to skip over them.</p>
+</div></blockquote>
+<p><strong>clip</strong> : None or sequence, optional</p>
+<blockquote>
+<div><p>If not None, must be a four-tuple (x1, y1, x2, y2)
+defining a rectangle in which to clip the path.</p>
+</div></blockquote>
+<p><strong>snap</strong> : None or bool, optional</p>
+<blockquote>
+<div><p>If None, auto-snap to pixels, to reduce
+fuzziness of rectilinear lines.  If True, force snapping, and
+if False, don&#8217;t snap.</p>
+</div></blockquote>
+<p><strong>stroke_width</strong> : float, optional</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>The width of the stroke being drawn.  Needed</dt>
+<dd><p class="first last">as a hint for the snapping algorithm.</p>
+</dd>
 </dl>
+</div></blockquote>
+<p><strong>simplify</strong> : None or bool, optional</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>If True, perform simplification, to remove</dt>
+<dd><p class="first last">vertices that do not affect the appearance of the path.  If
+False, perform no simplification.  If None, use the
+should_simplify member variable.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>curves</strong> : {True, False}, optional</p>
+<blockquote>
+<div><p>If True, curve segments will be returned as curve
+segments.  If False, all curves will be converted to line
+segments.</p>
+</div></blockquote>
+<p><strong>sketch</strong> : None or sequence, optional</p>
+<blockquote class="last">
+<div><p>If not None, must be a 3-tuple of the form
+(scale, length, randomness), representing the sketch
+parameters.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.make_compound_path">
 <em class="property">classmethod </em><tt class="descname">make_compound_path</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.make_compound_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Make a compound path from a list of Path
-objects.</p>
+<dd><p>Make a compound path from a list of Path objects.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.make_compound_path_from_polys">
 <em class="property">classmethod </em><tt class="descname">make_compound_path_from_polys</tt><big>(</big><em>XY</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.make_compound_path_from_polys" title="Permalink to this definition">¶</a></dt>
-<dd><p>(static method) Make a compound path object to draw a number
+<dd><p>Make a compound path object to draw a number
 of polygons with equal numbers of sides XY is a (numpolys x
 numsides x 2) numpy array of vertices.  Return object is a
 <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a></p>
@@ -416,6 +536,25 @@ numsides x 2) numpy array of vertices.  Return object is a
 <div class="figure">
 <img alt="../_images/histogram_path_demo.png" src="../_images/histogram_path_demo.png" />
 </div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="matplotlib.path.Path.readonly">
+<tt class="descname">readonly</tt><a class="headerlink" href="#matplotlib.path.Path.readonly" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt> if the <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a> is read-only.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="matplotlib.path.Path.should_simplify">
+<tt class="descname">should_simplify</tt><a class="headerlink" href="#matplotlib.path.Path.should_simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt> if the vertices array should be simplified.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="matplotlib.path.Path.simplify_threshold">
+<tt class="descname">simplify_threshold</tt><a class="headerlink" href="#matplotlib.path.Path.simplify_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>The fraction of a pixel difference below which vertices will
+be simplified out.</p>
 </dd></dl>
 
 <dl class="method">
@@ -449,7 +588,7 @@ transform changes.</dd>
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.unit_circle">
 <em class="property">classmethod </em><tt class="descname">unit_circle</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.path.Path.unit_circle" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> of the unit circle.
+<dd><p>Return a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> of the unit circle.
 The circle is approximated using cubic Bezier curves.  This
 uses 8 splines around the circle using the approach presented
 here:</p>
@@ -461,7 +600,7 @@ Bezier Cubic Splines</a>.</div></blockquote>
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.unit_circle_righthalf">
 <em class="property">classmethod </em><tt class="descname">unit_circle_righthalf</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.path.Path.unit_circle_righthalf" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> of the right half
+<dd><p>Return a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> of the right half
 of a unit circle. The circle is approximated using cubic Bezier
 curves.  This uses 4 splines around the circle using the approach
 presented here:</p>
@@ -473,14 +612,14 @@ Bezier Cubic Splines</a>.</div></blockquote>
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.unit_rectangle">
 <em class="property">classmethod </em><tt class="descname">unit_rectangle</tt><big>(</big><big>)</big><a class="headerlink" href="#matplotlib.path.Path.unit_rectangle" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> of the unit rectangle
+<dd><p>Return a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instance of the unit rectangle
 from (0, 0) to (1, 1).</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.unit_regular_asterisk">
 <em class="property">classmethod </em><tt class="descname">unit_regular_asterisk</tt><big>(</big><em>numVertices</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.unit_regular_asterisk" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> for a unit regular
+<dd><p>Return a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> for a unit regular
 asterisk with the given numVertices and radius of 1.0,
 centered at (0, 0).</p>
 </dd></dl>
@@ -488,7 +627,7 @@ centered at (0, 0).</p>
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.unit_regular_polygon">
 <em class="property">classmethod </em><tt class="descname">unit_regular_polygon</tt><big>(</big><em>numVertices</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.unit_regular_polygon" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> for a unit regular
+<dd><p>Return a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> instance for a unit regular
 polygon with the given <em>numVertices</em> and radius of 1.0,
 centered at (0, 0).</p>
 </dd></dl>
@@ -496,15 +635,21 @@ centered at (0, 0).</p>
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.unit_regular_star">
 <em class="property">classmethod </em><tt class="descname">unit_regular_star</tt><big>(</big><em>numVertices</em>, <em>innerCircle=0.5</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.unit_regular_star" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> for a unit regular star
+<dd><p>Return a <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-class docutils literal"><span class="pre">Path</span></tt></a> for a unit regular star
 with the given numVertices and radius of 1.0, centered at (0,
 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="matplotlib.path.Path.vertices">
+<tt class="descname">vertices</tt><a class="headerlink" href="#matplotlib.path.Path.vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of vertices in the <a class="reference internal" href="#matplotlib.path.Path" title="matplotlib.path.Path"><tt class="xref py py-obj docutils literal"><span class="pre">Path</span></tt></a> as an Nx2 numpy array.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="matplotlib.path.Path.wedge">
 <em class="property">classmethod </em><tt class="descname">wedge</tt><big>(</big><em>theta1</em>, <em>theta2</em>, <em>n=None</em><big>)</big><a class="headerlink" href="#matplotlib.path.Path.wedge" title="Permalink to this definition">¶</a></dt>
-<dd><p>(staticmethod) Returns a wedge of the unit circle from angle
+<dd><p>Return a wedge of the unit circle from angle
 <em>theta1</em> to angle <em>theta2</em> (in degrees).</p>
 <p>If <em>n</em> is provided, it is the number of spline segments to make.
 If <em>n</em> is not provided, the number of spline segments is
@@ -515,18 +660,30 @@ determined based on the delta between <em>theta1</em> and <em>theta2</em>.</p>
 
 <dl class="function">
 <dt id="matplotlib.path.cleanup_path">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">cleanup_path</tt><big>(</big><em>path</em>, <em>trans</em>, <em>remove_nans</em>, <em>clip</em>, <em>snap</em>, <em>simplify</em>, <em>curves</em><big>)</big><a class="headerlink" href="#matplotlib.path.cleanup_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">cleanup_path</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.cleanup_path" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The cleanup_path function was deprecated in version 1.3. Use path.Path.cleaned instead.</p>
+</div>
+<p>cleanup_path(path, trans, remove_nans, clip, snap, simplify, curves, sketch_params)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.clip_path_to_rect">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">clip_path_to_rect</tt><big>(</big><em>path</em>, <em>bbox</em>, <em>inside</em><big>)</big><a class="headerlink" href="#matplotlib.path.clip_path_to_rect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">clip_path_to_rect</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.clip_path_to_rect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The clip_path_to_rect function was deprecated in version 1.3. Use path.Path.clip_to_bbox instead.</p>
+</div>
+<p>clip_path_to_rect(path, bbox, inside)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.convert_path_to_polygons">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">convert_path_to_polygons</tt><big>(</big><em>path</em>, <em>trans</em>, <em>width</em>, <em>height</em><big>)</big><a class="headerlink" href="#matplotlib.path.convert_path_to_polygons" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">convert_path_to_polygons</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.convert_path_to_polygons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The convert_path_to_polygons function was deprecated in version 1.3. Use path.Path.to_polygons instead.</p>
+</div>
+<p>convert_path_to_polygons(path, trans, width, height)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.get_path_collection_extents">
@@ -552,8 +709,12 @@ their combinations are as follows:</p>
 
 <dl class="function">
 <dt id="matplotlib.path.get_path_extents">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">get_path_extents</tt><big>(</big><em>path</em>, <em>trans</em><big>)</big><a class="headerlink" href="#matplotlib.path.get_path_extents" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">get_path_extents</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.get_path_extents" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The get_path_extents function was deprecated in version 1.3. Use path.Path.get_extents instead.</p>
+</div>
+<p>get_path_extents(path, trans)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.get_paths_extents">
@@ -569,28 +730,48 @@ each path.</p>
 
 <dl class="function">
 <dt id="matplotlib.path.path_in_path">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">path_in_path</tt><big>(</big><em>a</em>, <em>atrans</em>, <em>b</em>, <em>btrans</em><big>)</big><a class="headerlink" href="#matplotlib.path.path_in_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">path_in_path</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.path_in_path" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The path_in_path function was deprecated in version 1.3. Use path.Path.contains_path instead.</p>
+</div>
+<p>path_in_path(a, atrans, b, btrans)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.path_intersects_path">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">path_intersects_path</tt><big>(</big><em>p1</em>, <em>p2</em><big>)</big><a class="headerlink" href="#matplotlib.path.path_intersects_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">path_intersects_path</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.path_intersects_path" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The path_intersects_path function was deprecated in version 1.3. Use path.Path.intersects_path instead.</p>
+</div>
+<p>path_intersects_path(p1, p2)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.point_in_path">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">point_in_path</tt><big>(</big><em>x</em>, <em>y</em>, <em>path</em>, <em>trans</em><big>)</big><a class="headerlink" href="#matplotlib.path.point_in_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">point_in_path</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.point_in_path" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The point_in_path function was deprecated in version 1.3. Use path.Path.contains_point instead.</p>
+</div>
+<p>point_in_path(x, y, path, trans)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.point_in_path_collection">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">point_in_path_collection</tt><big>(</big><em>x</em>, <em>y</em>, <em>r</em>, <em>trans</em>, <em>paths</em>, <em>transforms</em>, <em>offsets</em>, <em>offsetTrans</em>, <em>filled</em><big>)</big><a class="headerlink" href="#matplotlib.path.point_in_path_collection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">point_in_path_collection</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.point_in_path_collection" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The point_in_path_collection function was deprecated in version 1.3. Use collection.Collection.contains instead.</p>
+</div>
+<p>point_in_path_collection(x, y, r, trans, paths, transforms, offsets, offsetTrans, filled)</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="matplotlib.path.points_in_path">
-<tt class="descclassname">matplotlib.path.</tt><tt class="descname">points_in_path</tt><big>(</big><em>points</em>, <em>path</em>, <em>trans</em><big>)</big><a class="headerlink" href="#matplotlib.path.points_in_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">matplotlib.path.</tt><tt class="descname">points_in_path</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#matplotlib.path.points_in_path" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span>Deprecated since version 1.3: </span>The points_in_path function was deprecated in version 1.3. Use path.Path.contains_points instead.</p>
+</div>
+<p>points_in_path(points, path, trans)</p>
+</dd></dl>
 
 </div>
 </div>
@@ -614,22 +795,20 @@ each path.</p>
           <a href="pyplot_api.html" title="pyplot"
              >next</a> |</li>
         <li class="right" >
-          <a href="nxutils_api.html" title="nxutils"
+          <a href="mlab_api.html" title="mlab"
              >previous</a> |</li>
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="http://www.matplotlib.org/downloads.html">downloads</a>|&nbsp;</li>
-        <li><a href="../search.html">search</a>|&nbsp;</li>
         <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
         <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
-        <li><a href="../citing.html">citation</a>|&nbsp;</li>
+        <li><a href="pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
 
           <li><a href="index.html" >The Matplotlib API</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team.
-      Last updated on May 29, 2013.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2013 The matplotlib development team.
+      Last updated on Jul 31, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

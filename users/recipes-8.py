@@ -7,7 +7,7 @@ sigma = x.std()
 textstr = '$\mu=%.2f$\n$\mathrm{median}=%.2f$\n$\sigma=%.2f$'%(mu, median, sigma)
 
 ax.hist(x, 50)
-# these are matplotlib.patch.Patch properies
+# these are matplotlib.patch.Patch properties
 props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 
 # place a text box in upper left in axes coords
