@@ -16,6 +16,7 @@ import socket
 import sys
 import traceback
 
+import cPickle
 
 # CONSTANTS
 hostname = 'frs.sourceforge.net'
@@ -63,10 +64,20 @@ def get_hostkey_and_type(hostname):
 
 def get_files_for_version(sftp, version):
     sftp.chdir(dir_template.format(version))
-    return sftp.listdir()
+    base_files = set(sftp.listdir())
+    for folder in ('mac', 'windows'):
+        try:
+            base_files.remove(folder)
+            sftp.chdir(dir_template.format(version) + '/' + folder)
+            base_files |= set(folder + '/' + _ for _ in sftp.listdir())
+
+        except KeyError:
+            continue
+    return list(base_files)
 
 
 def get_file_listings(hostname, username, password, hostkey, versions):
+
     files = []
 
     try:
@@ -93,13 +104,23 @@ def generate_download_page(files):
         stream.dump(fd)
 
 
+def split_file_listing(input_list):
+    source = [(_, _) for _ in input_list if 'tar' in _]
+    mac = [(_, _.split('/', 1)[-1]) for _ in input_list if 'mac' in _]
+    win = [(_, _.split('/', 1)[-1]) for _ in input_list if 'win' in _]
+    return ('Source', source), ('Windows', win), ('OSX', mac)
+
+
 def main():
     versions = get_versions()
 
     username, password = get_username_and_password(hostname)
     hostkey, hostkeytype = get_hostkey_and_type(hostname)
 
-    files = get_file_listings(hostname, username, password, hostkey, versions)
+    files = get_file_listings(hostname, username,
+                              password, hostkey, versions)
+
+    files = [(a, b, split_file_listing(c)) for a, b, c in files]
 
     generate_download_page(files)
 
