@@ -14,7 +14,7 @@ distributing L/GPL code through an separate channel, possibly a
 toolkit.  If you include code, make sure you include a copy of that
 code's license in the license directory if the code's license requires
 you to distribute the license with it.  Non-BSD compatible licenses
-are acceptable in matplotlib toolkits (eg basemap), but make sure you
+are acceptable in matplotlib toolkits (e.g., basemap), but make sure you
 clearly state the licenses you are using.
 
 Why BSD compatible?
@@ -28,7 +28,7 @@ most widely used license is the GPL, which in addition to granting you
 full rights to the source code including redistribution, carries with
 it an extra obligation. If you use GPL code in your own code, or link
 with it, your product must be released under a GPL compatible
-license. I.e., you are required to give the source code to other
+license. i.e., you are required to give the source code to other
 people and give them the right to redistribute it as well. Many of the
 most famous and widely used open source projects are released under
 the GPL, including linux, gcc, emacs and sage.
