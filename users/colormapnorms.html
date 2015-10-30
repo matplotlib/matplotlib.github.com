@@ -1,0 +1,483 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Colormap Normaliztions &mdash; Matplotlib 1.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css"
+type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 1.5.0 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="top" title="Matplotlib 1.5.0 documentation" href="../index.html" />
+    <link rel="up" title="Beginner’s Guide" href="beginner.html" />
+    <link rel="next" title="Advanced Guide" href="developer.html" />
+    <link rel="prev" title="Choosing Colormaps" href="colormaps.html" /> 
+<link href="http://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+
+  </head>
+  <body>
+    <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
+">
+<h3>We're updating the default styles for Matplotlib 2.0</h3>
+
+<p>Learn what to expect in the <a href="/style_changes.html" style="font-weight: bold;
+color: #11557C;">new updates</a></p>
+
+</div>
+
+
+
+<link rel="shortcut icon" href="/_static/favicon.ico">
+
+<!-- The "Fork me on github" ribbon -->
+<img style="float: right; margin-bottom: -40px; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" usemap="#ribbonmap"/>
+<map name="ribbonmap">
+    <area shape="poly" coords="15,0,148,-1,148,135" href="https://github.com/matplotlib/matplotlib" title="Fork me on GitHub" />
+</map>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="../index.html"><img src="../_static/logo2.png" border="0" alt="matplotlib"/></a>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="developer.html" title="Advanced Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="colormaps.html" title="Choosing Colormaps"
+             accesskey="P">previous</a> |</li>
+
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
+        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../contents.html">docs</a> &raquo;</li>
+          <li><a href="index.html" >User&#8217;s Guide</a> &raquo;</li>
+          <li><a href="beginner.html" accesskey="U">Beginner&#8217;s Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Colormap Normaliztions</a><ul>
+<li><a class="reference internal" href="#logarithmic">Logarithmic</a></li>
+<li><a class="reference internal" href="#symetric-logarithmic">Symetric logarithmic</a></li>
+<li><a class="reference internal" href="#power-law">Power-law</a></li>
+<li><a class="reference internal" href="#discrete-bounds">Discrete bounds</a></li>
+<li><a class="reference internal" href="#custom-normalization-two-linear-ranges">Custom normalization: Two linear ranges</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="colormaps.html"
+                        title="previous chapter">Choosing Colormaps</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="developer.html"
+                        title="next chapter">Advanced Guide</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users/colormapnorms.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="colormap-normaliztions">
+<span id="colormapnorm-tutorial"></span><h1>Colormap Normaliztions<a class="headerlink" href="#colormap-normaliztions" title="Permalink to this headline">¶</a></h1>
+<p>Objects that use colormaps by default linearly map the colors in the
+colormap from data values <em>vmin</em> to <em>vmax</em>.  For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will map the data in <em>Z</em> linearly from -1 to +1, so <em>Z=0</em> will
+give a color at the center of the colormap <em>RdBu_r</em> (white in this
+case).</p>
+<p>Matplotlib does this mapping in two steps, with a normalization from
+[0,1] occuring first, and then mapping onto the indices in the
+colormap. Normalizations are defined as part of
+<a class="reference internal" href="../api/colors_api.html#module-matplotlib.colors" title="matplotlib.colors"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.colors()</span></code></a> module.  The default normalization is
+<a class="reference internal" href="../api/colors_api.html#matplotlib.colors.Normalize" title="matplotlib.colors.Normalize"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.colors.Normalize()</span></code></a>.</p>
+<p>The artists that map data to
+color pass the arguments <em>vmin</em> and <em>vmax</em> to
+<a class="reference internal" href="../api/colors_api.html#matplotlib.colors.Normalize" title="matplotlib.colors.Normalize"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.colors.Normalize()</span></code></a>. We can substnatiate the
+normalization and see what it returns.  In this case it returns 0.5:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+
+<span class="gp">In [2]: </span><span class="n">norm</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="mf">1.</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+
+<span class="gp">In [3]: </span><span class="n">norm</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
+<span class="gh">Out[3]: </span><span class="go">0.5</span>
+</pre></div>
+</div>
+<p>However, there are sometimes cases where it is useful to map data to
+colormaps in a non-linear fashion.</p>
+<div class="section" id="logarithmic">
+<h2>Logarithmic<a class="headerlink" href="#logarithmic" title="Permalink to this headline">¶</a></h2>
+<p>One of the most common transformations is to plot data by taking its
+logarithm (to the base-10).  This transformation is useful when there
+are changes across disparate scales that we still want to be able to
+see.  Using <code class="xref py py-func docutils literal"><span class="pre">colors.LogNorm()</span></code> normalizes the data by
+<img src="../_images/mathmpl/math-4f1ee0d2b3.png" style="position: relative; bottom: -7px"/>.  In the example below, there are two bumps, one much
+smaller than the other. Using <code class="xref py py-func docutils literal"><span class="pre">colors.LogNorm()</span></code>, the shape and
+location of each bump can clearly be seen:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Demonstration of using norm to map colormaps onto data in non-linear ways.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="kn">as</span> <span class="nn">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mlab</span> <span class="kn">import</span> <span class="n">bivariate_normal</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Lognorm: Instead of pcolor log10(Z1) you can have colorbars that have</span>
+<span class="sd">the exponential labels using a norm.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+
+<span class="c"># A low hump with a spike coming out of the top right.  Needs to have</span>
+<span class="c"># z/colour axis on a log scale so we see both hump and spike.  linear</span>
+<span class="c"># scale only shows the spike.</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span>  \
+    <span class="mf">0.1</span> <span class="o">*</span> <span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span>
+                   <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">Z1</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">Z1</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span>
+                   <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;PuBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;max&#39;</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;PuBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;max&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../users/plotting/examples/colormap_normalizations_lognorm.py">Source code</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_lognorm.png">png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_lognorm.hires.png">hires.png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_lognorm.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/colormap_normalizations_lognorm.png" src="../_images/colormap_normalizations_lognorm.png" />
+</div>
+</div>
+<div class="section" id="symetric-logarithmic">
+<h2>Symetric logarithmic<a class="headerlink" href="#symetric-logarithmic" title="Permalink to this headline">¶</a></h2>
+<p>Similarly, it sometimes happens that there is data that is positive
+and negative, but we would still like a logarithmic scaling applied to
+both.  In this case, the negative numbers are also scaled
+logarithmically, and mapped to small numbers.  i.e. If <code class="xref py py-obj docutils literal"><span class="pre">vmin=-vmax</span></code>,
+then they the negative numbers are mapped from 0 to 0.5 and the
+positive from 0.5 to 1.</p>
+<p>Since the values close to zero tend toward infinity, there is a need
+to have a range around zero that is linear.  The parameter <em>linthresh</em>
+allows the user to specify the size of this range (-<em>linthresh</em>,
+<em>linthresh</em>).  The size of this range in the colormap is set by
+<em>linscale</em>.  When <em>linscale</em> == 1.0 (the default), the space used for
+the positive and negative halves of the linear range will be equal to
+one decade in the logarithmic range.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Demonstration of using norm to map colormaps onto data in non-linear ways.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="kn">as</span> <span class="nn">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mlab</span> <span class="kn">import</span> <span class="n">bivariate_normal</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">SymLogNorm: two humps, one negative and one positive, The positive</span>
+<span class="sd">with 5-times the amplitude. Linearly, you cannot see detail in the</span>
+<span class="sd">negative hump.  Here we logarithmically scale the positive and</span>
+<span class="sd">negative data separately.</span>
+
+<span class="sd">Note that colorbar labels do not come out looking very good.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">N</span><span class="o">=</span><span class="mi">100</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="p">(</span><span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>  \
+    <span class="o">-</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="n">Z1</span><span class="o">/</span><span class="mf">0.03</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span>
+                       <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">SymLogNorm</span><span class="p">(</span><span class="n">linthresh</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">linscale</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span>
+                                              <span class="n">vmin</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+                       <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;both&#39;</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Z1</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;both&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../users/plotting/examples/colormap_normalizations_symlognorm.py">Source code</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_symlognorm.png">png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_symlognorm.hires.png">hires.png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_symlognorm.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/colormap_normalizations_symlognorm.png" src="../_images/colormap_normalizations_symlognorm.png" />
+</div>
+</div>
+<div class="section" id="power-law">
+<h2>Power-law<a class="headerlink" href="#power-law" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes it is useful to remap the colors onto a power-law
+relationship (i.e. <img src="../_images/mathmpl/math-5ad2665eea.png" style="position: relative; bottom: -7px"/>, where <img src="../_images/mathmpl/math-ae65c1de79.png" style="position: relative; bottom: -7px"/> is the
+power).  For this we use the <code class="xref py py-func docutils literal"><span class="pre">colors.PowerNorm()</span></code>.  It takes as an
+argument <em>gamma</em> ( <em>gamma</em> == 1.0 will just yield the defalut linear
+normalization):</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There should probably be a good reason for plotting the data using
+this type of transformation.  Technical viewers are used to linear
+and logarithmic axes and data transformations.  Power laws are less
+common, and viewers should explictly be made aware that they have
+been used.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Demonstration of using norm to map colormaps onto data in non-linear ways.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="kn">as</span> <span class="nn">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mlab</span> <span class="kn">import</span> <span class="n">bivariate_normal</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">PowerNorm: Here a power-law trend in X partially obscures a rectified</span>
+<span class="sd">sine wave in Y. We can remove the power law using a PowerNorm.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Y</span> <span class="o">*</span> <span class="mf">10.</span><span class="p">))</span> <span class="o">*</span> <span class="n">X</span><span class="o">**</span><span class="p">(</span><span class="mf">2.</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">PowerNorm</span><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span><span class="p">),</span>
+                       <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;PuBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;max&#39;</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;PuBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;max&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../users/plotting/examples/colormap_normalizations_power.py">Source code</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_power.png">png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_power.hires.png">hires.png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_power.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/colormap_normalizations_power.png" src="../_images/colormap_normalizations_power.png" />
+</div>
+</div>
+<div class="section" id="discrete-bounds">
+<h2>Discrete bounds<a class="headerlink" href="#discrete-bounds" title="Permalink to this headline">¶</a></h2>
+<p>Another normaization that comes with matplolib is
+<code class="xref py py-func docutils literal"><span class="pre">colors.BoundaryNorm()</span></code>.  In addition to <em>vmin</em> and <em>vmax</em>, this
+takes as arguments boundaries between which data is to be mapped.  The
+colors are then linearly distributed between these &#8220;bounds&#8221;.  For
+instance, if:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [4]: </span><span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="kn">as</span> <span class="nn">colors</span>
+
+<span class="gp">In [5]: </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.125</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="gp">In [6]: </span><span class="n">norm</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">(</span><span class="n">boundaries</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">ncolors</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="gp">In [7]: </span><span class="k">print</span><span class="p">(</span><span class="n">norm</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span><span class="o">-</span><span class="mf">0.15</span><span class="p">,</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]))</span>
+<span class="go">[0 0 1 2 3 3]</span>
+</pre></div>
+</div>
+<p>Note unlike the other norms, this norm returns values from 0 to <em>ncolors</em>-1.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Demonstration of using norm to map colormaps onto data in non-linear ways.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="kn">as</span> <span class="nn">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mlab</span> <span class="kn">import</span> <span class="n">bivariate_normal</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="p">(</span><span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>  \
+    <span class="o">-</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="n">Z1</span><span class="o">/</span><span class="mf">0.03</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">BoundaryNorm: For this one you provide the boundaries for your colors,</span>
+<span class="sd">and the Norm puts the first color in between the first pair, the</span>
+<span class="sd">second color between the second pair, etc.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="c"># even bounds gives a contour-like effect</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">(</span><span class="n">boundaries</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">ncolors</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span>
+                       <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
+                       <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;both&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">)</span>
+
+<span class="c"># uneven bounds changes the colormapping:</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.125</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">(</span><span class="n">boundaries</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">ncolors</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;both&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Z1</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;both&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../users/plotting/examples/colormap_normalizations_bounds.py">Source code</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_bounds.png">png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_bounds.hires.png">hires.png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_bounds.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/colormap_normalizations_bounds.png" src="../_images/colormap_normalizations_bounds.png" />
+</div>
+</div>
+<div class="section" id="custom-normalization-two-linear-ranges">
+<h2>Custom normalization: Two linear ranges<a class="headerlink" href="#custom-normalization-two-linear-ranges" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to define your own normalization.  This example
+plots the same data as the <code class="xref py py-func docutils literal"><span class="pre">colors:SymLogNorm()</span></code> example, but
+a different linear map is used for the negative data values than
+the positive.  (Note that this example is simple, and does not account
+for the edge cases like masked data or invalid values of <em>vmin</em> and
+<em>vmax</em>)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This may appear soon as <code class="xref py py-func docutils literal"><span class="pre">colors.OffsetNorm()</span></code></p>
+<p class="last">As above, non-symetric mapping of data to color is non-standard
+practice for quantitative data, and should only be used advisedly. A
+practical example is having an ocean/land colormap where the land and
+ocean data span different ranges.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Demonstration of using norm to map colormaps onto data in non-linear ways.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="kn">as</span> <span class="nn">colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mlab</span> <span class="kn">import</span> <span class="n">bivariate_normal</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Custom Norm: An example with a customized normalization.  This one</span>
+<span class="sd">uses the example above, and normalizes the negative data differently</span>
+<span class="sd">from the positive.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="p">(</span><span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>  \
+    <span class="o">-</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">Z1</span> <span class="o">=</span> <span class="n">Z1</span><span class="o">/</span><span class="mf">0.03</span>
+
+<span class="c"># Example of making your own norm.  Also see matplotlib.colors.</span>
+<span class="c"># From Joe Kington: This one gives two different linear ramps:</span>
+
+
+<span class="k">class</span> <span class="nc">MidpointNormalize</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">midpoint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">midpoint</span> <span class="o">=</span> <span class="n">midpoint</span>
+        <span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c"># I&#39;m ignoring masked values and all kinds of edge cases to make a</span>
+        <span class="c"># simple example...</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">midpoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="c">#####</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span>
+                       <span class="n">norm</span><span class="o">=</span><span class="n">MidpointNormalize</span><span class="p">(</span><span class="n">midpoint</span><span class="o">=</span><span class="mf">0.</span><span class="p">),</span>
+                       <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;both&#39;</span><span class="p">)</span>
+
+<span class="n">pcm</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;RdBu_r&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Z1</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">extend</span><span class="o">=</span><span class="s">&#39;both&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../users/plotting/examples/colormap_normalizations_custom.py">Source code</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_custom.png">png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_custom.hires.png">hires.png</a>, <a class="reference external" href="../users/plotting/examples/colormap_normalizations_custom.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/colormap_normalizations_custom.png" src="../_images/colormap_normalizations_custom.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
+      Last updated on Oct 29, 2015.
+      Created using <a
+href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
