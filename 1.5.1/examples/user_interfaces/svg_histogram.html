@@ -144,8 +144,8 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <div class="section" id="user-interfaces-example-code-svg-histogram-py">
 <span id="user-interfaces-svg-histogram"></span><h1>user_interfaces example code: svg_histogram.py<a class="headerlink" href="#user-interfaces-example-code-svg-histogram-py" title="Permalink to this headline">¶</a></h1>
 <p>[<a class="reference external" href="svg_histogram.py">source code</a>]</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
-<span class="c">#-*- encoding:utf-8 -*-</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#-*- encoding:utf-8 -*-</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Demonstrate how to create an interactive histogram, in which bars</span>
@@ -184,121 +184,121 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">&#39;svg.embed_char_paths&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;svg.embed_char_paths&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
 
-<span class="c"># Apparently, this `register_namespace` method works only with</span>
-<span class="c"># python 2.7 and up and is necessary to avoid garbling the XML name</span>
-<span class="c"># space with ns0.</span>
-<span class="n">ET</span><span class="o">.</span><span class="n">register_namespace</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;http://www.w3.org/2000/svg&quot;</span><span class="p">)</span>
+<span class="c1"># Apparently, this `register_namespace` method works only with</span>
+<span class="c1"># python 2.7 and up and is necessary to avoid garbling the XML name</span>
+<span class="c1"># space with ns0.</span>
+<span class="n">ET</span><span class="o">.</span><span class="n">register_namespace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/2000/svg&quot;</span><span class="p">)</span>
 
 
-<span class="c"># --- Create histogram, legend and title ---</span>
+<span class="c1"># --- Create histogram, legend and title ---</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">r1</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Rabbits&#39;</span><span class="p">,</span> <span class="s">&#39;Frogs&#39;</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Rabbits&#39;</span><span class="p">,</span> <span class="s1">&#39;Frogs&#39;</span><span class="p">]</span>
 <span class="n">H</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">r</span><span class="p">,</span> <span class="n">r1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
 <span class="n">containers</span> <span class="o">=</span> <span class="n">H</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">leg</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;From a web browser, click on the legend</span><span class="se">\n</span><span class="s">&quot;</span>
-          <span class="s">&quot;marker to toggle the corresponding histogram.&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;From a web browser, click on the legend</span><span class="se">\n</span><span class="s2">&quot;</span>
+          <span class="s2">&quot;marker to toggle the corresponding histogram.&quot;</span><span class="p">)</span>
 
 
-<span class="c"># --- Add ids to the svg objects we&#39;ll modify</span>
+<span class="c1"># --- Add ids to the svg objects we&#39;ll modify</span>
 
 <span class="n">hist_patches</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">containers</span><span class="p">):</span>
-    <span class="n">hist_patches</span><span class="p">[</span><span class="s">&#39;hist_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">ic</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hist_patches</span><span class="p">[</span><span class="s1">&#39;hist_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ic</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">il</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-        <span class="n">element</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s">&#39;hist_</span><span class="si">%d</span><span class="s">_patch_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="n">il</span><span class="p">))</span>
-        <span class="n">hist_patches</span><span class="p">[</span><span class="s">&#39;hist_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">ic</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;hist_</span><span class="si">%d</span><span class="s">_patch_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="n">il</span><span class="p">))</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s1">&#39;hist_</span><span class="si">%d</span><span class="s1">_patch_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="n">il</span><span class="p">))</span>
+        <span class="n">hist_patches</span><span class="p">[</span><span class="s1">&#39;hist_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ic</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;hist_</span><span class="si">%d</span><span class="s1">_patch_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="n">il</span><span class="p">))</span>
 
-<span class="c"># Set ids for the legend patches</span>
+<span class="c1"># Set ids for the legend patches</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_patches</span><span class="p">()):</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s">&#39;leg_patch_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s1">&#39;leg_patch_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
 
-<span class="c"># Set ids for the text patches</span>
+<span class="c1"># Set ids for the text patches</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()):</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s">&#39;leg_text_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="s1">&#39;leg_text_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
 
-<span class="c"># Save SVG in a fake file object.</span>
+<span class="c1"># Save SVG in a fake file object.</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&quot;svg&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
 
-<span class="c"># Create XML tree from the SVG file.</span>
+<span class="c1"># Create XML tree from the SVG file.</span>
 <span class="n">tree</span><span class="p">,</span> <span class="n">xmlid</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">XMLID</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
 
 
-<span class="c"># --- Add interactivity ---</span>
+<span class="c1"># --- Add interactivity ---</span>
 
-<span class="c"># Add attributes to the patch objects.</span>
+<span class="c1"># Add attributes to the patch objects.</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_patches</span><span class="p">()):</span>
-    <span class="n">el</span> <span class="o">=</span> <span class="n">xmlid</span><span class="p">[</span><span class="s">&#39;leg_patch_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
-    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;cursor&#39;</span><span class="p">,</span> <span class="s">&#39;pointer&#39;</span><span class="p">)</span>
-    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;onclick&#39;</span><span class="p">,</span> <span class="s">&quot;toggle_hist(this)&quot;</span><span class="p">)</span>
+    <span class="n">el</span> <span class="o">=</span> <span class="n">xmlid</span><span class="p">[</span><span class="s1">&#39;leg_patch_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cursor&#39;</span><span class="p">,</span> <span class="s1">&#39;pointer&#39;</span><span class="p">)</span>
+    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;onclick&#39;</span><span class="p">,</span> <span class="s2">&quot;toggle_hist(this)&quot;</span><span class="p">)</span>
 
-<span class="c"># Add attributes to the text objects.</span>
+<span class="c1"># Add attributes to the text objects.</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leg</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()):</span>
-    <span class="n">el</span> <span class="o">=</span> <span class="n">xmlid</span><span class="p">[</span><span class="s">&#39;leg_text_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
-    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;cursor&#39;</span><span class="p">,</span> <span class="s">&#39;pointer&#39;</span><span class="p">)</span>
-    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;onclick&#39;</span><span class="p">,</span> <span class="s">&quot;toggle_hist(this)&quot;</span><span class="p">)</span>
+    <span class="n">el</span> <span class="o">=</span> <span class="n">xmlid</span><span class="p">[</span><span class="s1">&#39;leg_text_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cursor&#39;</span><span class="p">,</span> <span class="s1">&#39;pointer&#39;</span><span class="p">)</span>
+    <span class="n">el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;onclick&#39;</span><span class="p">,</span> <span class="s2">&quot;toggle_hist(this)&quot;</span><span class="p">)</span>
 
-<span class="c"># Create script defining the function `toggle_hist`.</span>
-<span class="c"># We create a global variable `container` that stores the patches id</span>
-<span class="c"># belonging to each histogram. Then a function &quot;toggle_element&quot; sets the</span>
-<span class="c"># visibility attribute of all patches of each histogram and the opacity</span>
-<span class="c"># of the marker itself.</span>
+<span class="c1"># Create script defining the function `toggle_hist`.</span>
+<span class="c1"># We create a global variable `container` that stores the patches id</span>
+<span class="c1"># belonging to each histogram. Then a function &quot;toggle_element&quot; sets the</span>
+<span class="c1"># visibility attribute of all patches of each histogram and the opacity</span>
+<span class="c1"># of the marker itself.</span>
 
-<span class="n">script</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">&lt;script type=&quot;text/ecmascript&quot;&gt;</span>
-<span class="s">&lt;![CDATA[</span>
-<span class="s">var container = </span><span class="si">%s</span><span class="s"></span>
+<span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">&lt;script type=&quot;text/ecmascript&quot;&gt;</span>
+<span class="s2">&lt;![CDATA[</span>
+<span class="s2">var container = </span><span class="si">%s</span><span class="s2"></span>
 
-<span class="s">function toggle(oid, attribute, values) {</span>
-<span class="s">    /* Toggle the style attribute of an object between two values.</span>
+<span class="s2">function toggle(oid, attribute, values) {</span>
+<span class="s2">    /* Toggle the style attribute of an object between two values.</span>
 
-<span class="s">    Parameters</span>
-<span class="s">    ----------</span>
-<span class="s">    oid : str</span>
-<span class="s">      Object identifier.</span>
-<span class="s">    attribute : str</span>
-<span class="s">      Name of syle attribute.</span>
-<span class="s">    values : [on state, off state]</span>
-<span class="s">      The two values that are switched between.</span>
-<span class="s">    */</span>
-<span class="s">    var obj = document.getElementById(oid);</span>
-<span class="s">    var a = obj.style[attribute];</span>
+<span class="s2">    Parameters</span>
+<span class="s2">    ----------</span>
+<span class="s2">    oid : str</span>
+<span class="s2">      Object identifier.</span>
+<span class="s2">    attribute : str</span>
+<span class="s2">      Name of syle attribute.</span>
+<span class="s2">    values : [on state, off state]</span>
+<span class="s2">      The two values that are switched between.</span>
+<span class="s2">    */</span>
+<span class="s2">    var obj = document.getElementById(oid);</span>
+<span class="s2">    var a = obj.style[attribute];</span>
 
-<span class="s">    a = (a == values[0] || a == &quot;&quot;) ? values[1] : values[0];</span>
-<span class="s">    obj.style[attribute] = a;</span>
-<span class="s">    }</span>
+<span class="s2">    a = (a == values[0] || a == &quot;&quot;) ? values[1] : values[0];</span>
+<span class="s2">    obj.style[attribute] = a;</span>
+<span class="s2">    }</span>
 
-<span class="s">function toggle_hist(obj) {</span>
+<span class="s2">function toggle_hist(obj) {</span>
 
-<span class="s">    var num = obj.id.slice(-1);</span>
+<span class="s2">    var num = obj.id.slice(-1);</span>
 
-<span class="s">    toggle(&#39;leg_patch_&#39; + num, &#39;opacity&#39;, [1, 0.3]);</span>
-<span class="s">    toggle(&#39;leg_text_&#39; + num, &#39;opacity&#39;, [1, 0.5]);</span>
+<span class="s2">    toggle(&#39;leg_patch_&#39; + num, &#39;opacity&#39;, [1, 0.3]);</span>
+<span class="s2">    toggle(&#39;leg_text_&#39; + num, &#39;opacity&#39;, [1, 0.5]);</span>
 
-<span class="s">    var names = container[&#39;hist_&#39;+num]</span>
+<span class="s2">    var names = container[&#39;hist_&#39;+num]</span>
 
-<span class="s">    for (var i=0; i &lt; names.length; i++) {</span>
-<span class="s">        toggle(names[i], &#39;opacity&#39;, [1,0])</span>
-<span class="s">    };</span>
-<span class="s">    }</span>
-<span class="s">]]&gt;</span>
-<span class="s">&lt;/script&gt;</span>
-<span class="s">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hist_patches</span><span class="p">)</span>
+<span class="s2">    for (var i=0; i &lt; names.length; i++) {</span>
+<span class="s2">        toggle(names[i], &#39;opacity&#39;, [1,0])</span>
+<span class="s2">    };</span>
+<span class="s2">    }</span>
+<span class="s2">]]&gt;</span>
+<span class="s2">&lt;/script&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hist_patches</span><span class="p">)</span>
 
-<span class="c"># Add a transition effect</span>
+<span class="c1"># Add a transition effect</span>
 <span class="n">css</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getchildren</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">css</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">css</span><span class="o">.</span><span class="n">text</span> <span class="o">+</span> <span class="s">&quot;g {-webkit-transition:opacity 0.4s ease-out;&quot;</span> <span class="o">+</span> \
-    <span class="s">&quot;-moz-transition:opacity 0.4s ease-out;}&quot;</span>
+<span class="n">css</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">css</span><span class="o">.</span><span class="n">text</span> <span class="o">+</span> <span class="s2">&quot;g {-webkit-transition:opacity 0.4s ease-out;&quot;</span> <span class="o">+</span> \
+    <span class="s2">&quot;-moz-transition:opacity 0.4s ease-out;}&quot;</span>
 
-<span class="c"># Insert the script and save to file.</span>
+<span class="c1"># Insert the script and save to file.</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ET</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="n">script</span><span class="p">))</span>
 
-<span class="n">ET</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;svg_histogram.svg&quot;</span><span class="p">)</span>
+<span class="n">ET</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;svg_histogram.svg&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Keywords: python, matplotlib, pylab, example, codex (see <a class="reference internal" href="../../faq/howto_faq.html#how-to-search-examples"><span>Search examples</span></a>)</p>
@@ -313,9 +313,9 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Jan 10, 2016.
+      Last updated on Feb 08, 2016.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
 
 <script>

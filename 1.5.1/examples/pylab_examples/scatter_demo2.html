@@ -154,33 +154,33 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cbook</span> <span class="kn">as</span> <span class="nn">cbook</span>
 
-<span class="c"># Load a numpy record array from yahoo csv data with fields date,</span>
-<span class="c"># open, close, volume, adj_close from the mpl-data/example directory.</span>
-<span class="c"># The record array stores python datetime.date as an object array in</span>
-<span class="c"># the date column</span>
-<span class="n">datafile</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">get_sample_data</span><span class="p">(</span><span class="s">&#39;goog.npy&#39;</span><span class="p">)</span>
+<span class="c1"># Load a numpy record array from yahoo csv data with fields date,</span>
+<span class="c1"># open, close, volume, adj_close from the mpl-data/example directory.</span>
+<span class="c1"># The record array stores python datetime.date as an object array in</span>
+<span class="c1"># the date column</span>
+<span class="n">datafile</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">get_sample_data</span><span class="p">(</span><span class="s1">&#39;goog.npy&#39;</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="c"># Python3 cannot load python2 .npy files with datetime(object) arrays</span>
-    <span class="c"># unless the encoding is set to bytes. Hovever this option was</span>
-    <span class="c"># not added until numpy 1.10 so this example will only work with</span>
-    <span class="c"># python 2 or with numpy 1.10 and later</span>
-    <span class="n">price_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">&#39;bytes&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">recarray</span><span class="p">)</span>
+    <span class="c1"># Python3 cannot load python2 .npy files with datetime(object) arrays</span>
+    <span class="c1"># unless the encoding is set to bytes. Hovever this option was</span>
+    <span class="c1"># not added until numpy 1.10 so this example will only work with</span>
+    <span class="c1"># python 2 or with numpy 1.10 and later</span>
+    <span class="n">price_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;bytes&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">recarray</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
     <span class="n">price_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">datafile</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">recarray</span><span class="p">)</span>
-<span class="n">price_data</span> <span class="o">=</span> <span class="n">price_data</span><span class="p">[</span><span class="o">-</span><span class="mi">250</span><span class="p">:]</span>  <span class="c"># get the most recent 250 trading days</span>
+<span class="n">price_data</span> <span class="o">=</span> <span class="n">price_data</span><span class="p">[</span><span class="o">-</span><span class="mi">250</span><span class="p">:]</span>  <span class="c1"># get the most recent 250 trading days</span>
 
 <span class="n">delta1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">price_data</span><span class="o">.</span><span class="n">adj_close</span><span class="p">)</span><span class="o">/</span><span class="n">price_data</span><span class="o">.</span><span class="n">adj_close</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="c"># Marker size in units of points^2</span>
+<span class="c1"># Marker size in units of points^2</span>
 <span class="n">volume</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span> <span class="o">*</span> <span class="n">price_data</span><span class="o">.</span><span class="n">volume</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">price_data</span><span class="o">.</span><span class="n">volume</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">close</span> <span class="o">=</span> <span class="mf">0.003</span> <span class="o">*</span> <span class="n">price_data</span><span class="o">.</span><span class="n">close</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mf">0.003</span> <span class="o">*</span> <span class="n">price_data</span><span class="o">.</span><span class="n">open</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">delta1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">delta1</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">c</span><span class="o">=</span><span class="n">close</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">r&#39;$\Delta_i$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">r&#39;$\Delta_{i+1}$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;Volume and percent change&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">r&#39;$\Delta_i$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">r&#39;$\Delta_{i+1}$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Volume and percent change&#39;</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -200,9 +200,9 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Jan 10, 2016.
+      Last updated on Feb 08, 2016.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
 
 <script>
