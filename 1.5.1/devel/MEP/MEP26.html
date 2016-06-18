@@ -156,6 +156,9 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -266,17 +269,17 @@ Artist Style Sheets :+1: :</p>
 <p>I propose a very simple syntax to implement initially (like a proof of
 concept), which can be expanded upon in the future. The BNF form of
 the syntax is given below and then explained</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">RuleSet</span> <span class="p">::</span><span class="o">=</span> <span class="n">SelectorSequence</span> <span class="s2">&quot;{&quot;</span><span class="n">Declaration</span><span class="s2">&quot;}&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre>RuleSet ::= SelectorSequence &quot;{&quot;Declaration&quot;}&quot;
 
-<span class="n">SelectorSequence</span> <span class="p">::</span> <span class="o">=</span> <span class="n">Selector</span> <span class="p">{</span><span class="s2">&quot;,&quot;</span> <span class="n">Selector</span><span class="p">}</span>
+SelectorSequence :: = Selector {&quot;,&quot; Selector}
 
-<span class="n">Declaration</span> <span class="p">::</span><span class="o">=</span> <span class="n">propName</span><span class="s2">&quot;:&quot;</span> <span class="n">propValue</span><span class="s2">&quot;;&quot;</span>
+Declaration ::= propName&quot;:&quot; propValue&quot;;&quot;
 
-<span class="n">Selector</span> <span class="p">::</span><span class="o">=</span> <span class="n">ArtistIdent</span><span class="p">{</span><span class="s2">&quot;#&quot;</span><span class="n">Ident</span><span class="p">}</span>
+Selector ::= ArtistIdent{&quot;#&quot;Ident}
 
-<span class="n">propName</span> <span class="p">::</span><span class="o">=</span> <span class="n">Ident</span>
+propName ::= Ident
 
-<span class="n">propValue</span> <span class="p">::</span><span class="o">=</span> <span class="n">Ident</span> <span class="o">|</span> <span class="n">Number</span> <span class="o">|</span> <span class="n">Colour</span> <span class="o">|</span> <span class="s2">&quot;None&quot;</span>
+propValue ::= Ident | Number | Colour | &quot;None&quot;
 </pre></div>
 </div>
 <p><code class="xref py py-obj docutils literal"><span class="pre">ArtistIdent</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">Ident</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">Number</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">Colour</span></code> are tokens (the basic
@@ -288,7 +291,7 @@ expressions.</p>
 <p>A CSS stylesheet consists of a series of <strong>rule sets</strong> in hierarchical
 order (rules are applied from top to bottom). Each rule follows the
 syntax</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">selector</span> <span class="p">{</span><span class="n">attribute</span><span class="p">:</span> <span class="n">value</span><span class="p">;}</span>
+<div class="highlight-python"><div class="highlight"><pre>selector {attribute: value;}
 </pre></div>
 </div>
 <p>Each rule can have any number of <code class="xref py py-obj docutils literal"><span class="pre">attribute</span></code>: <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> pairs, and a
@@ -305,22 +308,22 @@ applied. As a starting point, I propose just 2 selectors to use in
 initial development:</p>
 <p>Artist Type Selector</p>
 <p>Select an <code class="xref py py-obj docutils literal"><span class="pre">artist</span></code> by it&#8217;s type. E.g <code class="xref py py-obj docutils literal"><span class="pre">Line2D</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">Text</span></code>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Line2D</span> <span class="p">{</span><span class="n">attribute</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
+<div class="highlight-python"><div class="highlight"><pre>Line2D {attribute: value}
 </pre></div>
 </div>
 <p>The regex for matching the artist type selector (<code class="xref py py-obj docutils literal"><span class="pre">ArtistIdent</span></code> in the BNF grammar) would be:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ArtistIdent</span> <span class="o">=</span> <span class="s1">r&#39;(?P&lt;ArtistIdent&gt;\bLine2D\b|\bText\b|\bAxesImage\b|\bFigureImage\b|\bPatch\b)&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ArtistIdent</span> <span class="o">=</span> <span class="s1">r&#39;(?P&lt;ArtistIdent&gt;\bLine2D\b|\bText\b|\bAxesImage\b|\bFigureImage\b|\bPatch\b)&#39;</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="gid-selector">
 <h4><a class="toc-backref" href="#id9">GID selector</a><a class="headerlink" href="#gid-selector" title="Permalink to this headline">¶</a></h4>
 <p>Select an <code class="xref py py-obj docutils literal"><span class="pre">artist</span></code> by its <code class="xref py py-obj docutils literal"><span class="pre">gid</span></code>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Line2D</span><span class="c1">#myGID {attribute: value}</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Line2D</span><span class="c1">#myGID {attribute: value}</span>
 </pre></div>
 </div>
 <p>A <code class="xref py py-obj docutils literal"><span class="pre">gid</span></code> can be any string, so the regex could be as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Ident</span> <span class="o">=</span> <span class="s1">r&#39;(?P&lt;Ident&gt;[a-zA-Z_][a-zA-Z_0-9]*)&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Ident</span> <span class="o">=</span> <span class="s1">r&#39;(?P&lt;Ident&gt;[a-zA-Z_][a-zA-Z_0-9]*)&#39;</span>
 </pre></div>
 </div>
 <p>The above selectors roughly correspond to their CSS counterparts
@@ -351,11 +354,11 @@ Here is a visitor class (again, thanks to python cookbook), where each
 <code class="xref py py-obj docutils literal"><span class="pre">node</span></code> would be an artist in the figure. A <code class="xref py py-obj docutils literal"><span class="pre">visit_</span></code> method would need
 to be implemented for each mpl artist, to handle the different
 properties for each</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Visitor</span><span class="p">:</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Visitor</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;visit_&#39;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span>
-       <span class="n">meth</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-       <span class="k">if</span> <span class="n">meth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">meth</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">meth</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">NotImplementedError</span>
        <span class="k">return</span> <span class="n">meth</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 </pre></div>
@@ -403,9 +406,9 @@ MEP25, which may assist in this development</p>
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on May 01, 2016.
+      Last updated on Jun 18, 2016.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
 
 <script>
