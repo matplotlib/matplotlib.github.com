@@ -96,6 +96,15 @@ distributed with matplotlib source.
 .. image:: /_static/demo_axes_grid.png
 
 
+.. _toolkit_mplcursors:
+
+mplcursors
+==========
+
+`mplcursors <https://mplcursors.readthedocs.io>`_ provides interactive
+data cursors for matplotlib.
+
+
 .. _toolkit_mpldatacursor:
 
 MplDataCursor
@@ -167,10 +176,9 @@ seaborn
 =======
 (*Not distributed with matplotlib*)
 
-`seaborn <http://web.stanford.edu/~mwaskom/software/seaborn>`_ is a high
-level interface for drawing statistical graphics with matplotlib. It
-aims to make visualization a central part of exploring and
-understanding complex datasets.
+`seaborn <https://seaborn.github.io/>`_ is a high level interface for drawing
+statistical graphics with matplotlib. It aims to make visualization a central
+part of exploring and understanding complex datasets.
 
 .. image:: /_static/seaborn.png
     :height: 157px

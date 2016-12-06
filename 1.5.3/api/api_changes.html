@@ -39,11 +39,11 @@ type="text/css" />
   <body>
     <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
 ">
-<h3>We're updating the default styles for Matplotlib 2.0</h3>
+<h3>Matplotlib 2.0.0rc1 is available</h3>
 
-<p>Learn what to expect in the <a href="../style_changes.html"
+<p><a href="../style_changes.html"
 style="font-weight: bold;
-color: #11557C;">new updates</a></p>
+color: #11557C;">Install the release candidate now!</a></p>
 
 </div>
 
@@ -103,6 +103,10 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <h3><a href="../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">API Changes</a><ul>
+<li><a class="reference internal" href="#changes-in-1-5-3">Changes in 1.5.3</a><ul>
+<li><a class="reference internal" href="#ax-plot-marker-none-gives-default-marker"><code class="docutils literal"><span class="pre">ax.plot(...,</span> <span class="pre">marker=None)</span></code> gives default marker</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#changes-in-1-5-2">Changes in 1.5.2</a><ul>
 <li><a class="reference internal" href="#default-behavior-changes">Default Behavior Changes</a><ul>
 <li><a class="reference internal" href="#changed-default-autorange-behavior-in-boxplots">Changed default <code class="docutils literal"><span class="pre">autorange</span></code> behavior in boxplots</a></li>
@@ -291,6 +295,30 @@ what changes may be necessary in your code or help figure out possible
 sources of the changes you are experiencing.</p>
 <p>For new features that were added to matplotlib, please see
 <a class="reference internal" href="../users/whats_new.html#whats-new"><span class="std std-ref">What&#8217;s new in matplotlib</span></a>.</p>
+<div class="section" id="changes-in-1-5-3">
+<h2>Changes in 1.5.3<a class="headerlink" href="#changes-in-1-5-3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ax-plot-marker-none-gives-default-marker">
+<h3><code class="docutils literal"><span class="pre">ax.plot(...,</span> <span class="pre">marker=None)</span></code> gives default marker<a class="headerlink" href="#ax-plot-marker-none-gives-default-marker" title="Permalink to this headline">¶</a></h3>
+<p>Prior to 1.5.3 kwargs passed to <code class="xref py py-obj docutils literal"><span class="pre">plot</span></code> were handled
+in two parts &#8211; default kwargs generated internal to
+<code class="xref py py-obj docutils literal"><span class="pre">plot</span></code> (such as the cycled styles) and user supplied
+kwargs.  The internally generated kwargs were passed to the
+<code class="xref py py-obj docutils literal"><span class="pre">matplotlib.lines.Line2D.__init__</span></code> and the user kwargs were passed to
+<code class="docutils literal"><span class="pre">ln.set(**kwargs)</span></code> to update the artist after it was created.  Now
+both sets of kwargs are merged and passed to
+<code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code>.  This change was made to allow <code class="xref py py-obj docutils literal"><span class="pre">None</span></code>
+to be passed in via the user kwargs to mean &#8216;do the default thing&#8217;  as
+is the convention through out mpl rather than raising an exception.</p>
+<p>Unlike most <a class="reference internal" href="lines_api.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><code class="xref py py-obj docutils literal"><span class="pre">Line2D</span></code></a> setter methods
+<a class="reference internal" href="lines_api.html#matplotlib.lines.Line2D.set_marker" title="matplotlib.lines.Line2D.set_marker"><code class="xref py py-obj docutils literal"><span class="pre">set_marker</span></code></a> did accept <code class="xref py py-obj docutils literal"><span class="pre">None</span></code> as a valid
+input which was mapped to &#8216;no marker&#8217;.  Thus, by routing this
+<code class="docutils literal"><span class="pre">marker=None</span></code> through <code class="docutils literal"><span class="pre">__init__</span></code> rather than <code class="docutils literal"><span class="pre">set(...)</span></code> the meaning
+of <code class="docutils literal"><span class="pre">ax.plot(...,</span> <span class="pre">marker=None)</span></code> changed from &#8216;no markers&#8217; to &#8216;default markers
+from rcparams&#8217;.</p>
+<p>This is change is only evident if <code class="docutils literal"><span class="pre">mpl.rcParams['lines.marker']</span></code> has a value
+other than <code class="docutils literal"><span class="pre">'None'</span></code> (which is string <code class="docutils literal"><span class="pre">'None'</span></code> which means &#8216;no marker&#8217;).</p>
+</div>
+</div>
 <div class="section" id="changes-in-1-5-2">
 <h2>Changes in 1.5.2<a class="headerlink" href="#changes-in-1-5-2" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="default-behavior-changes">
@@ -1126,7 +1154,7 @@ value), will result in a pie with a radius of 1 as before.</p>
 </li>
 <li><p class="first">Use of <code class="xref py py-func docutils literal"><span class="pre">projection_factory()</span></code> is now deprecated
 in favour of axes class identification using
-<a class="reference internal" href="../devel/add_new_projection.html#matplotlib.projections.process_projection_requirements" title="matplotlib.projections.process_projection_requirements"><code class="xref py py-func docutils literal"><span class="pre">process_projection_requirements()</span></code></a> followed by
+<a class="reference internal" href="projections_api.html#matplotlib.projections.process_projection_requirements" title="matplotlib.projections.process_projection_requirements"><code class="xref py py-func docutils literal"><span class="pre">process_projection_requirements()</span></code></a> followed by
 direct axes class invocation (at the time of writing, functions which do this
 are: <a class="reference internal" href="figure_api.html#matplotlib.figure.Figure.add_axes" title="matplotlib.figure.Figure.add_axes"><code class="xref py py-meth docutils literal"><span class="pre">add_axes()</span></code></a>,
 <a class="reference internal" href="figure_api.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot"><code class="xref py py-meth docutils literal"><span class="pre">add_subplot()</span></code></a> and
@@ -1726,7 +1754,7 @@ the left edge of the <code class="xref py py-class docutils literal"><span class
 </tr>
 </tbody>
 </table>
-<p>The <code class="xref py py-class docutils literal"><span class="pre">Polar</span></code> class has moved to <a class="reference internal" href="../devel/add_new_projection.html#module-matplotlib.projections.polar" title="matplotlib.projections.polar"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.projections.polar</span></code></a>.</p>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">Polar</span></code> class has moved to <a class="reference internal" href="projections_api.html#module-matplotlib.projections.polar" title="matplotlib.projections.polar"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.projections.polar</span></code></a>.</p>
 <table class="docutils footnote" frame="void" id="id12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -3045,9 +3073,9 @@ transformations.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Sep 20, 2016.
+      Last updated on Dec 05, 2016.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.
     </div>
 
 <script>
