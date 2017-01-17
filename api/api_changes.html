@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>API Changes &mdash; Matplotlib 1.5.3 documentation</title>
+    <title>API Changes &mdash; Matplotlib 2.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css"
 type="text/css" />
@@ -16,7 +16,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.5.3',
+        VERSION:     '2.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +26,14 @@ type="text/css" />
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.5.3 documentation"
+          title="Search within Matplotlib 2.0.0 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Matplotlib 1.5.3 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html"
+/>
+    <link rel="search" title="Search" href="../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.0.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib API" href="index.html" />
     <link rel="next" title="The top level matplotlib module" href="matplotlib_configuration_api.html" />
     <link rel="prev" title="Plotting commands summary" href="pyplot_summary.html" /> 
@@ -37,15 +41,6 @@ type="text/css" />
 
   </head>
   <body>
-    <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
-">
-<h2>Matplotlib 2.0.0rc2 is available</h2>
-
-<p><a href="../style_changes.html"
-style="font-weight: bold;
-color: #11557C;">Install the release candidate now!</a></p>
-
-</div>
 
 
 
@@ -103,6 +98,29 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <h3><a href="../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">API Changes</a><ul>
+<li><a class="reference internal" href="#api-changes-in-2-0-0">API Changes in 2.0.0</a><ul>
+<li><a class="reference internal" href="#deprecation-and-removal">Deprecation and removal</a><ul>
+<li><a class="reference internal" href="#color-of-axes">Color of Axes</a></li>
+<li><a class="reference internal" href="#gtk-and-gdk-backends-deprecated">GTK and GDK backends deprecated</a></li>
+<li><a class="reference internal" href="#wx-backend-deprecated">WX backend deprecated</a></li>
+<li><a class="reference internal" href="#cocoaagg-backend-removed">CocoaAgg backend removed</a></li>
+<li><a class="reference internal" href="#round-removed-from-tkagg-backend"><code class="docutils literal"><span class="pre">round</span></code> removed from TkAgg Backend</a></li>
+<li><a class="reference internal" href="#hold-functionality-deprecated">&#8216;hold&#8217; functionality deprecated</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#artist-update-has-return-value"><code class="docutils literal"><span class="pre">Artist.update</span></code> has return value</a></li>
+<li><a class="reference internal" href="#legend-initializers-gain-edgecolor-and-facecolor-kwargs"><code class="docutils literal"><span class="pre">Legend</span></code> initializers gain edgecolor and facecolor kwargs</a></li>
+<li><a class="reference internal" href="#qualitative-colormaps">Qualitative colormaps</a></li>
+<li><a class="reference internal" href="#change-in-the-draw-image-backend-api">Change in the <code class="docutils literal"><span class="pre">draw_image</span></code> backend API</a></li>
+<li><a class="reference internal" href="#matplotlib-ticker-linearlocator-algorithm-update"><code class="docutils literal"><span class="pre">matplotlib.ticker.LinearLocator</span></code> algorithm update</a></li>
+<li><a class="reference internal" href="#matplotlib-ticker-loglocator-gains-numticks-kwarg"><code class="docutils literal"><span class="pre">matplotlib.ticker.LogLocator</span></code> gains numticks kwarg</a></li>
+<li><a class="reference internal" href="#matplotlib-ticker-logformatter-two-new-kwargs"><code class="docutils literal"><span class="pre">matplotlib.ticker.LogFormatter</span></code>: two new kwargs</a></li>
+<li><a class="reference internal" href="#new-defaults-for-3d-quiver-function-in-mpl-toolkits-mplot3d-axes3d-py">New defaults for 3D quiver function in mpl_toolkits.mplot3d.axes3d.py</a></li>
+<li><a class="reference internal" href="#stale-figure-behavior">Stale figure behavior</a></li>
+<li><a class="reference internal" href="#the-spectral-colormap-is-now-nipy-spectral">The spectral colormap is now nipy_spectral</a></li>
+<li><a class="reference internal" href="#default-install-no-longer-includes-test-images">Default install no longer includes test images</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#changes-in-1-5-3">Changes in 1.5.3</a><ul>
 <li><a class="reference internal" href="#ax-plot-marker-none-gives-default-marker"><code class="docutils literal"><span class="pre">ax.plot(...,</span> <span class="pre">marker=None)</span></code> gives default marker</a></li>
 </ul>
@@ -116,9 +134,9 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 </li>
 <li><a class="reference internal" href="#changes-in-1-5-0">Changes in 1.5.0</a><ul>
 <li><a class="reference internal" href="#code-changes">Code Changes</a><ul>
-<li><a class="reference internal" href="#split-matplotlib-cbook-ls-mapper-in-two">Split <code class="docutils literal"><span class="pre">matplotlib.cbook.ls_mapper</span></code> in two</a></li>
+<li><a class="reference internal" href="#reversed-matplotlib-cbook-ls-mapper-added-ls-mapper-r">Reversed <code class="docutils literal"><span class="pre">matplotlib.cbook.ls_mapper</span></code>, added <code class="docutils literal"><span class="pre">ls_mapper_r</span></code></a></li>
 <li><a class="reference internal" href="#prevent-moving-artists-between-axes-property-ify-artist-axes-deprecate-artist-get-set-axes">Prevent moving artists between Axes, Property-ify Artist.axes, deprecate Artist.{get,set}_axes</a></li>
-<li><a class="reference internal" href="#tighted-input-validation-on-pivot-kwarg-to-quiver">Tighted input validation on &#8216;pivot&#8217; kwarg to quiver</a></li>
+<li><a class="reference internal" href="#tightened-input-validation-on-pivot-kwarg-to-quiver">Tightened input validation on &#8216;pivot&#8217; kwarg to quiver</a></li>
 <li><a class="reference internal" href="#reordered-axes-get-children">Reordered <code class="docutils literal"><span class="pre">Axes.get_children</span></code></a></li>
 <li><a class="reference internal" href="#changed-behaviour-of-contour-plots">Changed behaviour of contour plots</a></li>
 <li><a class="reference internal" href="#added-set-params-function-to-all-locator-types">Added set_params function to all Locator types</a></li>
@@ -265,7 +283,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/api_changes.txt"
+      <li><a href="../_sources/api/api_changes.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -289,12 +307,189 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
             
   <div class="section" id="api-changes">
 <h1>API Changes<a class="headerlink" href="#api-changes" title="Permalink to this headline">¶</a></h1>
-<p>Log of changes to matplotlib that affect the outward-facing API.  If
-updating matplotlib breaks your scripts, this list may help describe
-what changes may be necessary in your code or help figure out possible
-sources of the changes you are experiencing.</p>
-<p>For new features that were added to matplotlib, please see
+<p>Log of changes to Matplotlib that affect the outward-facing API.  If
+updating Matplotlib breaks your scripts, this list may help you figure
+out what caused the breakage and how to fix it by updating your code.</p>
+<p>For new features that were added to Matplotlib, please see
 <a class="reference internal" href="../users/whats_new.html#whats-new"><span class="std std-ref">What&#8217;s new in matplotlib</span></a>.</p>
+<div class="section" id="api-changes-in-2-0-0">
+<h2>API Changes in 2.0.0<a class="headerlink" href="#api-changes-in-2-0-0" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="deprecation-and-removal">
+<h3>Deprecation and removal<a class="headerlink" href="#deprecation-and-removal" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="color-of-axes">
+<h4>Color of Axes<a class="headerlink" href="#color-of-axes" title="Permalink to this headline">¶</a></h4>
+<p>The <code class="docutils literal"><span class="pre">axisbg</span></code> and <code class="docutils literal"><span class="pre">axis_bgcolor</span></code> properties on <code class="docutils literal"><span class="pre">Axes</span></code> have been
+deprecated in favor of <code class="docutils literal"><span class="pre">facecolor</span></code>.</p>
+</div>
+<div class="section" id="gtk-and-gdk-backends-deprecated">
+<h4>GTK and GDK backends deprecated<a class="headerlink" href="#gtk-and-gdk-backends-deprecated" title="Permalink to this headline">¶</a></h4>
+<p>The GDK and GTK backends have been deprecated. These obsolete backends
+allow figures to be rendered via the GDK API to files and GTK2 figures.
+They are untested and known to be broken, and their use has been
+discouraged for some time.  Instead, use the <code class="xref py py-obj docutils literal"><span class="pre">GTKAgg</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">GTKCairo</span></code>
+backends for rendering to GTK2 windows.</p>
+</div>
+<div class="section" id="wx-backend-deprecated">
+<h4>WX backend deprecated<a class="headerlink" href="#wx-backend-deprecated" title="Permalink to this headline">¶</a></h4>
+<p>The WX backend has been deprecated.  It is untested, and its
+use has been discouraged for some time. Instead, use the <code class="xref py py-obj docutils literal"><span class="pre">WXAgg</span></code>
+backend for rendering figures to WX windows.</p>
+</div>
+<div class="section" id="cocoaagg-backend-removed">
+<h4>CocoaAgg backend removed<a class="headerlink" href="#cocoaagg-backend-removed" title="Permalink to this headline">¶</a></h4>
+<p>The deprecated and not fully functional CocoaAgg backend has been removed.</p>
+</div>
+<div class="section" id="round-removed-from-tkagg-backend">
+<h4><code class="xref py py-obj docutils literal"><span class="pre">round</span></code> removed from TkAgg Backend<a class="headerlink" href="#round-removed-from-tkagg-backend" title="Permalink to this headline">¶</a></h4>
+<p>The TkAgg backend had its own implementation of the <code class="xref py py-obj docutils literal"><span class="pre">round</span></code> function. This
+was unused internally and has been removed. Instead, use either the
+<code class="xref py py-obj docutils literal"><span class="pre">round</span></code> builtin function or <code class="xref py py-obj docutils literal"><span class="pre">numpy.round</span></code>.</p>
+</div>
+<div class="section" id="hold-functionality-deprecated">
+<h4>&#8216;hold&#8217; functionality deprecated<a class="headerlink" href="#hold-functionality-deprecated" title="Permalink to this headline">¶</a></h4>
+<p>The &#8216;hold&#8217; keyword argument and all functions and methods related
+to it are deprecated, along with the &#8216;axes.hold&#8217; <code class="xref py py-obj docutils literal"><span class="pre">rcParams</span></code> entry.
+The behavior will remain consistent with the default <code class="docutils literal"><span class="pre">hold=True</span></code>
+state that has long been in place.  Instead of using a function
+or keyword argument (<code class="docutils literal"><span class="pre">hold=False</span></code>) to change that behavior,
+explicitly clear the axes or figure as needed prior to subsequent
+plotting commands.</p>
+</div>
+</div>
+<div class="section" id="artist-update-has-return-value">
+<h3><code class="xref py py-obj docutils literal"><span class="pre">Artist.update</span></code> has return value<a class="headerlink" href="#artist-update-has-return-value" title="Permalink to this headline">¶</a></h3>
+<p>The methods <a class="reference internal" href="_as_gen/matplotlib.artist.Artist.set.html#matplotlib.artist.Artist.set" title="matplotlib.artist.Artist.set"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.artist.Artist.set</span></code></a>,
+<code class="xref py py-obj docutils literal"><span class="pre">matplotlib.Artist.update</span></code>, and the function <a class="reference internal" href="_as_gen/matplotlib.artist.setp.html#matplotlib.artist.setp" title="matplotlib.artist.setp"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.artist.setp</span></code></a>
+now use a common codepath to look up how to update the given artist
+properties (either using the setter methods or an attribute/property).</p>
+<p>The behavior of <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.Artist.update</span></code> is slightly changed to
+return a list of the values returned from the setter methods to avoid
+changing the API of <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.Artist.set</span></code> and
+<a class="reference internal" href="_as_gen/matplotlib.artist.setp.html#matplotlib.artist.setp" title="matplotlib.artist.setp"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.artist.setp</span></code></a>.</p>
+<p>The keys passed into <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.Artist.update</span></code> are now converted to
+lower case before being processed, to match the behavior of
+<code class="xref py py-obj docutils literal"><span class="pre">matplotlib.Artist.set</span></code> and <a class="reference internal" href="_as_gen/matplotlib.artist.setp.html#matplotlib.artist.setp" title="matplotlib.artist.setp"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.artist.setp</span></code></a>.  This should not
+break any user code because there are no set methods with capitals in
+their names, but this puts a constraint on naming properties in the future.</p>
+</div>
+<div class="section" id="legend-initializers-gain-edgecolor-and-facecolor-kwargs">
+<h3><code class="xref py py-obj docutils literal"><span class="pre">Legend</span></code> initializers gain edgecolor and facecolor kwargs<a class="headerlink" href="#legend-initializers-gain-edgecolor-and-facecolor-kwargs" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend"><code class="xref py py-class docutils literal"><span class="pre">Legend</span></code></a> background patch (or &#8216;frame&#8217;)
+can have its <code class="docutils literal"><span class="pre">edgecolor</span></code> and <code class="docutils literal"><span class="pre">facecolor</span></code> determined by the
+corresponding keyword arguments to the <a class="reference internal" href="legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.legend.Legend</span></code></a>
+initializer, or to any of the methods or functions that call that
+initializer.  If left to their default values of <code class="xref py py-obj docutils literal"><span class="pre">None</span></code>, their values
+will be taken from <code class="docutils literal"><span class="pre">matplotlib.rcParams</span></code>.  The previously-existing
+<code class="docutils literal"><span class="pre">framealpha</span></code> kwarg still controls the alpha transparency of the
+patch.</p>
+</div>
+<div class="section" id="qualitative-colormaps">
+<h3>Qualitative colormaps<a class="headerlink" href="#qualitative-colormaps" title="Permalink to this headline">¶</a></h3>
+<p>Colorbrewer&#8217;s qualitative/discrete colormaps (&#8220;Accent&#8221;, &#8220;Dark2&#8221;, &#8220;Paired&#8221;,
+&#8220;Pastel1&#8221;, &#8220;Pastel2&#8221;, &#8220;Set1&#8221;, &#8220;Set2&#8221;, &#8220;Set3&#8221;) are now implemented as
+<code class="docutils literal"><span class="pre">ListedColormap</span></code> instead of <code class="docutils literal"><span class="pre">LinearSegmentedColormap</span></code>.</p>
+<p>To use these for images where categories are specified as integers, for
+instance, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Dark2&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="change-in-the-draw-image-backend-api">
+<h3>Change in the <code class="docutils literal"><span class="pre">draw_image</span></code> backend API<a class="headerlink" href="#change-in-the-draw-image-backend-api" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal"><span class="pre">draw_image</span></code> method implemented by backends has changed its interface.</p>
+<p>This change is only relevant if the backend declares that it is able
+to transform images by returning <code class="docutils literal"><span class="pre">True</span></code> from <code class="docutils literal"><span class="pre">option_scale_image</span></code>.
+See the <code class="docutils literal"><span class="pre">draw_image</span></code> docstring for more information.</p>
+</div>
+<div class="section" id="matplotlib-ticker-linearlocator-algorithm-update">
+<h3><a class="reference internal" href="ticker_api.html#matplotlib.ticker.LinearLocator" title="matplotlib.ticker.LinearLocator"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.ticker.LinearLocator</span></code></a> algorithm update<a class="headerlink" href="#matplotlib-ticker-linearlocator-algorithm-update" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal"><span class="pre">matplotlib.ticker.LinearLocator</span></code> is used to define the range and
+location of axis ticks when the user wants an exact number of ticks.
+<code class="docutils literal"><span class="pre">LinearLocator</span></code> thus differs from the default locator <code class="docutils literal"><span class="pre">MaxNLocator</span></code>,
+for which the user specifies a maximum number of intervals rather than
+a precise number of ticks.</p>
+<p>The view range algorithm in <code class="docutils literal"><span class="pre">matplotlib.ticker.LinearLocator</span></code> has been
+changed so that more convenient tick locations are chosen. The new algorithm
+returns a plot view range that is a multiple of the user-requested number of
+ticks. This ensures tick marks will be located at whole integers more
+consistently. For example, when both y-axes of a``twinx`` plot use
+<code class="docutils literal"><span class="pre">matplotlib.ticker.LinearLocator</span></code> with the same number of ticks,
+their y-tick locations and grid lines will coincide.</p>
+</div>
+<div class="section" id="matplotlib-ticker-loglocator-gains-numticks-kwarg">
+<h3><a class="reference internal" href="ticker_api.html#matplotlib.ticker.LogLocator" title="matplotlib.ticker.LogLocator"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.ticker.LogLocator</span></code></a> gains numticks kwarg<a class="headerlink" href="#matplotlib-ticker-loglocator-gains-numticks-kwarg" title="Permalink to this headline">¶</a></h3>
+<p>The maximum number of ticks generated by the
+<a class="reference internal" href="ticker_api.html#matplotlib.ticker.LogLocator" title="matplotlib.ticker.LogLocator"><code class="xref py py-obj docutils literal"><span class="pre">LogLocator</span></code></a> can now be controlled explicitly
+via setting the new &#8216;numticks&#8217; kwarg to an integer.  By default
+the kwarg is None which internally sets it to the &#8216;auto&#8217; string,
+triggering a new algorithm for adjusting the maximum according
+to the axis length relative to the ticklabel font size.</p>
+</div>
+<div class="section" id="matplotlib-ticker-logformatter-two-new-kwargs">
+<h3><a class="reference internal" href="ticker_api.html#matplotlib.ticker.LogFormatter" title="matplotlib.ticker.LogFormatter"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.ticker.LogFormatter</span></code></a>: two new kwargs<a class="headerlink" href="#matplotlib-ticker-logformatter-two-new-kwargs" title="Permalink to this headline">¶</a></h3>
+<p>Previously, minor ticks on log-scaled axes were not labeled by
+default.  An algorithm has been added to the
+<a class="reference internal" href="ticker_api.html#matplotlib.ticker.LogFormatter" title="matplotlib.ticker.LogFormatter"><code class="xref py py-obj docutils literal"><span class="pre">LogFormatter</span></code></a> to control the labeling of
+ticks between integer powers of the base.  The algorithm uses
+two parameters supplied in a kwarg tuple named &#8216;minor_thresholds&#8217;.
+See the docstring for further explanation.</p>
+<p>To improve support for axes using <code class="xref py py-obj docutils literal"><span class="pre">SymmetricLogLocator</span></code>,
+a &#8216;linthresh&#8217; kwarg was added.</p>
+</div>
+<div class="section" id="new-defaults-for-3d-quiver-function-in-mpl-toolkits-mplot3d-axes3d-py">
+<h3>New defaults for 3D quiver function in mpl_toolkits.mplot3d.axes3d.py<a class="headerlink" href="#new-defaults-for-3d-quiver-function-in-mpl-toolkits-mplot3d-axes3d-py" title="Permalink to this headline">¶</a></h3>
+<p>Matplotlib has both a 2D and a 3D <code class="docutils literal"><span class="pre">quiver</span></code> function. These changes
+affect only the 3D function and make the default behavior of the 3D
+function match the 2D version. There are two changes:</p>
+<ol class="arabic simple">
+<li>The 3D quiver function previously normalized the arrows to be the
+same length, which makes it unusable for situations where the
+arrows should be different lengths and does not match the behavior
+of the 2D function. This normalization behavior is now controlled
+with the <code class="docutils literal"><span class="pre">normalize</span></code> keyword, which defaults to False.</li>
+<li>The <code class="docutils literal"><span class="pre">pivot</span></code> keyword now defaults to <code class="docutils literal"><span class="pre">tail</span></code> instead of
+<code class="docutils literal"><span class="pre">tip</span></code>. This was done in order to match the default behavior of
+the 2D quiver function.</li>
+</ol>
+<p>To obtain the previous behavior with the 3D quiver function, one can
+call the function with</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pivot</span><span class="o">=</span><span class="s1">&#39;tip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where &#8220;ax&#8221; is an <code class="docutils literal"><span class="pre">Axes3d</span></code> object created with something like</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mpl_toolkits.mplot3d.axes3d</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">sublot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stale-figure-behavior">
+<h3>Stale figure behavior<a class="headerlink" href="#stale-figure-behavior" title="Permalink to this headline">¶</a></h3>
+<p>Attempting to draw the figure will now mark it as not stale (independent if
+the draw succeeds).  This change is to prevent repeatedly trying to re-draw a
+figure which is raising an error on draw.  The previous behavior would only mark
+a figure as not stale after a full re-draw succeeded.</p>
+</div>
+<div class="section" id="the-spectral-colormap-is-now-nipy-spectral">
+<h3>The spectral colormap is now nipy_spectral<a class="headerlink" href="#the-spectral-colormap-is-now-nipy-spectral" title="Permalink to this headline">¶</a></h3>
+<p>The colormaps formerly known as <code class="docutils literal"><span class="pre">spectral</span></code> and <code class="docutils literal"><span class="pre">spectral_r</span></code> have been
+replaced by <code class="docutils literal"><span class="pre">nipy_spectral</span></code> and <code class="docutils literal"><span class="pre">nipy_spectral_r</span></code> since Matplotlib
+1.3.0. Even though the colormap was deprecated in Matplotlib 1.3.0, it never
+raised a warning. As of Matplotlib 2.0.0, using the old names raises a
+deprecation warning. In the future, using the old names will raise an error.</p>
+</div>
+<div class="section" id="default-install-no-longer-includes-test-images">
+<h3>Default install no longer includes test images<a class="headerlink" href="#default-install-no-longer-includes-test-images" title="Permalink to this headline">¶</a></h3>
+<p>To reduce the size of wheels and source installs, the tests and
+baseline images are no longer included by default.</p>
+<p>To restore installing the tests and images, use a <code class="xref py py-obj docutils literal"><span class="pre">setup.cfg</span></code> with</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">packages</span><span class="p">]</span>
+<span class="n">tests</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">toolkits_tests</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>in the source directory at build/install time.</p>
+</div>
+</div>
 <div class="section" id="changes-in-1-5-3">
 <h2>Changes in 1.5.3<a class="headerlink" href="#changes-in-1-5-3" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="ax-plot-marker-none-gives-default-marker">
@@ -338,30 +533,30 @@ calling <code class="docutils literal"><span class="pre">plt.boxplot</span></cod
 <h2>Changes in 1.5.0<a class="headerlink" href="#changes-in-1-5-0" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="code-changes">
 <h3>Code Changes<a class="headerlink" href="#code-changes" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="split-matplotlib-cbook-ls-mapper-in-two">
-<h4>Split <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cbook.ls_mapper</span></code> in two<a class="headerlink" href="#split-matplotlib-cbook-ls-mapper-in-two" title="Permalink to this headline">¶</a></h4>
-<p>The <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cbook.ls_mapper</span></code> dictionary is split into two now to
-distinguish between qualified linestyle used by backends and
-unqualified ones. <code class="xref py py-obj docutils literal"><span class="pre">ls_mapper</span></code> now maps from the short symbols
-(e.g. <code class="xref py py-obj docutils literal"><span class="pre">&quot;--&quot;</span></code>) to qualified names (<code class="xref py py-obj docutils literal"><span class="pre">&quot;solid&quot;</span></code>). The new ls_mapper_r is
-the reversed mapping.</p>
+<div class="section" id="reversed-matplotlib-cbook-ls-mapper-added-ls-mapper-r">
+<h4>Reversed <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cbook.ls_mapper</span></code>, added <code class="xref py py-obj docutils literal"><span class="pre">ls_mapper_r</span></code><a class="headerlink" href="#reversed-matplotlib-cbook-ls-mapper-added-ls-mapper-r" title="Permalink to this headline">¶</a></h4>
+<p>Formerly, <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cbook.ls_mapper</span></code> was a dictionary with
+the long-form line-style names (<code class="xref py py-obj docutils literal"><span class="pre">&quot;solid&quot;</span></code>) as keys and the short
+forms (<code class="xref py py-obj docutils literal"><span class="pre">&quot;-&quot;</span></code>) as values.  This long-to-short mapping is now done
+by <code class="xref py py-obj docutils literal"><span class="pre">ls_mapper_r</span></code>, and the short-to-long mapping is done by the
+<code class="xref py py-obj docutils literal"><span class="pre">ls_mapper</span></code>.</p>
 </div>
 <div class="section" id="prevent-moving-artists-between-axes-property-ify-artist-axes-deprecate-artist-get-set-axes">
 <h4>Prevent moving artists between Axes, Property-ify Artist.axes, deprecate Artist.{get,set}_axes<a class="headerlink" href="#prevent-moving-artists-between-axes-property-ify-artist-axes-deprecate-artist-get-set-axes" title="Permalink to this headline">¶</a></h4>
-<p>The reason this was done was to prevent adding an Artist that is
-already associated with an Axes to be moved/added to a different Axes.
+<p>This was done to prevent an Artist that is
+already associated with an Axes from being moved/added to a different Axes.
 This was never supported as it causes havoc with the transform stack.
 The apparent support for this (as it did not raise an exception) was
 the source of multiple bug reports and questions on SO.</p>
 <p>For almost all use-cases, the assignment of the axes to an artist should be
 taken care of by the axes as part of the <code class="docutils literal"><span class="pre">Axes.add_*</span></code> method, hence the
-deprecation {get,set}_axes.</p>
+deprecation of {get,set}_axes.</p>
 <p>Removing the <code class="docutils literal"><span class="pre">set_axes</span></code> method will also remove the &#8216;axes&#8217; line from
 the ACCEPTS kwarg tables (assuming that the removal date gets here
 before that gets overhauled).</p>
 </div>
-<div class="section" id="tighted-input-validation-on-pivot-kwarg-to-quiver">
-<h4>Tighted input validation on &#8216;pivot&#8217; kwarg to quiver<a class="headerlink" href="#tighted-input-validation-on-pivot-kwarg-to-quiver" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="tightened-input-validation-on-pivot-kwarg-to-quiver">
+<h4>Tightened input validation on &#8216;pivot&#8217; kwarg to quiver<a class="headerlink" href="#tightened-input-validation-on-pivot-kwarg-to-quiver" title="Permalink to this headline">¶</a></h4>
 <p>Tightened validation so that only {&#8216;tip&#8217;, &#8216;tail&#8217;, &#8216;mid&#8217;, and &#8216;middle&#8217;}
 (but any capitalization) are valid values for the &#8216;pivot&#8217; kwarg in
 the <code class="xref py py-obj docutils literal"><span class="pre">Quiver.__init__</span></code> (and hence <code class="xref py py-obj docutils literal"><span class="pre">Axes.quiver</span></code> and
@@ -389,7 +584,7 @@ using <code class="xref py py-obj docutils literal"><span class="pre">corner_mas
 demonstrates the difference.  Use of the old contouring algorithm, which is
 obtained with <code class="xref py py-obj docutils literal"><span class="pre">corner_mask='legacy'</span></code>, is now deprecated.</p>
 <p>Contour labels may now appear in different places than in earlier versions of
-matplotlib.</p>
+Matplotlib.</p>
 <p>In addition, the keyword argument <code class="xref py py-obj docutils literal"><span class="pre">nchunk</span></code> now applies to
 <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.contour" title="matplotlib.pyplot.contour"><code class="xref py py-func docutils literal"><span class="pre">contour()</span></code></a> as well as
 <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.contourf" title="matplotlib.pyplot.contourf"><code class="xref py py-func docutils literal"><span class="pre">contourf()</span></code></a>, and it subdivides the domain into
@@ -403,18 +598,18 @@ and should not be accessed by end users.</p>
 <h4>Added set_params function to all Locator types<a class="headerlink" href="#added-set-params-function-to-all-locator-types" title="Permalink to this headline">¶</a></h4>
 <p>This was a bug fix targeted at making the api for Locators more consistent.</p>
 <p>In the old behavior, only locators of type MaxNLocator have set_params()
-defined, causing its use on any other Locator to throw an AttributeError <em>(
+defined, causing its use on any other Locator to raise an AttributeError <em>(
 aside: set_params(args) is a function that sets the parameters of a Locator
 instance to be as specified within args)</em>. The fix involves moving set_params()
 to the Locator class such that all subtypes will have this function defined.</p>
-<p>Since each of the Locator subtype have their own modifiable parameters, a
+<p>Since each of the Locator subtypes have their own modifiable parameters, a
 universal set_params() in Locator isn&#8217;t ideal. Instead, a default no-operation
 function that raises a warning is implemented in Locator. Subtypes extending
 Locator will then override with their own implementations. Subtypes that do
 not have a need for set_params() will fall back onto their parent&#8217;s
 implementation, which raises a warning as intended.</p>
-<p>In the new behavior, all Locator instances will not throw an AttributeError
-when set_param() is called. For Locators that do not implement set_params(),
+<p>In the new behavior, Locator instances will not raise an AttributeError
+when set_params() is called. For Locators that do not implement set_params(),
 the default implementation in Locator is used.</p>
 </div>
 <div class="section" id="disallow-none-as-x-or-y-value-in-ax-plot">
@@ -435,8 +630,8 @@ both the <code class="docutils literal"><span class="pre">x</span></code> and <c
 <h4>Removed <code class="xref py py-obj docutils literal"><span class="pre">args</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">kwargs</span></code> from <code class="xref py py-obj docutils literal"><span class="pre">MicrosecondLocator.__call__</span></code><a class="headerlink" href="#removed-args-and-kwargs-from-microsecondlocator-call" title="Permalink to this headline">¶</a></h4>
 <p>The call signature of <code class="xref py py-meth docutils literal"><span class="pre">__call__()</span></code>
 has changed from <code class="xref py py-obj docutils literal"><span class="pre">__call__(self,</span> <span class="pre">*args,</span> <span class="pre">**kwargs)</span></code> to <code class="xref py py-obj docutils literal"><span class="pre">__call__(self)</span></code>.
-This is consistent with the super class <a class="reference internal" href="ticker_api.html#matplotlib.ticker.Locator" title="matplotlib.ticker.Locator"><code class="xref py py-class docutils literal"><span class="pre">Locator</span></code></a>
-and also all the other Locators derived from this super class.</p>
+This is consistent with the superclass <a class="reference internal" href="ticker_api.html#matplotlib.ticker.Locator" title="matplotlib.ticker.Locator"><code class="xref py py-class docutils literal"><span class="pre">Locator</span></code></a>
+and also all the other Locators derived from this superclass.</p>
 </div>
 <div class="section" id="no-valueerror-for-the-microsecondlocator-and-yearlocator">
 <h4>No <code class="xref py py-obj docutils literal"><span class="pre">ValueError</span></code> for the MicrosecondLocator and YearLocator<a class="headerlink" href="#no-valueerror-for-the-microsecondlocator-and-yearlocator" title="Permalink to this headline">¶</a></h4>
@@ -450,13 +645,15 @@ the Date Locators.</p>
 <h4>&#8216;OffsetBox.DrawingArea&#8217; respects the &#8216;clip&#8217; keyword argument<a class="headerlink" href="#offsetbox-drawingarea-respects-the-clip-keyword-argument" title="Permalink to this headline">¶</a></h4>
 <p>The call signature was <code class="xref py py-obj docutils literal"><span class="pre">OffsetBox.DrawingArea(...,</span> <span class="pre">clip=True)</span></code> but nothing
 was done with the <code class="xref py py-obj docutils literal"><span class="pre">clip</span></code> argument. The object did not do any clipping
-regardless of that parameter. Now the object can and does clip the child <code class="xref py py-obj docutils literal"><span class="pre">Artists</span></code> if they are set to be clipped.</p>
-<p>You can turn off the clipping on a per-child basis using <code class="xref py py-obj docutils literal"><span class="pre">child.set_clip_on(False)</span></code>.</p>
+regardless of that parameter. Now the object can and does clip the
+child <code class="xref py py-obj docutils literal"><span class="pre">Artists</span></code> if they are set to be clipped.</p>
+<p>You can turn off the clipping on a per-child basis using
+<code class="xref py py-obj docutils literal"><span class="pre">child.set_clip_on(False)</span></code>.</p>
 </div>
 <div class="section" id="add-salt-to-clippath-id">
 <h4>Add salt to clipPath id<a class="headerlink" href="#add-salt-to-clippath-id" title="Permalink to this headline">¶</a></h4>
 <p>Add salt to the hash used to determine the id of the <code class="docutils literal"><span class="pre">clipPath</span></code>
-nodes.  This is to avoid conflicts in two svg documents with the same
+nodes.  This is to avoid conflicts when two svg documents with the same
 clip path are included in the same document (see
 <a class="reference external" href="https://github.com/ipython/ipython/issues/8133">https://github.com/ipython/ipython/issues/8133</a> and
 <a class="reference external" href="https://github.com/matplotlib/matplotlib/issues/4349">https://github.com/matplotlib/matplotlib/issues/4349</a> ), however this
@@ -552,7 +749,7 @@ of the property cycle, if it exists.</p>
 <h3>Bundled jquery<a class="headerlink" href="#bundled-jquery" title="Permalink to this headline">¶</a></h3>
 <p>The version of jquery bundled with the webagg backend has been upgraded
 from 1.7.1 to 1.11.3.  If you are using the version of jquery bundled
-with webagg you will need to update you html files as such</p>
+with webagg you will need to update your html files as such</p>
 <div class="highlight-diff"><div class="highlight"><pre><span></span><span class="gd">-    &lt;script src=&quot;_static/jquery/js/jquery-1.7.1.min.js&quot;&gt;&lt;/script&gt;</span>
 <span class="gi">+    &lt;script src=&quot;_static/jquery/js/jquery-1.11.3.min.js&quot;&gt;&lt;/script&gt;</span>
 </pre></div>
@@ -562,8 +759,9 @@ with webagg you will need to update you html files as such</p>
 <h3>Code Removed<a class="headerlink" href="#code-removed" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="removed-image-from-main-namespace">
 <h4>Removed <code class="xref py py-obj docutils literal"><span class="pre">Image</span></code> from main namespace<a class="headerlink" href="#removed-image-from-main-namespace" title="Permalink to this headline">¶</a></h4>
-<p><code class="xref py py-obj docutils literal"><span class="pre">Image</span></code> was imported from PIL/pillow to test if PIL is available, but there is no
-reason to keep <code class="xref py py-obj docutils literal"><span class="pre">Image</span></code> in the namespace once the availability has been determined.</p>
+<p><code class="xref py py-obj docutils literal"><span class="pre">Image</span></code> was imported from PIL/pillow to test if PIL is available, but
+there is no reason to keep <code class="xref py py-obj docutils literal"><span class="pre">Image</span></code> in the namespace once the availability
+has been determined.</p>
 </div>
 <div class="section" id="removed-lod-from-artist">
 <h4>Removed <code class="xref py py-obj docutils literal"><span class="pre">lod</span></code> from Artist<a class="headerlink" href="#removed-lod-from-artist" title="Permalink to this headline">¶</a></h4>
@@ -581,7 +779,7 @@ system which was not working and has recently been pulled out.</p>
 <div class="section" id="removed-lena-images-from-sample-data">
 <h4>Removed <code class="xref py py-obj docutils literal"><span class="pre">Lena</span></code> images from sample_data<a class="headerlink" href="#removed-lena-images-from-sample-data" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal"><span class="pre">lena.png</span></code> and <code class="docutils literal"><span class="pre">lena.jpg</span></code> images have been removed from
-matplotlib&#8217;s sample_data directory. The images are also no longer
+Matplotlib&#8217;s sample_data directory. The images are also no longer
 available from <a class="reference internal" href="cbook_api.html#matplotlib.cbook.get_sample_data" title="matplotlib.cbook.get_sample_data"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cbook.get_sample_data</span></code></a>. We suggest using
 <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cbook.get_sample_data('grace_hopper.png')</span></code> or
 <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cbook.get_sample_data('grace_hopper.jpg')</span></code> instead.</p>
@@ -599,7 +797,8 @@ implement a method <code class="docutils literal"><span class="pre">legend_artis
 <h4>Axis<a class="headerlink" href="#axis" title="Permalink to this headline">¶</a></h4>
 <p>Removed method <code class="docutils literal"><span class="pre">set_scale</span></code>.  This is now handled via a private method which
 should not be used directly by users.  It is called via <code class="docutils literal"><span class="pre">Axes.set_{x,y}scale</span></code>
-which takes care of ensuring the coupled changes are also made to the Axes object.</p>
+which takes care of ensuring the related changes are also made to the Axes
+object.</p>
 </div>
 <div class="section" id="finance-py">
 <h4>finance.py<a class="headerlink" href="#finance-py" title="Permalink to this headline">¶</a></h4>
@@ -611,10 +810,11 @@ which takes care of ensuring the coupled changes are also made to the Axes objec
 </div>
 <div class="section" id="spinxext-ipython-py">
 <h4>spinxext.ipython_*.py<a class="headerlink" href="#spinxext-ipython-py" title="Permalink to this headline">¶</a></h4>
-<p>Both <code class="docutils literal"><span class="pre">ipython_console_highlighting</span></code> and <code class="docutils literal"><span class="pre">ipython_directive</span></code> have been moved to
-<code class="xref py py-obj docutils literal"><span class="pre">IPython</span></code>.</p>
+<p>Both <code class="docutils literal"><span class="pre">ipython_console_highlighting</span></code> and <code class="docutils literal"><span class="pre">ipython_directive</span></code> have been
+moved to <code class="xref py py-obj docutils literal"><span class="pre">IPython</span></code>.</p>
 <p>Change your import from &#8216;matplotlib.sphinxext.ipython_directive&#8217; to
-&#8216;IPython.sphinxext.ipython_directive&#8217; and from &#8216;matplotlib.sphinxext.ipython_directive&#8217; to
+&#8216;IPython.sphinxext.ipython_directive&#8217; and from
+&#8216;matplotlib.sphinxext.ipython_directive&#8217; to
 &#8216;IPython.sphinxext.ipython_directive&#8217;</p>
 </div>
 <div class="section" id="linecollection-color">
@@ -730,7 +930,7 @@ that the font size is consistent with non-path effect fonts. See
 </li>
 <li><p class="first">The Sphinx extensions <code class="xref py py-obj docutils literal"><span class="pre">ipython_directive</span></code> and
 <code class="xref py py-obj docutils literal"><span class="pre">ipython_console_highlighting</span></code> have been moved to the IPython
-project itself.  While they remain in matplotlib for this release,
+project itself.  While they remain in Matplotlib for this release,
 they have been deprecated.  Update your extensions in <code class="xref py py-obj docutils literal"><span class="pre">conf.py</span></code> to
 point to <code class="xref py py-obj docutils literal"><span class="pre">IPython.sphinxext.ipython_directive</span></code> instead of
 <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.sphinxext.ipython_directive</span></code>.</p>
@@ -814,7 +1014,7 @@ formatting strings.</p>
 <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.testing.image_util.autocontrast</span></code>. These will be removed
 completely in v1.5.0.</p>
 </li>
-<li><p class="first">The <code class="docutils literal"><span class="pre">fmt</span></code> argument of <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.plot_date" title="matplotlib.axes.Axes.plot_date"><code class="xref py py-meth docutils literal"><span class="pre">plot_date()</span></code></a> has been
+<li><p class="first">The <code class="docutils literal"><span class="pre">fmt</span></code> argument of <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.plot_date.html#matplotlib.axes.Axes.plot_date" title="matplotlib.axes.Axes.plot_date"><code class="xref py py-meth docutils literal"><span class="pre">plot_date()</span></code></a> has been
 changed from <code class="docutils literal"><span class="pre">bo</span></code> to just <code class="docutils literal"><span class="pre">o</span></code>, so color cycling can happen by default.</p>
 </li>
 <li><p class="first">Removed the class <code class="xref py py-obj docutils literal"><span class="pre">FigureManagerQTAgg</span></code> and deprecated <code class="xref py py-obj docutils literal"><span class="pre">NavigationToolbar2QTAgg</span></code>
@@ -834,7 +1034,7 @@ instead of trying to deduce the intended behaviour from the file format.</p>
 tuple-like if separate axis padding is required.
 The original behavior is preserved.</p>
 </li>
-<li><p class="first">Added support for skewed transforms to <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Affine2D" title="matplotlib.transforms.Affine2D"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.transforms.Affine2D</span></code></a>,
+<li><p class="first">Added support for skewed transforms to <a class="reference internal" href="transformations.html#matplotlib.transforms.Affine2D" title="matplotlib.transforms.Affine2D"><code class="xref py py-obj docutils literal"><span class="pre">matplotlib.transforms.Affine2D</span></code></a>,
 which can be created using the <code class="xref py py-obj docutils literal"><span class="pre">skew</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">skew_deg</span></code> methods.</p>
 </li>
 <li><p class="first">Added clockwise parameter to control sectors direction in <code class="xref py py-obj docutils literal"><span class="pre">axes.pie</span></code></p>
@@ -846,7 +1046,7 @@ using a two-element-tuple.  If a two-element-list is used then it will be
 treated as numpy fancy indexing and only the two markers corresponding to the
 given indexes will be shown.</p>
 </li>
-<li><p class="first">removed prop kwarg from <code class="xref py py-obj docutils literal"><span class="pre">mpl_toolkits.axes_grid1.anchored_artists.AnchoredSizeBar</span></code>
+<li><p class="first">removed prop kwarg from <a class="reference internal" href="../mpl_toolkits/axes_grid/api/anchored_artists_api.html#mpl_toolkits.axes_grid1.anchored_artists.AnchoredSizeBar" title="mpl_toolkits.axes_grid1.anchored_artists.AnchoredSizeBar"><code class="xref py py-obj docutils literal"><span class="pre">mpl_toolkits.axes_grid1.anchored_artists.AnchoredSizeBar</span></code></a>
 call.  It was passed through to the base-class <code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code> and is only used for
 setting padding.  Now <code class="xref py py-obj docutils literal"><span class="pre">fontproperties</span></code> (which is what is really used to set
 the font properties of <code class="xref py py-obj docutils literal"><span class="pre">AnchoredSizeBar</span></code>) is passed through in place of <code class="xref py py-obj docutils literal"><span class="pre">prop</span></code>.
@@ -868,7 +1068,7 @@ exception in 1.5.</p>
 </li>
 <li><p class="first">Clipping is now off by default on offset boxes.</p>
 </li>
-<li><p class="first">matplotlib now uses a less-aggressive call to <code class="docutils literal"><span class="pre">gc.collect(1)</span></code> when
+<li><p class="first">Matplotlib now uses a less-aggressive call to <code class="docutils literal"><span class="pre">gc.collect(1)</span></code> when
 closing figures to avoid major delays with large numbers of user objects
 in memory.</p>
 </li>
@@ -895,7 +1095,7 @@ for 1.3.1 since 1.3.0 the following change was made:</p>
 <li><code class="xref py py-obj docutils literal"><span class="pre">text.Text.cached</span></code> (used to cache font objects) has been made into a
 private variable.  Among the obvious encapsulation benefit, this
 removes this confusing-looking member from the documentation.</li>
-<li>The method <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.hist" title="matplotlib.axes.Axes.hist"><code class="xref py py-meth docutils literal"><span class="pre">hist()</span></code></a> now always returns bin
+<li>The method <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.hist.html#matplotlib.axes.Axes.hist" title="matplotlib.axes.Axes.hist"><code class="xref py py-meth docutils literal"><span class="pre">hist()</span></code></a> now always returns bin
 occupancies as an array of type <code class="xref py py-obj docutils literal"><span class="pre">float</span></code>. Previously, it was sometimes
 an array of type <code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, depending on the call.</li>
 </ul>
@@ -989,7 +1189,7 @@ been deprecated in favour of <a class="reference internal" href="colors_api.html
 <li><p class="first">The <code class="xref py py-obj docutils literal"><span class="pre">ScalarMappable</span></code> class&#8217; <code class="xref py py-obj docutils literal"><span class="pre">set_colorbar</span></code> is now
 deprecated. Instead, the
 <a class="reference internal" href="cm_api.html#matplotlib.cm.ScalarMappable.colorbar" title="matplotlib.cm.ScalarMappable.colorbar"><code class="xref py py-attr docutils literal"><span class="pre">matplotlib.cm.ScalarMappable.colorbar</span></code></a> attribute should be
-used.  In previous matplotlib versions this attribute was an
+used.  In previous Matplotlib versions this attribute was an
 undocumented tuple of <code class="docutils literal"><span class="pre">(colorbar_instance,</span> <span class="pre">colorbar_axes)</span></code> but is
 now just <code class="docutils literal"><span class="pre">colorbar_instance</span></code>. To get the colorbar axes it is
 possible to just use the
@@ -1099,15 +1299,15 @@ raises <code class="xref py py-class docutils literal"><span class="pre">NotImpl
 <ul class="simple">
 <li>On Linux, the user-specific <code class="xref py py-obj docutils literal"><span class="pre">matplotlibrc</span></code> configuration file is now
 located in <code class="xref py py-obj docutils literal"><span class="pre">config/matplotlib/matplotlibrc</span></code> to conform to the
-<a class="reference external" href="http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html">XDG Base Directory Specification</a>.</li>
+<a class="reference external" href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html">XDG Base Directory Specification</a>.</li>
 <li>The <code class="xref py py-obj docutils literal"><span class="pre">font.*</span></code> rcParams now affect only text objects created after the
 rcParam has been set, and will not retroactively affect already
 existing text objects.  This brings their behavior in line with most
 other rcParams.</li>
-<li>Removed call of <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.grid" title="matplotlib.axes.Axes.grid"><code class="xref py py-meth docutils literal"><span class="pre">grid()</span></code></a> in
+<li>Removed call of <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="matplotlib.axes.Axes.grid"><code class="xref py py-meth docutils literal"><span class="pre">grid()</span></code></a> in
 <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.plotfile" title="matplotlib.pyplot.plotfile"><code class="xref py py-meth docutils literal"><span class="pre">plotfile()</span></code></a>. To draw the axes grid, set the
 <code class="docutils literal"><span class="pre">axes.grid</span></code> rcParam to <em>True</em>, or explicitly call
-<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.grid" title="matplotlib.axes.Axes.grid"><code class="xref py py-meth docutils literal"><span class="pre">grid()</span></code></a>.</li>
+<a class="reference internal" href="_as_gen/matplotlib.axes.Axes.grid.html#matplotlib.axes.Axes.grid" title="matplotlib.axes.Axes.grid"><code class="xref py py-meth docutils literal"><span class="pre">grid()</span></code></a>.</li>
 </ul>
 </div>
 </div>
@@ -1126,15 +1326,15 @@ zorder below which artists are rasterized.  This has defaulted to
 rasterized.  In order to rasterize artists below a given zorder
 value, <code class="xref py py-obj docutils literal"><span class="pre">set_rasterization_zorder</span></code> must be explicitly called.</p>
 </li>
-<li><p class="first">In <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.scatter" title="matplotlib.axes.Axes.scatter"><code class="xref py py-meth docutils literal"><span class="pre">scatter()</span></code></a>, and <code class="xref py py-obj docutils literal"><span class="pre">scatter</span></code>,
+<li><p class="first">In <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.scatter.html#matplotlib.axes.Axes.scatter" title="matplotlib.axes.Axes.scatter"><code class="xref py py-meth docutils literal"><span class="pre">scatter()</span></code></a>, and <code class="xref py py-obj docutils literal"><span class="pre">scatter</span></code>,
 when specifying a marker using a tuple, the angle is now specified
 in degrees, not radians.</p>
 </li>
-<li><p class="first">Using <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.twinx" title="matplotlib.axes.Axes.twinx"><code class="xref py py-meth docutils literal"><span class="pre">twinx()</span></code></a> or
-<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.twiny" title="matplotlib.axes.Axes.twiny"><code class="xref py py-meth docutils literal"><span class="pre">twiny()</span></code></a> no longer overrides the current locaters
+<li><p class="first">Using <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.twinx.html#matplotlib.axes.Axes.twinx" title="matplotlib.axes.Axes.twinx"><code class="xref py py-meth docutils literal"><span class="pre">twinx()</span></code></a> or
+<a class="reference internal" href="_as_gen/matplotlib.axes.Axes.twiny.html#matplotlib.axes.Axes.twiny" title="matplotlib.axes.Axes.twiny"><code class="xref py py-meth docutils literal"><span class="pre">twiny()</span></code></a> no longer overrides the current locaters
 and formatters on the axes.</p>
 </li>
-<li><p class="first">In <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.contourf" title="matplotlib.axes.Axes.contourf"><code class="xref py py-meth docutils literal"><span class="pre">contourf()</span></code></a>, the handling of the <em>extend</em>
+<li><p class="first">In <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.contourf.html#matplotlib.axes.Axes.contourf" title="matplotlib.axes.Axes.contourf"><code class="xref py py-meth docutils literal"><span class="pre">contourf()</span></code></a>, the handling of the <em>extend</em>
 kwarg has changed.  Formerly, the extended ranges were mapped
 after to 0, 1 after being normed, so that they always corresponded
 to the extreme values of the colormap.  Now they are mapped
@@ -1177,8 +1377,8 @@ are: <a class="reference internal" href="figure_api.html#matplotlib.figure.Figur
 </pre></div>
 </div>
 <p>This change means that third party objects can expose themselves as
-matplotlib axes by providing a <code class="docutils literal"><span class="pre">_as_mpl_axes</span></code> method. See
-<a class="reference internal" href="../devel/add_new_projection.html#adding-new-scales"><span class="std std-ref">Adding new scales and projections to matplotlib</span></a> for more detail.</p>
+Matplotlib axes by providing a <code class="docutils literal"><span class="pre">_as_mpl_axes</span></code> method. See
+<a class="reference internal" href="../devel/add_new_projection.html#adding-new-scales"><span class="std std-ref">Developer&#8217;s guide for creating scales and transformations</span></a> for more detail.</p>
 </li>
 <li><p class="first">A new keyword <em>extendfrac</em> in <a class="reference internal" href="pyplot_api.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar"><code class="xref py py-meth docutils literal"><span class="pre">colorbar()</span></code></a> and
 <a class="reference internal" href="colorbar_api.html#matplotlib.colorbar.ColorbarBase" title="matplotlib.colorbar.ColorbarBase"><code class="xref py py-class docutils literal"><span class="pre">ColorbarBase</span></code></a> allows one to control the size of
@@ -1249,7 +1449,7 @@ Qt and QtAgg backends will continue to work in v1.2.x for py2.6
 and py2.7. It is anticipated that the Qt3 support will be completely
 removed for the next release.</p>
 </li>
-<li><p class="first"><a class="reference internal" href="colors_api.html#matplotlib.colors.ColorConverter" title="matplotlib.colors.ColorConverter"><code class="xref py py-class docutils literal"><span class="pre">ColorConverter</span></code></a>,
+<li><p class="first"><code class="xref py py-class docutils literal"><span class="pre">ColorConverter</span></code>,
 <a class="reference internal" href="colors_api.html#matplotlib.colors.Colormap" title="matplotlib.colors.Colormap"><code class="xref py py-class docutils literal"><span class="pre">Colormap</span></code></a> and
 <a class="reference internal" href="colors_api.html#matplotlib.colors.Normalize" title="matplotlib.colors.Normalize"><code class="xref py py-class docutils literal"><span class="pre">Normalize</span></code></a> now subclasses <code class="docutils literal"><span class="pre">object</span></code></p>
 </li>
@@ -1283,9 +1483,9 @@ did result in a conflict. The string &#8216;d&#8217; now means &#8220;thin diamo
 <div class="section" id="changes-beyond-0-99-x">
 <h2>Changes beyond 0.99.x<a class="headerlink" href="#changes-beyond-0-99-x" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>The default behavior of <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_xlim()</span></code></a>,
-<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_ylim()</span></code></a>, and
-<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.axis" title="matplotlib.axes.Axes.axis"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.axis()</span></code></a>, and their corresponding
+<li>The default behavior of <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_xlim.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_xlim()</span></code></a>,
+<a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_ylim.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_ylim()</span></code></a>, and
+<a class="reference internal" href="_as_gen/matplotlib.axes.Axes.axis.html#matplotlib.axes.Axes.axis" title="matplotlib.axes.Axes.axis"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.axis()</span></code></a>, and their corresponding
 pyplot functions, has been changed: when view limits are
 set explicitly with one of these methods, autoscaling is turned
 off for the matching axis. A new <em>auto</em> kwarg is available to
@@ -1297,24 +1497,24 @@ be used, however.</li>
 functions to facilitate autoscaling, tick location, and tick
 label formatting, and the general appearance of ticks and
 tick labels:<ul>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.autoscale()</span></code></a> turns autoscaling
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.autoscale.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.autoscale()</span></code></a> turns autoscaling
 on or off, and applies it.</li>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.margins" title="matplotlib.axes.Axes.margins"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.margins()</span></code></a> sets margins used to
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.margins.html#matplotlib.axes.Axes.margins" title="matplotlib.axes.Axes.margins"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.margins()</span></code></a> sets margins used to
 autoscale the <code class="xref py py-attr docutils literal"><span class="pre">matplotlib.axes.Axes.viewLim</span></code> based on
 the <code class="xref py py-attr docutils literal"><span class="pre">matplotlib.axes.Axes.dataLim</span></code>.</li>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.locator_params" title="matplotlib.axes.Axes.locator_params"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.locator_params()</span></code></a> allows one to
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.locator_params.html#matplotlib.axes.Axes.locator_params" title="matplotlib.axes.Axes.locator_params"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.locator_params()</span></code></a> allows one to
 adjust axes locator parameters such as <em>nbins</em>.</li>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.ticklabel_format" title="matplotlib.axes.Axes.ticklabel_format"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.ticklabel_format()</span></code></a> is a convenience
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.ticklabel_format.html#matplotlib.axes.Axes.ticklabel_format" title="matplotlib.axes.Axes.ticklabel_format"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.ticklabel_format()</span></code></a> is a convenience
 method for controlling the <a class="reference internal" href="ticker_api.html#matplotlib.ticker.ScalarFormatter" title="matplotlib.ticker.ScalarFormatter"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.ticker.ScalarFormatter</span></code></a>
 that is used by default with linear axes.</li>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.tick_params" title="matplotlib.axes.Axes.tick_params"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tick_params()</span></code></a> controls direction, size,
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.tick_params.html#matplotlib.axes.Axes.tick_params" title="matplotlib.axes.Axes.tick_params"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tick_params()</span></code></a> controls direction, size,
 visibility, and color of ticks and their labels.</li>
 </ul>
 </li>
-<li>The <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.bar" title="matplotlib.axes.Axes.bar"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.bar()</span></code></a> method accepts a <em>error_kw</em>
+<li>The <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.bar.html#matplotlib.axes.Axes.bar" title="matplotlib.axes.Axes.bar"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.bar()</span></code></a> method accepts a <em>error_kw</em>
 kwarg; it is a dictionary of kwargs to be passed to the
 errorbar function.</li>
-<li>The <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.hist" title="matplotlib.axes.Axes.hist"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.hist()</span></code></a> <em>color</em> kwarg now accepts
+<li>The <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.hist.html#matplotlib.axes.Axes.hist" title="matplotlib.axes.Axes.hist"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.hist()</span></code></a> <em>color</em> kwarg now accepts
 a sequence of color specs to match a sequence of datasets.</li>
 <li>The <a class="reference internal" href="collections_api.html#matplotlib.collections.EllipseCollection" title="matplotlib.collections.EllipseCollection"><code class="xref py py-class docutils literal"><span class="pre">EllipseCollection</span></code></a> has been
 changed in two ways:<ul>
@@ -1382,13 +1582,13 @@ on collections and images.  Therefore:</p>
 <li><p class="first">There are four new Axes methods with corresponding pyplot
 functions that deal with unstructured triangular grids:</p>
 <ul class="simple">
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.tricontour" title="matplotlib.axes.Axes.tricontour"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tricontour()</span></code></a> draws contour lines
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.tricontour.html#matplotlib.axes.Axes.tricontour" title="matplotlib.axes.Axes.tricontour"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tricontour()</span></code></a> draws contour lines
 on a triangular grid.</li>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.tricontourf" title="matplotlib.axes.Axes.tricontourf"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tricontourf()</span></code></a> draws filled contours
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.tricontourf.html#matplotlib.axes.Axes.tricontourf" title="matplotlib.axes.Axes.tricontourf"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tricontourf()</span></code></a> draws filled contours
 on a triangular grid.</li>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.tripcolor" title="matplotlib.axes.Axes.tripcolor"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tripcolor()</span></code></a> draws a pseudocolor
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.tripcolor.html#matplotlib.axes.Axes.tripcolor" title="matplotlib.axes.Axes.tripcolor"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.tripcolor()</span></code></a> draws a pseudocolor
 plot on a triangular grid.</li>
-<li><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.triplot" title="matplotlib.axes.Axes.triplot"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.triplot()</span></code></a> draws a triangular grid
+<li><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.triplot.html#matplotlib.axes.Axes.triplot" title="matplotlib.axes.Axes.triplot"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.triplot()</span></code></a> draws a triangular grid
 as lines and/or markers.</li>
 </ul>
 </li>
@@ -1416,7 +1616,7 @@ axes (such as polar axes), these artists may be Patch instances.</li>
 <li>Polar plots no longer accept a resolution kwarg.  Instead, each Path
 must specify its own number of interpolation steps.  This is
 unlikely to be a user-visible change &#8211; if interpolation of data is
-required, that should be done before passing it to matplotlib.</li>
+required, that should be done before passing it to Matplotlib.</li>
 </ul>
 </div>
 <div class="section" id="changes-for-0-98-x">
@@ -1499,8 +1699,8 @@ functions were updated as well.</p>
 exact match.  Some fonts may be different in plots, but should be
 closer to what was requested.</p>
 </li>
-<li><p class="first"><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_xlim()</span></code></a>,
-<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_ylim()</span></code></a> now return a copy of the
+<li><p class="first"><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_xlim.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_xlim()</span></code></a>,
+<a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_ylim.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_ylim()</span></code></a> now return a copy of the
 <code class="xref py py-attr docutils literal"><span class="pre">viewlim</span></code> array to avoid modify-in-place surprises.</p>
 </li>
 <li><p class="first"><a class="reference internal" href="afm_api.html#matplotlib.afm.AFM.get_fullname" title="matplotlib.afm.AFM.get_fullname"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.afm.AFM.get_fullname()</span></code></a> and
@@ -1573,12 +1773,12 @@ rather than custom callback handling.  Any users of
 <a class="reference internal" href="cbook_api.html#matplotlib.cbook.CallbackRegistry" title="matplotlib.cbook.CallbackRegistry"><code class="xref py py-class docutils literal"><span class="pre">CallbackRegistry</span></code></a> instead.</li>
 <li>New axes function and Axes method provide control over the plot
 color cycle: <code class="xref py py-func docutils literal"><span class="pre">matplotlib.axes.set_default_color_cycle()</span></code> and
-<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_color_cycle" title="matplotlib.axes.Axes.set_color_cycle"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_color_cycle()</span></code></a>.</li>
-<li>matplotlib now requires Python 2.4, so <a class="reference internal" href="cbook_api.html#module-matplotlib.cbook" title="matplotlib.cbook"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.cbook</span></code></a> will
+<a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_color_cycle.html#matplotlib.axes.Axes.set_color_cycle" title="matplotlib.axes.Axes.set_color_cycle"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_color_cycle()</span></code></a>.</li>
+<li>Matplotlib now requires Python 2.4, so <a class="reference internal" href="cbook_api.html#module-matplotlib.cbook" title="matplotlib.cbook"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.cbook</span></code></a> will
 no longer provide <code class="xref py py-class docutils literal"><span class="pre">set</span></code>, <code class="xref py py-func docutils literal"><span class="pre">enumerate()</span></code>, <code class="xref py py-func docutils literal"><span class="pre">reversed()</span></code>
 or <code class="xref py py-func docutils literal"><span class="pre">izip()</span></code> compatibility functions.</li>
 <li>In Numpy 1.0, bins are specified by the left edges only.  The axes
-method <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.hist" title="matplotlib.axes.Axes.hist"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.hist()</span></code></a> now uses future Numpy 1.3
+method <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.hist.html#matplotlib.axes.Axes.hist" title="matplotlib.axes.Axes.hist"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.hist()</span></code></a> now uses future Numpy 1.3
 semantics for histograms.  Providing <code class="docutils literal"><span class="pre">binedges</span></code>, the last value gives
 the upper-right edge now, which was implicitly set to +infinity in
 Numpy 1.0.  This also means that the last bin doesn&#8217;t contain upper
@@ -1601,7 +1801,7 @@ rather than a custom C extension.</p>
 extend matplotlib to support new kinds of projections.  This is
 mostly an internal improvement, and the possible user-visible
 changes it allows are yet to come.</p>
-<p>See <a class="reference internal" href="../devel/transformations.html#module-matplotlib.transforms" title="matplotlib.transforms"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.transforms</span></code></a> for a description of the design of
+<p>See <a class="reference internal" href="transformations.html#module-matplotlib.transforms" title="matplotlib.transforms"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.transforms</span></code></a> for a description of the design of
 the new transformation framework.</p>
 <p>For efficiency, many of these functions return views into Numpy
 arrays.  This means that if you hold on to a reference to them,
@@ -1617,7 +1817,7 @@ and not assigned to an Axis or Axes, (e.g., in
 bounds.  Call <code class="xref py py-meth docutils literal"><span class="pre">matplotlib.ticker.Locator.create_dummy_axis()</span></code> to
 do so.</p>
 <p>The functionality of <code class="xref py py-class docutils literal"><span class="pre">Pbox</span></code> has been merged with
-<a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">Bbox</span></code></a>.  Its methods now all return
+<a class="reference internal" href="transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">Bbox</span></code></a>.  Its methods now all return
 copies rather than modifying in place.</p>
 <p>The following lists many of the simple changes necessary to update
 code from the old transformation framework to the new one.  In
@@ -1625,7 +1825,7 @@ particular, methods that return a copy are named with a verb in the
 past tense, whereas methods that alter an object in place are named
 with a verb in the present tense.</p>
 <div class="section" id="matplotlib-transforms">
-<h4><a class="reference internal" href="../devel/transformations.html#module-matplotlib.transforms" title="matplotlib.transforms"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.transforms</span></code></a><a class="headerlink" href="#matplotlib-transforms" title="Permalink to this headline">¶</a></h4>
+<h4><a class="reference internal" href="transformations.html#module-matplotlib.transforms" title="matplotlib.transforms"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.transforms</span></code></a><a class="headerlink" href="#matplotlib-transforms" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="docutils">
 <colgroup>
 <col width="50%" />
@@ -1695,7 +1895,7 @@ with a verb in the present tense.</p>
 <td><code class="xref py py-obj docutils literal"><span class="pre">interval_contains(tuple,</span> <span class="pre">v)</span></code></td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">identity_transform()</span></code></td>
-<td><a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.IdentityTransform" title="matplotlib.transforms.IdentityTransform"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.IdentityTransform</span></code></a></td>
+<td><a class="reference internal" href="transformations.html#matplotlib.transforms.IdentityTransform" title="matplotlib.transforms.IdentityTransform"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.IdentityTransform</span></code></a></td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">blend_xy_sep_transform(xtrans,</span> <span class="pre">ytrans)</span></code></td>
 <td><code class="xref py py-obj docutils literal"><span class="pre">blended_transform_factory(xtrans,</span> <span class="pre">ytrans)</span></code></td>
@@ -1719,7 +1919,7 @@ with a verb in the present tense.</p>
 <table class="docutils footnote" frame="void" id="id8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id5">2</a>, <a class="fn-backref" href="#id6">3</a>, <a class="fn-backref" href="#id7">4</a>)</em> The <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">Bbox</span></code></a> is bound by the points
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id5">2</a>, <a class="fn-backref" href="#id6">3</a>, <a class="fn-backref" href="#id7">4</a>)</em> The <a class="reference internal" href="transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">Bbox</span></code></a> is bound by the points
 (x0, y0) to (x1, y1) and there is no defined order to these points,
 that is, x0 is not necessarily the left edge of the box.  To get
 the left edge of the <code class="xref py py-class docutils literal"><span class="pre">Bbox</span></code>, use the read-only property
@@ -1741,13 +1941,13 @@ the left edge of the <code class="xref py py-class docutils literal"><span class
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">Axes.get_position()</span></code></td>
-<td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.get_position" title="matplotlib.axes.Axes.get_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.get_position()</span></code></a> <a class="footnote-reference" href="#id12" id="id9">[2]</a></td>
+<td><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.get_position.html#matplotlib.axes.Axes.get_position" title="matplotlib.axes.Axes.get_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.get_position()</span></code></a> <a class="footnote-reference" href="#id12" id="id9">[2]</a></td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">Axes.set_position()</span></code></td>
-<td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_position()</span></code></a> <a class="footnote-reference" href="#id13" id="id10">[3]</a></td>
+<td><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_position.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_position()</span></code></a> <a class="footnote-reference" href="#id13" id="id10">[3]</a></td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">Axes.toggle_log_lineary()</span></code></td>
-<td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_yscale" title="matplotlib.axes.Axes.set_yscale"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_yscale()</span></code></a> <a class="footnote-reference" href="#id14" id="id11">[4]</a></td>
+<td><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_yscale.html#matplotlib.axes.Axes.set_yscale" title="matplotlib.axes.Axes.set_yscale"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_yscale()</span></code></a> <a class="footnote-reference" href="#id14" id="id11">[4]</a></td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">Subplot</span></code> class</td>
 <td>removed.</td>
@@ -1758,16 +1958,16 @@ the left edge of the <code class="xref py py-class docutils literal"><span class
 <table class="docutils footnote" frame="void" id="id12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id9">[2]</a></td><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.get_position" title="matplotlib.axes.Axes.get_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.get_position()</span></code></a> used to return a list
-of points, now it returns a <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Bbox</span></code></a>
+<tr><td class="label"><a class="fn-backref" href="#id9">[2]</a></td><td><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.get_position.html#matplotlib.axes.Axes.get_position" title="matplotlib.axes.Axes.get_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.get_position()</span></code></a> used to return a list
+of points, now it returns a <a class="reference internal" href="transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Bbox</span></code></a>
 instance.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id13" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id10">[3]</a></td><td><a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_position()</span></code></a> now accepts either
-four scalars or a <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Bbox</span></code></a> instance.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id10">[3]</a></td><td><a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_position.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.axes.Axes.set_position()</span></code></a> now accepts either
+four scalars or a <a class="reference internal" href="transformations.html#matplotlib.transforms.Bbox" title="matplotlib.transforms.Bbox"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Bbox</span></code></a> instance.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id14" rules="none">
@@ -1800,9 +2000,9 @@ four scalars or a <a class="reference internal" href="../devel/transformations.h
 <table class="docutils footnote" frame="void" id="id16" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id15">[5]</a></td><td><a class="reference internal" href="artist_api.html#matplotlib.artist.Artist.set_clip_path" title="matplotlib.artist.Artist.set_clip_path"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.artist.Artist.set_clip_path()</span></code></a> now accepts a
+<tr><td class="label"><a class="fn-backref" href="#id15">[5]</a></td><td><a class="reference internal" href="_as_gen/matplotlib.artist.Artist.set_clip_path.html#matplotlib.artist.Artist.set_clip_path" title="matplotlib.artist.Artist.set_clip_path"><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.artist.Artist.set_clip_path()</span></code></a> now accepts a
 <a class="reference internal" href="path_api.html#matplotlib.path.Path" title="matplotlib.path.Path"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.path.Path</span></code></a> instance and a
-<a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Transform</span></code></a> that will be applied to
+<a class="reference internal" href="transformations.html#matplotlib.transforms.Transform" title="matplotlib.transforms.Transform"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Transform</span></code></a> that will be applied to
 the path immediately before clipping.</td></tr>
 </tbody>
 </table>
@@ -1982,7 +2182,7 @@ list of <a class="reference internal" href="path_api.html#matplotlib.path.Path" 
 <tr><td class="label"><a class="fn-backref" href="#id19">[7]</a></td><td><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.backend_bases.GraphicsContext.get_clip_path()</span></code>
 returns a tuple of the form (<em>path</em>, <em>affine_transform</em>), where
 <em>path</em> is a <a class="reference internal" href="path_api.html#matplotlib.path.Path" title="matplotlib.path.Path"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.path.Path</span></code></a> instance and
-<em>affine_transform</em> is a <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.Affine2D" title="matplotlib.transforms.Affine2D"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Affine2D</span></code></a>
+<em>affine_transform</em> is a <a class="reference internal" href="transformations.html#matplotlib.transforms.Affine2D" title="matplotlib.transforms.Affine2D"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.Affine2D</span></code></a>
 instance.</td></tr>
 </tbody>
 </table>
@@ -1990,7 +2190,7 @@ instance.</td></tr>
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id20">[8]</a></td><td><code class="xref py py-meth docutils literal"><span class="pre">matplotlib.backend_bases.GraphicsContext.set_clip_path()</span></code>
-now only accepts a <a class="reference internal" href="../devel/transformations.html#matplotlib.transforms.TransformedPath" title="matplotlib.transforms.TransformedPath"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.TransformedPath</span></code></a>
+now only accepts a <a class="reference internal" href="transformations.html#matplotlib.transforms.TransformedPath" title="matplotlib.transforms.TransformedPath"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.TransformedPath</span></code></a>
 instance.</td></tr>
 </tbody>
 </table>
@@ -2063,8 +2263,8 @@ extent of a line of ordinary text.  The default is 1.2;
 clipping silently defeats the purpose of the special over, under,
 and bad values in the colormap, thereby leading to unexpected
 behavior.  The new default should reduce such surprises.</li>
-<li>Made the emit property of <a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><code class="xref py py-meth docutils literal"><span class="pre">set_xlim()</span></code></a> and
-<a class="reference internal" href="axes_api.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><code class="xref py py-meth docutils literal"><span class="pre">set_ylim()</span></code></a> <code class="docutils literal"><span class="pre">True</span></code> by default; removed
+<li>Made the emit property of <a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_xlim.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><code class="xref py py-meth docutils literal"><span class="pre">set_xlim()</span></code></a> and
+<a class="reference internal" href="_as_gen/matplotlib.axes.Axes.set_ylim.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><code class="xref py py-meth docutils literal"><span class="pre">set_ylim()</span></code></a> <code class="docutils literal"><span class="pre">True</span></code> by default; removed
 the Axes custom callback handling into a &#8216;callbacks&#8217; attribute which
 is a <a class="reference internal" href="cbook_api.html#matplotlib.cbook.CallbackRegistry" title="matplotlib.cbook.CallbackRegistry"><code class="xref py py-class docutils literal"><span class="pre">CallbackRegistry</span></code></a> instance.  This now
 supports the &#8216;xlim_changed&#8217; and &#8216;ylim_changed&#8217; Axes events.</li>
@@ -3072,10 +3272,10 @@ transformations.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Dec 19, 2016.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
+      Last updated on Jan 16, 2017.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
 
 <script>

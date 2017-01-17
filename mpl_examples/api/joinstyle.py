@@ -1,5 +1,8 @@
-#!/usr/bin/env python
 """
+===========
+Join styles
+===========
+
 Illustrate the three different join styles
 """
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Copyright (C) 2003-2004 Andrew Straw, Jeremy O'Donoghue and others
 
@@ -74,7 +72,7 @@ class PlotPanel(wx.Panel):
         y = np.arange(100.0) * 2 * np.pi / 50.0
         self.x, self.y = np.meshgrid(x, y)
         z = np.sin(self.x) + np.cos(self.y)
-        self.im = a.imshow(z, cmap=cm.jet)  # , interpolation='nearest')
+        self.im = a.imshow(z, cmap=cm.RdBu)  # , interpolation='nearest')
 
         zmax = np.amax(z) - ERR_TOL
         ymax_i, xmax_i = np.nonzero(z >= zmax)

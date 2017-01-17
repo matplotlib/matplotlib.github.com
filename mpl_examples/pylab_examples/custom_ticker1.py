@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 The new ticker code was designed to explicitly support user customized
 ticking.  The documentation
@@ -27,5 +25,5 @@ formatter = FuncFormatter(millions)
 fig, ax = plt.subplots()
 ax.yaxis.set_major_formatter(formatter)
 plt.bar(x, money)
-plt.xticks(x + 0.5, ('Bill', 'Fred', 'Mary', 'Sue'))
+plt.xticks(x, ('Bill', 'Fred', 'Mary', 'Sue'))
 plt.show()

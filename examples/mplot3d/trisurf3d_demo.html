@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>mplot3d example code: trisurf3d_demo.py &mdash; Matplotlib 1.5.3 documentation</title>
+    <title>mplot3d example code: trisurf3d_demo.py &mdash; Matplotlib 2.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
@@ -16,7 +16,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.5.3',
+        VERSION:     '2.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +26,14 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.5.3 documentation"
+          title="Search within Matplotlib 2.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="Matplotlib 1.5.3 documentation" href="../../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.0.0 documentation" href="../../index.html" />
     <link rel="up" title="mplot3d Examples" href="index.html" />
     <link rel="next" title="mplot3d example code: trisurf3d_demo2.py" href="trisurf3d_demo2.html" />
     <link rel="prev" title="mplot3d example code: tricontourf3d_demo.py" href="tricontourf3d_demo.html" /> 
@@ -37,15 +41,6 @@ type="text/css" />
 
   </head>
   <body>
-    <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
-">
-<h2>Matplotlib 2.0.0rc2 is available</h2>
-
-<p><a href="../../style_changes.html"
-style="font-weight: bold;
-color: #11557C;">Install the release candidate now!</a></p>
-
-</div>
 
 
 
@@ -116,7 +111,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/examples/mplot3d/trisurf3d_demo.txt"
+      <li><a href="../../_sources/examples/mplot3d/trisurf3d_demo.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -140,40 +135,46 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
             
   <div class="section" id="mplot3d-example-code-trisurf3d-demo-py">
 <span id="mplot3d-trisurf3d-demo"></span><h1>mplot3d example code: trisurf3d_demo.py<a class="headerlink" href="#mplot3d-example-code-trisurf3d-demo-py" title="Permalink to this headline">¶</a></h1>
-<p>(<a class="reference external" href="../../mpl_examples/mplot3d/trisurf3d_demo.py">Source code</a>, <a class="reference external" href="../../mpl_examples/mplot3d/trisurf3d_demo.png">png</a>, <a class="reference external" href="../../mpl_examples/mplot3d/trisurf3d_demo.hires.png">hires.png</a>, <a class="reference external" href="../../mpl_examples/mplot3d/trisurf3d_demo.pdf">pdf</a>)</p>
+<p>(<a class="reference external" href="../../mpl_examples/mplot3d/trisurf3d_demo.py">Source code</a>, <a class="reference external" href="../../mpl_examples/mplot3d/trisurf3d_demo.png">png</a>, <a class="reference external" href="../../mpl_examples/mplot3d/trisurf3d_demo.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="../../_images/trisurf3d_demo.png" src="../../_images/trisurf3d_demo.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cm</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">======================</span>
+<span class="sd">Triangular 3D surfaces</span>
+<span class="sd">======================</span>
+
+<span class="sd">Plot a 3D surface with a triangular mesh.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">n_angles</span> <span class="o">=</span> <span class="mi">36</span>
+
 <span class="n">n_radii</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">n_angles</span> <span class="o">=</span> <span class="mi">36</span>
 
-<span class="c1"># An array of radii</span>
-<span class="c1"># Does not include radius r=0, this is to eliminate duplicate points</span>
+<span class="c1"># Make radii and angles spaces (radius r=0 omitted to eliminate duplication).</span>
 <span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">n_radii</span><span class="p">)</span>
-
-<span class="c1"># An array of angles</span>
 <span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">n_angles</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># Repeat all angles for each radius</span>
+<span class="c1"># Repeat all angles for each radius.</span>
 <span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">angles</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">n_radii</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="c1"># Convert polar (radii, angles) coords to cartesian (x, y) coords</span>
-<span class="c1"># (0, 0) is added here. There are no duplicate points in the (x, y) plane</span>
+<span class="c1"># Convert polar (radii, angles) coords to cartesian (x, y) coords.</span>
+<span class="c1"># (0, 0) is manually added at this stage,  so there will be no duplicate</span>
+<span class="c1"># points in the (x, y) plane.</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">radii</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">radii</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
 
-<span class="c1"># Pringle surface</span>
+<span class="c1"># Compute z to make the pringle surface.</span>
 <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">plot_trisurf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_trisurf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -189,10 +190,10 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
       <div class="clearer"></div>
     </div>
     <div class="footer">
-        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Dec 19, 2016.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
+      Last updated on Jan 16, 2017.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
 
 <script>

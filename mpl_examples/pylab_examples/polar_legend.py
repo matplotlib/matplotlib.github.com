@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import numpy as np
 from matplotlib.pyplot import figure, show, rc
 
@@ -10,7 +8,8 @@ rc('ytick', labelsize=15)
 
 # force square figure and square axes looks better for polar, IMO
 fig = figure(figsize=(8, 8))
-ax = fig.add_axes([0.1, 0.1, 0.8, 0.8], projection='polar', axisbg='#d5de9c')
+ax = fig.add_axes([0.1, 0.1, 0.8, 0.8],
+                  projection='polar', facecolor='#d5de9c')
 
 r = np.arange(0, 3.0, 0.01)
 theta = 2*np.pi*r

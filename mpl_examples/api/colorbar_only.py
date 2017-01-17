@@ -1,12 +1,16 @@
 '''
-Make a colorbar as a separate figure.
+====================
+Customized colorbars
+====================
+
+This example shows how to build colorbars without an attached mappable.
 '''
 
-from matplotlib import pyplot
+import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 # Make a figure and axes with dimensions as desired.
-fig = pyplot.figure(figsize=(8, 3))
+fig = plt.figure(figsize=(8, 3))
 ax1 = fig.add_axes([0.05, 0.80, 0.9, 0.15])
 ax2 = fig.add_axes([0.05, 0.475, 0.9, 0.15])
 ax3 = fig.add_axes([0.05, 0.15, 0.9, 0.15])
@@ -71,4 +75,4 @@ cb3 = mpl.colorbar.ColorbarBase(ax3, cmap=cmap,
                                 orientation='horizontal')
 cb3.set_label('Custom extension lengths, some other units')
 
-pyplot.show()
+plt.show()

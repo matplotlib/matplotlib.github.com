@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pylab_examples example code: mri_with_eeg.py &mdash; Matplotlib 1.5.3 documentation</title>
+    <title>pylab_examples example code: mri_with_eeg.py &mdash; Matplotlib 2.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
@@ -16,7 +16,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.5.3',
+        VERSION:     '2.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +26,14 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.5.3 documentation"
+          title="Search within Matplotlib 2.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="Matplotlib 1.5.3 documentation" href="../../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.0.0 documentation" href="../../index.html" />
     <link rel="up" title="pylab_examples Examples" href="index.html" />
     <link rel="next" title="pylab_examples example code: multi_image.py" href="multi_image.html" />
     <link rel="prev" title="pylab_examples example code: mri_demo.py" href="mri_demo.html" /> 
@@ -37,15 +41,6 @@ type="text/css" />
 
   </head>
   <body>
-    <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
-">
-<h2>Matplotlib 2.0.0rc2 is available</h2>
-
-<p><a href="../../style_changes.html"
-style="font-weight: bold;
-color: #11557C;">Install the release candidate now!</a></p>
-
-</div>
 
 
 
@@ -116,7 +111,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/examples/pylab_examples/mri_with_eeg.txt"
+      <li><a href="../../_sources/examples/pylab_examples/mri_with_eeg.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -140,88 +135,89 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
             
   <div class="section" id="pylab-examples-example-code-mri-with-eeg-py">
 <span id="pylab-examples-mri-with-eeg"></span><h1>pylab_examples example code: mri_with_eeg.py<a class="headerlink" href="#pylab-examples-example-code-mri-with-eeg-py" title="Permalink to this headline">¶</a></h1>
-<p>(<a class="reference external" href="../../mpl_examples/pylab_examples/mri_with_eeg.py">Source code</a>, <a class="reference external" href="../../mpl_examples/pylab_examples/mri_with_eeg.png">png</a>, <a class="reference external" href="../../mpl_examples/pylab_examples/mri_with_eeg.hires.png">hires.png</a>, <a class="reference external" href="../../mpl_examples/pylab_examples/mri_with_eeg.pdf">pdf</a>)</p>
+<p>(<a class="reference external" href="../../mpl_examples/pylab_examples/mri_with_eeg.py">Source code</a>, <a class="reference external" href="../../mpl_examples/pylab_examples/mri_with_eeg.png">png</a>, <a class="reference external" href="../../mpl_examples/pylab_examples/mri_with_eeg.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="../../_images/mri_with_eeg.png" src="../../_images/mri_with_eeg.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Displays a set of subplots with an MRI image, its intensity histogram and</span>
+<span class="sd">some EEG traces.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This now uses the imshow command instead of pcolor which *is much</span>
-<span class="sd">faster*</span>
-<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <span class="n">LineCollection</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cbook</span> <span class="k">as</span> <span class="nn">cbook</span>
-<span class="c1"># I use if 1 to break up the different regions of code visually</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
 
-<span class="k">if</span> <span class="mi">1</span><span class="p">:</span>   <span class="c1"># load the data</span>
-    <span class="c1"># data are 256x256 16 bit integers</span>
-    <span class="n">dfile</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">get_sample_data</span><span class="p">(</span><span class="s1">&#39;s1045.ima.gz&#39;</span><span class="p">)</span>
-    <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">dfile</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">im</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <span class="n">LineCollection</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="k">import</span> <span class="n">MultipleLocator</span>
 
-<span class="k">if</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># plot the MRI in pcolor</span>
-    <span class="n">subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
-    <span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
-    <span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s2">&quot;MRI_with_EEG&quot;</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># plot the histogram of MRI intensity</span>
-    <span class="n">subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
-    <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
-    <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">im</span><span class="p">)]</span>  <span class="c1"># ignore the background</span>
-    <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">**</span><span class="mi">15</span><span class="p">)</span>  <span class="c1"># normalize</span>
-    <span class="n">hist</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-    <span class="n">yticks</span><span class="p">([])</span>
-    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;intensity&#39;</span><span class="p">)</span>
-    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;MRI density&#39;</span><span class="p">)</span>
+<span class="c1"># Load the MRI data (256x256 16 bit integers)</span>
+<span class="n">dfile</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">get_sample_data</span><span class="p">(</span><span class="s1">&#39;s1045.ima.gz&#39;</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">dfile</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">im</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+<span class="n">dfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="k">if</span> <span class="mi">1</span><span class="p">:</span>   <span class="c1"># plot the EEG</span>
-    <span class="c1"># load the data</span>
+<span class="c1"># Plot the MRI image</span>
+<span class="n">ax0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
-    <span class="n">numSamples</span><span class="p">,</span> <span class="n">numRows</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">4</span>
-    <span class="n">eegfile</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">get_sample_data</span><span class="p">(</span><span class="s1">&#39;eeg.dat&#39;</span><span class="p">,</span> <span class="n">asfileobj</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;loading eeg </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">eegfile</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">eegfile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="nb">float</span><span class="p">)</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">numSamples</span><span class="p">,</span> <span class="n">numRows</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">numSamples</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">/</span><span class="n">numSamples</span>
-    <span class="n">ticklocs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
-    <span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-    <span class="n">dmin</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-    <span class="n">dmax</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="n">dr</span> <span class="o">=</span> <span class="p">(</span><span class="n">dmax</span> <span class="o">-</span> <span class="n">dmin</span><span class="p">)</span><span class="o">*</span><span class="mf">0.7</span>  <span class="c1"># Crowd them a bit.</span>
-    <span class="n">y0</span> <span class="o">=</span> <span class="n">dmin</span>
-    <span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="n">numRows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dr</span> <span class="o">+</span> <span class="n">dmax</span>
-    <span class="n">ylim</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="c1"># Plot the histogram of MRI intensity</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">im</span><span class="p">)]</span>  <span class="c1"># Ignore the background</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">im</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">16</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Normalize</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mf">0.4</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Intensity (a.u.)&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;MRI density&#39;</span><span class="p">)</span>
 
-    <span class="n">segs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numRows</span><span class="p">):</span>
-        <span class="n">segs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">t</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])))</span>
-        <span class="n">ticklocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">dr</span><span class="p">)</span>
+<span class="c1"># Load the EEG data</span>
+<span class="n">numSamples</span><span class="p">,</span> <span class="n">numRows</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">eegfile</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">get_sample_data</span><span class="p">(</span><span class="s1">&#39;eeg.dat&#39;</span><span class="p">,</span> <span class="n">asfileobj</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading EEG </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">eegfile</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">eegfile</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">numSamples</span><span class="p">,</span> <span class="n">numRows</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">numSamples</span><span class="p">)</span> <span class="o">/</span> <span class="n">numSamples</span>
 
-    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numRows</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">offsets</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ticklocs</span>
+<span class="c1"># Plot the EEG</span>
+<span class="n">ticklocs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">dmin</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">dmax</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">dr</span> <span class="o">=</span> <span class="p">(</span><span class="n">dmax</span> <span class="o">-</span> <span class="n">dmin</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.7</span>  <span class="c1"># Crowd them a bit.</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="n">dmin</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="n">numRows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dr</span> <span class="o">+</span> <span class="n">dmax</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
 
-    <span class="n">lines</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span><span class="n">segs</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="n">offsets</span><span class="p">,</span>
-                           <span class="n">transOffset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="p">)</span>
+<span class="n">segs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numRows</span><span class="p">):</span>
+    <span class="n">segs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">t</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])))</span>
+    <span class="n">ticklocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">dr</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+<span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numRows</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">offsets</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ticklocs</span>
 
-    <span class="c1"># set the yticks to use axes coords on the y axis</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticklocs</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="s1">&#39;PG3&#39;</span><span class="p">,</span> <span class="s1">&#39;PG5&#39;</span><span class="p">,</span> <span class="s1">&#39;PG7&#39;</span><span class="p">,</span> <span class="s1">&#39;PG9&#39;</span><span class="p">])</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span><span class="n">segs</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="n">offsets</span><span class="p">,</span> <span class="n">transOffset</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
-    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time (s)&#39;</span><span class="p">)</span>
+<span class="c1"># Set the yticks to use axes coordinates on the y axis</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticklocs</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="s1">&#39;PG3&#39;</span><span class="p">,</span> <span class="s1">&#39;PG5&#39;</span><span class="p">,</span> <span class="s1">&#39;PG7&#39;</span><span class="p">,</span> <span class="s1">&#39;PG9&#39;</span><span class="p">])</span>
 
-<span class="n">show</span><span class="p">()</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Keywords: python, matplotlib, pylab, example, codex (see <a class="reference internal" href="../../faq/howto_faq.html#how-to-search-examples"><span class="std std-ref">Search examples</span></a>)</p>
@@ -235,10 +231,10 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
       <div class="clearer"></div>
     </div>
     <div class="footer">
-        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Dec 19, 2016.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
+      Last updated on Jan 16, 2017.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
 
 <script>

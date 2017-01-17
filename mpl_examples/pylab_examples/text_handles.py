@@ -1,9 +1,10 @@
-#!/usr/bin/env python
-# Controlling the properties of axis text using handles
+"""
+Controlling the properties of axis text using handles
 
-# See examples/text_themes.py for a more elegant, pythonic way to control
-# fonts.  After all, if we were slaves to MATLAB , we wouldn't be
-# using python!
+See examples/text_themes.py for a more elegant, pythonic way to control
+fonts.  After all, if we were slaves to MATLAB , we wouldn't be
+using python!
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,8 +26,8 @@ ytext = plt.ylabel('Damped oscillation')
 xtext = plt.xlabel('time (s)')
 
 plt.setp(ttext, size='large', color='r', style='italic')
-plt.setp(xtext, size='medium', name=['Courier', 'Bitstream Vera Sans Mono'],
+plt.setp(xtext, size='medium', name=['Courier', 'DejaVu Sans Mono'],
      weight='bold', color='g')
-plt.setp(ytext, size='medium', name=['Helvetica', 'Bitstream Vera Sans'],
+plt.setp(ytext, size='medium', name=['Helvetica', 'DejaVu Sans'],
      weight='light', color='b')
 plt.show()

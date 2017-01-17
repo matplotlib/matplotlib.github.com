@@ -1,10 +1,14 @@
 """
+========================================================
+Building histograms using Rectangles and PolyCollections
+========================================================
+
 This example shows how to use a path patch to draw a bunch of
 rectangles.  The technique of using lots of Rectangle instances, or
 the faster method of using PolyCollections, were implemented before we
 had proper paths with moveto/lineto, closepoly etc in mpl.  Now that
 we have them, we can draw collections of regularly shaped objects with
-homogeous properties more efficiently with a PathCollection.  This
+homogeneous properties more efficiently with a PathCollection.  This
 example makes a histogram -- its more work to set up the vertex arrays
 at the outset, but it should be much faster for large numbers of
 objects
@@ -36,8 +40,7 @@ XY = np.array([[left, left, right, right], [bottom, top, top, bottom]]).T
 barpath = path.Path.make_compound_path_from_polys(XY)
 
 # make a patch out of it
-patch = patches.PathPatch(
-    barpath, facecolor='blue', edgecolor='gray', alpha=0.8)
+patch = patches.PathPatch(barpath)
 ax.add_patch(patch)
 
 # update the view limits

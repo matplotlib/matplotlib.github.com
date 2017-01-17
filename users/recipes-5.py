@@ -23,7 +23,7 @@ sigma2 = X2.std(axis=1)
 # plot it!
 fig, ax = plt.subplots(1)
 ax.plot(t, mu1, lw=2, label='mean population 1', color='blue')
-ax.plot(t, mu1, lw=2, label='mean population 2', color='yellow')
+ax.plot(t, mu2, lw=2, label='mean population 2', color='yellow')
 ax.fill_between(t, mu1+sigma1, mu1-sigma1, facecolor='blue', alpha=0.5)
 ax.fill_between(t, mu2+sigma2, mu2-sigma2, facecolor='yellow', alpha=0.5)
 ax.set_title('random walkers empirical $\mu$ and $\pm \sigma$ interval')

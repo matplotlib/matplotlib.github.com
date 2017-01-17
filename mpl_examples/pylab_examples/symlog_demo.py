@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -25,5 +23,7 @@ plt.xscale('symlog')
 plt.yscale('symlog', linthreshy=0.015)
 plt.grid(True)
 plt.ylabel('symlog both')
+
+plt.subplots_adjust(hspace=0.5, left=0.2)
 
 plt.show()

@@ -1,19 +1,20 @@
 import numpy as np
-from cycler import cycler
-cmap = cycler('cmap', ['viridis', 'magma','plasma', 'inferno'])
-x_mode = cycler('x', [1, 2])
-y_mode = cycler('y', x_mode)
+import matplotlib.pyplot as plt
 
-cy = (x_mode * y_mode) + cmap
+data = np.arange(30).reshape(5, 6)
+x = np.linspace(0, 6, 7)
+y = 10**np.linspace(0, 5, 6)
+X, Y = np.meshgrid(x, y)
 
-def demo(ax, x, y, cmap):
-    X, Y = np.ogrid[0:2*np.pi:200j, 0:2*np.pi:200j]
-    data = np.sin(X*x) * np.cos(Y*y)
-    ax.imshow(data, interpolation='none', cmap=cmap)
-    ax.set_title(cmap)
+fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(8, 4))
 
-fig, axes = plt.subplots(2, 2)
-for ax, sty in zip(axes.ravel(), cy):
-    demo(ax, **sty)
+ax1.imshow(data, aspect="auto", extent=(0, 6, 1e0, 1e5), interpolation='nearest')
+ax1.set_yscale('log')
+ax1.set_title('Using ax.imshow')
 
-fig.tight_layout()
+ax2.pcolormesh(x, y, np.flipud(data))
+ax2.set_yscale('log')
+ax2.set_title('Using ax.pcolormesh')
+ax2.autoscale('tight')
+
+plt.show()

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>mplot3d example code: wire3d_animation_demo.py &mdash; Matplotlib 1.5.3 documentation</title>
+    <title>mplot3d example code: wire3d_animation_demo.py &mdash; Matplotlib 2.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
@@ -16,7 +16,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.5.3',
+        VERSION:     '2.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +26,14 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.5.3 documentation"
+          title="Search within Matplotlib 2.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="Matplotlib 1.5.3 documentation" href="../../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.0.0 documentation" href="../../index.html" />
     <link rel="up" title="mplot3d Examples" href="index.html" />
     <link rel="next" title="mplot3d example code: wire3d_demo.py" href="wire3d_demo.html" />
     <link rel="prev" title="mplot3d example code: trisurf3d_demo2.py" href="trisurf3d_demo2.html" /> 
@@ -37,15 +41,6 @@ type="text/css" />
 
   </head>
   <body>
-    <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
-">
-<h2>Matplotlib 2.0.0rc2 is available</h2>
-
-<p><a href="../../style_changes.html"
-style="font-weight: bold;
-color: #11557C;">Install the release candidate now!</a></p>
-
-</div>
 
 
 
@@ -116,7 +111,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/examples/mplot3d/wire3d_animation_demo.txt"
+      <li><a href="../../_sources/examples/mplot3d/wire3d_animation_demo.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -140,14 +135,20 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
             
   <div class="section" id="mplot3d-example-code-wire3d-animation-demo-py">
 <span id="mplot3d-wire3d-animation-demo"></span><h1>mplot3d example code: wire3d_animation_demo.py<a class="headerlink" href="#mplot3d-example-code-wire3d-animation-demo-py" title="Permalink to this headline">¶</a></h1>
-<p>(<a class="reference external" href="../../mpl_examples/mplot3d/wire3d_animation_demo.py">Source code</a>, <a class="reference external" href="../../mpl_examples/mplot3d/wire3d_animation_demo.png">png</a>, <a class="reference external" href="../../mpl_examples/mplot3d/wire3d_animation_demo.hires.png">hires.png</a>, <a class="reference external" href="../../mpl_examples/mplot3d/wire3d_animation_demo.pdf">pdf</a>)</p>
+<p>(<a class="reference external" href="../../mpl_examples/mplot3d/wire3d_animation_demo.py">Source code</a>, <a class="reference external" href="../../mpl_examples/mplot3d/wire3d_animation_demo.png">png</a>, <a class="reference external" href="../../mpl_examples/mplot3d/wire3d_animation_demo.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="../../_images/wire3d_animation_demo.png" src="../../_images/wire3d_animation_demo.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">==========================</span>
+<span class="sd">Rotating 3D wireframe plot</span>
+<span class="sd">==========================</span>
+
+<span class="sd">A very simple &#39;animation&#39; of a 3D plot.  See also rotate_axes3d_demo.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">A very simple &#39;animation&#39; of a 3D plot</span>
-<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
 <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">axes3d</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -155,33 +156,38 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 
 
 <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generates Z data for the points in the X, Y meshgrid and parameter phi.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">R</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="n">R</span>
+
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
 
+<span class="c1"># Make the X, Y meshgrid.</span>
 <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
-<span class="n">Z</span> <span class="o">=</span> <span class="n">generate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
+<span class="c1"># Set the z axis limits so they aren&#39;t recalculated each frame.</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Begin plotting.</span>
 <span class="n">wframe</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+    <span class="c1"># If a line collection is already remove it before drawing.</span>
+    <span class="k">if</span> <span class="n">wframe</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">wframe</span><span class="p">)</span>
 
-    <span class="n">oldcol</span> <span class="o">=</span> <span class="n">wframe</span>
-
+    <span class="c1"># Plot the new wireframe and pause briefly before continuing.</span>
     <span class="n">Z</span> <span class="o">=</span> <span class="n">generate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
     <span class="n">wframe</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="c1"># Remove old line collection before drawing</span>
-    <span class="k">if</span> <span class="n">oldcol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">oldcol</span><span class="p">)</span>
-
     <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="o">.</span><span class="mi">001</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;FPS: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tstart</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Average FPS: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tstart</span><span class="p">)))</span>
 </pre></div>
 </div>
 <p>Keywords: python, matplotlib, pylab, example, codex (see <a class="reference internal" href="../../faq/howto_faq.html#how-to-search-examples"><span class="std std-ref">Search examples</span></a>)</p>
@@ -195,10 +201,10 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
       <div class="clearer"></div>
     </div>
     <div class="footer">
-        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Dec 19, 2016.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
+      Last updated on Jan 16, 2017.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
 
 <script>

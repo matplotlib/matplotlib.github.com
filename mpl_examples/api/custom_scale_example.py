@@ -1,3 +1,13 @@
+"""
+============
+Custom scale
+============
+
+This example showcases how to create a custom scale, by implementing the
+scaling use for latitude data in a Mercator Projection.
+"""
+
+
 from __future__ import unicode_literals
 
 import numpy as np
@@ -5,6 +15,11 @@ from numpy import ma
 from matplotlib import scale as mscale
 from matplotlib import transforms as mtransforms
 from matplotlib.ticker import Formatter, FixedLocator
+from matplotlib import rcParams
+
+
+# BUG: this example fails with any other setting of axisbelow
+rcParams['axes.axisbelow'] = False
 
 
 class MercatorLatitudeScale(mscale.ScaleBase):

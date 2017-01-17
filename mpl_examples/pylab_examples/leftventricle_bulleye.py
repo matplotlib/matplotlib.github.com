@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 This example demonstrates how to create the 17 segment model for the left
 ventricle recommended by the American Heart Association (AHA).
@@ -46,7 +45,7 @@ def bullseye_plot(ax, data, segBold=None, cmap=None, norm=None):
     data = np.array(data).ravel()
 
     if cmap is None:
-        cmap = plt.cm.jet
+        cmap = plt.cm.viridis
 
     if norm is None:
         norm = mpl.colors.Normalize(vmin=data.min(), vmax=data.max())
@@ -63,7 +62,7 @@ def bullseye_plot(ax, data, segBold=None, cmap=None, norm=None):
         theta_i = i*60*np.pi/180
         ax.plot([theta_i, theta_i], [r[1], 1], '-k', lw=linewidth)
 
-    # Create the bounds for the segmentss 13-16
+    # Create the bounds for the segments 13-16
     for i in range(4):
         theta_i = i*90*np.pi/180 - 45*np.pi/180
         ax.plot([theta_i, theta_i], [r[0], r[1]], '-k', lw=linewidth)
@@ -142,7 +141,7 @@ axl3 = fig.add_axes([0.69, 0.15, 0.2, 0.05])
 
 # Set the colormap and norm to correspond to the data for which
 # the colorbar will be used.
-cmap = mpl.cm.jet
+cmap = mpl.cm.viridis
 norm = mpl.colors.Normalize(vmin=1, vmax=17)
 
 # ColorbarBase derives from ScalarMappable and puts a colorbar

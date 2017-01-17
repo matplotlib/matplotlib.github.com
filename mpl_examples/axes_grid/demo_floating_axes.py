@@ -1,3 +1,15 @@
+"""
+Demo of the floating axes.
+
+This demo shows features of functions in floating_axes:
+    * Using scatter function and bar function with changing the
+      shape of the plot.
+    * Using GridHelperCurveLinear to rotate the plot and set the
+      boundary of the plot.
+    * Using FloatingSubplot to create a subplot using the return
+      value from GridHelperCurveLinear.
+    * Making sector plot by adding more features to GridHelperCurveLinear.
+"""
 from matplotlib.transforms import Affine2D
 import mpl_toolkits.axisartist.floating_axes as floating_axes
 import numpy as np
@@ -15,7 +27,7 @@ def setup_axes1(fig, rect):
     tr = Affine2D().scale(2, 1).rotate_deg(30)
 
     grid_helper = floating_axes.GridHelperCurveLinear(
-        tr, extremes=(0, 4, 0, 4))
+        tr, extremes=(-0.5, 3.5, 0, 4))
 
     ax1 = floating_axes.FloatingSubplot(fig, rect, grid_helper=grid_helper)
     fig.add_subplot(ax1)

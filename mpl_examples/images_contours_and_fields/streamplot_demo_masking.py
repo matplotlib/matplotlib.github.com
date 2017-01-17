@@ -14,13 +14,14 @@ V = 1 + X - Y**2
 speed = np.sqrt(U*U + V*V)
 
 mask = np.zeros(U.shape, dtype=bool)
-mask[40:60, 40:60] = 1
-U = np.ma.array(U, mask=mask)
+mask[40:60, 40:60] = True
 U[:20, :20] = np.nan
+U = np.ma.array(U, mask=mask)
 
-plt.streamplot(X, Y, U, V, color='r')
+fig, ax = plt.subplots()
+ax.streamplot(X, Y, U, V, color='r')
 
-plt.imshow(~mask, extent=(-w, w, -w, w), alpha=0.5,
-           interpolation='nearest', cmap=plt.cm.gray)
+ax.imshow(~mask, extent=(-w, w, -w, w), alpha=0.5,
+          interpolation='nearest', cmap=plt.cm.gray)
 
 plt.show()

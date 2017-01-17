@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from __future__ import print_function
 
 import matplotlib
@@ -6,7 +5,6 @@ import matplotlib
 #matplotlib.use("TkAgg")
 #matplotlib.use("GTKAgg")
 #matplotlib.use("Qt4Agg")
-#matplotlib.use("CocoaAgg")
 #matplotlib.use("MacOSX")
 import matplotlib.pyplot as plt
 

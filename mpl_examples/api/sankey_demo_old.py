@@ -1,4 +1,10 @@
-#!/usr/bin/env python
+"""
+==========================
+Yet another Sankey diagram
+==========================
+
+This example showcases a more complex sankey diagram.
+"""
 
 from __future__ import print_function
 
@@ -187,7 +193,7 @@ if __name__ == '__main__':
 
     patch, (intexts, outtexts) = sankey(ax, outputs=outputs,
                                         outlabels=outlabels, inputs=inputs,
-                                        inlabels=None, fc='g', alpha=0.2)
+                                        inlabels=None)
     outtexts[1].set_color('r')
     outtexts[-1].set_fontweight('bold')
 

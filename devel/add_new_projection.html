@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Adding new scales and projections to matplotlib &mdash; Matplotlib 1.5.3 documentation</title>
+    <title>Developer’s guide for creating scales and transformations &mdash; Matplotlib 2.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css"
 type="text/css" />
@@ -16,7 +16,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.5.3',
+        VERSION:     '2.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,26 +26,21 @@ type="text/css" />
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 1.5.3 documentation"
+          title="Search within Matplotlib 2.0.0 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Matplotlib 1.5.3 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html"
+/>
+    <link rel="search" title="Search" href="../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.0.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib Developers’ Guide" href="index.html" />
-    <link rel="next" title="Default Color changes" href="color_changes.html" />
-    <link rel="prev" title="Working with transformations" href="transformations.html" /> 
+    <link rel="next" title="Developer’s tips for writing code for Python 2 and 3" href="portable_code.html" />
+    <link rel="prev" title="Developer’s tips for documenting matplotlib" href="documenting_mpl.html" /> 
 
 
   </head>
   <body>
-    <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
-">
-<h2>Matplotlib 2.0.0rc2 is available</h2>
-
-<p><a href="../style_changes.html"
-style="font-weight: bold;
-color: #11557C;">Install the release candidate now!</a></p>
-
-</div>
 
 
 
@@ -72,10 +67,10 @@ color: #11557C;">Install the release candidate now!</a></p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="color_changes.html" title="Default Color changes"
+          <a href="portable_code.html" title="Developer’s tips for writing code for Python 2 and 3"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="transformations.html" title="Working with transformations"
+          <a href="documenting_mpl.html" title="Developer’s tips for documenting matplotlib"
              accesskey="P">previous</a> |</li>
 
         <li><a href="../index.html">home</a>|&nbsp;</li>
@@ -102,7 +97,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <br/>
   <h3><a href="../contents.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Adding new scales and projections to matplotlib</a><ul>
+<li><a class="reference internal" href="#">Developer&#8217;s guide for creating scales and transformations</a><ul>
 <li><a class="reference internal" href="#creating-a-new-scale">Creating a new scale</a></li>
 <li><a class="reference internal" href="#creating-a-new-projection">Creating a new projection</a></li>
 <li><a class="reference internal" href="#api-documentation">API documentation</a></li>
@@ -114,8 +109,8 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <ul>
   <li><a href="../contents.html">Documentation overview</a><ul>
   <li><a href="index.html">The Matplotlib Developers&#8217; Guide</a><ul>
-      <li>Previous: <a href="transformations.html" title="previous chapter">Working with transformations</a></li>
-      <li>Next: <a href="color_changes.html" title="next chapter">Default Color changes</a></li>
+      <li>Previous: <a href="documenting_mpl.html" title="previous chapter">Developer&#8217;s tips for documenting matplotlib</a></li>
+      <li>Next: <a href="portable_code.html" title="next chapter">Developer&#8217;s tips for writing code for Python 2 and 3</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -123,7 +118,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/devel/add_new_projection.txt"
+      <li><a href="../_sources/devel/add_new_projection.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -145,8 +140,8 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="adding-new-scales-and-projections-to-matplotlib">
-<span id="adding-new-scales"></span><h1>Adding new scales and projections to matplotlib<a class="headerlink" href="#adding-new-scales-and-projections-to-matplotlib" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="developer-s-guide-for-creating-scales-and-transformations">
+<span id="adding-new-scales"></span><h1>Developer&#8217;s guide for creating scales and transformations<a class="headerlink" href="#developer-s-guide-for-creating-scales-and-transformations" title="Permalink to this headline">¶</a></h1>
 <p>Matplotlib supports the addition of custom procedures that transform
 the data before it is displayed.</p>
 <p>There is an important distinction between two kinds of
@@ -155,8 +150,8 @@ dimension, are called &#8220;scales&#8221;, and non-separable transformations,
 that handle data in two or more dimensions at a time, are called
 &#8220;projections&#8221;.</p>
 <p>From the user&#8217;s perspective, the scale of a plot can be set with
-<a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.set_xscale" title="matplotlib.axes.Axes.set_xscale"><code class="xref py py-meth docutils literal"><span class="pre">set_xscale()</span></code></a> and
-<a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.set_yscale" title="matplotlib.axes.Axes.set_yscale"><code class="xref py py-meth docutils literal"><span class="pre">set_yscale()</span></code></a>.  Projections can be chosen
+<a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.set_xscale.html#matplotlib.axes.Axes.set_xscale" title="matplotlib.axes.Axes.set_xscale"><code class="xref py py-meth docutils literal"><span class="pre">set_xscale()</span></code></a> and
+<a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.set_yscale.html#matplotlib.axes.Axes.set_yscale" title="matplotlib.axes.Axes.set_yscale"><code class="xref py py-meth docutils literal"><span class="pre">set_yscale()</span></code></a>.  Projections can be chosen
 using the <code class="docutils literal"><span class="pre">projection</span></code> keyword argument to the
 <code class="xref py py-func docutils literal"><span class="pre">plot()</span></code> or <code class="xref py py-func docutils literal"><span class="pre">subplot()</span></code>
 functions, e.g.:</p>
@@ -211,7 +206,7 @@ convert mouse positions from screen space back into data space.</li>
 projections will often need to place these elements in special
 locations, and matplotlib has a facility to help with doing so.</li>
 <li>Setting up default values (overriding
-<a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes.cla" title="matplotlib.axes.Axes.cla"><code class="xref py py-meth docutils literal"><span class="pre">cla()</span></code></a>), since the defaults for a
+<a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.cla.html#matplotlib.axes.Axes.cla" title="matplotlib.axes.Axes.cla"><code class="xref py py-meth docutils literal"><span class="pre">cla()</span></code></a>), since the defaults for a
 rectilinear axes may not be appropriate.</li>
 <li>Defining the shape of the axes, for example, an elliptical axes,
 that will be used to draw the background of the plot and for
@@ -271,10 +266,10 @@ interest.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
-      Last updated on Dec 19, 2016.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
+      Last updated on Jan 16, 2017.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.4.3.
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
 
 <script>

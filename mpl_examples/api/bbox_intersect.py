@@ -1,11 +1,25 @@
+"""
+===========================================
+Changing colors of lines intersecting a box
+===========================================
+
+The lines intersecting the rectangle are colored in red, while the others
+are left as blue lines. This example showcases the `intersect_bbox` function.
+
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.transforms import Bbox
 from matplotlib.path import Path
 
-rect = plt.Rectangle((-1, -1), 2, 2, facecolor="#aaaaaa")
-plt.gca().add_patch(rect)
-bbox = Bbox.from_bounds(-1, -1, 2, 2)
+left, bottom, width, height = (-1, -1, 2, 2)
+rect = plt.Rectangle((left, bottom), width, height, facecolor="#aaaaaa")
+
+fig, ax = plt.subplots()
+ax.add_patch(rect)
+
+bbox = Bbox.from_bounds(left, bottom, width, height)
 
 for i in range(12):
     vertices = (np.random.random((2, 2)) - 0.5) * 6.0
@@ -14,6 +28,6 @@ for i in range(12):
         color = 'r'
     else:
         color = 'b'
-    plt.plot(vertices[:, 0], vertices[:, 1], color=color)
+    ax.plot(vertices[:, 0], vertices[:, 1], color=color)
 
 plt.show()
