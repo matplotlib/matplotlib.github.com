@@ -19,7 +19,8 @@ type="text/css" />
         VERSION:     '2.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -204,7 +205,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
         <span class="kn">import</span> <span class="nn">keyword</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="k">for</span> <span class="nb">list</span> <span class="ow">in</span> <span class="p">[</span><span class="n">keyword</span><span class="o">.</span><span class="n">kwlist</span><span class="p">,</span> <span class="n">__builtin__</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">__main__</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">locals</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
+        <span class="k">for</span> <span class="nb">list</span> <span class="ow">in</span> <span class="p">[</span><span class="n">keyword</span><span class="o">.</span><span class="n">kwlist</span><span class="p">,</span> <span class="n">__builtin__</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">__main__</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">locals</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
             <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">word</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="n">text</span> <span class="ow">and</span> <span class="n">word</span> <span class="o">!=</span> <span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span>
                     <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
@@ -224,15 +225,15 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">re</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">r&quot;(\w+(\.\w+)*)\.(\w*)&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+(\.\w+)*)\.(\w*)&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">expr</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="nb">object</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">__main__</span><span class="o">.</span><span class="n">__dict__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locals</span><span class="p">)</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">__main__</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locals</span><span class="p">)</span>
         <span class="n">words</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s1">&#39;__class__&#39;</span><span class="p">):</span>
             <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;__class__&#39;</span><span class="p">)</span>
-            <span class="n">words</span> <span class="o">=</span> <span class="n">words</span> <span class="o">+</span> <span class="n">get_class_members</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span>
+            <span class="n">words</span> <span class="o">=</span> <span class="n">words</span> <span class="o">+</span> <span class="n">get_class_members</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
@@ -244,7 +245,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <span class="k">def</span> <span class="nf">get_class_members</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="s1">&#39;__bases__&#39;</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">klass</span><span class="o">.</span><span class="n">__bases__</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">:</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="n">get_class_members</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ret</span>
 
@@ -283,7 +284,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">gtk</span><span class="o">.</span><span class="n">ScrolledWindow</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">gtk</span><span class="o">.</span><span class="n">ScrolledWindow</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_policy</span><span class="p">(</span><span class="n">gtk</span><span class="o">.</span><span class="n">POLICY_AUTOMATIC</span><span class="p">,</span> <span class="n">gtk</span><span class="o">.</span><span class="n">POLICY_AUTOMATIC</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">gtk</span><span class="o">.</span><span class="n">TextView</span><span class="p">()</span>
@@ -515,7 +516,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
             <span class="n">console</span><span class="o">.</span><span class="n">execute_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
     <span class="n">gtk</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -531,9 +532,9 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
-      Last updated on Jan 16, 2017.
+      Last updated on Feb 20, 2017.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
 
 <script>
