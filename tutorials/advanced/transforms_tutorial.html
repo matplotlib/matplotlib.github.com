@@ -35,7 +35,10 @@ type="text/css" />
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.1.0 documentation" href="../../index.html" /> 
+    <link rel="top" title="Matplotlib 2.1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Tutorials" href="../index.html" />
+    <link rel="next" title="Specifying Colors" href="../colors/colors.html" />
+    <link rel="prev" title="Path Tutorial" href="path_tutorial.html" /> 
 
 
   </head>
@@ -61,12 +64,20 @@ type="text/css" />
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="../colors/colors.html" title="Specifying Colors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="path_tutorial.html" title="Path Tutorial"
+             accesskey="P">previous</a> |</li>
 
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../index.html">tutorials</a>|&nbsp;</li>
         <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
-        <li><a href="../../contents.html">docs</a> &raquo;</li> 
+        <li><a href="../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../../users/index.html" >User’s Guide</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Tutorials</a> &raquo;</li> 
       </ul>
     </div>
 
@@ -103,6 +114,12 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../contents.html">Documentation overview</a><ul>
+  <li><a href="../../users/index.html">User’s Guide</a><ul>
+  <li><a href="../index.html">Tutorials</a><ul>
+      <li>Previous: <a href="path_tutorial.html" title="previous chapter">Path Tutorial</a></li>
+      <li>Next: <a href="../colors/colors.html" title="next chapter">Specifying Colors</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>
@@ -132,54 +149,68 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
             
   <div class="section" id="transformations-tutorial">
 <span id="sphx-glr-tutorials-advanced-transforms-tutorial-py"></span><h1>Transformations Tutorial<a class="headerlink" href="#transformations-tutorial" title="Permalink to this headline">¶</a></h1>
-<p>Transforming visuals in Matplotlib.</p>
-<p>Like any graphics packages, matplotlib is built on top of a
+<p>Like any graphics packages, Matplotlib is built on top of a
 transformation framework to easily move between coordinate systems,
 the userland <code class="xref py py-obj docutils literal"><span class="pre">data</span></code> coordinate system, the <code class="xref py py-obj docutils literal"><span class="pre">axes</span></code> coordinate system,
 the <code class="xref py py-obj docutils literal"><span class="pre">figure</span></code> coordinate system, and the <code class="xref py py-obj docutils literal"><span class="pre">display</span></code> coordinate system.
 In 95% of your plotting, you won’t need to think about this, as it
 happens under the hood, but as you push the limits of custom figure
 generation, it helps to have an understanding of these objects so you
-can reuse the existing transformations matplotlib makes available to
+can reuse the existing transformations Matplotlib makes available to
 you, or create your own (see <a class="reference internal" href="../../api/transformations.html#module-matplotlib.transforms" title="matplotlib.transforms"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.transforms</span></code></a>).  The table
-below summarizes the existing coordinate systems, the transformation
+below summarizes the some useful coordinate systems, the transformation
 object you should use to work in that coordinate system, and the
 description of that system. In the <code class="xref py py-obj docutils literal"><span class="pre">Transformation</span> <span class="pre">Object</span></code> column,
 <code class="docutils literal"><span class="pre">ax</span></code> is a <a class="reference internal" href="../../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><code class="xref py py-class docutils literal"><span class="pre">Axes</span></code></a> instance, and <code class="docutils literal"><span class="pre">fig</span></code> is a
 <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><code class="xref py py-class docutils literal"><span class="pre">Figure</span></code></a> instance.</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="9%" />
-<col width="18%" />
-<col width="73%" />
+<col width="14%" />
+<col width="38%" />
+<col width="48%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">Coordinate</th>
-<th class="head">Transformation Object</th>
+<tr class="row-odd"><th class="head">Coordinates</th>
+<th class="head">Transformation object</th>
 <th class="head">Description</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">data</span></code></td>
-<td><code class="docutils literal"><span class="pre">ax.transData</span></code></td>
-<td>The userland data coordinate system, controlled by the xlim and ylim</td>
+<tr class="row-even"><td>“data”</td>
+<td><code class="docutils literal"><span class="pre">ax.transData``</span></code></td>
+<td>The coordinate system for the data,
+controlled by xlim and ylim.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">axes</span></code></td>
+<tr class="row-odd"><td>“axes”</td>
 <td><code class="docutils literal"><span class="pre">ax.transAxes</span></code></td>
-<td>The coordinate system of the <a class="reference internal" href="../../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><code class="xref py py-class docutils literal"><span class="pre">Axes</span></code></a>; (0, 0) is
-bottom left of the axes, and (1, 1) is top right of the axes.</td>
+<td>The coordinate system of the
+<a class="reference internal" href="../../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><code class="xref py py-obj docutils literal"><span class="pre">Axes</span></code></a>; (0, 0) is bottom left of
+the axes, and (1, 1) is top right of
+the axes.</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">figure</span></code></td>
+<tr class="row-even"><td>“figure”</td>
 <td><code class="docutils literal"><span class="pre">fig.transFigure</span></code></td>
-<td>The coordinate system of the <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><code class="xref py py-class docutils literal"><span class="pre">Figure</span></code></a>; (0, 0)
-is bottom left of the figure, and (1, 1) is top right of the figure.</td>
+<td>The coordinate system of the
+<a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><code class="xref py py-obj docutils literal"><span class="pre">Figure</span></code></a>; (0, 0) is bottom left of
+the figure, and (1, 1) is top right
+of the figure.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">display</span></code></td>
-<td><a class="reference external" href="https://docs.python.org/2/library/constants.html#None" title="(in Python v2.7)"><code class="xref py py-obj docutils literal"><span class="pre">None</span></code></a></td>
-<td>This is the pixel coordinate system of the display; (0, 0) is the bottom
-left of the display, and (width, height) is the top right of the display in pixels.
-Alternatively, the identity transform
-(<a class="reference internal" href="../../api/transformations.html#matplotlib.transforms.IdentityTransform" title="matplotlib.transforms.IdentityTransform"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.transforms.IdentityTransform()</span></code></a>) may be used instead of None.</td>
+<tr class="row-odd"><td>“display”</td>
+<td><code class="docutils literal"><span class="pre">None</span></code>, or
+<code class="docutils literal"><span class="pre">IdentityTransform()</span></code></td>
+<td>The pixel coordinate system of the
+display; (0, 0) is bottom left of the
+display, and (width, height) is top
+right of the display in pixels.</td>
+</tr>
+<tr class="row-even"><td>“xaxis”,</td>
+<td><code class="docutils literal"><span class="pre">ax.get_xaxis_transform()</span></code>,</td>
+<td>Blended coordinate systems; use data</td>
+</tr>
+<tr class="row-odd"><td>“yaxis”</td>
+<td><code class="docutils literal"><span class="pre">ax.get_yaxis_transform()</span></code></td>
+<td>coordinates on one of the axis and
+axes coordinates on the other.</td>
 </tr>
 </tbody>
 </table>
@@ -196,7 +227,7 @@ coordinate system.</p>
 <div class="section" id="data-coordinates">
 <span id="data-coords"></span><h2>Data coordinates<a class="headerlink" href="#data-coordinates" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start with the most commonly used coordinate, the <code class="xref py py-obj docutils literal"><span class="pre">data</span></code>
-coordinate system.  Whenever you add data to the axes, matplotlib
+coordinate system.  Whenever you add data to the axes, Matplotlib
 updates the datalimits, most commonly updated with the
 <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.set_xlim.html#matplotlib.axes.Axes.set_xlim" title="matplotlib.axes.Axes.set_xlim"><code class="xref py py-meth docutils literal"><span class="pre">set_xlim()</span></code></a> and
 <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.set_ylim.html#matplotlib.axes.Axes.set_ylim" title="matplotlib.axes.Axes.set_ylim"><code class="xref py py-meth docutils literal"><span class="pre">set_ylim()</span></code></a> methods.  For example, in the
@@ -552,7 +583,7 @@ space to display space).  We can see this in action here</p>
 <p>The final piece is the <code class="docutils literal"><span class="pre">self.transScale</span></code> attribute, which is
 responsible for the optional non-linear scaling of the data, e.g., for
 logarithmic axes.  When an Axes is initially setup, this is just set to
-the identity transform, since the basic matplotlib axes has linear
+the identity transform, since the basic Matplotlib axes has linear
 scale, but when you call a logarithmic scaling function like
 <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.semilogx.html#matplotlib.axes.Axes.semilogx" title="matplotlib.axes.Axes.semilogx"><code class="xref py py-meth docutils literal"><span class="pre">semilogx()</span></code></a> or explicitly set the scale to
 logarithmic with <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.set_xscale.html#matplotlib.axes.Axes.set_xscale" title="matplotlib.axes.Axes.set_xscale"><code class="xref py py-meth docutils literal"><span class="pre">set_xscale()</span></code></a>, then the
@@ -575,18 +606,18 @@ e.g., latitude and longitude for map data, or radius and theta for polar
 data, to a separable Cartesian coordinate system.  There are several
 projection examples in the <code class="docutils literal"><span class="pre">matplotlib.projections</span></code> package, and the
 best way to learn more is to open the source for those packages and
-see how to make your own, since matplotlib supports extensible axes
+see how to make your own, since Matplotlib supports extensible axes
 and projections.  Michael Droettboom has provided a nice tutorial
-example of creating a hammer projection axes; see
+example of creating a Hammer projection axes; see
 <a class="reference internal" href="../../gallery/api/custom_projection_example.html#sphx-glr-gallery-api-custom-projection-example-py"><span class="std std-ref">Custom projection</span></a>.</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.174 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.476 seconds)</p>
 <div class="sphx-glr-footer docutils container">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" href="../../_downloads/transforms_tutorial.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">transforms_tutorial.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" href="../../_downloads/transforms_tutorial.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">transforms_tutorial.ipynb</span></code></a></div>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Generated by Sphinx-Gallery</a></p>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
 </div>
 
@@ -599,7 +630,7 @@ example of creating a hammer projection axes; see
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2017 The Matplotlib development team.
-      Last updated on Oct 07, 2017.
+      Last updated on Oct 13, 2017.
       Created using <a
 href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
