@@ -3,15 +3,17 @@
 .. _sphx_glr_gallery_animation_animation_demo.py:
 
 
-==============
-Animation Demo
-==============
+================
+pyplot animation
+================
 
-Pyplot animation example.
+Generating an animation by calling `~.pyplot.pause` between plotting commands.
 
-The method shown here is only for very simple, low-performance
-use.  For more demanding applications, look at the animation
-module and the examples that use it.
+The method shown here is only suitable for simple, low-performance use.  For
+more demanding applications, look at the :mod:`animation` module and the
+examples that use it.
+
+Note that calling `time.sleep` instead of `~.pyplot.pause` would *not* work.
 
 
 
@@ -20,20 +22,7 @@ module and the examples that use it.
     :align: center
 
 
-.. rst-class:: sphx-glr-script-out
 
- Out::
-
-    step 0
-    step 1
-    step 2
-    step 3
-    step 4
-
-
-
-
-|
 
 
 .. code-block:: python
@@ -42,24 +31,19 @@ module and the examples that use it.
     import matplotlib.pyplot as plt
     import numpy as np
 
-    x = np.arange(6)
-    y = np.arange(5)
-    z = x * y[:, np.newaxis]
+    np.random.seed(19680801)
+    data = np.random.random((50, 50, 50))
 
-    for i in range(5):
-        if i == 0:
-            p = plt.imshow(z)
-            fig = plt.gcf()
-            plt.clim()   # clamp the color limits
-            plt.title("Boring slide show")
-        else:
-            z = z + 2
-            p.set_data(z)
+    fig, ax = plt.subplots()
 
-        print("step", i)
-        plt.pause(0.5)
+    for i in range(len(data)):
+        ax.cla()
+        ax.imshow(data[i])
+        ax.set_title("frame {}".format(i))
+        # Note that using time.sleep does *not* work here!
+        plt.pause(0.1)
 
-**Total running time of the script:** ( 0 minutes  2.622 seconds)
+**Total running time of the script:** ( 0 minutes  6.914 seconds)
 
 
 

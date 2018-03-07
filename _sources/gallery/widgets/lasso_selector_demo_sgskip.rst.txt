@@ -17,9 +17,8 @@ on the graph, hold, and drag it around the points you need to select.
 
 .. code-block:: python
 
-    from __future__ import print_function
 
-    from six.moves import input
+    from __future__ import print_function
 
     import numpy as np
 
@@ -87,7 +86,6 @@ on the graph, hold, and drag it around the points you need to select.
     if __name__ == '__main__':
         import matplotlib.pyplot as plt
 
-        plt.ion()
         # Fixing random state for reproducibility
         np.random.seed(19680801)
 
@@ -99,16 +97,18 @@ on the graph, hold, and drag it around the points you need to select.
         pts = ax.scatter(data[:, 0], data[:, 1], s=80)
         selector = SelectFromCollection(ax, pts)
 
-        plt.draw()
-        input('Press Enter to accept selected points')
-        print("Selected points:")
-        print(selector.xys[selector.ind])
-        selector.disconnect()
+        def accept(event):
+            if event.key == "enter":
+                print("Selected points:")
+                print(selector.xys[selector.ind])
+                selector.disconnect()
+                ax.set_title("")
+                fig.canvas.draw()
 
-        # Block end of script so you can check that the lasso is disconnected.
-        input('Press Enter to quit')
+        fig.canvas.mpl_connect("key_press_event", accept)
+        ax.set_title("Press enter to accept selected points.")
 
-**Total running time of the script:** ( 0 minutes  0.000 seconds)
+        plt.show()
 
 
 

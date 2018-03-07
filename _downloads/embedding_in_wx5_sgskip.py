@@ -3,11 +3,6 @@
 Embedding In Wx5
 ================
 
-Matplotlib requires wxPython 2.8+
-set the wxPython version in lib\site-packages\wx.pth file
-or if you have wxversion installed un-comment the lines below
-import wxversion
-wxversion.ensureMinimal('2.8')
 """
 
 import wx
@@ -19,16 +14,16 @@ else:
     import wx.aui as aui
 
 import matplotlib as mpl
-from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as Canvas
-from matplotlib.backends.backend_wxagg import NavigationToolbar2Wx as Toolbar
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
+from matplotlib.backends.backend_wxagg import NavigationToolbar2WxAgg as NavigationToolbar
 
 
 class Plot(wx.Panel):
     def __init__(self, parent, id=-1, dpi=None, **kwargs):
         wx.Panel.__init__(self, parent, id=id, **kwargs)
         self.figure = mpl.figure.Figure(dpi=dpi, figsize=(2, 2))
-        self.canvas = Canvas(self, -1, self.figure)
-        self.toolbar = Toolbar(self.canvas)
+        self.canvas = FigureCanvas(self, -1, self.figure)
+        self.toolbar = NavigationToolbar(self.canvas)
         self.toolbar.Realize()
 
         sizer = wx.BoxSizer(wx.VERTICAL)

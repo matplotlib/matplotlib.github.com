@@ -29,13 +29,13 @@ connect your function to the event manager, which is part of the
 example that prints the location of the mouse click and which button
 was pressed::
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    fig, ax = plt.subplots()
     ax.plot(np.random.rand(10))
 
     def onclick(event):
-        print('button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
-              (event.button, event.x, event.y, event.xdata, event.ydata))
+        print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
+              ('double' if event.dblclick else 'single', event.button,
+               event.x, event.y, event.xdata, event.ydata))
 
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
@@ -57,12 +57,12 @@ Here are the events that you can connect to, the class instances that
 are sent back to you when the event occurs, and the event descriptions
 
 
-=======================  ======================================================================================
+=======================  =============================================================================================
 Event name               Class and description
-=======================  ======================================================================================
+=======================  =============================================================================================
 'button_press_event'     :class:`~matplotlib.backend_bases.MouseEvent`     - mouse button is pressed
 'button_release_event'   :class:`~matplotlib.backend_bases.MouseEvent`     - mouse button is released
-'draw_event'             :class:`~matplotlib.backend_bases.DrawEvent`      - canvas draw
+'draw_event'             :class:`~matplotlib.backend_bases.DrawEvent`      - canvas draw (but before screen update)
 'key_press_event'        :class:`~matplotlib.backend_bases.KeyEvent`       - key is pressed
 'key_release_event'      :class:`~matplotlib.backend_bases.KeyEvent`       - key is released
 'motion_notify_event'    :class:`~matplotlib.backend_bases.MouseEvent`     - mouse motion
@@ -73,7 +73,7 @@ Event name               Class and description
 'figure_leave_event'     :class:`~matplotlib.backend_bases.LocationEvent`  - mouse leaves a figure
 'axes_enter_event'       :class:`~matplotlib.backend_bases.LocationEvent`  - mouse enters a new axes
 'axes_leave_event'       :class:`~matplotlib.backend_bases.LocationEvent`  - mouse leaves an axes
-=======================  ======================================================================================
+=======================  =============================================================================================
 
 .. _event-attributes:
 

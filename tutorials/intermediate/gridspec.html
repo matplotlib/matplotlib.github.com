@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Customizing Location of Subplot Using GridSpec &mdash; Matplotlib 2.1.2 documentation</title>
+    <title>Customizing Figure Layouts Using GridSpec and Other Functions &mdash; Matplotlib 2.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
@@ -17,7 +17,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.1.2',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -28,17 +28,19 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.1.2 documentation"
+          title="Search within Matplotlib 2.2.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.1.2 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 2.2.0 documentation" href="../../index.html" />
     <link rel="up" title="Tutorials" href="../index.html" />
-    <link rel="next" title="Artist tutorial" href="artists.html" />
-    <link rel="prev" title="Legend guide" href="legend_guide.html" /> 
+    <link rel="next" title="Tight Layout guide" href="tight_layout_guide.html" />
+    <link rel="prev" title="Artist tutorial" href="artists.html" />
+  <link rel="canonical" href="https://matplotlib.org/tutorials/intermediate/gridspec.html" />
+
 
 
   </head>
@@ -47,7 +49,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.1.2</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -67,10 +69,10 @@ type="text/css" />
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="artists.html" title="Artist tutorial"
+          <a href="tight_layout_guide.html" title="Tight Layout guide"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="legend_guide.html" title="Legend guide"
+          <a href="artists.html" title="Artist tutorial"
              accesskey="P">previous</a> |</li>
 
         <li><a href="../../index.html">home</a>|&nbsp;</li>
@@ -85,28 +87,12 @@ type="text/css" />
 
   
       <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper"><a href="https://www.numfocus.org">
-  <image src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;colorA=E1523D&amp;colorB=007D8A">
-</a>
-
-<br/>
-
-<a href="http://depsy.org/package/python/matplotlib">
-  <img src="../../_static/depsy_badge.svg">
-</a>
-
-<br/>
-
-Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
-  <img src="https://travis-ci.org/matplotlib/matplotlib.svg?branch=master"/>
-</a>
-<br/>
+        <div class="sphinxsidebarwrapper">
   <h3><a href="../../contents.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Customizing Location of Subplot Using GridSpec</a><ul>
-<li><a class="reference internal" href="#basic-example-of-using-subplot2grid">Basic Example of using subplot2grid</a></li>
-<li><a class="reference internal" href="#gridspec-and-subplotspec">GridSpec and SubplotSpec</a></li>
-<li><a class="reference internal" href="#adjust-gridspec-layout">Adjust GridSpec layout</a></li>
+<li><a class="reference internal" href="#">Customizing Figure Layouts Using GridSpec and Other Functions</a><ul>
+<li><a class="reference internal" href="#basic-quickstart-guide">Basic Quickstart Guide</a></li>
+<li><a class="reference internal" href="#fine-adjustments-to-a-gridspec-layout">Fine Adjustments to a Gridspec Layout</a></li>
 <li><a class="reference internal" href="#gridspec-using-subplotspec">GridSpec using SubplotSpec</a></li>
 <li><a class="reference internal" href="#a-complex-nested-gridspec-using-subplotspec">A Complex Nested GridSpec using SubplotSpec</a></li>
 </ul>
@@ -118,8 +104,8 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <li><a href="../../contents.html">Documentation overview</a><ul>
   <li><a href="../../users/index.html">User’s Guide</a><ul>
   <li><a href="../index.html">Tutorials</a><ul>
-      <li>Previous: <a href="legend_guide.html" title="previous chapter">Legend guide</a></li>
-      <li>Next: <a href="artists.html" title="next chapter">Artist tutorial</a></li>
+      <li>Previous: <a href="artists.html" title="previous chapter">Artist tutorial</a></li>
+      <li>Next: <a href="tight_layout_guide.html" title="next chapter">Tight Layout guide</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -134,12 +120,14 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -149,161 +137,183 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="customizing-location-of-subplot-using-gridspec">
-<span id="sphx-glr-tutorials-intermediate-gridspec-py"></span><h1>Customizing Location of Subplot Using GridSpec<a class="headerlink" href="#customizing-location-of-subplot-using-gridspec" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="customizing-figure-layouts-using-gridspec-and-other-functions">
+<span id="sphx-glr-tutorials-intermediate-gridspec-py"></span><h1>Customizing Figure Layouts Using GridSpec and Other Functions<a class="headerlink" href="#customizing-figure-layouts-using-gridspec-and-other-functions" title="Permalink to this headline">¶</a></h1>
 <p>How to create grid-shaped combinations of axes.</p>
 <blockquote>
 <div><dl class="docutils">
-<dt><a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="matplotlib.gridspec.GridSpec"><code class="xref py py-class docutils literal"><span class="pre">GridSpec</span></code></a></dt>
-<dd>specifies the geometry of the grid that a subplot will be
-placed in. The number of rows and number of columns of the grid
+<dt><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a></dt>
+<dd>Perhaps the primary function used to create figures and axes.
+It’s also similar to <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="matplotlib.pyplot.subplot"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplot()</span></code></a>,
+but creates and places all axes on the figure at once.</dd>
+<dt><a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="matplotlib.gridspec.GridSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSpec</span></code></a></dt>
+<dd>Specifies the geometry of the grid that a subplot will be
+placed. The number of rows and number of columns of the grid
 need to be set. Optionally, the subplot layout parameters
 (e.g., left, right, etc.) can be tuned.</dd>
-<dt><a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec" title="matplotlib.gridspec.SubplotSpec"><code class="xref py py-class docutils literal"><span class="pre">SubplotSpec</span></code></a></dt>
-<dd>specifies the location of the subplot in the given <em>GridSpec</em>.</dd>
-<dt><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="matplotlib.pyplot.subplot2grid"><code class="xref py py-func docutils literal"><span class="pre">subplot2grid()</span></code></a></dt>
-<dd>a helper function that is similar to <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="matplotlib.pyplot.subplot"><code class="xref py py-func docutils literal"><span class="pre">subplot()</span></code></a>
-but uses 0-based indexing and let subplot to occupy multiple cells.</dd>
+<dt><a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec" title="matplotlib.gridspec.SubplotSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubplotSpec</span></code></a></dt>
+<dd>Specifies the location of the subplot in the given <em>GridSpec</em>.</dd>
+<dt><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="matplotlib.pyplot.subplot2grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplot2grid()</span></code></a></dt>
+<dd>A helper function that is similar to <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="matplotlib.pyplot.subplot"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplot()</span></code></a>,
+but uses 0-based indexing and let subplot to occupy multiple cells.
+This function is not covered in this tutorial.</dd>
 </dl>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">as</span> <span class="nn">gridspec</span>
 </pre></div>
 </div>
-<div class="section" id="basic-example-of-using-subplot2grid">
-<h2>Basic Example of using subplot2grid<a class="headerlink" href="#basic-example-of-using-subplot2grid" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># To use :func:`~matplotlib.pyplot.subplot2grid`, you provide geometry of</span>
-<span class="c1"># the grid and the location of the subplot in the grid. For a simple</span>
-<span class="c1"># single-cell subplot</span>
-
-<span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-
-<span class="c1"># is identical to</span>
-
-<span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="section" id="basic-quickstart-guide">
+<h2>Basic Quickstart Guide<a class="headerlink" href="#basic-quickstart-guide" title="Permalink to this headline">¶</a></h2>
+<p>These first two examples show how to create a basic 4-by-4 grid using
+both <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> and <a class="reference internal" href="../../api/gridspec_api.html#module-matplotlib.gridspec" title="matplotlib.gridspec"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gridspec</span></code></a>.</p>
+<p>Using <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> is quite simple.
+It returns a <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a> instance and an array of
+<a class="reference internal" href="../../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code></a> objects.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig1</span><span class="p">,</span> <span class="n">f1_axes</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">fig1</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_001.png"><img alt="../../_images/sphx_glr_gridspec_001.png" src="../../_images/sphx_glr_gridspec_001.png" style="width: 300.79999999999995px; height: 225.6px;" /></a>
-</li>
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_002.png"><img alt="../../_images/sphx_glr_gridspec_002.png" src="../../_images/sphx_glr_gridspec_002.png" style="width: 300.79999999999995px; height: 225.6px;" /></a>
-</li>
-</ul>
-<p>Note that, unlike Matplotlib’s subplot, the index starts from 0 in GridSpec.</p>
-<p>To create a subplot that spans multiple cells:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">colspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rowspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<img alt="../../_images/sphx_glr_gridspec_001.png" class="align-center" src="../../_images/sphx_glr_gridspec_001.png" />
+<p>For a simple use case such as this, <a class="reference internal" href="../../api/gridspec_api.html#module-matplotlib.gridspec" title="matplotlib.gridspec"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gridspec</span></code></a> is
+perhaps overly verbose.
+You have to create the figure and <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="matplotlib.gridspec.GridSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSpec</span></code></a>
+instance separately, then pass elements of gridspec instance to the
+<a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_subplot()</span></code></a> method to create the axes
+objects.
+The elements of the gridspec are accessed in generally the same manner as
+numpy arrays.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">spec2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f2_ax1</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">f2_ax2</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">f2_ax3</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">f2_ax4</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">fig2</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_gridspec_002.png" class="align-center" src="../../_images/sphx_glr_gridspec_002.png" />
+<p>When you want to have subplots of different sizes, however,
+<a class="reference internal" href="../../api/gridspec_api.html#module-matplotlib.gridspec" title="matplotlib.gridspec"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gridspec</span></code></a> becomes indispensable and provides a couple
+of options.
+The method shown here initializes a uniform grid specification,
+and then uses typical numpy indexing and slices to allocate multiple
+“cells” for a given subplot.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">spec3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">anno_opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span>
+                 <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+<span class="n">fig3</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec3</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;GridSpec[0, 0]&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">anno_opts</span><span class="p">)</span>
+<span class="n">fig3</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec3</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;GridSpec[0, 1:]&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">anno_opts</span><span class="p">)</span>
+<span class="n">fig3</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec3</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;GridSpec[1:, 0]&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">anno_opts</span><span class="p">)</span>
+<span class="n">fig3</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec3</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;GridSpec[1:, 1:]&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">anno_opts</span><span class="p">)</span>
+
+<span class="n">fig3</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_gridspec_003.png" class="align-center" src="../../_images/sphx_glr_gridspec_003.png" />
-<p>For example, see the output of the following commands:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">colspan</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">colspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rowspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax4</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="n">ax5</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<p>Other option is to use the <code class="docutils literal notranslate"><span class="pre">width_ratios</span></code> and <code class="docutils literal notranslate"><span class="pre">height_ratios</span></code>
+parameters. These keyword arguments are lists of numbers.
+Note that absolute values are meaningless, only their relative ratios
+matter. That means that <code class="docutils literal notranslate"><span class="pre">width_ratios=[2,</span> <span class="pre">4,</span> <span class="pre">8]</span></code> is equivalent to
+<code class="docutils literal notranslate"><span class="pre">width_ratios=[1,</span> <span class="pre">2,</span> <span class="pre">4]</span></code> within equally wide figures.
+For the sake of demonstration, we’ll blindly create the axes within
+<code class="docutils literal notranslate"><span class="pre">for</span></code> loops since we won’t need them later.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig4</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
+<span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">spec4</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="n">widths</span><span class="p">,</span>
+                          <span class="n">height_ratios</span><span class="o">=</span><span class="n">heights</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig4</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec4</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Width: {}</span><span class="se">\n</span><span class="s1">Height: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">widths</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">heights</span><span class="p">[</span><span class="n">row</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+<span class="n">fig4</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_gridspec_004.png" class="align-center" src="../../_images/sphx_glr_gridspec_004.png" />
-</div>
-<div class="section" id="gridspec-and-subplotspec">
-<h2>GridSpec and SubplotSpec<a class="headerlink" href="#gridspec-and-subplotspec" title="Permalink to this headline">¶</a></h2>
-<p>You can create <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="matplotlib.gridspec.GridSpec"><code class="xref py py-class docutils literal"><span class="pre">GridSpec</span></code></a> explicitly and use
-them to create a subplot.</p>
-<p>For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<p>Learning to use <code class="docutils literal notranslate"><span class="pre">width_ratios</span></code> and <code class="docutils literal notranslate"><span class="pre">height_ratios</span></code> is particularly
+useful since the top-level function <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a>
+accepts them within the <code class="docutils literal notranslate"><span class="pre">gridspec_kw</span></code> parameter.
+For that matter, any parameter accepted by
+<a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="matplotlib.gridspec.GridSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSpec</span></code></a> can be passed to
+<a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> via the <code class="docutils literal notranslate"><span class="pre">gridspec_kw</span></code> parameter.
+This example recreates the previous figure without directly using a
+gridspec instance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gs_kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">width_ratios</span><span class="o">=</span><span class="n">widths</span><span class="p">,</span> <span class="n">height_ratios</span><span class="o">=</span><span class="n">heights</span><span class="p">)</span>
+<span class="n">fig5</span><span class="p">,</span> <span class="n">f5_axes</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="n">gs_kw</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f5_axes</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Width: {}</span><span class="se">\n</span><span class="s1">Height: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">widths</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">heights</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 
-<span class="c1"># is equal to:</span>
-
-<span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">gs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-
-<span class="c1"># A GridSpec instance provides array-like (2d or 1d) indexing that</span>
-<span class="c1"># returns the SubplotSpec instance. For a SubplotSpec that spans multiple</span>
-<span class="c1"># cells, use slice.</span>
-
-<span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">fig5</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_005.png"><img alt="../../_images/sphx_glr_gridspec_005.png" src="../../_images/sphx_glr_gridspec_005.png" style="width: 300.79999999999995px; height: 225.6px;" /></a>
-</li>
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_006.png"><img alt="../../_images/sphx_glr_gridspec_006.png" src="../../_images/sphx_glr_gridspec_006.png" style="width: 300.79999999999995px; height: 225.6px;" /></a>
-</li>
-</ul>
-<p>The above example becomes</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">gs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
-<span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax4</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="n">ax5</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<img alt="../../_images/sphx_glr_gridspec_005.png" class="align-center" src="../../_images/sphx_glr_gridspec_005.png" />
+</div>
+<div class="section" id="fine-adjustments-to-a-gridspec-layout">
+<h2>Fine Adjustments to a Gridspec Layout<a class="headerlink" href="#fine-adjustments-to-a-gridspec-layout" title="Permalink to this headline">¶</a></h2>
+<p>When a GridSpec is explicitly used, you can adjust the layout
+parameters of subplots that are created from the GridSpec.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.48</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_gridspec_006.png" class="align-center" src="../../_images/sphx_glr_gridspec_006.png" />
+<p>This is similar to <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots_adjust()</span></code></a>, but it only
+affects the subplots that are created from the given GridSpec.</p>
+<p>For example, compare the left and right sides of this figure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.48</span><span class="p">,</span>
+                        <span class="n">wspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="n">gs2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span>
+                        <span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">ax4</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs2</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax5</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax6</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_gridspec_007.png" class="align-center" src="../../_images/sphx_glr_gridspec_007.png" />
 </div>
-<div class="section" id="adjust-gridspec-layout">
-<h2>Adjust GridSpec layout<a class="headerlink" href="#adjust-gridspec-layout" title="Permalink to this headline">¶</a></h2>
-<p>When a GridSpec is explicitly used, you can adjust the layout
-parameters of subplots that are created from the GridSpec.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">gs1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.48</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<div class="section" id="gridspec-using-subplotspec">
+<h2>GridSpec using SubplotSpec<a class="headerlink" href="#gridspec-using-subplotspec" title="Permalink to this headline">¶</a></h2>
+<p>You can create GridSpec from the <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec" title="matplotlib.gridspec.SubplotSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubplotSpec</span></code></a>,
+in which case its layout parameters are set to that of the location of
+the given SubplotSpec.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">gs0</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">gs00</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">subplot_spec</span><span class="o">=</span><span class="n">gs0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">gs01</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">subplot_spec</span><span class="o">=</span><span class="n">gs0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs00</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs01</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_gridspec_008.png" class="align-center" src="../../_images/sphx_glr_gridspec_008.png" />
-<p>This is similar to <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><code class="xref py py-func docutils literal"><span class="pre">subplots_adjust()</span></code></a>, but it only
-affects the subplots that are created from the given GridSpec.</p>
-<p>For example, see this code and the resulting figure:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">gs1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.48</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
-<span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">gs2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">gs2</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">ax4</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs2</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax5</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax6</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
-<ul class="sphx-glr-horizontal">
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_009.png"><img alt="../../_images/sphx_glr_gridspec_009.png" src="../../_images/sphx_glr_gridspec_009.png" style="width: 300.79999999999995px; height: 225.6px;" /></a>
-</li>
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_010.png"><img alt="../../_images/sphx_glr_gridspec_010.png" src="../../_images/sphx_glr_gridspec_010.png" style="width: 300.79999999999995px; height: 225.6px;" /></a>
-</li>
-</ul>
-</div>
-<div class="section" id="gridspec-using-subplotspec">
-<h2>GridSpec using SubplotSpec<a class="headerlink" href="#gridspec-using-subplotspec" title="Permalink to this headline">¶</a></h2>
-<p>You can create GridSpec from the <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec" title="matplotlib.gridspec.SubplotSpec"><code class="xref py py-class docutils literal"><span class="pre">SubplotSpec</span></code></a>,
-in which case its layout parameters are set to that of the location of
-the given SubplotSpec.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">gs0</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="n">gs00</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">subplot_spec</span><span class="o">=</span><span class="n">gs0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">gs01</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">subplot_spec</span><span class="o">=</span><span class="n">gs0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
-<img alt="../../_images/sphx_glr_gridspec_011.png" class="align-center" src="../../_images/sphx_glr_gridspec_011.png" />
 </div>
 <div class="section" id="a-complex-nested-gridspec-using-subplotspec">
 <h2>A Complex Nested GridSpec using SubplotSpec<a class="headerlink" href="#a-complex-nested-gridspec-using-subplotspec" title="Permalink to this headline">¶</a></h2>
 <p>Here’s a more sophisticated example of nested GridSpec where we put
 a box around each cell of the outer 4x4 grid, by hiding appropriate
 spines in each of the inner 3x3 grids.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 
 
@@ -342,38 +352,15 @@ spines in each of the inner 3x3 grids.</p>
         <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
 
 <a href="../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
-
-<span class="c1"># GridSpec with Varying Cell Sizes</span>
-<span class="c1"># ================================</span>
-<span class="c1">#</span>
-<span class="c1"># By default, GridSpec creates cells of equal sizes. You can adjust</span>
-<span class="c1"># relative heights and widths of rows and columns. Note that absolute</span>
-<span class="c1"># values are meaningless, only their relative ratios matter.</span>
-
-<span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-<span class="n">gs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
-                       <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
-                       <span class="n">height_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-                       <span class="p">)</span>
-
-<span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax3</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">ax4</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_012.png"><img alt="../../_images/sphx_glr_gridspec_012.png" src="../../_images/sphx_glr_gridspec_012.png" style="width: 376.0px; height: 376.0px;" /></a>
-</li>
-<li><a class="first reference internal image-reference" href="../../_images/sphx_glr_gridspec_013.png"><img alt="../../_images/sphx_glr_gridspec_013.png" src="../../_images/sphx_glr_gridspec_013.png" style="width: 300.79999999999995px; height: 225.6px;" /></a>
-</li>
-</ul>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  6.655 seconds)</p>
+<img alt="../../_images/sphx_glr_gridspec_009.png" class="align-center" src="../../_images/sphx_glr_gridspec_009.png" />
+<p><strong>Total running time of the script:</strong> ( 0 minutes  1.663 seconds)</p>
 <div class="sphx-glr-footer docutils container">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/gridspec.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">gridspec.py</span></code></a></div>
+<a class="reference download internal" href="../../_downloads/gridspec.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">gridspec.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/gridspec.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">gridspec.ipynb</span></code></a></div>
+<a class="reference download internal" href="../../_downloads/gridspec.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">gridspec.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
@@ -388,9 +375,9 @@ spines in each of the inner 3x3 grids.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2017 The Matplotlib development team.
-      Last updated on Feb 08, 2018.
+      Last updated on Mar 06, 2018.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
     </div>
 
 <script>

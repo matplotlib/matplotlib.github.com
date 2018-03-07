@@ -1,6 +1,6 @@
-****************
+*******
 dviread
-****************
+*******
 
 :mod:`matplotlib.dviread`
 =========================
@@ -8,4 +8,5 @@ dviread
 .. automodule:: matplotlib.dviread
    :members:
    :undoc-members:
+   :exclude-members: Page, Text, Box
    :show-inheritance:

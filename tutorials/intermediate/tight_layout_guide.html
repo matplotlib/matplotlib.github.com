@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tight Layout guide &mdash; Matplotlib 2.1.2 documentation</title>
+    <title>Tight Layout guide &mdash; Matplotlib 2.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
@@ -17,7 +17,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.1.2',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -28,17 +28,19 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.1.2 documentation"
+          title="Search within Matplotlib 2.2.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.1.2 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 2.2.0 documentation" href="../../index.html" />
     <link rel="up" title="Tutorials" href="../index.html" />
-    <link rel="next" title="Path effects guide" href="../advanced/patheffects_guide.html" />
-    <link rel="prev" title="Artist tutorial" href="artists.html" /> 
+    <link rel="next" title="Constrained Layout Guide" href="constrainedlayout_guide.html" />
+    <link rel="prev" title="Customizing Figure Layouts Using GridSpec and Other Functions" href="gridspec.html" />
+  <link rel="canonical" href="https://matplotlib.org/tutorials/intermediate/tight_layout_guide.html" />
+
 
 
   </head>
@@ -47,7 +49,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.1.2</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -67,10 +69,10 @@ type="text/css" />
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../advanced/patheffects_guide.html" title="Path effects guide"
+          <a href="constrainedlayout_guide.html" title="Constrained Layout Guide"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="artists.html" title="Artist tutorial"
+          <a href="gridspec.html" title="Customizing Figure Layouts Using GridSpec and Other Functions"
              accesskey="P">previous</a> |</li>
 
         <li><a href="../../index.html">home</a>|&nbsp;</li>
@@ -85,22 +87,7 @@ type="text/css" />
 
   
       <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper"><a href="https://www.numfocus.org">
-  <image src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;colorA=E1523D&amp;colorB=007D8A">
-</a>
-
-<br/>
-
-<a href="http://depsy.org/package/python/matplotlib">
-  <img src="../../_static/depsy_badge.svg">
-</a>
-
-<br/>
-
-Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
-  <img src="https://travis-ci.org/matplotlib/matplotlib.svg?branch=master"/>
-</a>
-<br/>
+        <div class="sphinxsidebarwrapper">
   <h3><a href="../../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Tight Layout guide</a><ul>
@@ -118,8 +105,8 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <li><a href="../../contents.html">Documentation overview</a><ul>
   <li><a href="../../users/index.html">User’s Guide</a><ul>
   <li><a href="../index.html">Tutorials</a><ul>
-      <li>Previous: <a href="artists.html" title="previous chapter">Artist tutorial</a></li>
-      <li>Next: <a href="../advanced/patheffects_guide.html" title="next chapter">Path effects guide</a></li>
+      <li>Previous: <a href="gridspec.html" title="previous chapter">Customizing Figure Layouts Using GridSpec and Other Functions</a></li>
+      <li>Next: <a href="constrainedlayout_guide.html" title="next chapter">Constrained Layout Guide</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -134,12 +121,14 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -162,7 +151,9 @@ of ticklabels, axis labels, and titles.</p>
 normalized figure coordinates. It can happen that your axis labels or
 titles (or sometimes even ticklabels) go outside the figure area, and are thus
 clipped.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 7</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <a href="../../api/matplotlib_configuration_api.html#matplotlib.rcParams" title="View documentation for matplotlib.pyplot.rcParams"><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span></a><span class="p">[</span><span class="s1">&#39;savefig.facecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0.8&quot;</span>
@@ -185,21 +176,21 @@ clipped.</p>
 <p>To prevent this, the location of axes needs to be adjusted. For
 subplots, this can be done by adjusting the subplot params
 (<a class="reference internal" href="../../faq/howto_faq.html#howto-subplots-adjust"><span class="std std-ref">Move the edge of an axes to make room for tick labels</span></a>). Matplotlib v1.1 introduces a new
-command <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> that does this
+command <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> that does this
 automatically for you.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 <a href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="View documentation for matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_tight_layout_guide_002.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_002.png" />
-<p>Note that <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.tight_layout()</span></code></a> will only adjust the
+<p>Note that <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.tight_layout()</span></code></a> will only adjust the
 subplot params when it is called.  In order to perform this adjustment each
-time the figure is redrawn, you can call <code class="docutils literal"><span class="pre">fig.set_tight_layout(True)</span></code>, or,
-equivalently, set the <code class="docutils literal"><span class="pre">figure.autolayout</span></code> rcParam to <code class="docutils literal"><span class="pre">True</span></code>.</p>
+time the figure is redrawn, you can call <code class="docutils literal notranslate"><span class="pre">fig.set_tight_layout(True)</span></code>, or,
+equivalently, set the <code class="docutils literal notranslate"><span class="pre">figure.autolayout</span></code> rcParam to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <p>When you have multiple subplots, often you see labels of different
 axes overlapping each other.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">))</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
@@ -209,9 +200,9 @@ axes overlapping each other.</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_tight_layout_guide_003.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_003.png" />
-<p><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> will also adjust spacing between
+<p><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> will also adjust spacing between
 subplots to minimize the overlaps.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">))</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">))</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax2</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax3</span><span class="p">)</span>
@@ -220,11 +211,11 @@ subplots to minimize the overlaps.</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_tight_layout_guide_004.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_004.png" />
-<p><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> can take keyword arguments of
+<p><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> can take keyword arguments of
 <em>pad</em>, <em>w_pad</em> and <em>h_pad</em>. These control the extra padding around the
 figure border and between subplots. The pads are specified in fraction
 of fontsize.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">))</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">))</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax2</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax3</span><span class="p">)</span>
@@ -233,11 +224,11 @@ of fontsize.</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_tight_layout_guide_005.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_005.png" />
-<p><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> will work even if the sizes of
+<p><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> will work even if the sizes of
 subplots are different as far as their grid specification is
 compatible. In the example below, <em>ax1</em> and <em>ax2</em> are subplots of a 2x2
 grid, while <em>ax3</em> is of a 1x2 grid.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
@@ -253,9 +244,9 @@ grid, while <em>ax3</em> is of a 1x2 grid.</p>
 </div>
 <img alt="../../_images/sphx_glr_tight_layout_guide_006.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_006.png" />
 <p>It works with subplots created with
-<a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="matplotlib.pyplot.subplot2grid"><code class="xref py py-func docutils literal"><span class="pre">subplot2grid()</span></code></a>. In general, subplots created
-from the gridspec (<a class="reference internal" href="gridspec.html#sphx-glr-tutorials-intermediate-gridspec-py"><span class="std std-ref">Customizing Location of Subplot Using GridSpec</span></a>) will work.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="matplotlib.pyplot.subplot2grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplot2grid()</span></code></a>. In general, subplots created
+from the gridspec (<a class="reference internal" href="gridspec.html#sphx-glr-tutorials-intermediate-gridspec-py"><span class="std std-ref">Customizing Figure Layouts Using GridSpec and Other Functions</span></a>) will work.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -274,7 +265,7 @@ from the gridspec (<a class="reference internal" href="gridspec.html#sphx-glr-tu
 <img alt="../../_images/sphx_glr_tight_layout_guide_007.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_007.png" />
 <p>Although not thoroughly tested, it seems to work for subplots with
 aspect != “auto” (e.g., axes with images).</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">arr</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 
 <a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
@@ -291,7 +282,7 @@ aspect != “auto” (e.g., axes with images).</p>
 <h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> only considers ticklabels, axis
+<li><a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> only considers ticklabels, axis
 labels, and titles. Thus, other artists may be clipped and also may
 overlap.</li>
 <li>It assumes that the extra space needed for ticklabels, axis labels,
@@ -306,9 +297,9 @@ recommended.</li>
 </div>
 <div class="section" id="use-with-gridspec">
 <h2>Use with GridSpec<a class="headerlink" href="#use-with-gridspec" title="Permalink to this headline">¶</a></h2>
-<p>GridSpec has its own <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.tight_layout" title="matplotlib.gridspec.GridSpec.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> method
-(the pyplot api <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> also works).</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">as</span> <span class="nn">gridspec</span>
+<p>GridSpec has its own <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.tight_layout" title="matplotlib.gridspec.GridSpec.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> method
+(the pyplot api <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> also works).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">as</span> <span class="nn">gridspec</span>
 
 <a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
@@ -327,7 +318,7 @@ recommended.</li>
 <p>You may provide an optional <em>rect</em> parameter, which specifies the bounding box
 that the subplots will be fit inside. The coordinates must be in normalized
 figure coordinates and the default is (0, 0, 1, 1).</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
 <span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -341,7 +332,7 @@ figure coordinates and the default is (0, 0, 1, 1).</p>
 </div>
 <img alt="../../_images/sphx_glr_tight_layout_guide_010.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_010.png" />
 <p>For example, this can be used for a figure with multiple gridspecs.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
 <span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -376,12 +367,12 @@ figure coordinates and the default is (0, 0, 1, 1).</p>
 <img alt="../../_images/sphx_glr_tight_layout_guide_011.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_011.png" />
 <p>While this should be mostly good enough, adjusting top and bottom
 may require adjustment of hspace also.  To update hspace &amp; vspace, we
-call <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.tight_layout" title="matplotlib.gridspec.GridSpec.tight_layout"><code class="xref py py-func docutils literal"><span class="pre">tight_layout()</span></code></a> again with updated
+call <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.tight_layout" title="matplotlib.gridspec.GridSpec.tight_layout"><code class="xref py py-func docutils literal notranslate"><span class="pre">tight_layout()</span></code></a> again with updated
 rect argument. Note that the rect argument specifies the area including the
 ticklabels, etc.  Thus, we will increase the bottom (which is 0 for the normal
 case) by the difference between the <em>bottom</em> from above and the bottom of each
 gridspec. Same thing for the top.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.gcf.html#matplotlib.pyplot.gcf" title="View documentation for matplotlib.pyplot.gcf"><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span></a><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.gcf.html#matplotlib.pyplot.gcf" title="View documentation for matplotlib.pyplot.gcf"><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span></a><span class="p">()</span>
 
 <span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -425,7 +416,7 @@ gridspec. Same thing for the top.</p>
 <div class="section" id="use-with-axesgrid1">
 <h2>Use with AxesGrid1<a class="headerlink" href="#use-with-axesgrid1" title="Permalink to this headline">¶</a></h2>
 <p>While limited, the axes_grid1 toolkit is also supported.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">Grid</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">Grid</span>
 
 <a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
@@ -444,11 +435,11 @@ gridspec. Same thing for the top.</p>
 </div>
 <div class="section" id="colorbar">
 <h2>Colorbar<a class="headerlink" href="#colorbar" title="Permalink to this headline">¶</a></h2>
-<p>If you create a colorbar with the <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.colorbar.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar"><code class="xref py py-func docutils literal"><span class="pre">colorbar()</span></code></a>
+<p>If you create a colorbar with the <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.colorbar.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar"><code class="xref py py-func docutils literal notranslate"><span class="pre">colorbar()</span></code></a>
 command, the created colorbar is an instance of Axes, <em>not</em> Subplot, so
 tight_layout does not work. With Matplotlib v1.1, you may create a
 colorbar as a subplot using the gridspec.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="n">arr</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">im</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="View documentation for matplotlib.pyplot.imshow"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span></a><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
@@ -461,7 +452,7 @@ colorbar as a subplot using the gridspec.</p>
 <img alt="../../_images/sphx_glr_tight_layout_guide_014.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_014.png" />
 <p>Another option is to use AxesGrid1 toolkit to
 explicitly create an axes for colorbar.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <a href="../../api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="View documentation for matplotlib.pyplot.close"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="n">arr</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
@@ -476,12 +467,11 @@ explicitly create an axes for colorbar.</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_tight_layout_guide_015.png" class="align-center" src="../../_images/sphx_glr_tight_layout_guide_015.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  1.843 seconds)</p>
 <div class="sphx-glr-footer docutils container">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/tight_layout_guide.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tight_layout_guide.py</span></code></a></div>
+<a class="reference download internal" href="../../_downloads/tight_layout_guide.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tight_layout_guide.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/tight_layout_guide.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tight_layout_guide.ipynb</span></code></a></div>
+<a class="reference download internal" href="../../_downloads/tight_layout_guide.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tight_layout_guide.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
@@ -496,9 +486,9 @@ explicitly create an axes for colorbar.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2017 The Matplotlib development team.
-      Last updated on Feb 08, 2018.
+      Last updated on Mar 06, 2018.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
     </div>
 
 <script>

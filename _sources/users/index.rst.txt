@@ -12,14 +12,10 @@ User's Guide
 .. toctree::
     :maxdepth: 2
 
-    intro.rst
+    history.rst
     installing.rst
-    tutorials.rst
-    index_text.rst
-    color_index.rst
-    customizing.rst
+    ../tutorials/index.rst
     interactive.rst
-    examples_index
     whats_new.rst
     github_stats.rst
     license.rst

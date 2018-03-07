@@ -6,17 +6,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>MEP15 - Fix axis autoscaling when limits are specified for one axis only &mdash; Matplotlib 2.0.0 documentation</title>
+    <title>MEP15 - Fix axis autoscaling when limits are specified for one axis only &mdash; Matplotlib 2.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.0.0',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,32 +28,32 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.0.0 documentation"
+          title="Search within Matplotlib 2.2.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.0.0 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 2.2.0 documentation" href="../../index.html" />
     <link rel="up" title="Matplotlib Enhancement Proposals" href="index.html" />
     <link rel="next" title="MEP19: Continuous Integration" href="MEP19.html" />
-    <link rel="prev" title="MEP14: Text handling" href="MEP14.html" /> 
+    <link rel="prev" title="MEP14: Text handling" href="MEP14.html" />
+  <link rel="canonical" href="https://matplotlib.org/devel/MEP/MEP15.html" />
+
 
 
   </head>
   <body>
 
 
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.0</span></div>
+    <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
-<img style="float: right; margin-bottom: -40px; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" usemap="#ribbonmap"/>
-<map name="ribbonmap">
-    <area shape="poly" coords="15,0,148,-1,148,135" href="https://github.com/matplotlib/matplotlib" title="Fork me on GitHub" />
-</map>
-
-<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
-<a href="../../index.html"><img src="../../_static/logo2.svg" width="540px" border="0" alt="matplotlib"/></a>
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
 </div>
 
 
@@ -75,11 +76,11 @@ type="text/css" />
              accesskey="P">previous</a> |</li>
 
         <li><a href="../../index.html">home</a>|&nbsp;</li>
-        <li><a href="../../examples/index.html">examples</a>|&nbsp;</li>
-        <li><a href="../../gallery.html">gallery</a>|&nbsp;</li>
+        <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
         <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
-          <li><a href="../index.html" >The Matplotlib Developers&#8217; Guide</a> &raquo;</li>
+          <li><a href="../index.html" >The Matplotlib Developers’ Guide</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Matplotlib Enhancement Proposals</a> &raquo;</li> 
       </ul>
     </div>
@@ -87,16 +88,6 @@ type="text/css" />
   
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-<a href="http://depsy.org/package/python/matplotlib">
-  <img src="http://depsy.org/api/package/pypi/matplotlib/badge.svg">
-</a>
-
-<br/>
-
-Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
-  <img src="https://travis-ci.org/matplotlib/matplotlib.svg?branch=master"/>
-</a>
-<br/>
   <h3><a href="../../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">MEP15 - Fix axis autoscaling when limits are specified for one axis only</a><ul>
@@ -114,7 +105,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../contents.html">Documentation overview</a><ul>
-  <li><a href="../index.html">The Matplotlib Developers&#8217; Guide</a><ul>
+  <li><a href="../index.html">The Matplotlib Developers’ Guide</a><ul>
   <li><a href="index.html">Matplotlib Enhancement Proposals</a><ul>
       <li>Previous: <a href="MEP14.html" title="previous chapter">MEP14: Text handling</a></li>
       <li>Next: <a href="MEP19.html" title="next chapter">MEP19: Continuous Integration</a></li>
@@ -132,17 +123,18 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
@@ -171,14 +163,14 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 </div>
 <div class="section" id="abstract">
 <h2><a class="toc-backref" href="#id3">Abstract</a><a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
-<p>When one axis of a 2-dimensional plot if overridden via <code class="xref py py-obj docutils literal"><span class="pre">xlim</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">ylim</span></code>,
+<p>When one axis of a 2-dimensional plot if overridden via <code class="xref py py-obj docutils literal notranslate"><span class="pre">xlim</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">ylim</span></code>,
 automatic scaling of the remaining axis should be based on the data that falls
 within the specified limits of the first axis.</p>
 </div>
 <div class="section" id="detailed-description">
 <h2><a class="toc-backref" href="#id4">Detailed description</a><a class="headerlink" href="#detailed-description" title="Permalink to this headline">¶</a></h2>
-<p>When axis limits for a 2-D plot are specified for one axis only (via <code class="xref py py-obj docutils literal"><span class="pre">xlim</span></code> or
-<code class="xref py py-obj docutils literal"><span class="pre">ylim</span></code>), matplotlib currently does not currently rescale the other axis.  The
+<p>When axis limits for a 2-D plot are specified for one axis only (via <code class="xref py py-obj docutils literal notranslate"><span class="pre">xlim</span></code> or
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">ylim</span></code>), matplotlib currently does not currently rescale the other axis.  The
 result is that the displayed curves or symbols may be compressed into a tiny
 portion of the available area, so that the final plot conveys much less
 information than it would with appropriate axis scaling.</p>
@@ -188,7 +180,7 @@ where limits were specified.</p>
 </div>
 <div class="section" id="implementation">
 <h2><a class="toc-backref" href="#id5">Implementation</a><a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
-<p>I don&#8217;t know enough about the internals of matplotlib to be able to suggest an
+<p>I don’t know enough about the internals of matplotlib to be able to suggest an
 implementation.</p>
 </div>
 <div class="section" id="backward-compatibility">
@@ -212,10 +204,10 @@ the axis scaling for both axes.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
-      Last updated on Feb 20, 2017.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2017 The Matplotlib development team.
+      Last updated on Mar 06, 2018.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
     </div>
 
 <script>
@@ -321,52 +313,6 @@ position:fixed; z-index:999999; overflow: auto;
 }
 
 </style>
-
-<script>
-
-function open_window(cause_id) {
-var  protocol=String(document.location.protocol);
-var new_url;
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-new_url="https://www.flipcause.com/widget/"+cause_id
-window.open(new_url);
-}
-
-else {
-document.getElementById("fc-fade").style.display = "block";
-document.getElementById("fc-fade").style.webkitAnimation = "backfadesin 1s";
-document.getElementById("fc-fade").style.animation = "backfadesin 1s";
-document.getElementById("fc-fade").style.mozAnimation = "backfadesin 1s";
-document.getElementById("fc-light").style.display = "block";
-document.getElementById("fc-light").style.webkitAnimation = "fadesin 1.5s";
-document.getElementById("fc-light").style.animation = "fadesin 1.5s";
-document.getElementById("fc-light").style.mozAnimation = "fadesin 1.5s";
-document.getElementById("fc-main").style.display = "block";
-document.getElementById("fc-main").style.webkitAnimation = "fadesin 1.5s";
-document.getElementById("fc-main").style.animation = "fadesin 1.5s";
-document.getElementById("fc-main").style.mozAnimation = "fadesin 1.5s";
-document.getElementById("fc-close").style.display = "block";
-document.getElementById("fc-close").style.webkitAnimation = "fadesin 1.5s";
-document.getElementById("fc-close").style.animation = "fadesin 1.5s";
-document.getElementById("fc-close").style.mozAnimation = "fadesin 1.5s";
-document.getElementById("fc-myFrame").style.display = "block";
-document.getElementById("fc-myFrame").style.webkitAnimation = "fadesin 1.5s";
-document.getElementById("fc-myFrame").style.animation = "fadesin 1.5s";
-document.getElementById("fc-myFrame").style.mozAnimation = "fadesin 1.5s";
-document.getElementById("fc-myFrame").src="https://www.flipcause.com/widget/"+cause_id;
-}
-}
-
-
-function close_window() {
-document.getElementById("fc-fade").style.display="none";
-document.getElementById("fc-light").style.display="none";
-document.getElementById("fc-main").style.display="none";
-document.getElementById("fc-close").style.display="none";
-document.getElementById("fc-myFrame").style.display="none";
-}
-
-</script>
 
 <div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
 <div id="fc-light" class="fc-white_content">

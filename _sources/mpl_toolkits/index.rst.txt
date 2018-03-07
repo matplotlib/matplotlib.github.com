@@ -1,11 +1,5 @@
 .. _toolkits-index:
 
-.. toctree::
-   :hidden:
-
-   axes_grid/index.rst
-   mplot3d/index.rst
-
 .. _toolkits:
 
 ########
@@ -14,222 +8,70 @@ Toolkits
 
 
 
-Toolkits are collections of application-specific functions that extend matplotlib.
+Toolkits are collections of application-specific functions that extend
+Matplotlib.
 
-
-.. _toolkits-mapping:
-
-
-Mapping Toolkits
-****************
-
-
-.. _toolkit_basemap:
-
-Basemap
-=======
-(*Not distributed with matplotlib*)
-
-Plots data on map projections, with continental and political
-boundaries, see `basemap <http://matplotlib.org/basemap>`_
-docs.
-
-.. image:: /_static/basemap_contour1.png
-    :height: 400px
-
-
-
-Cartopy
-=======
-(*Not distributed with matplotlib*)
-
-An alternative mapping library written for matplotlib ``v1.2`` and beyond.
-`Cartopy <http://scitools.org.uk/cartopy/docs/latest>`_ builds on top of
-matplotlib to provide object oriented map projection definitions and close
-integration with Shapely for powerful yet easy-to-use vector data processing
-tools. An example plot from the
-`Cartopy gallery <http://scitools.org.uk/cartopy/docs/latest/gallery.html>`_:
-
-.. image:: /_static/cartopy_hurricane_katrina_01_00.png
-    :height: 400px
-
-
-.. _toolkits-shipped:
-
-
-General Toolkits
-****************
 
 .. _toolkit_mplot3d:
 
 mplot3d
 =======
+
+:mod:`mpl_toolkits.mplot3d` provides some basic 3D
+plotting (scatter, surf, line, mesh) tools.  Not the fastest or most feature
+complete 3D library out there, but it ships with Matplotlib and thus may be a
+lighter weight solution for some use cases. Check out the
+:ref:`mplot3d tutorial <sphx_glr_tutorials_toolkits_mplot3d.py>` for more
+information.
+
+.. figure:: ../gallery/mplot3d/images/sphx_glr_contourf3d_2_001.png
+   :target: ../gallery/mplot3d/contourf3d_2.html
+   :align: center
+   :scale: 50
+
+   Contourf3d 2
+
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   mplot3d/index
+    mplot3d/index.rst
+    mplot3d/faq.rst
 
+Links
+-----
+* mpl3d API: :ref:`toolkit_mplot3d-api`
 
-:ref:`mpl_toolkits.mplot3d <toolkit_mplot3d-index>` provides some basic 3D plotting (scatter, surf,
-line, mesh) tools.  Not the fastest or feature complete 3D library out
-there, but ships with matplotlib and thus may be a lighter weight
-solution for some use cases.
+.. _toolkit_axes_grid1:
 
-.. plot:: mpl_examples/mplot3d/contourf3d_demo2.py
+axes_grid1
+==========
 
-.. _toolkit_axes_grid:
-
-AxesGrid
-========
-.. toctree::
-   :maxdepth: 2
-
-   axes_grid/index
-
-
-The matplotlib :ref:`AxesGrid <toolkit_axesgrid-index>` toolkit is a collection of helper classes to
-ease displaying multiple images in matplotlib. The AxesGrid toolkit is
-distributed with matplotlib source.
-
-
+The :mod:`mpl_toolkits.axes_grid1` toolkit is a
+collection of helper classes for displaying multiple axes in Matplotlib.
 
 .. image:: /_static/demo_axes_grid.png
 
+.. toctree::
+    :maxdepth: 2
 
-.. _toolkit_mplcursors:
+    axes_grid1/index.rst
 
-mplcursors
+
+.. _toolkit_axisartist:
+
+axisartist
 ==========
 
-`mplcursors <https://mplcursors.readthedocs.io>`_ provides interactive
-data cursors for matplotlib.
+The :mod:`mpl_toolkits.axisartist` toolkit contains
+a custom Axes class that is meant to support curvilinear grids.
+
+.. toctree::
+    :maxdepth: 2
+
+    axisartist/index.rst
 
 
-.. _toolkit_mpldatacursor:
+API
+---
+* Axes Grid and Axis Artist API: :ref:`axes_grid-api-index`
 
-MplDataCursor
-=============
-(*Not distributed with matplotlib*)
-
-`MplDataCursor <https://github.com/joferkington/mpldatacursor>`_ is a
-toolkit written by Joe Kington to provide interactive "data cursors"
-(clickable annotation boxes) for matplotlib.
-
-
-.. _toolkit_gtk:
-
-GTK Tools
-=========
-
-mpl_toolkits.gtktools provides some utilities for working with GTK.
-This toolkit ships with matplotlib, but requires `pygtk
-<http://www.pygtk.org/>`_.
-
-
-.. _toolkit_excel:
-
-Excel Tools
-===========
-
-mpl_toolkits.exceltools provides some utilities for working with
-Excel.  This toolkit ships with matplotlib, but requires
-`xlwt <https://pypi.python.org/pypi/xlwt>`_
-
-
-.. _toolkit_natgrid:
-
-Natgrid
-=======
-(*Not distributed with matplotlib*)
-
-mpl_toolkits.natgrid is an interface to natgrid C library for gridding
-irregularly spaced data.  This requires a separate installation of the
-`natgrid toolkit <https://github.com/matplotlib/natgrid>`__.
-
-
-.. _toolkit_matplotlibvenn:
-
-Matplotlib-Venn
-===============
-(*Not distributed with matplotlib*)
-
-`Matplotlib-Venn <https://github.com/konstantint/matplotlib-venn>`_ provides a set of functions for plotting 2- and 3-set area-weighted (or unweighted) Venn diagrams.
-
-mplstereonet
-===============
-(*Not distributed with matplotlib*)
-
-`mplstereonet <https://github.com/joferkington/mplstereonet>`_ provides stereonets for plotting and analyzing orientation data in Matplotlib.
-
-
-.. _hl_plotting:
-
-High-Level Plotting
-*******************
-
-Several projects have started to provide a higher-level interface to
-matplotlib.  These are independent projects.
-
-.. _toolkit_seaborn:
-
-seaborn
-=======
-(*Not distributed with matplotlib*)
-
-`seaborn <https://seaborn.github.io/>`_ is a high level interface for drawing
-statistical graphics with matplotlib. It aims to make visualization a central
-part of exploring and understanding complex datasets.
-
-.. image:: /_static/seaborn.png
-    :height: 157px
-
-.. _toolkit_holoviews:
-
-holoviews
-=========
-(*Not distributed with matplotlib*)
-
-`holoviews <http://holoviews.org>`_ makes it easier to visualize data
-interactively, especially in a `Jupyter notebook
-<http://jupyter.org>`_, by providing a set of declarative
-plotting objects that store your data and associated metadata.  Your
-data is then immediately visualizable alongside or overlaid with other
-data, either statically or with automatically provided widgets for
-parameter exploration.
-
-.. image:: /_static/holoviews.png
-    :height: 354px
-
-.. _toolkit_ggplot:
-
-ggplot
-======
-(*Not distributed with matplotlib*)
-
-`ggplot <https://github.com/yhat/ggplot>`_ is a port of the R ggplot2
-to python based on matplotlib.
-
-.. image:: /_static/ggplot.png
-    :height: 195px
-
-
-.. _toolkit_prettyplotlib:
-
-prettyplotlib
-=============
-(*Not distributed with matplotlib*)
-
-`prettyplotlib <https://olgabot.github.io/prettyplotlib>`_ is an extension
-to matplotlib which changes many of the defaults to make plots some
-consider more attractive.
-
-
-iTerm2 terminal backend
-=======================
-(*Not distributed with matplotlib*)
-
-`matplotlib_iterm2 <https://github.com/oselivanov/matplotlib_iterm2>`_ is an
-external matplotlib backend uses iTerm2 nightly build inline image display
-feature.
-
-.. image:: /_static/matplotlib_iterm2_demo.png

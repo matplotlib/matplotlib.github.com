@@ -22,7 +22,6 @@ functionality of imshow and the many images you can create.
 
     import numpy as np
     import matplotlib.cm as cm
-    import matplotlib.mlab as mlab
     import matplotlib.pyplot as plt
     import matplotlib.cbook as cbook
     from matplotlib.path import Path
@@ -44,9 +43,9 @@ First we'll generate a simple bivariate normal distribution.
     delta = 0.025
     x = y = np.arange(-3.0, 3.0, delta)
     X, Y = np.meshgrid(x, y)
-    Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)
-    Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
-    Z = Z2 - Z1  # difference of Gaussians
+    Z1 = np.exp(-X**2 - Y**2)
+    Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+    Z = (Z1 - Z2) * 2
 
     im = plt.imshow(Z, interpolation='bilinear', cmap=cm.RdYlGn,
                     origin='lower', extent=[-3, 3, -3, 3],
@@ -236,9 +235,9 @@ Finally, we'll show an image using a clip path.
     delta = 0.025
     x = y = np.arange(-3.0, 3.0, delta)
     X, Y = np.meshgrid(x, y)
-    Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)
-    Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
-    Z = Z2 - Z1  # difference of Gaussians
+    Z1 = np.exp(-X**2 - Y**2)
+    Z2 = np.exp(-(X - 1)**2 - (Y - 1)**2)
+    Z = (Z1 - Z2) * 2
 
     path = Path([[0, 1], [1, 0], [0, -1], [-1, 0], [0, 1]])
     patch = PathPatch(path, facecolor='none')
@@ -260,8 +259,6 @@ Finally, we'll show an image using a clip path.
 
 
 
-
-**Total running time of the script:** ( 0 minutes  0.225 seconds)
 
 
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Specifying Colors &mdash; Matplotlib 2.1.2 documentation</title>
+    <title>Specifying Colors &mdash; Matplotlib 2.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
@@ -17,7 +17,7 @@ type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.1.2',
+        VERSION:     '2.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -28,17 +28,19 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.1.2 documentation"
+          title="Search within Matplotlib 2.2.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.1.2 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 2.2.0 documentation" href="../../index.html" />
     <link rel="up" title="Tutorials" href="../index.html" />
     <link rel="next" title="Customized Colorbars Tutorial" href="colorbar_only.html" />
-    <link rel="prev" title="Transformations Tutorial" href="../advanced/transforms_tutorial.html" /> 
+    <link rel="prev" title="Transformations Tutorial" href="../advanced/transforms_tutorial.html" />
+  <link rel="canonical" href="https://matplotlib.org/tutorials/colors/colors.html" />
+
 
 
   </head>
@@ -47,7 +49,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.1.2</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -85,22 +87,7 @@ type="text/css" />
 
   
       <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper"><a href="https://www.numfocus.org">
-  <image src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;colorA=E1523D&amp;colorB=007D8A">
-</a>
-
-<br/>
-
-<a href="http://depsy.org/package/python/matplotlib">
-  <img src="../../_static/depsy_badge.svg">
-</a>
-
-<br/>
-
-Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
-  <img src="https://travis-ci.org/matplotlib/matplotlib.svg?branch=master"/>
-</a>
-<br/>
+        <div class="sphinxsidebarwrapper">
   <h3><a href="../../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Specifying Colors</a><ul>
@@ -131,12 +118,14 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -150,30 +139,41 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <span id="sphx-glr-tutorials-colors-colors-py"></span><h1>Specifying Colors<a class="headerlink" href="#specifying-colors" title="Permalink to this headline">¶</a></h1>
 <p>Matplotlib recognizes the following formats to specify a color:</p>
 <ul class="simple">
-<li>an RGB or RGBA tuple of float values in <code class="docutils literal"><span class="pre">[0,</span> <span class="pre">1]</span></code> (e.g., <code class="docutils literal"><span class="pre">(0.1,</span> <span class="pre">0.2,</span> <span class="pre">0.5)</span></code>
-or  <code class="docutils literal"><span class="pre">(0.1,</span> <span class="pre">0.2,</span> <span class="pre">0.5,</span> <span class="pre">0.3)</span></code>);</li>
-<li>a hex RGB or RGBA string (e.g., <code class="docutils literal"><span class="pre">'#0F0F0F'</span></code> or <code class="docutils literal"><span class="pre">'#0F0F0F0F'</span></code>);</li>
-<li>a string representation of a float value in <code class="docutils literal"><span class="pre">[0,</span> <span class="pre">1]</span></code> inclusive for gray
-level (e.g., <code class="docutils literal"><span class="pre">'0.5'</span></code>);</li>
-<li>one of <code class="docutils literal"><span class="pre">{'b',</span> <span class="pre">'g',</span> <span class="pre">'r',</span> <span class="pre">'c',</span> <span class="pre">'m',</span> <span class="pre">'y',</span> <span class="pre">'k',</span> <span class="pre">'w'}</span></code>;</li>
+<li>an RGB or RGBA tuple of float values in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">(0.1,</span> <span class="pre">0.2,</span> <span class="pre">0.5)</span></code>
+or  <code class="docutils literal notranslate"><span class="pre">(0.1,</span> <span class="pre">0.2,</span> <span class="pre">0.5,</span> <span class="pre">0.3)</span></code>).  RGBA is short for Red, Green, Blue, Alpha;</li>
+<li>a hex RGB or RGBA string (e.g., <code class="docutils literal notranslate"><span class="pre">'#0F0F0F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'#0F0F0F0F'</span></code>);</li>
+<li>a string representation of a float value in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code> inclusive for gray
+level (e.g., <code class="docutils literal notranslate"><span class="pre">'0.5'</span></code>);</li>
+<li>one of <code class="docutils literal notranslate"><span class="pre">{'b',</span> <span class="pre">'g',</span> <span class="pre">'r',</span> <span class="pre">'c',</span> <span class="pre">'m',</span> <span class="pre">'y',</span> <span class="pre">'k',</span> <span class="pre">'w'}</span></code>;</li>
 <li>a X11/CSS4 color name;</li>
 <li>a name from the <a class="reference external" href="https://xkcd.com/color/rgb/">xkcd color survey</a>;
-prefixed with <code class="docutils literal"><span class="pre">'xkcd:'</span></code> (e.g., <code class="docutils literal"><span class="pre">'xkcd:sky</span> <span class="pre">blue'</span></code>);</li>
-<li>one of <code class="docutils literal"><span class="pre">{'tab:blue',</span> <span class="pre">'tab:orange',</span> <span class="pre">'tab:green',</span>
+prefixed with <code class="docutils literal notranslate"><span class="pre">'xkcd:'</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">'xkcd:sky</span> <span class="pre">blue'</span></code>);</li>
+<li>one of <code class="docutils literal notranslate"><span class="pre">{'tab:blue',</span> <span class="pre">'tab:orange',</span> <span class="pre">'tab:green',</span>
 <span class="pre">'tab:red',</span> <span class="pre">'tab:purple',</span> <span class="pre">'tab:brown',</span> <span class="pre">'tab:pink',</span>
 <span class="pre">'tab:gray',</span> <span class="pre">'tab:olive',</span> <span class="pre">'tab:cyan'}</span></code> which are the Tableau Colors from the
 ‘T10’ categorical palette (which is the default color cycle);</li>
-<li>a “CN” color spec, i.e. <code class="xref py py-obj docutils literal"><span class="pre">'C'</span></code> followed by a single digit, which is an index
-into the default property cycle (<code class="docutils literal"><span class="pre">matplotlib.rcParams['axes.prop_cycle']</span></code>);
+<li>a “CN” color spec, i.e. <code class="xref py py-obj docutils literal notranslate"><span class="pre">'C'</span></code> followed by a single digit, which is an index
+into the default property cycle (<code class="docutils literal notranslate"><span class="pre">matplotlib.rcParams['axes.prop_cycle']</span></code>);
 the indexing occurs at artist creation time and defaults to black if the
 cycle does not include color.</li>
 </ul>
+<p>“Red”, “Green” and “Blue”, are the intensities of those colors, the combination
+of which span the colorspace.</p>
+<p>How “Alpha” behaves depends on the <code class="docutils literal notranslate"><span class="pre">zorder</span></code> of the Artist.  Higher
+<code class="docutils literal notranslate"><span class="pre">zorder</span></code> Artists are drawn on top of lower Artists, and “Alpha” determines
+whether the lower artist is covered by the higher.
+If the old RGB of a pixel is <code class="docutils literal notranslate"><span class="pre">RGBold</span></code> and the RGB of the
+pixel of the Artist being added is <code class="docutils literal notranslate"><span class="pre">RGBnew</span></code> with Alpha <code class="docutils literal notranslate"><span class="pre">alpha</span></code>,
+then the RGB of the pixel is updated to:
+<code class="docutils literal notranslate"><span class="pre">RGB</span> <span class="pre">=</span> <span class="pre">RGBOld</span> <span class="pre">*</span> <span class="pre">(1</span> <span class="pre">-</span> <span class="pre">Alpha)</span> <span class="pre">+</span> <span class="pre">RGBnew</span> <span class="pre">*</span> <span class="pre">Alpha</span></code>.  Alpha
+of 1 means the old color is completely covered by the new Artist, Alpha of 0
+means that pixel of the Artist is transparent.</p>
 <p>All string specifications of color, other than “CN”, are case-insensitive.</p>
 <div class="section" id="cn-color-selection">
 <h2>“CN” color selection<a class="headerlink" href="#cn-color-selection" title="Permalink to this headline">¶</a></h2>
 <p>“CN” colors are converted to RGBA as soon as the artist is created.  For
 example,</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
 
@@ -201,7 +201,7 @@ example,</p>
 </li>
 </ul>
 <p>will use the first color for the title and then plot using the second
-and third colors of each style’s <code class="docutils literal"><span class="pre">mpl.rcParams['axes.prop_cycle']</span></code>.</p>
+and third colors of each style’s <code class="docutils literal notranslate"><span class="pre">mpl.rcParams['axes.prop_cycle']</span></code>.</p>
 </div>
 <div class="section" id="xkcd-v-x11-css4">
 <h2>xkcd v X11/CSS4<a class="headerlink" href="#xkcd-v-x11-css4" title="Permalink to this headline">¶</a></h2>
@@ -209,14 +209,14 @@ and third colors of each style’s <code class="docutils literal"><span class="p
 webcomic xkcd.  <a class="reference external" href="https://blog.xkcd.com/2010/05/03/color-survey-results/">Details of the survey are available on the xkcd blog</a>.</p>
 <p>Out of 148 colors in the CSS color list, there are 95 name collisions
 between the X11/CSS4 names and the xkcd names, all but 3 of which have
-different hex values.  For example <code class="docutils literal"><span class="pre">'blue'</span></code> maps to <code class="docutils literal"><span class="pre">'#0000FF'</span></code>
-where as <code class="docutils literal"><span class="pre">'xkcd:blue'</span></code> maps to <code class="docutils literal"><span class="pre">'#0343DF'</span></code>.  Due to these name
-collisions all of the xkcd colors have <code class="docutils literal"><span class="pre">'xkcd:'</span></code> prefixed.  As noted in
+different hex values.  For example <code class="docutils literal notranslate"><span class="pre">'blue'</span></code> maps to <code class="docutils literal notranslate"><span class="pre">'#0000FF'</span></code>
+where as <code class="docutils literal notranslate"><span class="pre">'xkcd:blue'</span></code> maps to <code class="docutils literal notranslate"><span class="pre">'#0343DF'</span></code>.  Due to these name
+collisions all of the xkcd colors have <code class="docutils literal notranslate"><span class="pre">'xkcd:'</span></code> prefixed.  As noted in
 the blog post, while it might be interesting to re-define the X11/CSS4 names
 based on such a survey, we do not do so unilaterally.</p>
 <p>The name collisions are shown in the table below; the color names
 where the hex values agree are shown in bold.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib._color_data</span> <span class="kn">as</span> <span class="nn">mcd</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib._color_data</span> <span class="kn">as</span> <span class="nn">mcd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="kn">as</span> <span class="nn">mpatch</span>
 
 <span class="n">overlap</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">mcd</span><span class="o">.</span><span class="n">CSS4_COLORS</span>
@@ -248,12 +248,11 @@ where the hex values agree are shown in bold.</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_colors_003.png" class="align-center" src="../../_images/sphx_glr_colors_003.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.144 seconds)</p>
 <div class="sphx-glr-footer docutils container">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/colors.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">colors.py</span></code></a></div>
+<a class="reference download internal" href="../../_downloads/colors.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">colors.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/colors.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">colors.ipynb</span></code></a></div>
+<a class="reference download internal" href="../../_downloads/colors.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">colors.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
@@ -268,9 +267,9 @@ where the hex values agree are shown in bold.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2017 The Matplotlib development team.
-      Last updated on Feb 08, 2018.
+      Last updated on Mar 06, 2018.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
     </div>
 
 <script>
