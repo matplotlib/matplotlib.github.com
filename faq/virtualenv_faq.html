@@ -6,18 +6,17 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Working with Matplotlib in Virtual environments &mdash; Matplotlib 2.1.2 documentation</title>
+    <title>Working with Matplotlib in Virtual environments &mdash; Matplotlib 2.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css"
 type="text/css" />
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.1.2',
+        VERSION:     '2.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -28,14 +27,14 @@ type="text/css" />
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.1.2 documentation"
+          title="Search within Matplotlib 2.0.0 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html"
 />
     <link rel="search" title="Search" href="../search.html"
 />
-    <link rel="top" title="Matplotlib 2.1.2 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 2.0.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib FAQ" href="index.html" />
     <link rel="next" title="Working with Matplotlib on OSX" href="osx_framework.html" />
     <link rel="prev" title="Environment Variables" href="environment_variables_faq.html" /> 
@@ -45,13 +44,15 @@ type="text/css" />
   <body>
 
 
-<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
-<a href="../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.1.2</span></div>
-    <img src="../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
-<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+<img style="float: right; margin-bottom: -40px; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" usemap="#ribbonmap"/>
+<map name="ribbonmap">
+    <area shape="poly" coords="15,0,148,-1,148,135" href="https://github.com/matplotlib/matplotlib" title="Fork me on GitHub" />
+</map>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="../index.html"><img src="../_static/logo2.svg" width="540px" border="0" alt="matplotlib"/></a>
 </div>
 
 
@@ -74,8 +75,8 @@ type="text/css" />
              accesskey="P">previous</a> |</li>
 
         <li><a href="../index.html">home</a>|&nbsp;</li>
-        <li><a href="../gallery/index.html">examples</a>|&nbsp;</li>
-        <li><a href="../tutorials/index.html">tutorials</a>|&nbsp;</li>
+        <li><a href="../examples/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../gallery.html">gallery</a>|&nbsp;</li>
         <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">The Matplotlib FAQ</a> &raquo;</li> 
@@ -84,14 +85,9 @@ type="text/css" />
 
   
       <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper"><a href="https://www.numfocus.org">
-  <image src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;colorA=E1523D&amp;colorB=007D8A">
-</a>
-
-<br/>
-
+        <div class="sphinxsidebarwrapper">
 <a href="http://depsy.org/package/python/matplotlib">
-  <img src="../_static/depsy_badge.svg">
+  <img src="http://depsy.org/api/package/pypi/matplotlib/badge.svg">
 </a>
 
 <br/>
@@ -99,7 +95,16 @@ type="text/css" />
 Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
   <img src="https://travis-ci.org/matplotlib/matplotlib.svg?branch=master"/>
 </a>
-<br/><div class="relations">
+<br/>
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Working with Matplotlib in Virtual environments</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#gui-frameworks">GUI Frameworks</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../contents.html">Documentation overview</a><ul>
@@ -129,6 +134,7 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
+
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
@@ -136,84 +142,60 @@ Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
             
   <div class="section" id="working-with-matplotlib-in-virtual-environments">
 <span id="virtualenv-faq"></span><h1>Working with Matplotlib in Virtual environments<a class="headerlink" href="#working-with-matplotlib-in-virtual-environments" title="Permalink to this headline">¶</a></h1>
-<p>When running Matplotlib in a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtual environment</a> you may discover a few issues.
-Matplotlib itself has no issue with virtual environments.  However, some of
-the external GUI frameworks that Matplotlib uses for interactive figures may
-be tricky to install in a virtual environment.  Everything below assumes some
-familiarity with the Matplotlib backends as found in <a class="reference internal" href="../tutorials/introductory/usage.html#what-is-a-backend"><span class="std std-ref">What is a backend?</span></a>.</p>
-<p>If you only use the IPython and Jupyter Notebook’s <code class="docutils literal"><span class="pre">inline</span></code> and <code class="docutils literal"><span class="pre">notebook</span></code>
-backends, or non-interactive backends, you should not have any issues and can
-ignore everything below.</p>
-<p>Likewise, the <code class="docutils literal"><span class="pre">Tk</span></code> framework (<code class="docutils literal"><span class="pre">TkAgg</span></code> backend) does not require any
-external dependencies and is normally always available.  On certain Linux
-distributions, a package named <code class="docutils literal"><span class="pre">python-tk</span></code> (or similar) needs to be
-installed.</p>
-<p>Otherwise, the situation (at the time of writing) is as follows:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="18%" />
-<col width="36%" />
-<col width="46%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">GUI framework</th>
-<th class="head">pip-installable?</th>
-<th class="head">conda or conda-forge-installable?</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>PyQt5</td>
-<td>on Python&gt;=3.5</td>
-<td>yes</td>
-</tr>
-<tr class="row-odd"><td>PyQt4</td>
-<td>PySide: on Windows and OSX</td>
-<td>yes</td>
-</tr>
-<tr class="row-even"><td>PyGObject</td>
-<td>no</td>
-<td>on Linux</td>
-</tr>
-<tr class="row-odd"><td>PyGTK</td>
-<td>no</td>
-<td>no</td>
-</tr>
-<tr class="row-even"><td>wxPython</td>
-<td>yes <a class="footnote-reference" href="#id2" id="id1">[1]</a></td>
-<td>yes</td>
-</tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>OSX and Windows wheels available on PyPI.  Linux wheels available but
-not on PyPI, see <a class="reference external" href="https://wxpython.org/pages/downloads/">https://wxpython.org/pages/downloads/</a>.</td></tr>
-</tbody>
-</table>
-<p>In other cases, you need to install the package in the global (system)
-site-packages, and somehow make it available from within the virtual
-environment.  This can be achieved by any of the following methods (in all
-cases, the system-wide Python and the virtualenv Python must be of the same
-version):</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
 <ul class="simple">
-<li>Using <code class="docutils literal"><span class="pre">virtualenv</span></code>’s <code class="docutils literal"><span class="pre">--system-site-packages</span></code> option when creating
-an environment adds all system-wide packages to the virtual environment.
-However, this breaks the isolation between the virtual environment and the
-system install.  Among other issues it results in hard to debug problems
-with system packages shadowing the environment packages.  If you use
-<a class="reference external" href="https://virtualenvwrapper.readthedocs.io/">virtualenvwrapper</a>, this can be
-toggled with the <code class="docutils literal"><span class="pre">toggleglobalsitepackages</span></code> command.</li>
-<li><a class="reference external" href="https://pypi.python.org/pypi/vext">vext</a> allows controlled access
-from within the virtualenv to specific system-wide packages without the
-overall shadowing issue.  A specific package needs to be installed for each
-framework, e.g. <a class="reference external" href="https://pypi.python.org/pypi/vext.pyqt5">vext.pyqt5</a>, etc.</li>
-<li>The GUI frameworks can be manually symlinked into the environment, e.g. for
-PyQt5, you should symlink <code class="docutils literal"><span class="pre">PyQt5</span></code> and <code class="docutils literal"><span class="pre">sip</span></code> from the system site-packages
-into the virtualenv site-packages.</li>
+<li><a class="reference internal" href="#working-with-matplotlib-in-virtual-environments" id="id1">Working with Matplotlib in Virtual environments</a><ul>
+<li><a class="reference internal" href="#introduction" id="id2">Introduction</a></li>
+<li><a class="reference internal" href="#gui-frameworks" id="id3">GUI Frameworks</a></li>
 </ul>
-<p>If you are using Matplotlib on OSX, you may also want to consider the
+</li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<span id="virtualenv-introduction"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>When running <code class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></code> in a
+<a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtual environment</a> you may discover
+a few issues. <code class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></code> itself has no issue with virtual environments.
+However, the GUI frameworks that <code class="xref py py-mod docutils literal"><span class="pre">matplotlib</span></code> uses for interactive
+figures have some issues with virtual environments. Everything below assumes
+some familiarity with the Matplotlib backends as found in <a class="reference internal" href="usage_faq.html#what-is-a-backend"><span class="std std-ref">What is a
+backend?</span></a>.</p>
+<p>If you only use the <code class="docutils literal"><span class="pre">IPython/Jupyter</span> <span class="pre">Notebook</span></code>&#8216;s <code class="docutils literal"><span class="pre">inline</span></code> and <code class="docutils literal"><span class="pre">notebook</span></code>
+backends and non interactive backends you should not have any issues and can
+ignore everything below.</p>
+<p>If you are using Matplotlib on OSX you may also want to consider the
 <a class="reference internal" href="osx_framework.html#osxframework-faq"><span class="std std-ref">OSX framework FAQ</span></a>.</p>
+</div>
+<div class="section" id="gui-frameworks">
+<h2>GUI Frameworks<a class="headerlink" href="#gui-frameworks" title="Permalink to this headline">¶</a></h2>
+<p>Interactive Matplotlib relies heavily on the interaction with external GUI
+frameworks.</p>
+<p>Most GUI frameworks are not pip installable. This makes it tricky to install
+them within a virtual environment. This problem does not exist if you use Conda
+environments where you can install all Conda supported GUI frameworks directly
+into the environment. In regular virtualenv environment various workarounds
+exist. Some of these are given here:</p>
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">TKAgg</span></code> backend doesn&#8217;t require any external dependencies and is
+normally always available.</li>
+<li>The <code class="docutils literal"><span class="pre">QT4</span></code> framework <code class="docutils literal"><span class="pre">PySide</span></code> is pip installable.</li>
+<li><code class="docutils literal"><span class="pre">PYQT5</span></code> is pip installable on Python 3.5.</li>
+</ul>
+<p>Other frameworks are harder to install into a virtual environment. There are at
+least two possible ways to get access to these in a virtual environment.</p>
+<p>One often suggested solution is to use the <code class="docutils literal"><span class="pre">--system-site-packages</span></code> option
+to virtualenv when creating an environment. This adds all system wide packages
+to the virtual environment. However, this breaks the isolation between the
+virtual environment and the system install. Among other issues it results in
+hard to debug problems with system packages shadowing the environment packages.
+If you use <a class="reference external" href="https://virtualenvwrapper.readthedocs.io/">virtualenvwrapper</a>
+this can be toggled with the <code class="docutils literal"><span class="pre">toggleglobalsitepackages</span></code> command.</p>
+<p>Alternatively, you can manually symlink the GUI frameworks into the environment.
+I.e. to use PyQt5, you should symlink <code class="docutils literal"><span class="pre">PyQt5</span></code> and <code class="docutils literal"><span class="pre">sip</span></code> from your system
+site packages directory into the environment taking care that the environment
+and the systemwide install use the same python version.</p>
+</div>
 </div>
 
 
@@ -224,10 +206,10 @@ into the virtualenv site-packages.</li>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2017 The Matplotlib development team.
-      Last updated on Feb 08, 2018.
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
+      Last updated on Feb 20, 2017.
       Created using <a
-href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
 
 <script>
@@ -333,6 +315,52 @@ position:fixed; z-index:999999; overflow: auto;
 }
 
 </style>
+
+<script>
+
+function open_window(cause_id) {
+var  protocol=String(document.location.protocol);
+var new_url;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+new_url="https://www.flipcause.com/widget/"+cause_id
+window.open(new_url);
+}
+
+else {
+document.getElementById("fc-fade").style.display = "block";
+document.getElementById("fc-fade").style.webkitAnimation = "backfadesin 1s";
+document.getElementById("fc-fade").style.animation = "backfadesin 1s";
+document.getElementById("fc-fade").style.mozAnimation = "backfadesin 1s";
+document.getElementById("fc-light").style.display = "block";
+document.getElementById("fc-light").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-light").style.animation = "fadesin 1.5s";
+document.getElementById("fc-light").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-main").style.display = "block";
+document.getElementById("fc-main").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-main").style.animation = "fadesin 1.5s";
+document.getElementById("fc-main").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-close").style.display = "block";
+document.getElementById("fc-close").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-close").style.animation = "fadesin 1.5s";
+document.getElementById("fc-close").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.display = "block";
+document.getElementById("fc-myFrame").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.animation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").src="https://www.flipcause.com/widget/"+cause_id;
+}
+}
+
+
+function close_window() {
+document.getElementById("fc-fade").style.display="none";
+document.getElementById("fc-light").style.display="none";
+document.getElementById("fc-main").style.display="none";
+document.getElementById("fc-close").style.display="none";
+document.getElementById("fc-myFrame").style.display="none";
+}
+
+</script>
 
 <div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
 <div id="fc-light" class="fc-white_content">

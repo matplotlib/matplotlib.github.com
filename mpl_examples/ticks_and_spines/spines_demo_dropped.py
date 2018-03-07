@@ -1,8 +1,4 @@
 """
-==============
-Dropped spines
-==============
-
 Demo of spines offset from the axes (a.k.a. "dropped spines").
 """
 import numpy as np

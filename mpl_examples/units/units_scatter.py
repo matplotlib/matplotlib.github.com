@@ -1,7 +1,5 @@
 """
-=============
-Unit handling
-=============
+Demonstrate unit handling
 
 basic_units is a mockup of a true units package used for testing
 purposed, which illustrates the basic interface that a units package

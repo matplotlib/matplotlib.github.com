@@ -1,7 +1,6 @@
 """
-=========================================
-Setting tick labels from a list of values
-=========================================
+
+Basic demo showing how to set tick labels to values of a series.
 
 Using ax.set_xticks causes the tick labels to be set on the currently
 chosen ticks. However, you may want to allow matplotlib to dynamically
@@ -29,8 +28,6 @@ def format_fn(tick_val, tick_pos):
         return labels[int(tick_val)]
     else:
         return ''
-
-
 ax.xaxis.set_major_formatter(FuncFormatter(format_fn))
 ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 ax.plot(xs, ys)

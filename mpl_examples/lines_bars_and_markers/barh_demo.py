@@ -1,9 +1,5 @@
 """
-====================
-Horizontal bar chart
-====================
-
-This example showcases a simple horizontal bar chart.
+Simple demo of a horizontal bar chart.
 """
 import matplotlib.pyplot as plt
 plt.rcdefaults()

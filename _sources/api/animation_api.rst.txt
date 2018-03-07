@@ -3,8 +3,6 @@
 ======================
 
 .. automodule:: matplotlib.animation
-   :no-members:
-   :no-undoc-members:
 
 .. contents:: Table of Contents
    :depth: 1
@@ -32,10 +30,16 @@ to.  If you do not hold a reference to the `Animation` object, it (and
 hence the timers), will be garbage collected which will stop the
 animation.
 
-To save an animation to disk use `Animation.save` or `Animation.to_html5_video`
+To save an animation to disk use
 
-See :ref:`ani_writer_classes` below for details about what movie formats are
-supported.
+.. autosummary::
+   :toctree: _as_gen
+   :nosignatures:
+
+   Animation.save
+   Animation.to_html5_video
+
+See :ref:`ani_writer_classes` below for details about what movie formats are supported.
 
 
 ``FuncAnimation``
@@ -46,13 +50,12 @@ The inner workings of `FuncAnimation` is more-or-less::
   for d in frames:
      artists = func(d, *fargs)
      fig.canvas.draw_idle()
-     fig.canvas.start_event_loop(interval)
+     plt.pause(interval)
 
 
 with details to handle 'blitting' (to dramatically improve the live
-performance), to be non-blocking, not repeatedly start/stop the GUI
-event loop, handle repeats, multiple animated axes, and easily save
-the animation to a movie file.
+performance), to be non-blocking, handle repeats, multiple animated
+axes, and easily save the animation to a movie file.
 
 'Blitting' is a `old technique
 <https://en.wikipedia.org/wiki/Bit_blit>`__ in computer graphics.  The
@@ -83,7 +86,7 @@ time.  When using blitting (by passing ``blit=True``) the core loop of
    for f in frames:
        artists = func(f, *fargs)
        update_blit(artists)
-       fig.canvas.start_event_loop(interval)
+       plt.pause(interval)
 
 This is of course leaving out many details (such as updating the
 background when the figure is resized or fully re-drawn).  However,
@@ -136,17 +139,17 @@ Examples
 .. toctree::
    :maxdepth: 1
 
-   ../gallery/animation/animate_decay
-   ../gallery/animation/bayes_update_sgskip
-   ../gallery/animation/double_pendulum_animated_sgskip
-   ../gallery/animation/dynamic_image
-   ../gallery/animation/histogram
-   ../gallery/animation/rain
-   ../gallery/animation/random_data
-   ../gallery/animation/simple_3danim
-   ../gallery/animation/simple_anim
-   ../gallery/animation/strip_chart_demo
-   ../gallery/animation/unchained
+   ../examples/animation/animate_decay
+   ../examples/animation/bayes_update
+   ../examples/animation/double_pendulum_animated
+   ../examples/animation/dynamic_image
+   ../examples/animation/histogram
+   ../examples/animation/rain
+   ../examples/animation/random_data
+   ../examples/animation/simple_3danim
+   ../examples/animation/simple_anim
+   ../examples/animation/strip_chart_demo
+   ../examples/animation/unchained
 
 ``ArtistAnimation``
 -------------------
@@ -158,9 +161,9 @@ Examples
 .. toctree::
    :maxdepth: 1
 
-   ../gallery/animation/basic_example
-   ../gallery/animation/basic_example_writer_sgskip
-   ../gallery/animation/dynamic_image2
+   ../examples/animation/basic_example
+   ../examples/animation/basic_example_writer
+   ../examples/animation/dynamic_image2
 
 
 
@@ -203,6 +206,18 @@ class `MovieWriter` implements 3 methods and a context manager.  The
 only difference between the pipe-based and file-based writers is in the
 arguments to their respective ``setup`` methods.
 
+
+.. autosummary::
+   :toctree: _as_gen
+   :nosignatures:
+
+   MovieWriter.setup
+   FileMovieWriter.setup
+   MovieWriter.grab_frame
+   MovieWriter.finish
+   MovieWriter.saving
+
+
 The ``setup()`` method is used to prepare the writer (possibly opening
 a pipe), successive calls to ``grab_frame()`` capture a single frame
 at a time and ``finish()`` finalizes the movie and writes the output
@@ -228,7 +243,7 @@ to use the `~MovieWriter.saving` context manager ::
 to ensures that setup and cleanup are performed as necessary.
 
 
-:ref:`sphx_glr_gallery_animation_moviewriter_sgskip.py`
+:ref:`animation-moviewriter`
 
 
 .. _ani_writer_classes:
@@ -252,7 +267,7 @@ Animation Base Classes
 Custom Animation classes
 ------------------------
 
-:ref:`sphx_glr_gallery_animation_subplots.py`
+:ref:`animation-subplots`
 
 Writer Registry
 ---------------
@@ -276,7 +291,6 @@ To reduce code duplication base classes
    :toctree: _as_gen
    :nosignatures:
 
-   AbstractMovieWriter
    MovieWriter
    FileMovieWriter
 

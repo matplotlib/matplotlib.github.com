@@ -1,3 +1,4 @@
+from __future__ import print_function, division
 """
 This is used to drive many of the examples across the backends, for
 regression testing, and comparing backend efficiency.
@@ -17,7 +18,6 @@ option parsing error with the driver script, separate them from driver
 switches with a --.
 """
 
-from __future__ import print_function, division
 import os
 import time
 import sys

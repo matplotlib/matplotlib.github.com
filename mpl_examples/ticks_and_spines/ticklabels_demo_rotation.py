@@ -1,8 +1,4 @@
 """
-===========================
-Rotating custom tick labels
-===========================
-
 Demo of custom tick-labels with user-defined rotation.
 """
 import matplotlib.pyplot as plt

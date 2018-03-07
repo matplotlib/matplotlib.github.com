@@ -1,11 +1,3 @@
-"""
-=======
-Firefox
-=======
-
-This example shows how to create the Firefox logo with path and patches.
-"""
-
 import re
 import numpy as np
 import matplotlib.pyplot as plt
