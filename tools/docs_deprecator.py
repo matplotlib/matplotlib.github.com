@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 import re
 
+import sys
+
 def adjust(root, file, dry = False):
     '''
     mark an html file deprecated, incl' canonical link for crawlers.
@@ -69,11 +71,9 @@ def process(target, verbose = False, dry = False):
                 print(f, e)
 
 if __name__ == "__main__":
-    targets = [d for d in os.listdir() if re.match(r'''\d+\.\d+\.\d+''', d)]
-    print(targets)
-    input("I will mutate all HTML files in the directories listed. Press 'enter' to proceed, 'ctrl-c' to abort.")
-
-    # wait, I need a pristine copy!: svn checkout https://github.com/matplotlib/matplotlib.github.com/trunk/<subdir>
-    for t in targets:
-        process(t, verbose=False)
-        print(t + ' done')
+    target = sys.argv[1]
+    if os.path.isdir(target):
+        input("Deprecating all HTML files in " + target + ". Press 'enter' to proceed, 'ctrl-c' to abort.")
+        process(target)
+    else:
+        print("Couldn't find subdirectory " + target + ".")
