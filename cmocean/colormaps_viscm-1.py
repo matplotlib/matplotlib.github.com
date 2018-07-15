@@ -1,6 +1,5 @@
 import cmocean
 
-cmaps = cmocean.cm.cmall
 
-for cmap in cmaps:
-   cmocean.plots.wrap_viscm(cmap)
+for cmapname in cmocean.cm.cmapnames:
+   cmocean.plots.wrap_viscm(cmocean.cm.cmap_d[cmapname], saveplot=False)

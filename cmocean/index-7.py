@@ -1,10 +1,13 @@
 import cmocean
+import cmocean.cm as cmo
 import matplotlib.pyplot as plt
-import numpy as np
 
-azimuths = np.arange(0, 361, 1)
-zeniths = np.arange(40, 70, 1)
-values = azimuths * np.ones((30, 361))
-fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
-ax.pcolormesh(azimuths*np.pi/180.0, zeniths, values, cmap=cmocean.cm.phase)
-ax.set_yticks([])
+fig = plt.figure(figsize=(8, 3))
+ax = fig.add_subplot(1, 2, 1)
+Z = np.random.randn(10,10)
+ax.pcolormesh(Z, cmap=cmo.matter)
+
+ax = fig.add_subplot(1, 2, 2)
+lightcmap = cmocean.tools.lighten(cmo.matter, 0.5)
+ax.pcolormesh(Z, cmap=lightcmap)
+fig.tight_layout()
