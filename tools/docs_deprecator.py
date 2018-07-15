@@ -11,18 +11,18 @@ def adjust(root, file, dry = False):
     base = Path(root)
     # if (Path(file).suffix != '.html') raise ValueError("Not an html file.")
     if ('.tmp' in Path(file).suffixes): return # prefer to ignore own temp files.
+
+    ver, *rest = base.parts # '/'.join(rest) is our best-guess current version.
+    target = os.path.join('https://matplotlib.org', *rest, file)
+        # ADJUST as necessary.
+        # Base path contains version string, so '..' is wrong.
     
     with open(base / file, "rt") as f:
         parse = BS(f, 'lxml')
-        for child in parse.html.children: # beautifulsoup likes explicit iteration
-            
+        for child in parse.html.children:
+            # accessing children outside of iteration confuses beautifulsoup            
             if child.name == 'head':
-                ver, *rest = base.parts # '/'.join(rest) is our best-guess current version.
-                target = os.path.join('https://matplotlib.org', *rest, file)
-                    # ADJUST as necessary.
-                    # Base path contains version string, so '..' is wrong.
-                    
-                redirect_bots =                     BS('''<link href="{}" rel="canonical">'''.format(target), 'html.parser')
+                redirect_bots = BS('''<link href="{}" rel="canonical">'''.format(target), 'html.parser')
                     # lxml would wrap this snippet. yuck.
                 child.append(redirect_bots)
 
