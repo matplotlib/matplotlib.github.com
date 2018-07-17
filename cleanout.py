@@ -1,33 +1,85 @@
 import os
 import sys
-
+from bs4 import BeautifulSoup as BS
+from pathlib import Path
 """
-Cleans out the top-level (latest) docs from old files.
+Display warning banner on latest/'versionless' docs that aren't in current release.
 
 Requires a single commandline argument for the latest version.
 """
 
-redirect = """
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+# def tempname(file):
+    # *name, ext = file.split('.')
+    # return ('.'.join([*name, 'tmp', ext])) 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="refresh" content="0; url=index.html"/>
-  </head>
-</html>
-"""
+def adjust(root, file, dry = False):
+    '''
+    mark an html file deprecated
+    dry: do not overwrite, but go to temp file.
+    '''
+    p = Path(root)
+    # if ('.tmp' in Path(file).suffixes): return # prefer to ignore own temp files.
+                
+    with open(p / file, "rt") as f:
+        parse = BS(f, 'lxml')
+    
+        s = ' '.join(file.split('.')[:-1])
+        query = ' '.join(s.split('_')) # works well for (mpl_)examples, gallery
+        
+        if 'index' == s:
+            query = parse.find('h1').text[:-1].replace('_', ' ')
+            
+            # ' '.join(p.parts) if s == 'index'
+        search = '''https://matplotlib.org/search.html?q={}'''.format(query)
+        
+        for child in parse.html.children:
+            # accessing children outside of iteration confuses beautifulsoup
+            
+            # if child.name == 'img':
+                # WIP: attempt to deprecate image, if it isn't static
+                # if os.path.exists(p / ):
+                    # child['src'] = tempname(child['src'])
 
-latest = sys.argv[-1]
+            if child.name == 'body':
+                # id="legacy-docs-banner" class="warning"
+                banner = BS('''<div id="unreleased-message"> 
+            You are reading documentation that no longer exists in the
+            current release of Matplotlib! <a href="{}">Try searching for
+            an updated version?</a>
+            </div>'''.format(search), 'html.parser')
+                child.insert(0, banner)
 
-for tree in ('examples', '_images', 'mpl_examples', 'plot_directive', 'devel', 'users', 'api', 'faq', 'glossary'):
-    for root, dirs, files in os.walk(tree):
-        for file in files:
-            if not os.path.exists(os.path.join(latest, root, file)):
-                print(os.path.join(root, file))
+        if not dry:
+            with open(p/file, "wt") as g:
+                g.write(str(parse))
+        else:
+            print( query )
 
-                if file.endswith('.html'):
-                    with open(os.path.join(root, file), 'w') as fd:
-                        fd.write(redirect.strip())
-                elif file.endswith('.py') or file.endswith('.png') or file.endswith('.pdf'):
-                    os.system('git rm ' + os.path.join(root, file))
+# adjust('examples/images_contours_and_fields', 'contourf_log.html', dry=True)
+# adjust('devel', 'index.html', True)
+# adjust('api/_as_gen', 'matplotlib.animation.Animation.save.html', True)
+
+if __name__ == "__main__":
+    for tree in ('examples', 'mpl_examples', 'plot_directive', # '_images'
+                 'devel', 'users', 'api', 'faq', 'glossary'):
+        
+        for root, dirs, files in os.walk(os.path.join(tree)):
+            # FIXME: how to run from another directory without introducing '..' to root?
+            
+            for file in files:
+                if not os.path.exists(os.path.join(latest, root, file)):
+                    # if missing from latest release
+                    
+                    if file.endswith('.html'):
+                        adjust(root, file)
+                    elif file.endswith('.png'):
+                        pass
+                        # os.rename(file, tempname(file))
+                        
+                    elif file.endswith('.py') or file.endswith('.pdf'):
+                        os.system('git rm ' + os.path.join(root, file))
+                    
+                    if verbose: print(os.path.join(root, file))
+                        
+                # elif verbose:
+                    # print('SKIP ' + os.path.join(root, file))
