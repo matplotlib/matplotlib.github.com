@@ -1,0 +1,512 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>matplotlib.backends.backend_nbagg &mdash; Matplotlib 3.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.0.0 documentation"
+          href="../../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../../search.html"
+/>
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="matplotlib" href="../../matplotlib.html" />
+  <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/backends/backend_nbagg.html" />
+
+
+
+  </head>
+  <body>
+
+
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../../../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
+    <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
+
+<!-- The "Fork me on github" ribbon -->
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+        <li><a href="../../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
+        <li><a href="../../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../contents.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../matplotlib.html">matplotlib</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for matplotlib.backends.backend_nbagg</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Interactive figures in the IPython notebook&quot;&quot;&quot;</span>
+<span class="c1"># Note: There is a notebook in</span>
+<span class="c1"># lib/matplotlib/backends/web_backend/nbagg_uat.ipynb to help verify</span>
+<span class="c1"># that changes made maintain expected behaviour.</span>
+
+<span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64encode</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Javascript</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Jupyter/IPython 4.x or later</span>
+    <span class="kn">from</span> <span class="nn">ipykernel.comm</span> <span class="k">import</span> <span class="n">Comm</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Jupyter/IPython 3.x or earlier</span>
+    <span class="kn">from</span> <span class="nn">IPython.kernel.comm</span> <span class="k">import</span> <span class="n">Comm</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">rcParams</span><span class="p">,</span> <span class="n">is_interactive</span>
+<span class="kn">from</span> <span class="nn">matplotlib._pylab_helpers</span> <span class="k">import</span> <span class="n">Gcf</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">NavigationToolbar2</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_webagg_core</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">FigureCanvasWebAggCore</span><span class="p">,</span> <span class="n">FigureManagerWebAgg</span><span class="p">,</span> <span class="n">NavigationToolbar2WebAgg</span><span class="p">,</span>
+    <span class="n">TimerTornado</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="connection_info"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.connection_info">[docs]</a><span class="k">def</span> <span class="nf">connection_info</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a string showing the figure and connection status for</span>
+<span class="sd">    the backend. This is intended as a diagnostic tool, and not for general</span>
+<span class="sd">    use.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">Gcf</span><span class="o">.</span><span class="n">get_all_fig_managers</span><span class="p">():</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">figure</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> - </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="ow">or</span>
+                                          <span class="s2">&quot;Figure </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">num</span><span class="p">)),</span>
+                                         <span class="n">manager</span><span class="o">.</span><span class="n">web_sockets</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_interactive</span><span class="p">():</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Figures pending show: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Gcf</span><span class="o">.</span><span class="n">_activeQue</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+<span class="c1"># Note: Version 3.2 and 4.x icons</span>
+<span class="c1"># http://fontawesome.io/3.2.1/icons/</span>
+<span class="c1"># http://fontawesome.io/</span>
+<span class="c1"># the `fa fa-xxx` part targets font-awesome 4, (IPython 3.x)</span>
+<span class="c1"># the icon-xxx targets font awesome 3.21 (IPython 2.x)</span>
+<span class="n">_FONT_AWESOME_CLASSES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;home&#39;</span><span class="p">:</span> <span class="s1">&#39;fa fa-home icon-home&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;back&#39;</span><span class="p">:</span> <span class="s1">&#39;fa fa-arrow-left icon-arrow-left&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;forward&#39;</span><span class="p">:</span> <span class="s1">&#39;fa fa-arrow-right icon-arrow-right&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;zoom_to_rect&#39;</span><span class="p">:</span> <span class="s1">&#39;fa fa-square-o icon-check-empty&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;move&#39;</span><span class="p">:</span> <span class="s1">&#39;fa fa-arrows icon-move&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;download&#39;</span><span class="p">:</span> <span class="s1">&#39;fa fa-floppy-o icon-save&#39;</span><span class="p">,</span>
+    <span class="kc">None</span><span class="p">:</span> <span class="kc">None</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="NavigationIPy"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.NavigationIPy">[docs]</a><span class="k">class</span> <span class="nc">NavigationIPy</span><span class="p">(</span><span class="n">NavigationToolbar2WebAgg</span><span class="p">):</span>
+
+    <span class="c1"># Use the standard toolbar items + download button</span>
+    <span class="n">toolitems</span> <span class="o">=</span> <span class="p">[(</span><span class="n">text</span><span class="p">,</span> <span class="n">tooltip_text</span><span class="p">,</span>
+                  <span class="n">_FONT_AWESOME_CLASSES</span><span class="p">[</span><span class="n">image_file</span><span class="p">],</span> <span class="n">name_of_method</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">tooltip_text</span><span class="p">,</span> <span class="n">image_file</span><span class="p">,</span> <span class="n">name_of_method</span>
+                 <span class="ow">in</span> <span class="p">(</span><span class="n">NavigationToolbar2</span><span class="o">.</span><span class="n">toolitems</span> <span class="o">+</span>
+                     <span class="p">((</span><span class="s1">&#39;Download&#39;</span><span class="p">,</span> <span class="s1">&#39;Download plot&#39;</span><span class="p">,</span> <span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;download&#39;</span><span class="p">),))</span>
+                 <span class="k">if</span> <span class="n">image_file</span> <span class="ow">in</span> <span class="n">_FONT_AWESOME_CLASSES</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="FigureManagerNbAgg"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg">[docs]</a><span class="k">class</span> <span class="nc">FigureManagerNbAgg</span><span class="p">(</span><span class="n">FigureManagerWebAgg</span><span class="p">):</span>
+    <span class="n">ToolbarCls</span> <span class="o">=</span> <span class="n">NavigationIPy</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shown</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">FigureManagerWebAgg</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FigureManagerNbAgg.display_js"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.display_js">[docs]</a>    <span class="k">def</span> <span class="nf">display_js</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># XXX How to do this just once? It has to deal with multiple</span>
+        <span class="c1"># browser instances using the same kernel (require.js - but the</span>
+        <span class="c1"># file isn&#39;t static?).</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">Javascript</span><span class="p">(</span><span class="n">FigureManagerNbAgg</span><span class="o">.</span><span class="n">get_javascript</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="FigureManagerNbAgg.show"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shown</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_js</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_comm</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw_idle</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shown</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="FigureManagerNbAgg.reshow"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.reshow">[docs]</a>    <span class="k">def</span> <span class="nf">reshow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A special method to re-show the figure in the notebook.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shown</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">connected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FigureManagerNbAgg.get_javascript"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.get_javascript">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_javascript</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">stream</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_javascript</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">((</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+                      <span class="o">/</span> <span class="s2">&quot;web_backend/js/nbagg_mpl.js&quot;</span><span class="p">)</span>
+                     <span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_comm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">comm</span> <span class="o">=</span> <span class="n">CommSocket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_web_socket</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">comm</span>
+
+<div class="viewcode-block" id="FigureManagerNbAgg.destroy"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.destroy">[docs]</a>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_event</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">)</span>
+        <span class="c1"># need to copy comms as callbacks will modify this list</span>
+        <span class="k">for</span> <span class="n">comm</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span><span class="p">):</span>
+            <span class="n">comm</span><span class="o">.</span><span class="n">on_close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clearup_closed</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FigureManagerNbAgg.clearup_closed"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.clearup_closed">[docs]</a>    <span class="k">def</span> <span class="nf">clearup_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear up any closed Comms.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span> <span class="o">=</span> <span class="p">{</span><span class="n">socket</span> <span class="k">for</span> <span class="n">socket</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span>
+                            <span class="k">if</span> <span class="n">socket</span><span class="o">.</span><span class="n">is_open</span><span class="p">()}</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">close_event</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FigureManagerNbAgg.remove_comm"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.remove_comm">[docs]</a>    <span class="k">def</span> <span class="nf">remove_comm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comm_id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span> <span class="o">=</span> <span class="p">{</span><span class="n">socket</span> <span class="k">for</span> <span class="n">socket</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">socket</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">comm_id</span> <span class="o">==</span> <span class="n">comm_id</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="FigureCanvasNbAgg"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureCanvasNbAgg">[docs]</a><span class="k">class</span> <span class="nc">FigureCanvasNbAgg</span><span class="p">(</span><span class="n">FigureCanvasWebAggCore</span><span class="p">):</span>
+<div class="viewcode-block" id="FigureCanvasNbAgg.new_timer"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureCanvasNbAgg.new_timer">[docs]</a>    <span class="k">def</span> <span class="nf">new_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TimerTornado</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CommSocket"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.CommSocket">[docs]</a><span class="k">class</span> <span class="nc">CommSocket</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages the Comm connection between IPython and the browser (client).</span>
+
+<span class="sd">    Comms are 2 way, with the CommSocket being able to publish a message</span>
+<span class="sd">    via the send_json method, and handle a message with on_message. On the</span>
+<span class="sd">    JS side figure.send_message and figure.ws.onmessage do the sending and</span>
+<span class="sd">    receiving respectively.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supports_binary</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="c1"># Publish an output area with a unique ID. The javascript can then</span>
+        <span class="c1"># hook into this area.</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;div id=</span><span class="si">%r</span><span class="s2">&gt;&lt;/div&gt;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">=</span> <span class="n">Comm</span><span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">})</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unable to create an IPython notebook Comm &#39;</span>
+                               <span class="s1">&#39;instance. Are you in the IPython notebook?&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">on_msg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_message</span><span class="p">)</span>
+
+        <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ext_close</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">def</span> <span class="nf">_on_close</span><span class="p">(</span><span class="n">close_message</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ext_close</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">remove_comm</span><span class="p">(</span><span class="n">close_message</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;comm_id&#39;</span><span class="p">])</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">clearup_closed</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">on_close</span><span class="p">(</span><span class="n">_on_close</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CommSocket.is_open"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.CommSocket.is_open">[docs]</a>    <span class="k">def</span> <span class="nf">is_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ext_close</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">_closed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CommSocket.on_close"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.CommSocket.on_close">[docs]</a>    <span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># When the socket is closed, deregister the websocket with</span>
+        <span class="c1"># the FigureManager.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_open</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># apparently already cleaned it up?</span>
+                <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CommSocket.send_json"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.CommSocket.send_json">[docs]</a>    <span class="k">def</span> <span class="nf">send_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">content</span><span class="p">)})</span></div>
+
+<div class="viewcode-block" id="CommSocket.send_binary"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.CommSocket.send_binary">[docs]</a>    <span class="k">def</span> <span class="nf">send_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">):</span>
+        <span class="c1"># The comm is ascii, so we always send the image in base64</span>
+        <span class="c1"># encoded data URL form.</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="n">data_uri</span> <span class="o">=</span> <span class="s2">&quot;data:image/png;base64,</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data_uri</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="CommSocket.on_message"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.CommSocket.on_message">[docs]</a>    <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="c1"># The &#39;supports_binary&#39; message is relevant to the</span>
+        <span class="c1"># websocket itself.  The other messages get passed along</span>
+        <span class="c1"># to matplotlib as-is.</span>
+
+        <span class="c1"># Every message has a &quot;type&quot; and a &quot;figure_id&quot;.</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;closing&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">on_close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">clearup_closed</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;supports_binary&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">supports_binary</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">handle_json</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div></div>
+
+
+<span class="nd">@_Backend</span><span class="o">.</span><span class="n">export</span>
+<span class="k">class</span> <span class="nc">_BackendNbAgg</span><span class="p">(</span><span class="n">_Backend</span><span class="p">):</span>
+    <span class="n">FigureCanvas</span> <span class="o">=</span> <span class="n">FigureCanvasNbAgg</span>
+    <span class="n">FigureManager</span> <span class="o">=</span> <span class="n">FigureManagerNbAgg</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">new_figure_manager_given_figure</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvasNbAgg</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">FigureManagerNbAgg</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_interactive</span><span class="p">():</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw_idle</span><span class="p">()</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;close_event&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">Gcf</span><span class="o">.</span><span class="n">destroy</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">manager</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">trigger_manager_draw</span><span class="p">(</span><span class="n">manager</span><span class="p">):</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">## TODO: something to do when keyword block==False ?</span>
+        <span class="kn">from</span> <span class="nn">matplotlib._pylab_helpers</span> <span class="k">import</span> <span class="n">Gcf</span>
+
+        <span class="n">managers</span> <span class="o">=</span> <span class="n">Gcf</span><span class="o">.</span><span class="n">get_all_fig_managers</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">managers</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">interactive</span> <span class="o">=</span> <span class="n">is_interactive</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">managers</span><span class="p">:</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+            <span class="c1"># plt.figure adds an event which puts the figure in focus</span>
+            <span class="c1"># in the activeQue. Disable this behaviour, as it results in</span>
+            <span class="c1"># figures being put as the active figure after they have been</span>
+            <span class="c1"># shown, even in non-interactive mode.</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="s1">&#39;_cidgcf&#39;</span><span class="p">):</span>
+                <span class="n">manager</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_disconnect</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">_cidgcf</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">interactive</span> <span class="ow">and</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">Gcf</span><span class="o">.</span><span class="n">_activeQue</span><span class="p">:</span>
+                <span class="n">Gcf</span><span class="o">.</span><span class="n">_activeQue</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">manager</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+        <br />
+      Last updated on Sep 18, 2018.
+	Created using
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>

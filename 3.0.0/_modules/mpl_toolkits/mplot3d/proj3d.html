@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mpl_toolkits.mplot3d.proj3d &mdash; Matplotlib 3.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.0.0 documentation"
+          href="../../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../../search.html"
+/>
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+  <link rel="canonical" href="https://matplotlib.org/_modules/mpl_toolkits/mplot3d/proj3d.html" />
+
+
+
+  </head>
+  <body>
+
+
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../../../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
+    <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
+
+<!-- The "Fork me on github" ribbon -->
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+        <li><a href="../../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
+        <li><a href="../../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../contents.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mpl_toolkits.mplot3d.proj3d</h1><div class="highlight"><pre>
+<span></span><span class="c1"># 3dproj.py</span>
+<span class="c1">#</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Various transforms used for by the 3D code</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">linalg</span>
+
+
+
+<div class="viewcode-block" id="line2d"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.line2d.html#mpl_toolkits.mplot3d.proj3d.line2d">[docs]</a><span class="k">def</span> <span class="nf">line2d</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return 2D equation of line in the form ax+by+c = 0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># x + x1  = 0</span>
+    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">p0</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="o">==</span> <span class="n">x1</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">x1</span>
+    <span class="k">elif</span> <span class="n">y0</span> <span class="o">==</span> <span class="n">y1</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="o">-</span><span class="n">y1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">y0</span><span class="o">-</span><span class="n">y1</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span><span class="o">*</span><span class="n">y1</span> <span class="o">-</span> <span class="n">x1</span><span class="o">*</span><span class="n">y0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span></div>
+
+<div class="viewcode-block" id="line2d_dist"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.line2d_dist.html#mpl_toolkits.mplot3d.proj3d.line2d_dist">[docs]</a><span class="k">def</span> <span class="nf">line2d_dist</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Distance from line to point</span>
+<span class="sd">    line is a tuple of coefficients a,b,c</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">l</span>
+    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="k">return</span> <span class="nb">abs</span><span class="p">((</span><span class="n">a</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">y0</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">b</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="line2d_seg_dist"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.line2d_seg_dist.html#mpl_toolkits.mplot3d.proj3d.line2d_seg_dist">[docs]</a><span class="k">def</span> <span class="nf">line2d_seg_dist</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;distance(s) from line defined by p1 - p2 to point(s) p0</span>
+
+<span class="sd">    p0[0] = x(s)</span>
+<span class="sd">    p0[1] = y(s)</span>
+
+<span class="sd">    intersection point p = p1 + u*(p2-p1)</span>
+<span class="sd">    and intersection point lies within segment if u is between 0 and 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x21</span> <span class="o">=</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y21</span> <span class="o">=</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x01</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y01</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="p">(</span><span class="n">x01</span><span class="o">*</span><span class="n">x21</span> <span class="o">+</span> <span class="n">y01</span><span class="o">*</span><span class="n">y21</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x21</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y21</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x01</span> <span class="o">-</span> <span class="n">u</span><span class="o">*</span><span class="n">x21</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y01</span> <span class="o">-</span> <span class="n">u</span><span class="o">*</span><span class="n">y21</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="mod"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.mod.html#mpl_toolkits.mplot3d.proj3d.mod">[docs]</a><span class="k">def</span> <span class="nf">mod</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;3d vector length&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="world_transformation"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.world_transformation.html#mpl_toolkits.mplot3d.proj3d.world_transformation">[docs]</a><span class="k">def</span> <span class="nf">world_transformation</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span>
+                         <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span>
+                         <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span><span class="p">):</span>
+    <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">dz</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">),</span> <span class="p">(</span><span class="n">ymax</span><span class="o">-</span><span class="n">ymin</span><span class="p">),</span> <span class="p">(</span><span class="n">zmax</span><span class="o">-</span><span class="n">zmin</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dx</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">xmin</span><span class="o">/</span><span class="n">dx</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dy</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">ymin</span><span class="o">/</span><span class="n">dy</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dz</span><span class="p">,</span><span class="o">-</span><span class="n">zmin</span><span class="o">/</span><span class="n">dz</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]])</span></div>
+
+
+<div class="viewcode-block" id="view_transformation"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.view_transformation.html#mpl_toolkits.mplot3d.proj3d.view_transformation">[docs]</a><span class="k">def</span> <span class="nf">view_transformation</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span> <span class="o">-</span> <span class="n">R</span><span class="p">)</span>
+    <span class="c1">## new</span>
+<span class="c1">#    n /= mod(n)</span>
+<span class="c1">#    u = np.cross(V,n)</span>
+<span class="c1">#    u /= mod(u)</span>
+<span class="c1">#    v = np.cross(n,u)</span>
+<span class="c1">#    Mr = np.diag([1.]*4)</span>
+<span class="c1">#    Mt = np.diag([1.]*4)</span>
+<span class="c1">#    Mr[:3,:3] = u,v,n</span>
+<span class="c1">#    Mt[:3,-1] = -E</span>
+    <span class="c1">## end new</span>
+
+    <span class="c1">## old</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="n">mod</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">/</span> <span class="n">mod</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+    <span class="n">Mr</span> <span class="o">=</span> <span class="p">[[</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">n</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">0</span><span class="p">],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">1</span><span class="p">],</span>
+          <span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="n">Mt</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">E</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">E</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">E</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="c1">## end old</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Mr</span><span class="p">,</span> <span class="n">Mt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="persp_transformation"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.persp_transformation.html#mpl_toolkits.mplot3d.proj3d.persp_transformation">[docs]</a><span class="k">def</span> <span class="nf">persp_transformation</span><span class="p">(</span><span class="n">zfront</span><span class="p">,</span> <span class="n">zback</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">zfront</span><span class="o">+</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">zfront</span><span class="o">*</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+                     <span class="p">])</span></div>
+
+<span class="k">def</span> <span class="nf">ortho_transformation</span><span class="p">(</span><span class="n">zfront</span><span class="p">,</span> <span class="n">zback</span><span class="p">):</span>
+    <span class="c1"># note: w component in the resulting vector will be (zback-zfront), not 1</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">zfront</span> <span class="o">+</span> <span class="n">zback</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">zfront</span> <span class="o">-</span> <span class="n">zback</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">]</span>
+                     <span class="p">])</span>
+
+<div class="viewcode-block" id="proj_transform_vec"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.proj_transform_vec.html#mpl_toolkits.mplot3d.proj3d.proj_transform_vec">[docs]</a><span class="k">def</span> <span class="nf">proj_transform_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="n">vecw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="c1"># clip here..</span>
+    <span class="n">txs</span><span class="p">,</span> <span class="n">tys</span><span class="p">,</span> <span class="n">tzs</span> <span class="o">=</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">w</span><span class="p">,</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">w</span><span class="p">,</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">w</span>
+    <span class="k">return</span> <span class="n">txs</span><span class="p">,</span> <span class="n">tys</span><span class="p">,</span> <span class="n">tzs</span></div>
+
+<div class="viewcode-block" id="proj_transform_vec_clip"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.proj_transform_vec_clip.html#mpl_toolkits.mplot3d.proj3d.proj_transform_vec_clip">[docs]</a><span class="k">def</span> <span class="nf">proj_transform_vec_clip</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="n">vecw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="c1"># clip here.</span>
+    <span class="n">txs</span><span class="p">,</span> <span class="n">tys</span><span class="p">,</span> <span class="n">tzs</span> <span class="o">=</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w</span><span class="p">,</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w</span><span class="p">,</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">w</span>
+    <span class="n">tis</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">vecw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">vecw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">tis</span><span class="p">):</span>
+        <span class="n">tis</span> <span class="o">=</span> <span class="n">vecw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">txs</span><span class="p">,</span> <span class="n">tys</span><span class="p">,</span> <span class="n">tzs</span><span class="p">,</span> <span class="n">tis</span></div>
+
+<div class="viewcode-block" id="inv_transform"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.inv_transform.html#mpl_toolkits.mplot3d.proj3d.inv_transform">[docs]</a><span class="k">def</span> <span class="nf">inv_transform</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="n">iM</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">vec_pad_ones</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">)</span>
+    <span class="n">vecr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">iM</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">vecr</span> <span class="o">=</span> <span class="n">vecr</span><span class="o">/</span><span class="n">vecr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">vecr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vecr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vecr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="vec_pad_ones"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.vec_pad_ones.html#mpl_toolkits.mplot3d.proj3d.vec_pad_ones">[docs]</a><span class="k">def</span> <span class="nf">vec_pad_ones</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xs</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="proj_transform"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.proj_transform.html#mpl_toolkits.mplot3d.proj3d.proj_transform">[docs]</a><span class="k">def</span> <span class="nf">proj_transform</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform the points by the projection matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">vec_pad_ones</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">proj_transform_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="proj_transform_clip"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.proj_transform_clip.html#mpl_toolkits.mplot3d.proj3d.proj_transform_clip">[docs]</a><span class="k">def</span> <span class="nf">proj_transform_clip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform the points by the projection matrix</span>
+<span class="sd">    and return the clipping result</span>
+<span class="sd">    returns txs,tys,tzs,tis</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">vec_pad_ones</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">proj_transform_vec_clip</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span></div>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">proj_transform</span>
+
+<div class="viewcode-block" id="proj_points"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.proj_points.html#mpl_toolkits.mplot3d.proj3d.proj_points">[docs]</a><span class="k">def</span> <span class="nf">proj_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span><span class="n">proj_trans_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">M</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="proj_trans_points"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.proj_trans_points.html#mpl_toolkits.mplot3d.proj3d.proj_trans_points">[docs]</a><span class="k">def</span> <span class="nf">proj_trans_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">proj_transform</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="proj_trans_clip_points"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.proj_trans_clip_points.html#mpl_toolkits.mplot3d.proj3d.proj_trans_clip_points">[docs]</a><span class="k">def</span> <span class="nf">proj_trans_clip_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">proj_transform_clip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="rot_x"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.proj3d.rot_x.html#mpl_toolkits.mplot3d.proj3d.rot_x">[docs]</a><span class="k">def</span> <span class="nf">rot_x</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="n">cosa</span><span class="p">,</span> <span class="n">sina</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">M1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">cosa</span><span class="p">,</span><span class="o">-</span><span class="n">sina</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">sina</span><span class="p">,</span><span class="n">cosa</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M1</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+        <br />
+      Last updated on Sep 18, 2018.
+	Created using
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>
