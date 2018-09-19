@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.type1font &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.type1font &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/type1font.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -135,22 +137,18 @@ type="text/css" />
 <span class="sd">  v1.1, 1993. ISBN 0-201-57044-0.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
 <span class="kn">import</span> <span class="nn">binascii</span>
-<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">struct</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-<div class="viewcode-block" id="ord"><a class="viewcode-back" href="../../api/type1font.html#matplotlib.type1font.ord">[docs]</a>    <span class="k">def</span> <span class="nf">ord</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">x</span></div>
+
+<span class="c1"># token types</span>
+<span class="n">_TokenType</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;_TokenType&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;whitespace name string delimiter number&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Type1Font"><a class="viewcode-back" href="../../api/type1font.html#matplotlib.type1font.Type1Font">[docs]</a><span class="k">class</span> <span class="nc">Type1Font</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -192,13 +190,13 @@ type="text/css" />
             <span class="k">return</span> <span class="n">rawdata</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
-        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">rawdata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">rawdata</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">rawdata</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x80</span><span class="s1">&#39;</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Broken pfb file (expected byte 128, &#39;</span>
-                                   <span class="s1">&#39;got </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">rawdata</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-            <span class="nb">type</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">rawdata</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                                   <span class="s1">&#39;got </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">type</span> <span class="o">=</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
-                <span class="n">length</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;&lt;i&#39;</span><span class="p">),</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+                <span class="n">length</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;i&#39;</span><span class="p">,</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
                 <span class="n">segment</span> <span class="o">=</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">6</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span>
                 <span class="n">rawdata</span> <span class="o">=</span> <span class="n">rawdata</span><span class="p">[</span><span class="mi">6</span> <span class="o">+</span> <span class="n">length</span><span class="p">:]</span>
 
@@ -242,11 +240,10 @@ type="text/css" />
         <span class="k">if</span> <span class="n">zeros</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Insufficiently many zeros in Type 1 font&#39;</span><span class="p">)</span>
 
-        <span class="c1"># Convert encrypted part to binary (if we read a pfb file, we</span>
-        <span class="c1"># may end up converting binary to hexadecimal to binary again;</span>
-        <span class="c1"># but if we read a pfa file, this part is already in hex, and</span>
-        <span class="c1"># I am not quite sure if even the pfb format guarantees that</span>
-        <span class="c1"># it will be in binary).</span>
+        <span class="c1"># Convert encrypted part to binary (if we read a pfb file, we may end</span>
+        <span class="c1"># up converting binary to hexadecimal to binary again; but if we read</span>
+        <span class="c1"># a pfa file, this part is already in hex, and I am not quite sure if</span>
+        <span class="c1"># even the pfb format guarantees that it will be in binary).</span>
         <span class="n">binary</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">len1</span><span class="p">:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">data</span><span class="p">[:</span><span class="n">len1</span><span class="p">],</span> <span class="n">binary</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
@@ -256,25 +253,18 @@ type="text/css" />
     <span class="n">_comment_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">br</span><span class="s1">&#39;%[^\r\n\v]*&#39;</span><span class="p">)</span>
     <span class="n">_instring_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">br</span><span class="s1">&#39;[()</span><span class="se">\\</span><span class="s1">]&#39;</span><span class="p">)</span>
 
-    <span class="c1"># token types, compared via object identity (poor man&#39;s enum)</span>
-    <span class="n">_whitespace</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-    <span class="n">_name</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-    <span class="n">_string</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-    <span class="n">_delimiter</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-    <span class="n">_number</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_tokens</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A PostScript tokenizer. Yield (token, value) pairs such as</span>
-<span class="sd">        (cls._whitespace, &#39;   &#39;) or (cls._name, &#39;/Foobar&#39;).</span>
+<span class="sd">        (_TokenType.whitespace, &#39;   &#39;) or (_TokenType.name, &#39;/Foobar&#39;).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
             <span class="n">match</span> <span class="o">=</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_comment_re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:])</span> <span class="ow">or</span>
                      <span class="bp">cls</span><span class="o">.</span><span class="n">_whitespace_re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:]))</span>
             <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_whitespace</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">_TokenType</span><span class="o">.</span><span class="n">whitespace</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
                 <span class="n">pos</span> <span class="o">+=</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;(&#39;</span><span class="p">:</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="n">pos</span>
@@ -291,25 +281,25 @@ type="text/css" />
                         <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span>
                     <span class="k">else</span><span class="p">:</span>  <span class="c1"># a backslash - skip the next character</span>
                         <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">yield</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_string</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">pos</span><span class="p">])</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">_TokenType</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">pos</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&lt;&lt;&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&gt;&gt;&#39;</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_delimiter</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">_TokenType</span><span class="o">.</span><span class="n">delimiter</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
                 <span class="n">pos</span> <span class="o">+=</span> <span class="mi">2</span>
             <span class="k">elif</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&lt;&#39;</span><span class="p">:</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="n">pos</span>
                 <span class="n">pos</span> <span class="o">+=</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)</span>
-                <span class="k">yield</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_string</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">pos</span><span class="p">])</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">_TokenType</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">pos</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_token_re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:])</span>
                 <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
-                        <span class="k">yield</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_number</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+                        <span class="k">yield</span> <span class="p">(</span><span class="n">_TokenType</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
                     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="k">yield</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+                        <span class="k">yield</span> <span class="p">(</span><span class="n">_TokenType</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
                     <span class="n">pos</span> <span class="o">+=</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_delimiter</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                    <span class="k">yield</span> <span class="p">(</span><span class="n">_TokenType</span><span class="o">.</span><span class="n">delimiter</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
                     <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -323,23 +313,23 @@ type="text/css" />
                 <span class="s1">&#39;UnderlinePosition&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;UnderlineThickness&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">}</span>
         <span class="n">filtered</span> <span class="o">=</span> <span class="p">((</span><span class="n">token</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                    <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_whitespace</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_TokenType</span><span class="o">.</span><span class="n">whitespace</span><span class="p">)</span>
         <span class="c1"># The spec calls this an ASCII format; in Python 2.x we could</span>
         <span class="c1"># just treat the strings and names as opaque bytes but let&#39;s</span>
         <span class="c1"># turn them into proper Unicode, and be lenient in case of high bytes.</span>
         <span class="n">convert</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="n">_TokenType</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
                 <span class="n">key</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
                 <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">filtered</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="n">_TokenType</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="sa">b</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;false&#39;</span><span class="p">):</span>
                         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;true&#39;</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">value</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;/&#39;</span><span class="p">))</span>
-                <span class="k">elif</span> <span class="n">token</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">token</span> <span class="ow">is</span> <span class="n">_TokenType</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;(&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;)&#39;</span><span class="p">))</span>
-                <span class="k">elif</span> <span class="n">token</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">token</span> <span class="ow">is</span> <span class="n">_TokenType</span><span class="o">.</span><span class="n">number</span><span class="p">:</span>
                     <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
                         <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -368,14 +358,13 @@ type="text/css" />
         <span class="k">def</span> <span class="nf">fontname</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">name</span>
             <span class="k">if</span> <span class="n">slant</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;_Slant_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="n">slant</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;_Slant_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="n">slant</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">extend</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;_Extend_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="n">extend</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;_Extend_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="n">extend</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">result</span>
 
         <span class="k">def</span> <span class="nf">italicangle</span><span class="p">(</span><span class="n">angle</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">slant</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">180</span><span class="p">)</span>
-                    <span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;%a&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">slant</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">180</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">fontmatrix</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
             <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;[&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -389,19 +378,21 @@ type="text/css" />
             <span class="n">newmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">modifier</span><span class="p">,</span> <span class="n">oldmatrix</span><span class="p">)</span>
             <span class="n">array</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">newmatrix</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
             <span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">newmatrix</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="n">as_string</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;[&#39;</span> <span class="o">+</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span><span class="p">)</span> <span class="o">+</span> <span class="sa">u</span><span class="s1">&#39;]&#39;</span>
+            <span class="c1"># Not directly using `b&#39;%a&#39; % x for x in array` for now as that</span>
+            <span class="c1"># produces longer reprs on numpy&lt;1.14, causing test failures.</span>
+            <span class="n">as_string</span> <span class="o">=</span> <span class="s1">&#39;[&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">array</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span>
             <span class="k">return</span> <span class="n">as_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
             <span class="k">def</span> <span class="nf">replacer</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
                 <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>      <span class="c1"># name, e.g., /FontMatrix</span>
-                <span class="k">yield</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">value</span>
                 <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>      <span class="c1"># possible whitespace</span>
-                <span class="k">while</span> <span class="n">token</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_whitespace</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">while</span> <span class="n">token</span> <span class="ow">is</span> <span class="n">_TokenType</span><span class="o">.</span><span class="n">whitespace</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">value</span>
                     <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;[&#39;</span><span class="p">:</span>                <span class="c1"># name/number/etc.</span>
-                    <span class="k">yield</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">fun</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                    <span class="k">yield</span> <span class="n">fun</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>                            <span class="c1"># array, e.g., [1 2 3]</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
                     <span class="k">while</span> <span class="n">value</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;]&#39;</span><span class="p">:</span>
@@ -422,10 +413,9 @@ type="text/css" />
                  <span class="sa">b</span><span class="s1">&#39;/UniqueID&#39;</span><span class="p">:</span> <span class="n">suppress</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_name</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="n">value</span><span class="p">](</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">([(</span><span class="n">token</span><span class="p">,</span> <span class="n">value</span><span class="p">)],</span>
-                                                          <span class="n">tokens</span><span class="p">)):</span>
-                    <span class="k">yield</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="n">_TokenType</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="n">table</span><span class="p">[</span><span class="n">value</span><span class="p">](</span>
+                    <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">([(</span><span class="n">token</span><span class="p">,</span> <span class="n">value</span><span class="p">)],</span> <span class="n">tokens</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">value</span>
 
@@ -438,13 +428,11 @@ type="text/css" />
 <span class="sd">        multiplier by which the font is to be extended (so values less</span>
 <span class="sd">        than 1.0 condense). Returns a new :class:`Type1Font` object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span> <span class="k">as</span> <span class="n">buffer</span><span class="p">:</span>
-            <span class="n">tokenizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">transformed</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">_transformer</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span>
-                                             <span class="n">slant</span><span class="o">=</span><span class="n">effects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slant&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
-                                             <span class="n">extend</span><span class="o">=</span><span class="n">effects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extend&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
-            <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="n">transformed</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">Type1Font</span><span class="p">((</span><span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span></div></div>
+        <span class="n">tokenizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformer</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span>
+                                        <span class="n">slant</span><span class="o">=</span><span class="n">effects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slant&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                                        <span class="n">extend</span><span class="o">=</span><span class="n">effects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extend&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Type1Font</span><span class="p">((</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">transformed</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span></div></div>
 </pre></div>
 
           </div>
@@ -456,10 +444,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

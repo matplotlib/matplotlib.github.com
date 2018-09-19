@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.backends.backend_nbagg &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.backends.backend_nbagg &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/backends/backend_nbagg.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -116,12 +118,11 @@ type="text/css" />
 <span class="c1"># lib/matplotlib/backends/web_backend/nbagg_uat.ipynb to help verify</span>
 <span class="c1"># that changes made maintain expected behaviour.</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-
 <span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64encode</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Javascript</span><span class="p">,</span> <span class="n">HTML</span>
@@ -225,12 +226,10 @@ type="text/css" />
             <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">stream</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">FigureManagerNbAgg</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">get_javascript</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
-                <span class="s2">&quot;web_backend&quot;</span><span class="p">,</span> <span class="s1">&#39;js&#39;</span><span class="p">,</span>
-                <span class="s2">&quot;nbagg_mpl.js&quot;</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
-            <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_javascript</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">((</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+                      <span class="o">/</span> <span class="s2">&quot;web_backend/js/nbagg_mpl.js&quot;</span><span class="p">)</span>
+                     <span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 
@@ -248,15 +247,15 @@ type="text/css" />
 
 <div class="viewcode-block" id="FigureManagerNbAgg.clearup_closed"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.clearup_closed">[docs]</a>    <span class="k">def</span> <span class="nf">clearup_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Clear up any closed Comms.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">socket</span> <span class="k">for</span> <span class="n">socket</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span>
-                                <span class="k">if</span> <span class="n">socket</span><span class="o">.</span><span class="n">is_open</span><span class="p">()])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span> <span class="o">=</span> <span class="p">{</span><span class="n">socket</span> <span class="k">for</span> <span class="n">socket</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span>
+                            <span class="k">if</span> <span class="n">socket</span><span class="o">.</span><span class="n">is_open</span><span class="p">()}</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">close_event</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FigureManagerNbAgg.remove_comm"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureManagerNbAgg.remove_comm">[docs]</a>    <span class="k">def</span> <span class="nf">remove_comm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comm_id</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">socket</span> <span class="k">for</span> <span class="n">socket</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span>
-                                <span class="k">if</span> <span class="ow">not</span> <span class="n">socket</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">comm_id</span> <span class="o">==</span> <span class="n">comm_id</span><span class="p">])</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span> <span class="o">=</span> <span class="p">{</span><span class="n">socket</span> <span class="k">for</span> <span class="n">socket</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_sockets</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">socket</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">comm_id</span> <span class="o">==</span> <span class="n">comm_id</span><span class="p">}</span></div></div>
 
 
 <div class="viewcode-block" id="FigureCanvasNbAgg"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.FigureCanvasNbAgg">[docs]</a><span class="k">class</span> <span class="nc">FigureCanvasNbAgg</span><span class="p">(</span><span class="n">FigureCanvasWebAggCore</span><span class="p">):</span>
@@ -317,9 +316,7 @@ type="text/css" />
 <div class="viewcode-block" id="CommSocket.send_binary"><a class="viewcode-back" href="../../../api/backend_nbagg_api.html#matplotlib.backends.backend_nbagg.CommSocket.send_binary">[docs]</a>    <span class="k">def</span> <span class="nf">send_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">):</span>
         <span class="c1"># The comm is ascii, so we always send the image in base64</span>
         <span class="c1"># encoded data URL form.</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
         <span class="n">data_uri</span> <span class="o">=</span> <span class="s2">&quot;data:image/png;base64,</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data_uri</span><span class="p">})</span></div>
 
@@ -392,10 +389,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

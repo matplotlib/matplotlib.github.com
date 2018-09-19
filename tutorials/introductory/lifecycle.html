@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The Lifecycle of a Plot &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>The Lifecycle of a Plot &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,18 +28,19 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="Tutorials" href="../index.html" />
-    <link rel="next" title="Styling with cycler" href="../intermediate/color_cycle.html" />
-    <link rel="prev" title="Pyplot tutorial" href="pyplot.html" />
+    <link rel="next" title="Customizing Matplotlib with style sheets and rcParams" href="customizing.html" />
+    <link rel="prev" title="Image tutorial" href="images.html" />
   <link rel="canonical" href="https://matplotlib.org/tutorials/introductory/lifecycle.html" />
 
 
@@ -50,7 +52,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -70,16 +72,16 @@ type="text/css" />
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../intermediate/color_cycle.html" title="Styling with cycler"
+          <a href="customizing.html" title="Customizing Matplotlib with style sheets and rcParams"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="pyplot.html" title="Pyplot tutorial"
+          <a href="images.html" title="Image tutorial"
              accesskey="P">previous</a> |</li>
 
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../users/index.html" >User's Guide</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Tutorials</a> &raquo;</li> 
@@ -101,7 +103,7 @@ type="text/css" />
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-  <h3><a href="../../contents.html">Table Of Contents</a></h3>
+  <h3><a href="../../contents.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">The Lifecycle of a Plot</a><ul>
 <li><a class="reference internal" href="#a-note-on-the-object-oriented-api-vs-pyplot">A note on the Object-Oriented API vs Pyplot</a></li>
@@ -120,8 +122,8 @@ type="text/css" />
   <li><a href="../../contents.html">Documentation overview</a><ul>
   <li><a href="../../users/index.html">User's Guide</a><ul>
   <li><a href="../index.html">Tutorials</a><ul>
-      <li>Previous: <a href="pyplot.html" title="previous chapter">Pyplot tutorial</a></li>
-      <li>Next: <a href="../intermediate/color_cycle.html" title="next chapter">Styling with cycler</a></li>
+      <li>Previous: <a href="images.html" title="previous chapter">Image tutorial</a></li>
+      <li>Next: <a href="customizing.html" title="next chapter">Customizing Matplotlib with style sheets and rcParams</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -171,9 +173,7 @@ is that:</p>
 &quot;axis&quot;, which refers to the x/y axis of a plot).</li>
 </ul>
 <p>We call methods that do the plotting directly from the Axes, which gives
-us much more flexibility and power in customizing our plot. See the
-<a class="reference internal" href="../../gallery/index.html#api-examples"><span class="std std-ref">object-oriented examples</span></a> for many examples of how
-this approach is used.</p>
+us much more flexibility and power in customizing our plot.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">In general, try to use the object-oriented interface over the pyplot
@@ -237,7 +237,7 @@ your visualization to your needs. To see a list of styles, we can use
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;tableau-colorblind10&#39;, &#39;seaborn&#39;, &#39;seaborn-whitegrid&#39;, &#39;seaborn-white&#39;, &#39;seaborn-ticks&#39;, &#39;seaborn-talk&#39;, &#39;seaborn-poster&#39;, &#39;seaborn-pastel&#39;, &#39;seaborn-paper&#39;, &#39;seaborn-notebook&#39;, &#39;seaborn-muted&#39;, &#39;seaborn-deep&#39;, &#39;seaborn-darkgrid&#39;, &#39;seaborn-dark&#39;, &#39;seaborn-dark-palette&#39;, &#39;seaborn-colorblind&#39;, &#39;seaborn-bright&#39;, &#39;grayscale&#39;, &#39;ggplot&#39;, &#39;fivethirtyeight&#39;, &#39;fast&#39;, &#39;dark_background&#39;, &#39;classic&#39;, &#39;bmh&#39;, &#39;_classic_test&#39;, &#39;Solarize_Light2&#39;]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;seaborn-poster&#39;, &#39;seaborn-darkgrid&#39;, &#39;seaborn-pastel&#39;, &#39;grayscale&#39;, &#39;Solarize_Light2&#39;, &#39;seaborn-deep&#39;, &#39;bmh&#39;, &#39;seaborn-dark-palette&#39;, &#39;seaborn-talk&#39;, &#39;seaborn-notebook&#39;, &#39;classic&#39;, &#39;fast&#39;, &#39;seaborn-colorblind&#39;, &#39;ggplot&#39;, &#39;seaborn-paper&#39;, &#39;seaborn-ticks&#39;, &#39;_classic_test&#39;, &#39;seaborn-white&#39;, &#39;seaborn-bright&#39;, &#39;fivethirtyeight&#39;, &#39;tableau-colorblind10&#39;, &#39;seaborn-whitegrid&#39;, &#39;seaborn&#39;, &#39;seaborn-muted&#39;, &#39;dark_background&#39;, &#39;seaborn-dark&#39;]
 </pre></div>
 </div>
 <p>You can activate a style with the following:</p>
@@ -408,9 +408,9 @@ if the format supports it.</li>
 </div>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-introductory-lifecycle-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/lifecycle.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">lifecycle.py</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/0aa526fb17d2197164296ca813288a5d/lifecycle.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">lifecycle.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/lifecycle.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">lifecycle.ipynb</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/f3fe9e6beb4769177a4ad3bcabea54eb/lifecycle.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">lifecycle.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature">Keywords: matplotlib code example, codex, python plot, pyplot
 <a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -427,10 +427,10 @@ if the format supports it.</li>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Developer&#39;s guide for creating scales and transformations &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>Developer&#39;s guide for creating scales and transformations &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,17 +28,18 @@ type="text/css" />
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html"
 />
     <link rel="search" title="Search" href="../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib Developers&#39; Guide" href="index.html" />
-    <link rel="next" title="Developer&#39;s tips for writing code for Python 2 and 3" href="portable_code.html" />
+    <link rel="next" title="Working with Matplotlib source code" href="gitwash/index.html" />
     <link rel="prev" title="Plot directive documentation" href="plot_directive.html" />
   <link rel="canonical" href="https://matplotlib.org/devel/add_new_projection.html" />
 
@@ -50,7 +52,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -70,7 +72,7 @@ type="text/css" />
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="portable_code.html" title="Developer&#39;s tips for writing code for Python 2 and 3"
+          <a href="gitwash/index.html" title="Working with Matplotlib source code"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="plot_directive.html" title="Plot directive documentation"
@@ -79,7 +81,7 @@ type="text/css" />
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">The Matplotlib Developers' Guide</a> &raquo;</li> 
       </ul>
@@ -100,7 +102,7 @@ type="text/css" />
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <h3><a href="../contents.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Developer's guide for creating scales and transformations</a><ul>
 <li><a class="reference internal" href="#creating-a-new-scale">Creating a new scale</a></li>
@@ -115,7 +117,7 @@ type="text/css" />
   <li><a href="../contents.html">Documentation overview</a><ul>
   <li><a href="index.html">The Matplotlib Developers' Guide</a><ul>
       <li>Previous: <a href="plot_directive.html" title="previous chapter">Plot directive documentation</a></li>
-      <li>Next: <a href="portable_code.html" title="next chapter">Developer's tips for writing code for Python 2 and 3</a></li>
+      <li>Next: <a href="gitwash/index.html" title="next chapter">Working with <em>Matplotlib</em> source code</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -160,15 +162,13 @@ tree itself.</p>
 <p>Adding a new scale consists of defining a subclass of
 <a class="reference internal" href="../api/scale_api.html#matplotlib.scale.ScaleBase" title="matplotlib.scale.ScaleBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.scale.ScaleBase</span></code></a>, that includes the following
 elements:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li>A transformation from data coordinates into display coordinates.</li>
 <li>An inverse of that transformation.  This is used, for example, to
 convert mouse positions from screen space back into data space.</li>
 <li>A function to limit the range of the axis to acceptable values
 (<code class="docutils literal notranslate"><span class="pre">limit_range_for_scale()</span></code>).  A log scale, for instance, would
-prevent the range from including values less than or equal to
-zero.</li>
+prevent the range from including values less than or equal to zero.</li>
 <li>Locators (major and minor) that determine where to place ticks in
 the plot, and optionally, how to adjust the limits of the plot to
 some &quot;good&quot; values.  Unlike <code class="docutils literal notranslate"><span class="pre">limit_range_for_scale()</span></code>, which is
@@ -177,11 +177,10 @@ automatically setting the range of the plot.</li>
 <li>Formatters (major and minor) that specify how the tick labels
 should be drawn.</li>
 </ul>
-</div></blockquote>
 <p>Once the class is defined, it must be registered with matplotlib so
 that the user can select it.</p>
 <p>A full-fledged and heavily annotated example is in
-<code class="file docutils literal notranslate"><span class="pre">examples/api/custom_scale_example.py</span></code>.  There are also some classes
+<a class="reference internal" href="../gallery/scales/custom_scale.html"><span class="doc">Custom scale</span></a>.  There are also some classes
 in <a class="reference internal" href="../api/scale_api.html#module-matplotlib.scale" title="matplotlib.scale"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.scale</span></code></a> that may be used as starting points.</p>
 </div>
 <div class="section" id="creating-a-new-projection">
@@ -189,20 +188,17 @@ in <a class="reference internal" href="../api/scale_api.html#module-matplotlib.s
 <p>Adding a new projection consists of defining a projection axes which
 subclasses <a class="reference internal" href="../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> and includes the following
 elements:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li>A transformation from data coordinates into display coordinates.</li>
 <li>An inverse of that transformation.  This is used, for example, to
 convert mouse positions from screen space back into data space.</li>
 <li>Transformations for the gridlines, ticks and ticklabels.  Custom
 projections will often need to place these elements in special
 locations, and matplotlib has a facility to help with doing so.</li>
-<li>Setting up default values (overriding
-<a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.cla.html#matplotlib.axes.Axes.cla" title="matplotlib.axes.Axes.cla"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cla()</span></code></a>), since the defaults for a
-rectilinear axes may not be appropriate.</li>
-<li>Defining the shape of the axes, for example, an elliptical axes,
-that will be used to draw the background of the plot and for
-clipping any data elements.</li>
+<li>Setting up default values (overriding <a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.cla.html#matplotlib.axes.Axes.cla" title="matplotlib.axes.Axes.cla"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cla()</span></code></a>),
+since the defaults for a rectilinear axes may not be appropriate.</li>
+<li>Defining the shape of the axes, for example, an elliptical axes, that will be
+used to draw the background of the plot and for clipping any data elements.</li>
 <li>Defining custom locators and formatters for the projection.  For
 example, in a geographic projection, it may be more convenient to
 display the grid in degrees, even if the data is in radians.</li>
@@ -211,10 +207,8 @@ display the grid in degrees, even if the data is in radians.</li>
 this for polar plots in <a class="reference internal" href="../api/projections_api.html#module-matplotlib.projections.polar" title="matplotlib.projections.polar"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.projections.polar</span></code></a>.</li>
 <li>Any additional methods for additional convenience or features.</li>
 </ul>
-</div></blockquote>
 <p>Once the projection axes is defined, it can be used in one of two ways:</p>
-<blockquote>
-<div><ul>
+<ul>
 <li><p class="first">By defining the class attribute <code class="docutils literal notranslate"><span class="pre">name</span></code>, the projection axes can be
 registered with <a class="reference internal" href="../api/projections_api.html#matplotlib.projections.register_projection" title="matplotlib.projections.register_projection"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.projections.register_projection()</span></code></a>
 and subsequently simply invoked by name:</p>
@@ -222,21 +216,19 @@ and subsequently simply invoked by name:</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first">For more complex, parameterisable projections, a generic &quot;projection&quot;
-object may be defined which includes the method <code class="docutils literal notranslate"><span class="pre">_as_mpl_axes</span></code>.
-<code class="docutils literal notranslate"><span class="pre">_as_mpl_axes</span></code> should take no arguments and return the projection's
-axes subclass and a dictionary of additional arguments to pass to the
-subclass' <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method.  Subsequently a parameterised projection
-can be initialised with:</p>
+<li><p class="first">For more complex, parameterisable projections, a generic &quot;projection&quot; object
+may be defined which includes the method <code class="docutils literal notranslate"><span class="pre">_as_mpl_axes</span></code>. <code class="docutils literal notranslate"><span class="pre">_as_mpl_axes</span></code>
+should take no arguments and return the projection's axes subclass and a
+dictionary of additional arguments to pass to the subclass' <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+method.  Subsequently a parameterised projection can be initialised with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">MyProjection</span><span class="p">(</span><span class="n">param1</span><span class="o">=</span><span class="n">param1_value</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>where MyProjection is an object which implements a <code class="docutils literal notranslate"><span class="pre">_as_mpl_axes</span></code> method.</p>
 </li>
 </ul>
-</div></blockquote>
 <p>A full-fledged and heavily annotated example is in
-<code class="file docutils literal notranslate"><span class="pre">examples/api/custom_projection_example.py</span></code>.  The polar plot
+<a class="reference internal" href="../gallery/misc/custom_projection.html"><span class="doc">Custom projection</span></a>.  The polar plot
 functionality in <a class="reference internal" href="../api/projections_api.html#module-matplotlib.projections.polar" title="matplotlib.projections.polar"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.projections.polar</span></code></a> may also be of
 interest.</p>
 </div>
@@ -260,10 +252,10 @@ interest.</p>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

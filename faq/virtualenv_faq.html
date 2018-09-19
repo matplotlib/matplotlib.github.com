@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Working with Matplotlib in Virtual environments &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>Working with Matplotlib in Virtual environments &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html"
 />
     <link rel="search" title="Search" href="../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib FAQ" href="index.html" />
     <link rel="next" title="Working with Matplotlib on OSX" href="osx_framework.html" />
     <link rel="prev" title="Environment Variables" href="environment_variables_faq.html" />
@@ -50,7 +52,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -79,7 +81,7 @@ type="text/css" />
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">The Matplotlib FAQ</a> &raquo;</li> 
       </ul>
@@ -124,11 +126,10 @@ type="text/css" />
             
   <div class="section" id="working-with-matplotlib-in-virtual-environments">
 <span id="virtualenv-faq"></span><h1>Working with Matplotlib in Virtual environments<a class="headerlink" href="#working-with-matplotlib-in-virtual-environments" title="Permalink to this headline">¶</a></h1>
-<p>When running Matplotlib in a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtual environment</a> you may discover a few issues.
-Matplotlib itself has no issue with virtual environments.  However, some of
-the external GUI frameworks that Matplotlib uses for interactive figures may
-be tricky to install in a virtual environment.  Everything below assumes some
-familiarity with the Matplotlib backends as found in <a class="reference internal" href="../tutorials/introductory/usage.html#what-is-a-backend"><span class="std std-ref">What is a backend?</span></a>.</p>
+<p>While Matplotlib itself runs fine in a <a class="reference external" href="https://docs.python.org/3/library/venv.html">virtual environment</a> (venv), some of the GUI
+frameworks that Matplotlib uses for interactive figures are tricky to install
+in a venv.  Everything below assumes some familiarity with the Matplotlib
+backends as found in <a class="reference internal" href="../tutorials/introductory/usage.html#what-is-a-backend"><span class="std std-ref">What is a backend?</span></a>.</p>
 <p>If you only use the IPython and Jupyter Notebook's <code class="docutils literal notranslate"><span class="pre">inline</span></code> and <code class="docutils literal notranslate"><span class="pre">notebook</span></code>
 backends, or non-interactive backends, you should not have any issues and can
 ignore everything below.</p>
@@ -139,65 +140,83 @@ installed.</p>
 <p>Otherwise, the situation (at the time of writing) is as follows:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="18%" />
-<col width="36%" />
-<col width="46%" />
+<col width="13%" />
+<col width="13%" />
+<col width="24%" />
+<col width="49%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">GUI framework</th>
+<tr class="row-odd"><th class="head">framework</th>
+<th class="head">bindings</th>
 <th class="head">pip-installable?</th>
 <th class="head">conda or conda-forge-installable?</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>PyQt5</td>
-<td>on Python&gt;=3.5</td>
+<tr class="row-even"><td>Qt5</td>
+<td>PyQt5</td>
+<td>yes</td>
 <td>yes</td>
 </tr>
-<tr class="row-odd"><td>PyQt4</td>
-<td>PySide: on Windows and OSX</td>
+<tr class="row-odd"><td>Qt5</td>
+<td>PySide2</td>
+<td>yes</td>
 <td>yes</td>
 </tr>
-<tr class="row-even"><td>PyGObject</td>
+<tr class="row-even"><td>Qt4</td>
+<td>PyQt4</td>
 <td>no</td>
-<td>on Linux</td>
+<td>yes</td>
 </tr>
-<tr class="row-odd"><td>PyGTK</td>
-<td>no</td>
-<td>no</td>
+<tr class="row-odd"><td>Qt4</td>
+<td>PySide</td>
+<td>OSX and Windows</td>
+<td>yes</td>
 </tr>
-<tr class="row-even"><td>wxPython</td>
-<td>yes <a class="footnote-reference" href="#id2" id="id1">[1]</a></td>
+<tr class="row-even"><td>GTK3</td>
+<td>PyGObject</td>
+<td>yes <a class="footnote-reference" href="#id3" id="id1">[1]</a></td>
+<td>Linux and OSX</td>
+</tr>
+<tr class="row-odd"><td>wxWidgets</td>
+<td>wxPython</td>
+<td>yes <a class="footnote-reference" href="#id4" id="id2">[2]</a></td>
 <td>yes</td>
 </tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
+<table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>OSX and Windows wheels available on PyPI.  Linux wheels available but
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>No wheels available, see
+<a class="reference external" href="https://pygobject.readthedocs.io/en/latest/devguide/dev_environ.html">https://pygobject.readthedocs.io/en/latest/devguide/dev_environ.html</a>
+for build instructions.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>OSX and Windows wheels available on PyPI.  Linux wheels available but
 not on PyPI, see <a class="reference external" href="https://wxpython.org/pages/downloads/">https://wxpython.org/pages/downloads/</a>.</td></tr>
 </tbody>
 </table>
-<p>In other cases, you need to install the package in the global (system)
-site-packages, and somehow make it available from within the virtual
-environment.  This can be achieved by any of the following methods (in all
-cases, the system-wide Python and the virtualenv Python must be of the same
+<p>For cases where the framework is not installable in a venv, it needs to be
+installed in the global (system) site-packages, and then made available from
+within the venv.  This can be achieved by either of the following methods (in
+all cases, the system-wide Python and the venv Python must be of the same
 version):</p>
 <ul class="simple">
-<li>Using <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code>'s <code class="docutils literal notranslate"><span class="pre">--system-site-packages</span></code> option when creating
-an environment adds all system-wide packages to the virtual environment.
-However, this breaks the isolation between the virtual environment and the
-system install.  Among other issues it results in hard to debug problems
-with system packages shadowing the environment packages.  If you use
-<a class="reference external" href="https://virtualenvwrapper.readthedocs.io/">virtualenvwrapper</a>, this can be
-toggled with the <code class="docutils literal notranslate"><span class="pre">toggleglobalsitepackages</span></code> command.</li>
 <li><a class="reference external" href="https://pypi.python.org/pypi/vext">vext</a> allows controlled access
-from within the virtualenv to specific system-wide packages without the
-overall shadowing issue.  A specific package needs to be installed for each
-framework, e.g. <a class="reference external" href="https://pypi.python.org/pypi/vext.pyqt5">vext.pyqt5</a>, etc.
-It is recommended to use <code class="docutils literal notranslate"><span class="pre">vext&gt;=0.7.0</span></code> as earlier versions misconfigure the
-logging system.</li>
+from within the venv to specific system-wide packages.  A specific
+package needs to be installed for each framework, e.g. <a class="reference external" href="https://pypi.python.org/pypi/vext.pyqt5">vext.pyqt5</a>, etc.  It is recommended to use
+<code class="docutils literal notranslate"><span class="pre">vext&gt;=0.7.0</span></code> as earlier versions misconfigure the logging system.</li>
+<li>Using the <code class="docutils literal notranslate"><span class="pre">--system-site-packages</span></code> option when creating an environment
+adds all system-wide packages to the virtual environment.  However, this
+breaks the isolation between the virtual environment and the system
+install.  Among other issues it results in hard to debug problems with
+system packages shadowing the environment packages.  If you use <code class="xref py py-obj docutils literal notranslate"><span class="pre">virtualenv</span></code> (rather than the stdlib's <code class="docutils literal notranslate"><span class="pre">venv</span></code>) together
+with <a class="reference external" href="https://virtualenvwrapper.readthedocs.io/">virtualenvwrapper</a>, this
+can be toggled with the <code class="docutils literal notranslate"><span class="pre">toggleglobalsitepackages</span></code> command.</li>
 </ul>
 <p>If you are using Matplotlib on OSX, you may also want to consider the
 <a class="reference internal" href="osx_framework.html#osxframework-faq"><span class="std std-ref">OSX framework FAQ</span></a>.</p>
@@ -213,10 +232,10 @@ logging system.</li>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.mathtext &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.mathtext &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/mathtext.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -127,18 +129,14 @@ type="text/css" />
 <span class="sd">arbitrary fonts, but results may vary without proper tweaking and</span>
 <span class="sd">metrics for those fonts.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">unichr</span>
-
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">ceil</span>
+<span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">import</span> <span class="nn">unicodedata</span>
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">isinf</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="k">import</span> <span class="p">(</span>
@@ -148,9 +146,9 @@ type="text/css" />
 
 <span class="n">ParserElement</span><span class="o">.</span><span class="n">enablePackrat</span><span class="p">()</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span><span class="p">,</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">mcolors</span><span class="p">,</span> <span class="n">get_data_path</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">mcolors</span><span class="p">,</span> <span class="n">get_data_path</span><span class="p">,</span> <span class="n">rcParams</span>
 <span class="kn">from</span> <span class="nn">matplotlib.afm</span> <span class="k">import</span> <span class="n">AFM</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">Bunch</span><span class="p">,</span> <span class="n">get_realpath_and_stat</span><span class="p">,</span> <span class="n">maxdict</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">get_realpath_and_stat</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="k">import</span> <span class="n">FT2Image</span><span class="p">,</span> <span class="n">KERNING_DEFAULT</span><span class="p">,</span> <span class="n">LOAD_NO_HINTING</span>
 <span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">FontProperties</span><span class="p">,</span> <span class="n">get_font</span>
 <span class="kn">from</span> <span class="nn">matplotlib._mathtext_data</span> <span class="k">import</span> <span class="p">(</span><span class="n">latex_to_bakoma</span><span class="p">,</span> <span class="n">latex_to_standard</span><span class="p">,</span>
@@ -182,25 +180,20 @@ type="text/css" />
     <span class="c1"># length, usually longer than a hyphen.</span>
     <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="mh">0x2212</span>
-    <span class="k">try</span><span class="p">:</span><span class="c1"># This will succeed if symbol is a single unicode char</span>
+    <span class="k">try</span><span class="p">:</span>  <span class="c1"># This will succeed if symbol is a single unicode char</span>
         <span class="k">return</span> <span class="nb">ord</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
         <span class="k">pass</span>
-    <span class="k">try</span><span class="p">:</span><span class="c1"># Is symbol a TeX symbol (i.e. \alpha)</span>
+    <span class="k">try</span><span class="p">:</span>  <span class="c1"># Is symbol a TeX symbol (i.e. \alpha)</span>
         <span class="k">return</span> <span class="n">tex2uni</span><span class="p">[</span><span class="n">symbol</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&#39;</span><span class="si">%(symbol)s</span><span class="s2">&#39; is not a valid Unicode character or</span>
-<span class="s2">TeX/Type1 symbol&quot;&quot;&quot;</span><span class="o">%</span><span class="nb">locals</span><span class="p">()</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; is not a valid Unicode character or TeX/Type1 symbol&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symbol</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="unichr_safe"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.unichr_safe">[docs]</a><span class="k">def</span> <span class="nf">unichr_safe</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return the Unicode character corresponding to the index,</span>
-<span class="sd">or the replacement character if this is a narrow build of Python</span>
-<span class="sd">and the requested character is outside the BMP.&quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">unichr</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">unichr</span><span class="p">(</span><span class="mh">0xFFFD</span><span class="p">)</span></div>
+
+<span class="n">unichr_safe</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)(</span><span class="nb">chr</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="MathtextBackend"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathtextBackend">[docs]</a><span class="k">class</span> <span class="nc">MathtextBackend</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -278,7 +271,7 @@ type="text/css" />
 <div class="viewcode-block" id="MathtextBackendAgg.set_canvas_size"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathtextBackendAgg.set_canvas_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_canvas_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="n">MathtextBackend</span><span class="o">.</span><span class="n">set_canvas_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s1">&#39;bbox&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">FT2Image</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">ceil</span><span class="p">(</span><span class="n">h</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">FT2Image</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">h</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="MathtextBackendAgg.render_glyph"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathtextBackendAgg.render_glyph">[docs]</a>    <span class="k">def</span> <span class="nf">render_glyph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;bbox&#39;</span><span class="p">:</span>
@@ -301,7 +294,7 @@ type="text/css" />
                 <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="p">(</span><span class="n">height</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">draw_rect_filled</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">ceil</span><span class="p">(</span><span class="n">x2</span><span class="p">),</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">draw_rect_filled</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x2</span><span class="p">),</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MathtextBackendAgg.get_results"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathtextBackendAgg.get_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">used_characters</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;bbox&#39;</span>
@@ -342,7 +335,7 @@ type="text/css" />
 <span class="sd">    backend.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pswriter</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">cStringIO</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pswriter</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lastfont</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="MathtextBackendPs.render_glyph"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathtextBackendPs.render_glyph">[docs]</a>    <span class="k">def</span> <span class="nf">render_glyph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
@@ -425,8 +418,8 @@ type="text/css" />
 
 <div class="viewcode-block" id="MathtextBackendSvg.get_results"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathtextBackendSvg.get_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">used_characters</span><span class="p">):</span>
         <span class="n">ship</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">box</span><span class="p">)</span>
-        <span class="n">svg_elements</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">svg_glyphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg_glyphs</span><span class="p">,</span>
-                             <span class="n">svg_rects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg_rects</span><span class="p">)</span>
+        <span class="n">svg_elements</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">svg_glyphs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_glyphs</span><span class="p">,</span>
+                                             <span class="n">svg_rects</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_rects</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
@@ -473,7 +466,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="MathtextBackendCairo.render_glyph"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathtextBackendCairo.render_glyph">[docs]</a>    <span class="k">def</span> <span class="nf">render_glyph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="n">oy</span> <span class="o">=</span> <span class="n">oy</span> <span class="o">-</span> <span class="n">info</span><span class="o">.</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
-        <span class="n">thetext</span> <span class="o">=</span> <span class="n">unichr_safe</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">num</span><span class="p">)</span>
+        <span class="n">thetext</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">num</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">glyphs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">font</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">fontsize</span><span class="p">,</span> <span class="n">thetext</span><span class="p">,</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">))</span></div>
 
@@ -576,8 +569,9 @@ type="text/css" />
 <span class="sd">        Set the size of the buffer used to render the math expression.</span>
 <span class="sd">        Only really necessary for the bitmap backends.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">ceil</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">ceil</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mathtext_backend</span><span class="o">.</span><span class="n">set_canvas_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">([</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mathtext_backend</span><span class="o">.</span><span class="n">set_canvas_size</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Fonts.render_glyph"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.Fonts.render_glyph">[docs]</a>    <span class="k">def</span> <span class="nf">render_glyph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">facename</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">dpi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -700,7 +694,7 @@ type="text/css" />
 
         <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span><span class="o">/</span><span class="mf">64.0</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bbox</span><span class="p">]</span>
         <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_offset</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span>
-        <span class="n">metrics</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
             <span class="n">advance</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">linearHoriAdvance</span><span class="o">/</span><span class="mf">65536.0</span><span class="p">,</span>
             <span class="n">height</span>  <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mf">64.0</span><span class="p">,</span>
             <span class="n">width</span>   <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mf">64.0</span><span class="p">,</span>
@@ -713,7 +707,7 @@ type="text/css" />
             <span class="n">slanted</span> <span class="o">=</span> <span class="n">slanted</span>
             <span class="p">)</span>
 
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">glyphd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">glyphd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
             <span class="n">font</span>            <span class="o">=</span> <span class="n">font</span><span class="p">,</span>
             <span class="n">fontsize</span>        <span class="o">=</span> <span class="n">fontsize</span><span class="p">,</span>
             <span class="n">postscript_name</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">postscript_name</span><span class="p">,</span>
@@ -773,7 +767,7 @@ type="text/css" />
 
         <span class="n">TruetypeFonts</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fontmap</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontmap</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">fullpath</span> <span class="o">=</span> <span class="n">findfont</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fullpath</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span><span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="n">fullpath</span>
@@ -913,9 +907,9 @@ type="text/css" />
                 <span class="n">found_symbol</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">uniindex</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No TeX to unicode mapping for &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
-                     <span class="n">sym</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;backslashreplace&#39;</span><span class="p">),</span>
-                     <span class="n">MathTextWarning</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;No TeX to unicode mapping for </span><span class="si">{!a}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sym</span><span class="p">),</span>
+                    <span class="n">MathTextWarning</span><span class="p">)</span>
 
         <span class="n">fontname</span><span class="p">,</span> <span class="n">uniindex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_virtual_font</span><span class="p">(</span>
             <span class="n">fontname</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">uniindex</span><span class="p">)</span>
@@ -927,7 +921,7 @@ type="text/css" />
         <span class="k">if</span> <span class="n">found_symbol</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">fontname</span> <span class="o">==</span> <span class="s1">&#39;it&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">uniindex</span> <span class="o">&lt;</span> <span class="mh">0x10000</span><span class="p">:</span>
-                    <span class="n">unistring</span> <span class="o">=</span> <span class="n">unichr</span><span class="p">(</span><span class="n">uniindex</span><span class="p">)</span>
+                    <span class="n">unistring</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">uniindex</span><span class="p">)</span>
                     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">category</span><span class="p">(</span><span class="n">unistring</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span>
                         <span class="ow">or</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">unistring</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;GREEK CAPITAL&quot;</span><span class="p">)):</span>
                         <span class="n">new_fontname</span> <span class="o">=</span> <span class="s1">&#39;rm&#39;</span>
@@ -943,8 +937,9 @@ type="text/css" />
         <span class="k">if</span> <span class="ow">not</span> <span class="n">found_symbol</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cm_fallback</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cm_fallback</span><span class="p">,</span> <span class="n">BakomaFonts</span><span class="p">):</span>
-                    <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Substituting with a symbol from Computer Modern.&quot;</span><span class="p">,</span>
-                         <span class="n">MathTextWarning</span><span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">&quot;Substituting with a symbol from Computer Modern.&quot;</span><span class="p">,</span>
+                        <span class="n">MathTextWarning</span><span class="p">)</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">fontname</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;it&#39;</span><span class="p">,</span> <span class="s1">&#39;regular&#39;</span><span class="p">)</span> <span class="ow">and</span>
                         <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cm_fallback</span><span class="p">,</span> <span class="n">StixFonts</span><span class="p">)):</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cm_fallback</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span>
@@ -953,14 +948,14 @@ type="text/css" />
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cm_fallback</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span>
                         <span class="n">fontname</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">fontname</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;it&#39;</span><span class="p">,</span> <span class="s1">&#39;regular&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">StixFonts</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">fontname</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;it&#39;</span><span class="p">,</span> <span class="s1">&#39;regular&#39;</span><span class="p">)</span>
+                        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">StixFonts</span><span class="p">)):</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span><span class="s1">&#39;rm&#39;</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">)</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Font &#39;</span><span class="si">%s</span><span class="s2">&#39; does not have a glyph for &#39;</span><span class="si">%s</span><span class="s2">&#39; [U+</span><span class="si">%x</span><span class="s2">]&quot;</span> <span class="o">%</span>
-                     <span class="p">(</span><span class="n">new_fontname</span><span class="p">,</span>
-                      <span class="n">sym</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;backslashreplace&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">),</span>
-                      <span class="n">uniindex</span><span class="p">),</span>
-                     <span class="n">MathTextWarning</span><span class="p">)</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Substituting with a dummy symbol.&quot;</span><span class="p">,</span> <span class="n">MathTextWarning</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Font </span><span class="si">{!r}</span><span class="s2"> does not have a glyph for </span><span class="si">{!a}</span><span class="s2"> [U+</span><span class="si">{:x}</span><span class="s2">], &quot;</span>
+                    <span class="s2">&quot;substituting with a dummy symbol.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">new_fontname</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">uniindex</span><span class="p">),</span>
+                    <span class="n">MathTextWarning</span><span class="p">)</span>
                 <span class="n">fontname</span> <span class="o">=</span> <span class="s1">&#39;rm&#39;</span>
                 <span class="n">new_fontname</span> <span class="o">=</span> <span class="n">fontname</span>
                 <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_font</span><span class="p">(</span><span class="n">fontname</span><span class="p">)</span>
@@ -997,7 +992,7 @@ type="text/css" />
                  <span class="mi">3</span> <span class="p">:</span> <span class="s1">&#39;STIXSizeThreeSym&#39;</span><span class="p">,</span>
                  <span class="mi">4</span> <span class="p">:</span> <span class="s1">&#39;STIXSizeFourSym&#39;</span><span class="p">,</span>
                  <span class="mi">5</span> <span class="p">:</span> <span class="s1">&#39;STIXSizeFiveSym&#39;</span><span class="p">})</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fontmap</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontmap</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">fullpath</span> <span class="o">=</span> <span class="n">findfont</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fullpath</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fullpath</span>
@@ -1005,8 +1000,8 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">_get_glyph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">math</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Override prime symbol to use Bakoma &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">sym</span> <span class="o">==</span> <span class="sa">r</span><span class="s1">&#39;\prime&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bakoma</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span><span class="n">fontname</span><span class="p">,</span>
-                    <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">math</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bakoma</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span>
+                <span class="n">fontname</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">math</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># check whether the glyph is available in the display font</span>
             <span class="n">uniindex</span> <span class="o">=</span> <span class="n">get_unicode_index</span><span class="p">(</span><span class="n">sym</span><span class="p">)</span>
@@ -1014,11 +1009,11 @@ type="text/css" />
             <span class="k">if</span> <span class="n">font</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">glyphindex</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_char_index</span><span class="p">(</span><span class="n">uniindex</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">glyphindex</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">DejaVuFonts</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span>
-                            <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">math</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span>
+                        <span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">math</span><span class="p">)</span>
             <span class="c1"># otherwise return regular glyph</span>
-            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">DejaVuFonts</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span><span class="n">fontname</span><span class="p">,</span>
-                    <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">math</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_glyph</span><span class="p">(</span>
+                <span class="n">fontname</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">math</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DejaVuSerifFonts"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.DejaVuSerifFonts">[docs]</a><span class="k">class</span> <span class="nc">DejaVuSerifFonts</span><span class="p">(</span><span class="n">DejaVuFonts</span><span class="p">):</span>
@@ -1084,7 +1079,7 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">TruetypeFonts</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fontmap</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontmap</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">fullpath</span> <span class="o">=</span> <span class="n">findfont</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fullpath</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fullpath</span>
@@ -1120,7 +1115,7 @@ type="text/css" />
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
 
-            <span class="k">if</span> <span class="n">uniindex</span> <span class="o">&gt;=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">uniindex</span> <span class="o">&lt;=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">uniindex</span> <span class="o">&lt;=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="n">uniindex</span> <span class="o">=</span> <span class="n">uniindex</span> <span class="o">-</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">range</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
                 <span class="n">fontname</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">doing_sans_conversion</span><span class="p">:</span>
@@ -1160,7 +1155,7 @@ type="text/css" />
             <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_font</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="n">glyphindex</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_char_index</span><span class="p">(</span><span class="n">uniindex</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">glyphindex</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">alternatives</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">unichr_safe</span><span class="p">(</span><span class="n">uniindex</span><span class="p">)))</span>
+                <span class="n">alternatives</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="nb">chr</span><span class="p">(</span><span class="n">uniindex</span><span class="p">)))</span>
 
         <span class="c1"># The largest size of the radical symbol in STIX has incorrect</span>
         <span class="c1"># metrics that cause it to be disconnected from the stem.</span>
@@ -1211,7 +1206,7 @@ type="text/css" />
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fonts</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_font</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fonts</span><span class="p">[</span><span class="s1">&#39;regular&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_font</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pswriter</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">cStringIO</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pswriter</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_get_font</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">font</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">font</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fontmap</span><span class="p">:</span>
@@ -1229,7 +1224,7 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">fonts</span><span class="p">[</span><span class="n">cached_font</span><span class="o">.</span><span class="n">get_fontname</span><span class="p">()]</span> <span class="o">=</span> <span class="n">cached_font</span>
         <span class="k">return</span> <span class="n">cached_font</span>
 
-    <span class="k">def</span> <span class="nf">_get_info</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="n">math</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">,</span> <span class="n">font_class</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="n">math</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="s1">&#39;load the cmfont, metrics and glyph with caching&#39;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">fontname</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">dpi</span>
         <span class="n">tup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">glyphd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -1240,8 +1235,7 @@ type="text/css" />
         <span class="c1"># Only characters in the &quot;Letter&quot; class should really be italicized.</span>
         <span class="c1"># This class includes greek letters, so we&#39;re ok</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">fontname</span> <span class="o">==</span> <span class="s1">&#39;it&#39;</span> <span class="ow">and</span>
-            <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sym</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span>
-             <span class="ow">not</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">category</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">sym</span><span class="p">))</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">))):</span>
+            <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sym</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">category</span><span class="p">(</span><span class="n">sym</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">))):</span>
             <span class="n">fontname</span> <span class="o">=</span> <span class="s1">&#39;rm&#39;</span>
 
         <span class="n">found_symbol</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1255,8 +1249,9 @@ type="text/css" />
             <span class="n">num</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">glyph</span><span class="p">)</span>
             <span class="n">found_symbol</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No TeX to built-in Postscript mapping for </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sym</span><span class="p">),</span>
-                 <span class="n">MathTextWarning</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;No TeX to built-in Postscript mapping for </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sym</span><span class="p">),</span>
+                <span class="n">MathTextWarning</span><span class="p">)</span>
 
         <span class="n">slanted</span> <span class="o">=</span> <span class="p">(</span><span class="n">fontname</span> <span class="o">==</span> <span class="s1">&#39;it&#39;</span><span class="p">)</span>
         <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_font</span><span class="p">(</span><span class="n">fontname</span><span class="p">)</span>
@@ -1265,8 +1260,10 @@ type="text/css" />
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">symbol_name</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_name_char</span><span class="p">(</span><span class="n">glyph</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No glyph in standard Postscript font </span><span class="si">{!r}</span><span class="s2"> for </span><span class="si">{!r}</span><span class="s2">&quot;</span>
-                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">get_fontname</span><span class="p">(),</span> <span class="n">sym</span><span class="p">),</span> <span class="n">MathTextWarning</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;No glyph in standard Postscript font </span><span class="si">{!r}</span><span class="s2"> for </span><span class="si">{!r}</span><span class="s2">&quot;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">get_fontname</span><span class="p">(),</span> <span class="n">sym</span><span class="p">),</span>
+                    <span class="n">MathTextWarning</span><span class="p">)</span>
                 <span class="n">found_symbol</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">found_symbol</span><span class="p">:</span>
@@ -1280,7 +1277,7 @@ type="text/css" />
 
         <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span> <span class="o">*</span> <span class="n">scale</span>
                                   <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">font</span><span class="o">.</span><span class="n">get_bbox_char</span><span class="p">(</span><span class="n">glyph</span><span class="p">)]</span>
-        <span class="n">metrics</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
             <span class="n">advance</span>  <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_width_char</span><span class="p">(</span><span class="n">glyph</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
             <span class="n">width</span>    <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_width_char</span><span class="p">(</span><span class="n">glyph</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
             <span class="n">height</span>   <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_height_char</span><span class="p">(</span><span class="n">glyph</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
@@ -1293,7 +1290,7 @@ type="text/css" />
             <span class="n">slanted</span> <span class="o">=</span> <span class="n">slanted</span>
             <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">glyphd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">glyphd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
             <span class="n">font</span>            <span class="o">=</span> <span class="n">font</span><span class="p">,</span>
             <span class="n">fontsize</span>        <span class="o">=</span> <span class="n">fontsize</span><span class="p">,</span>
             <span class="n">postscript_name</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_fontname</span><span class="p">(),</span>
@@ -1478,9 +1475,6 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__internal_repr__</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">__internal_repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
 
 <div class="viewcode-block" id="Node.get_kerning"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.Node.get_kerning">[docs]</a>    <span class="k">def</span> <span class="nf">get_kerning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">next</span><span class="p">):</span>
@@ -1567,7 +1561,7 @@ type="text/css" />
         <span class="c1"># pack phase, after we know the real fontsize</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_metrics</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__internal_repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;`</span><span class="si">%s</span><span class="s1">`&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span>
 
     <span class="k">def</span> <span class="nf">_update_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1665,22 +1659,22 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1"> &lt;</span><span class="si">%.02f</span><span class="s1"> </span><span class="si">%.02f</span><span class="s1"> </span><span class="si">%.02f</span><span class="s1"> </span><span class="si">%.02f</span><span class="s1">&gt; </span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__internal_repr__</span><span class="p">(),</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_amount</span><span class="p">,</span>
             <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">]))</span>
 
-    <span class="k">def</span> <span class="nf">_determine_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">totals</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_determine_order</span><span class="p">(</span><span class="n">totals</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A helper function to determine the highest order of glue</span>
-<span class="sd">        used by the members of this list.  Used by vpack and hpack.</span>
+<span class="sd">        Determine the highest order of glue used by the members of this list.</span>
+
+<span class="sd">        Helper function used by vpack and hpack.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">o</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">totals</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">totals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
-                <span class="n">o</span> <span class="o">=</span> <span class="n">i</span>
-                <span class="k">break</span>
-        <span class="k">return</span> <span class="n">o</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">totals</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">totals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span>
+        <span class="k">return</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_set_glue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">totals</span><span class="p">,</span> <span class="n">error_type</span><span class="p">):</span>
         <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_order</span><span class="p">(</span><span class="n">totals</span><span class="p">)</span>
@@ -1693,8 +1687,9 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">glue_ratio</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">):</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">error_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="p">),</span>
-                     <span class="n">MathTextWarning</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">error_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="p">),</span>
+                    <span class="n">MathTextWarning</span><span class="p">)</span>
 
 <div class="viewcode-block" id="List.shrink"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.List.shrink">[docs]</a>    <span class="k">def</span> <span class="nf">shrink</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
@@ -1936,19 +1931,19 @@ type="text/css" />
 <div class="viewcode-block" id="Glue"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.Glue">[docs]</a><span class="k">class</span> <span class="nc">Glue</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Most of the information in this object is stored in the underlying</span>
-<span class="sd">    :class:`GlueSpec` class, which is shared between multiple glue objects.  (This</span>
-<span class="sd">    is a memory optimization which probably doesn&#39;t matter anymore, but it&#39;s</span>
-<span class="sd">    easier to stick to what TeX does.)</span>
+<span class="sd">    :class:`GlueSpec` class, which is shared between multiple glue objects.</span>
+<span class="sd">    (This is a memory optimization which probably doesn&#39;t matter anymore, but</span>
+<span class="sd">    it&#39;s easier to stick to what TeX does.)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">glue_type</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">Node</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">glue_subtype</span>   <span class="o">=</span> <span class="s1">&#39;normal&#39;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">glue_type</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">glue_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">glue_spec</span> <span class="o">=</span> <span class="n">GlueSpec</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">glue_type</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">glue_type</span><span class="p">,</span> <span class="n">GlueSpec</span><span class="p">):</span>
             <span class="n">glue_spec</span> <span class="o">=</span> <span class="n">glue_type</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;glue_type must be a glue spec name or instance.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;glue_type must be a glue spec name or instance&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
             <span class="n">glue_spec</span> <span class="o">=</span> <span class="n">glue_spec</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">glue_spec</span>      <span class="o">=</span> <span class="n">glue_spec</span>
@@ -2403,7 +2398,7 @@ type="text/css" />
     <span class="n">_right_delim</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;) ] \} &gt; \rfloor \rangle \rceil&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">()</span>
         <span class="c1"># All forward declarations are here</span>
         <span class="n">p</span><span class="o">.</span><span class="n">accent</span>           <span class="o">=</span> <span class="n">Forward</span><span class="p">()</span>
         <span class="n">p</span><span class="o">.</span><span class="n">ambi_delim</span>       <span class="o">=</span> <span class="n">Forward</span><span class="p">()</span>
@@ -2486,7 +2481,7 @@ type="text/css" />
 
         <span class="n">p</span><span class="o">.</span><span class="n">accent</span>        <span class="o">&lt;&lt;=</span> <span class="n">Group</span><span class="p">(</span>
                              <span class="n">Suppress</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">bslash</span><span class="p">)</span>
-                           <span class="o">+</span> <span class="n">oneOf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accent_map</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wide_accents</span><span class="p">))</span>
+                           <span class="o">+</span> <span class="n">oneOf</span><span class="p">([</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_accent_map</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_wide_accents</span><span class="p">])</span>
                            <span class="o">-</span> <span class="n">p</span><span class="o">.</span><span class="n">placeable</span>
                          <span class="p">)</span>
 
@@ -2524,7 +2519,7 @@ type="text/css" />
         <span class="n">p</span><span class="o">.</span><span class="n">ambi_delim</span>    <span class="o">&lt;&lt;=</span> <span class="n">oneOf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ambi_delim</span><span class="p">))</span>
         <span class="n">p</span><span class="o">.</span><span class="n">left_delim</span>    <span class="o">&lt;&lt;=</span> <span class="n">oneOf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_left_delim</span><span class="p">))</span>
         <span class="n">p</span><span class="o">.</span><span class="n">right_delim</span>   <span class="o">&lt;&lt;=</span> <span class="n">oneOf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_right_delim</span><span class="p">))</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">right_delim_safe</span> <span class="o">&lt;&lt;=</span> <span class="n">oneOf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_right_delim</span> <span class="o">-</span> <span class="p">{</span><span class="s1">&#39;}&#39;</span><span class="p">})</span> <span class="o">+</span> <span class="p">[</span><span class="sa">r</span><span class="s1">&#39;\}&#39;</span><span class="p">])</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">right_delim_safe</span> <span class="o">&lt;&lt;=</span> <span class="n">oneOf</span><span class="p">([</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_right_delim</span> <span class="o">-</span> <span class="p">{</span><span class="s1">&#39;}&#39;</span><span class="p">}),</span> <span class="sa">r</span><span class="s1">&#39;\}&#39;</span><span class="p">])</span>
 
         <span class="n">p</span><span class="o">.</span><span class="n">genfrac</span>       <span class="o">&lt;&lt;=</span> <span class="n">Group</span><span class="p">(</span>
                              <span class="n">Suppress</span><span class="p">(</span><span class="n">Literal</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\genfrac&quot;</span><span class="p">))</span>
@@ -2627,11 +2622,10 @@ type="text/css" />
         <span class="k">try</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expression</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ParseBaseException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                        <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                        <span class="n">err</span><span class="o">.</span><span class="n">line</span><span class="p">,</span>
-                        <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span>
-                        <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">err</span><span class="p">)]))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                        <span class="n">err</span><span class="o">.</span><span class="n">line</span><span class="p">,</span>
+                                        <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span>
+                                        <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_stack</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_em_width_cache</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_expression</span><span class="o">.</span><span class="n">resetCache</span><span class="p">()</span>
@@ -2753,14 +2747,11 @@ type="text/css" />
         <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spaced_symbols</span><span class="p">:</span>
             <span class="c1"># iterate until we find previous character, needed for cases</span>
             <span class="c1"># such as ${ -2}$, $ -2$, or $   -2$.</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">prev_char</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span><span class="o">-</span><span class="n">i</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">prev_char</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">:</span>
-                    <span class="k">break</span>
+            <span class="n">prev_char</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[:</span><span class="n">loc</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="c1"># Binary operators at start of string should not be spaced</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_binary_operators</span> <span class="ow">and</span>
                     <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="n">loc</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">prev_char</span> <span class="o">==</span> <span class="s1">&#39;{&#39;</span> <span class="ow">or</span>
-                        <span class="n">prev_char</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_left_delim</span><span class="p">)):</span>
+                     <span class="n">prev_char</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_left_delim</span><span class="p">)):</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">char</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">Hlist</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_make_space</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
@@ -2771,20 +2762,13 @@ type="text/css" />
 
             <span class="c1"># Do not space commas between brackets</span>
             <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;,&#39;</span><span class="p">:</span>
-                <span class="n">prev_char</span><span class="p">,</span> <span class="n">next_char</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                    <span class="n">prev_char</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">prev_char</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">:</span>
-                        <span class="k">break</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="n">loc</span><span class="p">):</span>
-                    <span class="n">next_char</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">next_char</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">:</span>
-                        <span class="k">break</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">prev_char</span> <span class="o">==</span> <span class="s1">&#39;{&#39;</span> <span class="ow">and</span> <span class="n">next_char</span> <span class="o">==</span> <span class="s1">&#39;}&#39;</span><span class="p">):</span>
+                <span class="n">prev_char</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[:</span><span class="n">loc</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">next_char</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prev_char</span> <span class="o">==</span> <span class="s1">&#39;{&#39;</span> <span class="ow">and</span> <span class="n">next_char</span> <span class="o">==</span> <span class="s1">&#39;}&#39;</span><span class="p">:</span>
                     <span class="k">return</span> <span class="p">[</span><span class="n">char</span><span class="p">]</span>
 
             <span class="c1"># Do not space dots as decimal separators</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">loc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">char</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">Hlist</span><span class="p">([</span><span class="n">char</span><span class="p">,</span>
@@ -2969,7 +2953,7 @@ type="text/css" />
         <span class="n">napostrophes</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">new_toks</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tok</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tok</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tok</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tok</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">):</span>
                 <span class="n">napostrophes</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tok</span><span class="p">,</span> <span class="n">Char</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tok</span><span class="o">.</span><span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">:</span>
                 <span class="n">napostrophes</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -3360,9 +3344,9 @@ type="text/css" />
 <span class="sd">        Create a MathTextParser for the given backend *output*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="n">maxdict</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MathTextParser.parse"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathTextParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mi">72</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MathTextParser.parse"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathTextParser.parse">[docs]</a>    <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mi">72</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the given math expression *s* at the given *dpi*.  If</span>
 <span class="sd">        *prop* is provided, it is a</span>
@@ -3373,15 +3357,9 @@ type="text/css" />
 <span class="sd">        The results are cached, so multiple calls to :meth:`parse`</span>
 <span class="sd">        with the same expression should be fast.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># There is a bug in Python 3.x where it leaks frame references,</span>
-        <span class="c1"># and therefore can&#39;t handle this caching</span>
+
         <span class="k">if</span> <span class="n">prop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">prop</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">()</span>
-
-        <span class="n">cacheKey</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="nb">hash</span><span class="p">(</span><span class="n">prop</span><span class="p">))</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cacheKey</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">result</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="o">==</span> <span class="s1">&#39;ps&#39;</span> <span class="ow">and</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ps.useafm&#39;</span><span class="p">]:</span>
             <span class="n">font_output</span> <span class="o">=</span> <span class="n">StandardPsFonts</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
@@ -3405,9 +3383,7 @@ type="text/css" />
 
         <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">font_output</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span>
         <span class="n">font_output</span><span class="o">.</span><span class="n">set_canvas_size</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">font_output</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">cacheKey</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-        <span class="k">return</span> <span class="n">result</span></div>
+        <span class="k">return</span> <span class="n">font_output</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="n">box</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MathTextParser.to_mask"><a class="viewcode-back" href="../../api/mathtext_api.html#matplotlib.mathtext.MathTextParser.to_mask">[docs]</a>    <span class="k">def</span> <span class="nf">to_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texstr</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3567,10 +3543,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Writing mathematical expressions &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>Writing mathematical expressions &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,18 +28,19 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="Tutorials" href="../index.html" />
-    <link rel="next" title="Text properties and layout" href="text_props.html" />
-    <link rel="prev" title="Typesetting With XeLaTeX/LuaLaTeX" href="pgf.html" />
+    <link rel="next" title="Typesetting With XeLaTeX/LuaLaTeX" href="pgf.html" />
+    <link rel="prev" title="Annotations" href="annotations.html" />
   <link rel="canonical" href="https://matplotlib.org/tutorials/text/mathtext.html" />
 
 
@@ -50,7 +52,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -70,16 +72,16 @@ type="text/css" />
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="text_props.html" title="Text properties and layout"
+          <a href="pgf.html" title="Typesetting With XeLaTeX/LuaLaTeX"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="pgf.html" title="Typesetting With XeLaTeX/LuaLaTeX"
+          <a href="annotations.html" title="Annotations"
              accesskey="P">previous</a> |</li>
 
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../users/index.html" >User's Guide</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Tutorials</a> &raquo;</li> 
@@ -101,7 +103,7 @@ type="text/css" />
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-  <h3><a href="../../contents.html">Table Of Contents</a></h3>
+  <h3><a href="../../contents.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Writing mathematical expressions</a><ul>
 <li><a class="reference internal" href="#subscripts-and-superscripts">Subscripts and superscripts</a></li>
@@ -123,8 +125,8 @@ type="text/css" />
   <li><a href="../../contents.html">Documentation overview</a><ul>
   <li><a href="../../users/index.html">User's Guide</a><ul>
   <li><a href="../index.html">Tutorials</a><ul>
-      <li>Previous: <a href="pgf.html" title="previous chapter">Typesetting With XeLaTeX/LuaLaTeX</a></li>
-      <li>Next: <a href="text_props.html" title="next chapter">Text properties and layout</a></li>
+      <li>Previous: <a href="annotations.html" title="previous chapter">Annotations</a></li>
+      <li>Next: <a href="pgf.html" title="next chapter">Typesetting With XeLaTeX/LuaLaTeX</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -211,13 +213,17 @@ characters will behave differently depending on the rcParam
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$\alpha_i &gt; \beta_i$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-e2db32b4d0.png" class="center" /><p>Some symbols automatically put their sub/superscripts under and over
-the operator.  For example, to write the sum of <img src="../../_images/mathmpl/math-ccea9f4e30.png" style="position: relative; bottom: -6px"/> from <img src="../../_images/mathmpl/math-f9f98764da.png" style="position: relative; bottom: -3px"/> to
-<img src="../../_images/mathmpl/math-c899412e92.png" style="position: relative; bottom: -3px"/>, you could do:</p>
+<div class="math notranslate nohighlight">
+\[\alpha_i &gt; \beta_i\]</div>
+<p>Some symbols automatically put their sub/superscripts under and over the
+operator.  For example, to write the sum of <img src="../../_images/mathmpl/math-ccea9f4e30.png" style="position: relative; bottom: -6px"/> from <img src="../../_images/mathmpl/math-f9f98764da.png" style="position: relative; bottom: -3px"/>
+to <img src="../../_images/mathmpl/math-c899412e92.png" style="position: relative; bottom: -3px"/>, you could do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$\sum_{i=0}^\infty x_i$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-a3ca6be911.png" class="center" /></div>
+<div class="math notranslate nohighlight">
+\[\sum_{i=0}^\infty x_i\]</div>
+</div>
 <div class="section" id="fractions-binomials-and-stacked-numbers">
 <h2>Fractions, binomials and stacked numbers<a class="headerlink" href="#fractions-binomials-and-stacked-numbers" title="Permalink to this headline">¶</a></h2>
 <p>Fractions, binomials and stacked numbers can be created with the
@@ -227,36 +233,48 @@ respectively:</p>
 </pre></div>
 </div>
 <p>produces</p>
-<img src="../../_images/mathmpl/math-3025afbc71.png" class="center" /><p>Fractions can be arbitrarily nested:</p>
+<div class="math notranslate nohighlight">
+\[\frac{3}{4} \binom{3}{4} \stackrel{3}{4}\]</div>
+<p>Fractions can be arbitrarily nested:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$\frac{5 - \frac</span><span class="si">{1}{x}</span><span class="s1">}</span><span class="si">{4}</span><span class="s1">$&#39;</span>
 </pre></div>
 </div>
 <p>produces</p>
-<img src="../../_images/mathmpl/math-2e885fe67f.png" class="center" /><p>Note that special care needs to be taken to place parentheses and brackets around
+<div class="math notranslate nohighlight">
+\[\frac{5 - \frac{1}{x}}{4}\]</div>
+<p>Note that special care needs to be taken to place parentheses and brackets around
 fractions.  Doing things the obvious way produces brackets that are
 too small:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$(\frac{5 - \frac</span><span class="si">{1}{x}</span><span class="s1">}</span><span class="si">{4}</span><span class="s1">)$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-07b17ba8f6.png" class="center" /><p>The solution is to precede the bracket with <code class="docutils literal notranslate"><span class="pre">\left</span></code> and <code class="docutils literal notranslate"><span class="pre">\right</span></code>
+<div class="math notranslate nohighlight">
+\[(\frac{5 - \frac{1}{x}}{4})\]</div>
+<p>The solution is to precede the bracket with <code class="docutils literal notranslate"><span class="pre">\left</span></code> and <code class="docutils literal notranslate"><span class="pre">\right</span></code>
 to inform the parser that those brackets encompass the entire object.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$\left(\frac{5 - \frac</span><span class="si">{1}{x}</span><span class="s1">}</span><span class="si">{4}</span><span class="s1">\right)$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-9d267a8c3c.png" class="center" /></div>
+<div class="math notranslate nohighlight">
+\[\left(\frac{5 - \frac{1}{x}}{4}\right)\]</div>
+</div>
 <div class="section" id="radicals">
 <h2>Radicals<a class="headerlink" href="#radicals" title="Permalink to this headline">¶</a></h2>
 <p>Radicals can be produced with the <code class="docutils literal notranslate"><span class="pre">\sqrt[]{}</span></code> command.  For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$\sqrt</span><span class="si">{2}</span><span class="s1">$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-f151e9b6c6.png" class="center" /><p>Any base can (optionally) be provided inside square brackets.  Note
+<div class="math notranslate nohighlight">
+\[\sqrt{2}\]</div>
+<p>Any base can (optionally) be provided inside square brackets.  Note
 that the base must be a simple expression, and can not contain layout
 commands such as fractions or sub/superscripts:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$\sqrt[3]</span><span class="si">{x}</span><span class="s1">$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-6b6cc30aef.png" class="center" /></div>
+<div class="math notranslate nohighlight">
+\[\sqrt[3]{x}\]</div>
+</div>
 <div class="section" id="fonts">
 <span id="mathtext-fonts"></span><h2>Fonts<a class="headerlink" href="#fonts" title="Permalink to this headline">¶</a></h2>
 <p>The default font is <em>italics</em> for mathematical symbols.</p>
@@ -271,20 +289,26 @@ in a font command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$s(t) = \mathcal</span><span class="si">{A}</span><span class="s1">\mathrm</span><span class="si">{sin}</span><span class="s1">(2 \omega t)$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-c8056d47b3.png" class="center" /><p>More conveniently, many commonly used function names that are typeset in a
+<div class="math notranslate nohighlight">
+\[s(t) = \mathcal{A}\mathrm{sin}(2 \omega t)\]</div>
+<p>More conveniently, many commonly used function names that are typeset in a
 Roman font have shortcuts.  So the expression above could be written
 as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s1">&#39;$s(t) = \mathcal</span><span class="si">{A}</span><span class="s1">\sin(2 \omega t)$&#39;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-77926a09ec.png" class="center" /><p>Here &quot;s&quot; and &quot;t&quot; are variable in italics font (default), &quot;sin&quot; is in
+<div class="math notranslate nohighlight">
+\[s(t) = \mathcal{A}\sin(2 \omega t)\]</div>
+<p>Here &quot;s&quot; and &quot;t&quot; are variable in italics font (default), &quot;sin&quot; is in
 Roman font, and the amplitude &quot;A&quot; is in calligraphy font.  Note in the
 example above the calligraphy <code class="docutils literal notranslate"><span class="pre">A</span></code> is squished into the <code class="docutils literal notranslate"><span class="pre">sin</span></code>.  You
 can use a spacing command to add a little whitespace between them:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">=</span> \<span class="n">mathcal</span><span class="p">{</span><span class="n">A</span><span class="p">}</span>\<span class="o">/</span>\<span class="n">sin</span><span class="p">(</span><span class="mi">2</span> \<span class="n">omega</span> <span class="n">t</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-44f45b7160.png" class="center" /><p>The choices available with all fonts are:</p>
+<div class="math notranslate nohighlight">
+\[s(t) = \mathcal{A}\/\sin(2 \omega t)\]</div>
+<p>The choices available with all fonts are:</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
@@ -501,7 +525,9 @@ over the i:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">r</span><span class="s2">&quot;$\hat i\ \ \hat \imath$&quot;</span>
 </pre></div>
 </div>
-<img src="../../_images/mathmpl/math-80117b16d3.png" class="center" /></div>
+<div class="math notranslate nohighlight">
+\[\hat i\ \ \hat \imath\]</div>
+</div>
 <div class="section" id="symbols">
 <h2>Symbols<a class="headerlink" href="#symbols" title="Permalink to this headline">¶</a></h2>
 <p>You can also use a large number of the TeX symbols, as in <code class="docutils literal notranslate"><span class="pre">\infty</span></code>,
@@ -518,42 +544,42 @@ over the i:</p>
 <col width="17%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-5149852f08.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\alpha</span></code></td>
-<td><img src="../../_images/mathmpl/math-59ed813421.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\beta</span></code></td>
-<td><img src="../../_images/mathmpl/math-7d54d13fc9.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\chi</span></code></td>
-<td><img src="../../_images/mathmpl/math-e15357ad29.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\delta</span></code></td>
-<td><img src="../../_images/mathmpl/math-41188a0c1b.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\digamma</span></code></td>
-<td><img src="../../_images/mathmpl/math-21b6ff3aa7.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\epsilon</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\alpha\)</span> <code class="docutils literal notranslate"><span class="pre">\alpha</span></code></td>
+<td><span class="math notranslate nohighlight">\(\beta\)</span> <code class="docutils literal notranslate"><span class="pre">\beta</span></code></td>
+<td><span class="math notranslate nohighlight">\(\chi\)</span> <code class="docutils literal notranslate"><span class="pre">\chi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\delta\)</span> <code class="docutils literal notranslate"><span class="pre">\delta</span></code></td>
+<td><span class="math notranslate nohighlight">\(\digamma\)</span> <code class="docutils literal notranslate"><span class="pre">\digamma</span></code></td>
+<td><span class="math notranslate nohighlight">\(\epsilon\)</span> <code class="docutils literal notranslate"><span class="pre">\epsilon</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-0fa258552e.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\eta</span></code></td>
-<td><img src="../../_images/mathmpl/math-ae65c1de79.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\gamma</span></code></td>
-<td><img src="../../_images/mathmpl/math-ff6a67483e.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\iota</span></code></td>
-<td><img src="../../_images/mathmpl/math-436efe52d1.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\kappa</span></code></td>
-<td><img src="../../_images/mathmpl/math-3642ca147d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\lambda</span></code></td>
-<td><img src="../../_images/mathmpl/math-3488de1d0a.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\mu</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\eta\)</span> <code class="docutils literal notranslate"><span class="pre">\eta</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gamma\)</span> <code class="docutils literal notranslate"><span class="pre">\gamma</span></code></td>
+<td><span class="math notranslate nohighlight">\(\iota\)</span> <code class="docutils literal notranslate"><span class="pre">\iota</span></code></td>
+<td><span class="math notranslate nohighlight">\(\kappa\)</span> <code class="docutils literal notranslate"><span class="pre">\kappa</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lambda\)</span> <code class="docutils literal notranslate"><span class="pre">\lambda</span></code></td>
+<td><span class="math notranslate nohighlight">\(\mu\)</span> <code class="docutils literal notranslate"><span class="pre">\mu</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-79a0df421c.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\nu</span></code></td>
-<td><img src="../../_images/mathmpl/math-b555ccd28d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\omega</span></code></td>
-<td><img src="../../_images/mathmpl/math-e22cc525ec.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\phi</span></code></td>
-<td><img src="../../_images/mathmpl/math-2c7a9dac6d.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\pi</span></code></td>
-<td><img src="../../_images/mathmpl/math-3fc9142b1d.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\psi</span></code></td>
-<td><img src="../../_images/mathmpl/math-f2e3547a85.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\rho</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\nu\)</span> <code class="docutils literal notranslate"><span class="pre">\nu</span></code></td>
+<td><span class="math notranslate nohighlight">\(\omega\)</span> <code class="docutils literal notranslate"><span class="pre">\omega</span></code></td>
+<td><span class="math notranslate nohighlight">\(\phi\)</span> <code class="docutils literal notranslate"><span class="pre">\phi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\pi\)</span> <code class="docutils literal notranslate"><span class="pre">\pi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\psi\)</span> <code class="docutils literal notranslate"><span class="pre">\psi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rho\)</span> <code class="docutils literal notranslate"><span class="pre">\rho</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-293c147d21.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\sigma</span></code></td>
-<td><img src="../../_images/mathmpl/math-f970af607c.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\tau</span></code></td>
-<td><img src="../../_images/mathmpl/math-5dc8912759.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\theta</span></code></td>
-<td><img src="../../_images/mathmpl/math-ac7cfff3a1.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\upsilon</span></code></td>
-<td><img src="../../_images/mathmpl/math-a88976d8dd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\varepsilon</span></code></td>
-<td><img src="../../_images/mathmpl/math-67a8f5ca79.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\varkappa</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\sigma\)</span> <code class="docutils literal notranslate"><span class="pre">\sigma</span></code></td>
+<td><span class="math notranslate nohighlight">\(\tau\)</span> <code class="docutils literal notranslate"><span class="pre">\tau</span></code></td>
+<td><span class="math notranslate nohighlight">\(\theta\)</span> <code class="docutils literal notranslate"><span class="pre">\theta</span></code></td>
+<td><span class="math notranslate nohighlight">\(\upsilon\)</span> <code class="docutils literal notranslate"><span class="pre">\upsilon</span></code></td>
+<td><span class="math notranslate nohighlight">\(\varepsilon\)</span> <code class="docutils literal notranslate"><span class="pre">\varepsilon</span></code></td>
+<td><span class="math notranslate nohighlight">\(\varkappa\)</span> <code class="docutils literal notranslate"><span class="pre">\varkappa</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-a79325da6f.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\varphi</span></code></td>
-<td><img src="../../_images/mathmpl/math-5e94f6d1ef.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\varpi</span></code></td>
-<td><img src="../../_images/mathmpl/math-d6c1d2bb14.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\varrho</span></code></td>
-<td><img src="../../_images/mathmpl/math-92fc1ff85f.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\varsigma</span></code></td>
-<td><img src="../../_images/mathmpl/math-d11bf19a50.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\vartheta</span></code></td>
-<td><img src="../../_images/mathmpl/math-1859062b14.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\xi</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\varphi\)</span> <code class="docutils literal notranslate"><span class="pre">\varphi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\varpi\)</span> <code class="docutils literal notranslate"><span class="pre">\varpi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\varrho\)</span> <code class="docutils literal notranslate"><span class="pre">\varrho</span></code></td>
+<td><span class="math notranslate nohighlight">\(\varsigma\)</span> <code class="docutils literal notranslate"><span class="pre">\varsigma</span></code></td>
+<td><span class="math notranslate nohighlight">\(\vartheta\)</span> <code class="docutils literal notranslate"><span class="pre">\vartheta</span></code></td>
+<td><span class="math notranslate nohighlight">\(\xi\)</span> <code class="docutils literal notranslate"><span class="pre">\xi</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-d51bb4d6d4.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\zeta</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\zeta\)</span> <code class="docutils literal notranslate"><span class="pre">\zeta</span></code></td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
@@ -577,20 +603,20 @@ over the i:</p>
 <col width="13%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-e3168b0fff.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Delta</span></code></td>
-<td><img src="../../_images/mathmpl/math-4eacc6ba71.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Gamma</span></code></td>
-<td><img src="../../_images/mathmpl/math-a57791e0e2.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Lambda</span></code></td>
-<td><img src="../../_images/mathmpl/math-28d3e90e31.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Omega</span></code></td>
-<td><img src="../../_images/mathmpl/math-cebfe4186d.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\Phi</span></code></td>
-<td><img src="../../_images/mathmpl/math-3b938a5601.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Pi</span></code></td>
-<td><img src="../../_images/mathmpl/math-d44376b8c3.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Psi</span></code></td>
-<td><img src="../../_images/mathmpl/math-076bf05243.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Sigma</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\Delta\)</span> <code class="docutils literal notranslate"><span class="pre">\Delta</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Gamma\)</span> <code class="docutils literal notranslate"><span class="pre">\Gamma</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Lambda\)</span> <code class="docutils literal notranslate"><span class="pre">\Lambda</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Omega\)</span> <code class="docutils literal notranslate"><span class="pre">\Omega</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Phi\)</span> <code class="docutils literal notranslate"><span class="pre">\Phi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Pi\)</span> <code class="docutils literal notranslate"><span class="pre">\Pi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Psi\)</span> <code class="docutils literal notranslate"><span class="pre">\Psi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Sigma\)</span> <code class="docutils literal notranslate"><span class="pre">\Sigma</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-98c28d2d1b.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Theta</span></code></td>
-<td><img src="../../_images/mathmpl/math-43a44ec8e4.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\Upsilon</span></code></td>
-<td><img src="../../_images/mathmpl/math-376450e92a.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Xi</span></code></td>
-<td><img src="../../_images/mathmpl/math-ab04245089.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\mho</span></code></td>
-<td><img src="../../_images/mathmpl/math-9544659959.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\nabla</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\Theta\)</span> <code class="docutils literal notranslate"><span class="pre">\Theta</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Upsilon\)</span> <code class="docutils literal notranslate"><span class="pre">\Upsilon</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Xi\)</span> <code class="docutils literal notranslate"><span class="pre">\Xi</span></code></td>
+<td><span class="math notranslate nohighlight">\(\mho\)</span> <code class="docutils literal notranslate"><span class="pre">\mho</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nabla\)</span> <code class="docutils literal notranslate"><span class="pre">\nabla</span></code></td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
@@ -610,10 +636,10 @@ over the i:</p>
 <col width="17%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-d115134b0c.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\aleph</span></code></td>
-<td><img src="../../_images/mathmpl/math-b1d46891d0.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\beth</span></code></td>
-<td><img src="../../_images/mathmpl/math-ad0c7d5fd3.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\daleth</span></code></td>
-<td><img src="../../_images/mathmpl/math-4a68c72624.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\gimel</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\aleph\)</span> <code class="docutils literal notranslate"><span class="pre">\aleph</span></code></td>
+<td><span class="math notranslate nohighlight">\(\beth\)</span> <code class="docutils literal notranslate"><span class="pre">\beth</span></code></td>
+<td><span class="math notranslate nohighlight">\(\daleth\)</span> <code class="docutils literal notranslate"><span class="pre">\daleth</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gimel\)</span> <code class="docutils literal notranslate"><span class="pre">\gimel</span></code></td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
@@ -632,33 +658,33 @@ over the i:</p>
 <col width="17%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-9d750cc7d9.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">/</span></code></td>
-<td><img src="../../_images/mathmpl/math-1f9db75fdb.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">[</span></code></td>
-<td><img src="../../_images/mathmpl/math-0c8ba18b43.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\Downarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-d00ab41d80.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\Uparrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-2480720752.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\Vert</span></code></td>
-<td><img src="../../_images/mathmpl/math-b6a35dc0d4.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\backslash</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(/\)</span> <code class="docutils literal notranslate"><span class="pre">/</span></code></td>
+<td><span class="math notranslate nohighlight">\([\)</span> <code class="docutils literal notranslate"><span class="pre">[</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Downarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Downarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Uparrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Uparrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Vert\)</span> <code class="docutils literal notranslate"><span class="pre">\Vert</span></code></td>
+<td><span class="math notranslate nohighlight">\(\backslash\)</span> <code class="docutils literal notranslate"><span class="pre">\backslash</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-56b7078922.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\downarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-46c392f788.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\langle</span></code></td>
-<td><img src="../../_images/mathmpl/math-6c35839641.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\lceil</span></code></td>
-<td><img src="../../_images/mathmpl/math-145ca7a5e7.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\lfloor</span></code></td>
-<td><img src="../../_images/mathmpl/math-554199c05b.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\llcorner</span></code></td>
-<td><img src="../../_images/mathmpl/math-057e1a984d.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\lrcorner</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\downarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\downarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\langle\)</span> <code class="docutils literal notranslate"><span class="pre">\langle</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lceil\)</span> <code class="docutils literal notranslate"><span class="pre">\lceil</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lfloor\)</span> <code class="docutils literal notranslate"><span class="pre">\lfloor</span></code></td>
+<td><span class="math notranslate nohighlight">\(\llcorner\)</span> <code class="docutils literal notranslate"><span class="pre">\llcorner</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lrcorner\)</span> <code class="docutils literal notranslate"><span class="pre">\lrcorner</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-ef94320557.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\rangle</span></code></td>
-<td><img src="../../_images/mathmpl/math-cbd4824a55.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\rceil</span></code></td>
-<td><img src="../../_images/mathmpl/math-c8d83de344.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\rfloor</span></code></td>
-<td><img src="../../_images/mathmpl/math-de64de5819.png" style="position: relative; bottom: --2px"/> <code class="docutils literal notranslate"><span class="pre">\ulcorner</span></code></td>
-<td><img src="../../_images/mathmpl/math-f1bfb0bbf7.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\uparrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-4f8107394b.png" style="position: relative; bottom: --2px"/> <code class="docutils literal notranslate"><span class="pre">\urcorner</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\rangle\)</span> <code class="docutils literal notranslate"><span class="pre">\rangle</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rceil\)</span> <code class="docutils literal notranslate"><span class="pre">\rceil</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rfloor\)</span> <code class="docutils literal notranslate"><span class="pre">\rfloor</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ulcorner\)</span> <code class="docutils literal notranslate"><span class="pre">\ulcorner</span></code></td>
+<td><span class="math notranslate nohighlight">\(\uparrow\)</span> <code class="docutils literal notranslate"><span class="pre">\uparrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\urcorner\)</span> <code class="docutils literal notranslate"><span class="pre">\urcorner</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-e12e277d39.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\vert</span></code></td>
-<td><img src="../../_images/mathmpl/math-f81f19a962.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\{</span></code></td>
-<td><img src="../../_images/mathmpl/math-ee61bb7cf9.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\|</span></code></td>
-<td><img src="../../_images/mathmpl/math-19097cff83.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\}</span></code></td>
-<td><img src="../../_images/mathmpl/math-d35c7fd4db.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">]</span></code></td>
-<td><img src="../../_images/mathmpl/math-dfa04fb947.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">|</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\vert\)</span> <code class="docutils literal notranslate"><span class="pre">\vert</span></code></td>
+<td><span class="math notranslate nohighlight">\(\{\)</span> <code class="docutils literal notranslate"><span class="pre">\{</span></code></td>
+<td><span class="math notranslate nohighlight">\(\|\)</span> <code class="docutils literal notranslate"><span class="pre">\|</span></code></td>
+<td><span class="math notranslate nohighlight">\(\}\)</span> <code class="docutils literal notranslate"><span class="pre">\}</span></code></td>
+<td><span class="math notranslate nohighlight">\(]\)</span> <code class="docutils literal notranslate"><span class="pre">]</span></code></td>
+<td><span class="math notranslate nohighlight">\(|\)</span> <code class="docutils literal notranslate"><span class="pre">|</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -675,21 +701,21 @@ over the i:</p>
 <col width="17%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-db9b9e0126.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\bigcap</span></code></td>
-<td><img src="../../_images/mathmpl/math-52ee117ecd.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\bigcup</span></code></td>
-<td><img src="../../_images/mathmpl/math-a31bc74ee2.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\bigodot</span></code></td>
-<td><img src="../../_images/mathmpl/math-011efae7a0.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\bigoplus</span></code></td>
-<td><img src="../../_images/mathmpl/math-e8cf7f5844.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\bigotimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-8f896d9410.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\biguplus</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\bigcap\)</span> <code class="docutils literal notranslate"><span class="pre">\bigcap</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigcup\)</span> <code class="docutils literal notranslate"><span class="pre">\bigcup</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigodot\)</span> <code class="docutils literal notranslate"><span class="pre">\bigodot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigoplus\)</span> <code class="docutils literal notranslate"><span class="pre">\bigoplus</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigotimes\)</span> <code class="docutils literal notranslate"><span class="pre">\bigotimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\biguplus\)</span> <code class="docutils literal notranslate"><span class="pre">\biguplus</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-1de8afe642.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\bigvee</span></code></td>
-<td><img src="../../_images/mathmpl/math-888740ee66.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\bigwedge</span></code></td>
-<td><img src="../../_images/mathmpl/math-1bb3130224.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\coprod</span></code></td>
-<td><img src="../../_images/mathmpl/math-1610e87ea8.png" style="position: relative; bottom: -19px"/> <code class="docutils literal notranslate"><span class="pre">\int</span></code></td>
-<td><img src="../../_images/mathmpl/math-ce75170225.png" style="position: relative; bottom: -19px"/> <code class="docutils literal notranslate"><span class="pre">\oint</span></code></td>
-<td><img src="../../_images/mathmpl/math-e661b1289d.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\prod</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\bigvee\)</span> <code class="docutils literal notranslate"><span class="pre">\bigvee</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigwedge\)</span> <code class="docutils literal notranslate"><span class="pre">\bigwedge</span></code></td>
+<td><span class="math notranslate nohighlight">\(\coprod\)</span> <code class="docutils literal notranslate"><span class="pre">\coprod</span></code></td>
+<td><span class="math notranslate nohighlight">\(\int\)</span> <code class="docutils literal notranslate"><span class="pre">\int</span></code></td>
+<td><span class="math notranslate nohighlight">\(\oint\)</span> <code class="docutils literal notranslate"><span class="pre">\oint</span></code></td>
+<td><span class="math notranslate nohighlight">\(\prod\)</span> <code class="docutils literal notranslate"><span class="pre">\prod</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-f6fb720d82.png" style="position: relative; bottom: -10px"/> <code class="docutils literal notranslate"><span class="pre">\sum</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\sum\)</span> <code class="docutils literal notranslate"><span class="pre">\sum</span></code></td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
@@ -711,43 +737,43 @@ over the i:</p>
 <col width="17%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-a174a79fa7.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Pr</span></code></td>
-<td><img src="../../_images/mathmpl/math-c7d2b9a8fd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\arccos</span></code></td>
-<td><img src="../../_images/mathmpl/math-bab33d6e68.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\arcsin</span></code></td>
-<td><img src="../../_images/mathmpl/math-f8ee41a28a.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\arctan</span></code></td>
-<td><img src="../../_images/mathmpl/math-510e2aecba.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\arg</span></code></td>
-<td><img src="../../_images/mathmpl/math-a539c63e58.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\cos</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\Pr\)</span> <code class="docutils literal notranslate"><span class="pre">\Pr</span></code></td>
+<td><span class="math notranslate nohighlight">\(\arccos\)</span> <code class="docutils literal notranslate"><span class="pre">\arccos</span></code></td>
+<td><span class="math notranslate nohighlight">\(\arcsin\)</span> <code class="docutils literal notranslate"><span class="pre">\arcsin</span></code></td>
+<td><span class="math notranslate nohighlight">\(\arctan\)</span> <code class="docutils literal notranslate"><span class="pre">\arctan</span></code></td>
+<td><span class="math notranslate nohighlight">\(\arg\)</span> <code class="docutils literal notranslate"><span class="pre">\arg</span></code></td>
+<td><span class="math notranslate nohighlight">\(\cos\)</span> <code class="docutils literal notranslate"><span class="pre">\cos</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-46d99aa165.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\cosh</span></code></td>
-<td><img src="../../_images/mathmpl/math-06c793e494.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\cot</span></code></td>
-<td><img src="../../_images/mathmpl/math-993151c5de.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\coth</span></code></td>
-<td><img src="../../_images/mathmpl/math-c72f36312c.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\csc</span></code></td>
-<td><img src="../../_images/mathmpl/math-efdcd0e7c3.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\deg</span></code></td>
-<td><img src="../../_images/mathmpl/math-a4f974e6ac.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\det</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\cosh\)</span> <code class="docutils literal notranslate"><span class="pre">\cosh</span></code></td>
+<td><span class="math notranslate nohighlight">\(\cot\)</span> <code class="docutils literal notranslate"><span class="pre">\cot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\coth\)</span> <code class="docutils literal notranslate"><span class="pre">\coth</span></code></td>
+<td><span class="math notranslate nohighlight">\(\csc\)</span> <code class="docutils literal notranslate"><span class="pre">\csc</span></code></td>
+<td><span class="math notranslate nohighlight">\(\deg\)</span> <code class="docutils literal notranslate"><span class="pre">\deg</span></code></td>
+<td><span class="math notranslate nohighlight">\(\det\)</span> <code class="docutils literal notranslate"><span class="pre">\det</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-4ceaca4089.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\dim</span></code></td>
-<td><img src="../../_images/mathmpl/math-9b8a721035.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\exp</span></code></td>
-<td><img src="../../_images/mathmpl/math-705a921d5a.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\gcd</span></code></td>
-<td><img src="../../_images/mathmpl/math-ec200f4f3a.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\hom</span></code></td>
-<td><img src="../../_images/mathmpl/math-d78d7b5c1b.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\inf</span></code></td>
-<td><img src="../../_images/mathmpl/math-9c3c23a23d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ker</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\dim\)</span> <code class="docutils literal notranslate"><span class="pre">\dim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\exp\)</span> <code class="docutils literal notranslate"><span class="pre">\exp</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gcd\)</span> <code class="docutils literal notranslate"><span class="pre">\gcd</span></code></td>
+<td><span class="math notranslate nohighlight">\(\hom\)</span> <code class="docutils literal notranslate"><span class="pre">\hom</span></code></td>
+<td><span class="math notranslate nohighlight">\(\inf\)</span> <code class="docutils literal notranslate"><span class="pre">\inf</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ker\)</span> <code class="docutils literal notranslate"><span class="pre">\ker</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-0c0d015405.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\lg</span></code></td>
-<td><img src="../../_images/mathmpl/math-441aa359eb.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\lim</span></code></td>
-<td><img src="../../_images/mathmpl/math-2f010c89dd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\liminf</span></code></td>
-<td><img src="../../_images/mathmpl/math-a9a0109ea9.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\limsup</span></code></td>
-<td><img src="../../_images/mathmpl/math-a5edc7016a.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ln</span></code></td>
-<td><img src="../../_images/mathmpl/math-e5cdb1d314.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\log</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\lg\)</span> <code class="docutils literal notranslate"><span class="pre">\lg</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lim\)</span> <code class="docutils literal notranslate"><span class="pre">\lim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\liminf\)</span> <code class="docutils literal notranslate"><span class="pre">\liminf</span></code></td>
+<td><span class="math notranslate nohighlight">\(\limsup\)</span> <code class="docutils literal notranslate"><span class="pre">\limsup</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ln\)</span> <code class="docutils literal notranslate"><span class="pre">\ln</span></code></td>
+<td><span class="math notranslate nohighlight">\(\log\)</span> <code class="docutils literal notranslate"><span class="pre">\log</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-fb64cdd50f.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\max</span></code></td>
-<td><img src="../../_images/mathmpl/math-bf7d25e347.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\min</span></code></td>
-<td><img src="../../_images/mathmpl/math-a0b5414d31.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sec</span></code></td>
-<td><img src="../../_images/mathmpl/math-d8d19f17ef.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sin</span></code></td>
-<td><img src="../../_images/mathmpl/math-fce9663ad9.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sinh</span></code></td>
-<td><img src="../../_images/mathmpl/math-358f2a2131.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\sup</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\max\)</span> <code class="docutils literal notranslate"><span class="pre">\max</span></code></td>
+<td><span class="math notranslate nohighlight">\(\min\)</span> <code class="docutils literal notranslate"><span class="pre">\min</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sec\)</span> <code class="docutils literal notranslate"><span class="pre">\sec</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sin\)</span> <code class="docutils literal notranslate"><span class="pre">\sin</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sinh\)</span> <code class="docutils literal notranslate"><span class="pre">\sinh</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sup\)</span> <code class="docutils literal notranslate"><span class="pre">\sup</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-fb3512b848.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\tan</span></code></td>
-<td><img src="../../_images/mathmpl/math-8e6df07c24.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\tanh</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\tan\)</span> <code class="docutils literal notranslate"><span class="pre">\tan</span></code></td>
+<td><span class="math notranslate nohighlight">\(\tanh\)</span> <code class="docutils literal notranslate"><span class="pre">\tanh</span></code></td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
@@ -766,247 +792,247 @@ over the i:</p>
 <col width="25%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-f610b8e469.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\Bumpeq</span></code></td>
-<td><img src="../../_images/mathmpl/math-2a327a85e8.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Cap</span></code></td>
-<td><img src="../../_images/mathmpl/math-0fbbe481d0.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Cup</span></code></td>
-<td><img src="../../_images/mathmpl/math-2303577dee.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Doteq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\Bumpeq\)</span> <code class="docutils literal notranslate"><span class="pre">\Bumpeq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Cap\)</span> <code class="docutils literal notranslate"><span class="pre">\Cap</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Cup\)</span> <code class="docutils literal notranslate"><span class="pre">\Cup</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Doteq\)</span> <code class="docutils literal notranslate"><span class="pre">\Doteq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-70e89758da.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\Join</span></code></td>
-<td><img src="../../_images/mathmpl/math-3d85215bfa.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Subset</span></code></td>
-<td><img src="../../_images/mathmpl/math-191c6ba7fa.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Supset</span></code></td>
-<td><img src="../../_images/mathmpl/math-219444d8f5.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Vdash</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\Join\)</span> <code class="docutils literal notranslate"><span class="pre">\Join</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Subset\)</span> <code class="docutils literal notranslate"><span class="pre">\Subset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Supset\)</span> <code class="docutils literal notranslate"><span class="pre">\Supset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Vdash\)</span> <code class="docutils literal notranslate"><span class="pre">\Vdash</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-7db176731c.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Vvdash</span></code></td>
-<td><img src="../../_images/mathmpl/math-c957a5ae9f.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\approx</span></code></td>
-<td><img src="../../_images/mathmpl/math-cf8f5e2275.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\approxeq</span></code></td>
-<td><img src="../../_images/mathmpl/math-4ea8b1e13e.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ast</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\Vvdash\)</span> <code class="docutils literal notranslate"><span class="pre">\Vvdash</span></code></td>
+<td><span class="math notranslate nohighlight">\(\approx\)</span> <code class="docutils literal notranslate"><span class="pre">\approx</span></code></td>
+<td><span class="math notranslate nohighlight">\(\approxeq\)</span> <code class="docutils literal notranslate"><span class="pre">\approxeq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ast\)</span> <code class="docutils literal notranslate"><span class="pre">\ast</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-23c4970a1a.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\asymp</span></code></td>
-<td><img src="../../_images/mathmpl/math-ea0303ad72.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\backepsilon</span></code></td>
-<td><img src="../../_images/mathmpl/math-b1d77626bb.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\backsim</span></code></td>
-<td><img src="../../_images/mathmpl/math-af3bc8ac21.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\backsimeq</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\asymp\)</span> <code class="docutils literal notranslate"><span class="pre">\asymp</span></code></td>
+<td><span class="math notranslate nohighlight">\(\backepsilon\)</span> <code class="docutils literal notranslate"><span class="pre">\backepsilon</span></code></td>
+<td><span class="math notranslate nohighlight">\(\backsim\)</span> <code class="docutils literal notranslate"><span class="pre">\backsim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\backsimeq\)</span> <code class="docutils literal notranslate"><span class="pre">\backsimeq</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-71771b9385.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\barwedge</span></code></td>
-<td><img src="../../_images/mathmpl/math-937e2c148d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\because</span></code></td>
-<td><img src="../../_images/mathmpl/math-51ae43b24b.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\between</span></code></td>
-<td><img src="../../_images/mathmpl/math-3b72c12de0.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\bigcirc</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\barwedge\)</span> <code class="docutils literal notranslate"><span class="pre">\barwedge</span></code></td>
+<td><span class="math notranslate nohighlight">\(\because\)</span> <code class="docutils literal notranslate"><span class="pre">\because</span></code></td>
+<td><span class="math notranslate nohighlight">\(\between\)</span> <code class="docutils literal notranslate"><span class="pre">\between</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigcirc\)</span> <code class="docutils literal notranslate"><span class="pre">\bigcirc</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-e98739824f.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\bigtriangledown</span></code></td>
-<td><img src="../../_images/mathmpl/math-52ddd6655e.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\bigtriangleup</span></code></td>
-<td><img src="../../_images/mathmpl/math-679967c920.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\blacktriangleleft</span></code></td>
-<td><img src="../../_images/mathmpl/math-2ff97d8581.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\blacktriangleright</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\bigtriangledown\)</span> <code class="docutils literal notranslate"><span class="pre">\bigtriangledown</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigtriangleup\)</span> <code class="docutils literal notranslate"><span class="pre">\bigtriangleup</span></code></td>
+<td><span class="math notranslate nohighlight">\(\blacktriangleleft\)</span> <code class="docutils literal notranslate"><span class="pre">\blacktriangleleft</span></code></td>
+<td><span class="math notranslate nohighlight">\(\blacktriangleright\)</span> <code class="docutils literal notranslate"><span class="pre">\blacktriangleright</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-d2bc160257.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\bot</span></code></td>
-<td><img src="../../_images/mathmpl/math-88c0703f35.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\bowtie</span></code></td>
-<td><img src="../../_images/mathmpl/math-0cc3cb6c41.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\boxdot</span></code></td>
-<td><img src="../../_images/mathmpl/math-b5a379f4e8.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\boxminus</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\bot\)</span> <code class="docutils literal notranslate"><span class="pre">\bot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bowtie\)</span> <code class="docutils literal notranslate"><span class="pre">\bowtie</span></code></td>
+<td><span class="math notranslate nohighlight">\(\boxdot\)</span> <code class="docutils literal notranslate"><span class="pre">\boxdot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\boxminus\)</span> <code class="docutils literal notranslate"><span class="pre">\boxminus</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-3e25be9041.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\boxplus</span></code></td>
-<td><img src="../../_images/mathmpl/math-d3219d7443.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\boxtimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-ef7a046183.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\bullet</span></code></td>
-<td><img src="../../_images/mathmpl/math-c5baac4e57.png" /> <code class="docutils literal notranslate"><span class="pre">\bumpeq</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\boxplus\)</span> <code class="docutils literal notranslate"><span class="pre">\boxplus</span></code></td>
+<td><span class="math notranslate nohighlight">\(\boxtimes\)</span> <code class="docutils literal notranslate"><span class="pre">\boxtimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bullet\)</span> <code class="docutils literal notranslate"><span class="pre">\bullet</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bumpeq\)</span> <code class="docutils literal notranslate"><span class="pre">\bumpeq</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-f0c7f8f01c.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\cap</span></code></td>
-<td><img src="../../_images/mathmpl/math-5a90bc5099.png" style="position: relative; bottom: --1px"/> <code class="docutils literal notranslate"><span class="pre">\cdot</span></code></td>
-<td><img src="../../_images/mathmpl/math-f9b0df773f.png" style="position: relative; bottom: -1px"/> <code class="docutils literal notranslate"><span class="pre">\circ</span></code></td>
-<td><img src="../../_images/mathmpl/math-5af298e692.png" /> <code class="docutils literal notranslate"><span class="pre">\circeq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\cap\)</span> <code class="docutils literal notranslate"><span class="pre">\cap</span></code></td>
+<td><span class="math notranslate nohighlight">\(\cdot\)</span> <code class="docutils literal notranslate"><span class="pre">\cdot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\circ\)</span> <code class="docutils literal notranslate"><span class="pre">\circ</span></code></td>
+<td><span class="math notranslate nohighlight">\(\circeq\)</span> <code class="docutils literal notranslate"><span class="pre">\circeq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-e4d9d4c64b.png" style="position: relative; bottom: -1px"/> <code class="docutils literal notranslate"><span class="pre">\coloneq</span></code></td>
-<td><img src="../../_images/mathmpl/math-b43c061111.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\cong</span></code></td>
-<td><img src="../../_images/mathmpl/math-20b287ac85.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\cup</span></code></td>
-<td><img src="../../_images/mathmpl/math-c0df1e9b19.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\curlyeqprec</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\coloneq\)</span> <code class="docutils literal notranslate"><span class="pre">\coloneq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\cong\)</span> <code class="docutils literal notranslate"><span class="pre">\cong</span></code></td>
+<td><span class="math notranslate nohighlight">\(\cup\)</span> <code class="docutils literal notranslate"><span class="pre">\cup</span></code></td>
+<td><span class="math notranslate nohighlight">\(\curlyeqprec\)</span> <code class="docutils literal notranslate"><span class="pre">\curlyeqprec</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-995f666935.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\curlyeqsucc</span></code></td>
-<td><img src="../../_images/mathmpl/math-615de138a6.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\curlyvee</span></code></td>
-<td><img src="../../_images/mathmpl/math-5af1fa6042.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\curlywedge</span></code></td>
-<td><img src="../../_images/mathmpl/math-9b12241d0c.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\dag</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\curlyeqsucc\)</span> <code class="docutils literal notranslate"><span class="pre">\curlyeqsucc</span></code></td>
+<td><span class="math notranslate nohighlight">\(\curlyvee\)</span> <code class="docutils literal notranslate"><span class="pre">\curlyvee</span></code></td>
+<td><span class="math notranslate nohighlight">\(\curlywedge\)</span> <code class="docutils literal notranslate"><span class="pre">\curlywedge</span></code></td>
+<td><span class="math notranslate nohighlight">\(\dag\)</span> <code class="docutils literal notranslate"><span class="pre">\dag</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-9e1beabce9.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\dashv</span></code></td>
-<td><img src="../../_images/mathmpl/math-f0fa40854a.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\ddag</span></code></td>
-<td><img src="../../_images/mathmpl/math-765d4eae57.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\diamond</span></code></td>
-<td><img src="../../_images/mathmpl/math-a1903b29fd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\div</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\dashv\)</span> <code class="docutils literal notranslate"><span class="pre">\dashv</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ddag\)</span> <code class="docutils literal notranslate"><span class="pre">\ddag</span></code></td>
+<td><span class="math notranslate nohighlight">\(\diamond\)</span> <code class="docutils literal notranslate"><span class="pre">\diamond</span></code></td>
+<td><span class="math notranslate nohighlight">\(\div\)</span> <code class="docutils literal notranslate"><span class="pre">\div</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-3df678db55.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\divideontimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-a5b22dbdac.png" /> <code class="docutils literal notranslate"><span class="pre">\doteq</span></code></td>
-<td><img src="../../_images/mathmpl/math-ff23293ae5.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\doteqdot</span></code></td>
-<td><img src="../../_images/mathmpl/math-397b5fc155.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\dotplus</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\divideontimes\)</span> <code class="docutils literal notranslate"><span class="pre">\divideontimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\doteq\)</span> <code class="docutils literal notranslate"><span class="pre">\doteq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\doteqdot\)</span> <code class="docutils literal notranslate"><span class="pre">\doteqdot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\dotplus\)</span> <code class="docutils literal notranslate"><span class="pre">\dotplus</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-d5242ce585.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\doublebarwedge</span></code></td>
-<td><img src="../../_images/mathmpl/math-a4f1a69c76.png" style="position: relative; bottom: -1px"/> <code class="docutils literal notranslate"><span class="pre">\eqcirc</span></code></td>
-<td><img src="../../_images/mathmpl/math-17826fcd24.png" style="position: relative; bottom: -1px"/> <code class="docutils literal notranslate"><span class="pre">\eqcolon</span></code></td>
-<td><img src="../../_images/mathmpl/math-c104febab3.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\eqsim</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\doublebarwedge\)</span> <code class="docutils literal notranslate"><span class="pre">\doublebarwedge</span></code></td>
+<td><span class="math notranslate nohighlight">\(\eqcirc\)</span> <code class="docutils literal notranslate"><span class="pre">\eqcirc</span></code></td>
+<td><span class="math notranslate nohighlight">\(\eqcolon\)</span> <code class="docutils literal notranslate"><span class="pre">\eqcolon</span></code></td>
+<td><span class="math notranslate nohighlight">\(\eqsim\)</span> <code class="docutils literal notranslate"><span class="pre">\eqsim</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-45eaae26d2.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\eqslantgtr</span></code></td>
-<td><img src="../../_images/mathmpl/math-c3fea548da.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\eqslantless</span></code></td>
-<td><img src="../../_images/mathmpl/math-cc1340c453.png" style="position: relative; bottom: -1px"/> <code class="docutils literal notranslate"><span class="pre">\equiv</span></code></td>
-<td><img src="../../_images/mathmpl/math-7965c0c1af.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\fallingdotseq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\eqslantgtr\)</span> <code class="docutils literal notranslate"><span class="pre">\eqslantgtr</span></code></td>
+<td><span class="math notranslate nohighlight">\(\eqslantless\)</span> <code class="docutils literal notranslate"><span class="pre">\eqslantless</span></code></td>
+<td><span class="math notranslate nohighlight">\(\equiv\)</span> <code class="docutils literal notranslate"><span class="pre">\equiv</span></code></td>
+<td><span class="math notranslate nohighlight">\(\fallingdotseq\)</span> <code class="docutils literal notranslate"><span class="pre">\fallingdotseq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-a41c184ca6.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\frown</span></code></td>
-<td><img src="../../_images/mathmpl/math-0bf42a25bb.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\geq</span></code></td>
-<td><img src="../../_images/mathmpl/math-9b14251f65.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\geqq</span></code></td>
-<td><img src="../../_images/mathmpl/math-1fca7a951f.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\geqslant</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\frown\)</span> <code class="docutils literal notranslate"><span class="pre">\frown</span></code></td>
+<td><span class="math notranslate nohighlight">\(\geq\)</span> <code class="docutils literal notranslate"><span class="pre">\geq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\geqq\)</span> <code class="docutils literal notranslate"><span class="pre">\geqq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\geqslant\)</span> <code class="docutils literal notranslate"><span class="pre">\geqslant</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-f9990bc9cf.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\gg</span></code></td>
-<td><img src="../../_images/mathmpl/math-a3de1e5b51.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ggg</span></code></td>
-<td><img src="../../_images/mathmpl/math-04c47dcb6e.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\gnapprox</span></code></td>
-<td><img src="../../_images/mathmpl/math-a3f9f1f014.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\gneqq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\gg\)</span> <code class="docutils literal notranslate"><span class="pre">\gg</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ggg\)</span> <code class="docutils literal notranslate"><span class="pre">\ggg</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gnapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\gnapprox</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gneqq\)</span> <code class="docutils literal notranslate"><span class="pre">\gneqq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-793d9cedd0.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\gnsim</span></code></td>
-<td><img src="../../_images/mathmpl/math-207852189a.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\gtrapprox</span></code></td>
-<td><img src="../../_images/mathmpl/math-9336896bb3.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\gtrdot</span></code></td>
-<td><img src="../../_images/mathmpl/math-4cd21f8ba6.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\gtreqless</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\gnsim\)</span> <code class="docutils literal notranslate"><span class="pre">\gnsim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gtrapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\gtrapprox</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gtrdot\)</span> <code class="docutils literal notranslate"><span class="pre">\gtrdot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gtreqless\)</span> <code class="docutils literal notranslate"><span class="pre">\gtreqless</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-18a0084a2d.png" style="position: relative; bottom: -11px"/> <code class="docutils literal notranslate"><span class="pre">\gtreqqless</span></code></td>
-<td><img src="../../_images/mathmpl/math-8e388594ad.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\gtrless</span></code></td>
-<td><img src="../../_images/mathmpl/math-9d5e427aeb.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\gtrsim</span></code></td>
-<td><img src="../../_images/mathmpl/math-58e3fcf6fd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\in</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\gtreqqless\)</span> <code class="docutils literal notranslate"><span class="pre">\gtreqqless</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gtrless\)</span> <code class="docutils literal notranslate"><span class="pre">\gtrless</span></code></td>
+<td><span class="math notranslate nohighlight">\(\gtrsim\)</span> <code class="docutils literal notranslate"><span class="pre">\gtrsim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\in\)</span> <code class="docutils literal notranslate"><span class="pre">\in</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-0e049fe80b.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\intercal</span></code></td>
-<td><img src="../../_images/mathmpl/math-1a503a50f2.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\leftthreetimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-aca311c641.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\leq</span></code></td>
-<td><img src="../../_images/mathmpl/math-d87b34b699.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\leqq</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\intercal\)</span> <code class="docutils literal notranslate"><span class="pre">\intercal</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftthreetimes\)</span> <code class="docutils literal notranslate"><span class="pre">\leftthreetimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leq\)</span> <code class="docutils literal notranslate"><span class="pre">\leq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leqq\)</span> <code class="docutils literal notranslate"><span class="pre">\leqq</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-764751dad5.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\leqslant</span></code></td>
-<td><img src="../../_images/mathmpl/math-b8571a3cc2.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\lessapprox</span></code></td>
-<td><img src="../../_images/mathmpl/math-6cb5c3c310.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\lessdot</span></code></td>
-<td><img src="../../_images/mathmpl/math-1632a38331.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\lesseqgtr</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\leqslant\)</span> <code class="docutils literal notranslate"><span class="pre">\leqslant</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lessapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\lessapprox</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lessdot\)</span> <code class="docutils literal notranslate"><span class="pre">\lessdot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lesseqgtr\)</span> <code class="docutils literal notranslate"><span class="pre">\lesseqgtr</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-d367d088c6.png" style="position: relative; bottom: -11px"/> <code class="docutils literal notranslate"><span class="pre">\lesseqqgtr</span></code></td>
-<td><img src="../../_images/mathmpl/math-268c486057.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\lessgtr</span></code></td>
-<td><img src="../../_images/mathmpl/math-b53ab799d1.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\lesssim</span></code></td>
-<td><img src="../../_images/mathmpl/math-f5e02865f3.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\ll</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\lesseqqgtr\)</span> <code class="docutils literal notranslate"><span class="pre">\lesseqqgtr</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lessgtr\)</span> <code class="docutils literal notranslate"><span class="pre">\lessgtr</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lesssim\)</span> <code class="docutils literal notranslate"><span class="pre">\lesssim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ll\)</span> <code class="docutils literal notranslate"><span class="pre">\ll</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-2303518311.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\lll</span></code></td>
-<td><img src="../../_images/mathmpl/math-c408639f33.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\lnapprox</span></code></td>
-<td><img src="../../_images/mathmpl/math-38bf4cf10d.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\lneqq</span></code></td>
-<td><img src="../../_images/mathmpl/math-ad67ff4a6f.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\lnsim</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\lll\)</span> <code class="docutils literal notranslate"><span class="pre">\lll</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lnapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\lnapprox</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lneqq\)</span> <code class="docutils literal notranslate"><span class="pre">\lneqq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\lnsim\)</span> <code class="docutils literal notranslate"><span class="pre">\lnsim</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-f557917efd.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\ltimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-96c9a8ca95.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\mid</span></code></td>
-<td><img src="../../_images/mathmpl/math-b5ae8c62a3.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\models</span></code></td>
-<td><img src="../../_images/mathmpl/math-608c4a02ea.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\mp</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\ltimes\)</span> <code class="docutils literal notranslate"><span class="pre">\ltimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\mid\)</span> <code class="docutils literal notranslate"><span class="pre">\mid</span></code></td>
+<td><span class="math notranslate nohighlight">\(\models\)</span> <code class="docutils literal notranslate"><span class="pre">\models</span></code></td>
+<td><span class="math notranslate nohighlight">\(\mp\)</span> <code class="docutils literal notranslate"><span class="pre">\mp</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-e0ca686f62.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\nVDash</span></code></td>
-<td><img src="../../_images/mathmpl/math-4d5d5f4ffb.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\nVdash</span></code></td>
-<td><img src="../../_images/mathmpl/math-8aa32761da.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\napprox</span></code></td>
-<td><img src="../../_images/mathmpl/math-92306485fb.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\ncong</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\nVDash\)</span> <code class="docutils literal notranslate"><span class="pre">\nVDash</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nVdash\)</span> <code class="docutils literal notranslate"><span class="pre">\nVdash</span></code></td>
+<td><span class="math notranslate nohighlight">\(\napprox\)</span> <code class="docutils literal notranslate"><span class="pre">\napprox</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ncong\)</span> <code class="docutils literal notranslate"><span class="pre">\ncong</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-6e6c5971ad.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\ne</span></code></td>
-<td><img src="../../_images/mathmpl/math-da1122f776.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\neq</span></code></td>
-<td><img src="../../_images/mathmpl/math-da1122f776.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\neq</span></code></td>
-<td><img src="../../_images/mathmpl/math-989088989a.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\nequiv</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\ne\)</span> <code class="docutils literal notranslate"><span class="pre">\ne</span></code></td>
+<td><span class="math notranslate nohighlight">\(\neq\)</span> <code class="docutils literal notranslate"><span class="pre">\neq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\neq\)</span> <code class="docutils literal notranslate"><span class="pre">\neq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nequiv\)</span> <code class="docutils literal notranslate"><span class="pre">\nequiv</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-07c03ece9c.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\ngeq</span></code></td>
-<td><img src="../../_images/mathmpl/math-c2c43a5762.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\ngtr</span></code></td>
-<td><img src="../../_images/mathmpl/math-7e90b124a8.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ni</span></code></td>
-<td><img src="../../_images/mathmpl/math-1c2ed5670a.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\nleq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\ngeq\)</span> <code class="docutils literal notranslate"><span class="pre">\ngeq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ngtr\)</span> <code class="docutils literal notranslate"><span class="pre">\ngtr</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ni\)</span> <code class="docutils literal notranslate"><span class="pre">\ni</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nleq\)</span> <code class="docutils literal notranslate"><span class="pre">\nleq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-c9136df47e.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\nless</span></code></td>
-<td><img src="../../_images/mathmpl/math-4c5d76f523.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\nmid</span></code></td>
-<td><img src="../../_images/mathmpl/math-9afe2d20f8.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\notin</span></code></td>
-<td><img src="../../_images/mathmpl/math-e63a2108d5.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\nparallel</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\nless\)</span> <code class="docutils literal notranslate"><span class="pre">\nless</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nmid\)</span> <code class="docutils literal notranslate"><span class="pre">\nmid</span></code></td>
+<td><span class="math notranslate nohighlight">\(\notin\)</span> <code class="docutils literal notranslate"><span class="pre">\notin</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nparallel\)</span> <code class="docutils literal notranslate"><span class="pre">\nparallel</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-201b65e42c.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\nprec</span></code></td>
-<td><img src="../../_images/mathmpl/math-37454f1e25.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\nsim</span></code></td>
-<td><img src="../../_images/mathmpl/math-b045970090.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\nsubset</span></code></td>
-<td><img src="../../_images/mathmpl/math-e2dcef116c.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\nsubseteq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\nprec\)</span> <code class="docutils literal notranslate"><span class="pre">\nprec</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nsim\)</span> <code class="docutils literal notranslate"><span class="pre">\nsim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nsubset\)</span> <code class="docutils literal notranslate"><span class="pre">\nsubset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nsubseteq\)</span> <code class="docutils literal notranslate"><span class="pre">\nsubseteq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-0dc1c96f16.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\nsucc</span></code></td>
-<td><img src="../../_images/mathmpl/math-0d1363d575.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\nsupset</span></code></td>
-<td><img src="../../_images/mathmpl/math-8963eae853.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\nsupseteq</span></code></td>
-<td><img src="../../_images/mathmpl/math-2eaa265b46.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\ntriangleleft</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\nsucc\)</span> <code class="docutils literal notranslate"><span class="pre">\nsucc</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nsupset\)</span> <code class="docutils literal notranslate"><span class="pre">\nsupset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nsupseteq\)</span> <code class="docutils literal notranslate"><span class="pre">\nsupseteq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ntriangleleft\)</span> <code class="docutils literal notranslate"><span class="pre">\ntriangleleft</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-343170b287.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\ntrianglelefteq</span></code></td>
-<td><img src="../../_images/mathmpl/math-813dcf0a93.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\ntriangleright</span></code></td>
-<td><img src="../../_images/mathmpl/math-df6899ad3e.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\ntrianglerighteq</span></code></td>
-<td><img src="../../_images/mathmpl/math-a55f718abe.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\nvDash</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\ntrianglelefteq\)</span> <code class="docutils literal notranslate"><span class="pre">\ntrianglelefteq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ntriangleright\)</span> <code class="docutils literal notranslate"><span class="pre">\ntriangleright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ntrianglerighteq\)</span> <code class="docutils literal notranslate"><span class="pre">\ntrianglerighteq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nvDash\)</span> <code class="docutils literal notranslate"><span class="pre">\nvDash</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-fefbb15af0.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\nvdash</span></code></td>
-<td><img src="../../_images/mathmpl/math-b8348856ea.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\odot</span></code></td>
-<td><img src="../../_images/mathmpl/math-497b831b05.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\ominus</span></code></td>
-<td><img src="../../_images/mathmpl/math-cfcebc2ef8.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\oplus</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\nvdash\)</span> <code class="docutils literal notranslate"><span class="pre">\nvdash</span></code></td>
+<td><span class="math notranslate nohighlight">\(\odot\)</span> <code class="docutils literal notranslate"><span class="pre">\odot</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ominus\)</span> <code class="docutils literal notranslate"><span class="pre">\ominus</span></code></td>
+<td><span class="math notranslate nohighlight">\(\oplus\)</span> <code class="docutils literal notranslate"><span class="pre">\oplus</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-6fd5eead33.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\oslash</span></code></td>
-<td><img src="../../_images/mathmpl/math-3d7ac4bb5c.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\otimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-305e05a6ab.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\parallel</span></code></td>
-<td><img src="../../_images/mathmpl/math-86ea2beb93.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\perp</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\oslash\)</span> <code class="docutils literal notranslate"><span class="pre">\oslash</span></code></td>
+<td><span class="math notranslate nohighlight">\(\otimes\)</span> <code class="docutils literal notranslate"><span class="pre">\otimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\parallel\)</span> <code class="docutils literal notranslate"><span class="pre">\parallel</span></code></td>
+<td><span class="math notranslate nohighlight">\(\perp\)</span> <code class="docutils literal notranslate"><span class="pre">\perp</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-62d5e1ef75.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\pitchfork</span></code></td>
-<td><img src="../../_images/mathmpl/math-813255d42d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\pm</span></code></td>
-<td><img src="../../_images/mathmpl/math-2a54002803.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\prec</span></code></td>
-<td><img src="../../_images/mathmpl/math-6f127405a3.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\precapprox</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\pitchfork\)</span> <code class="docutils literal notranslate"><span class="pre">\pitchfork</span></code></td>
+<td><span class="math notranslate nohighlight">\(\pm\)</span> <code class="docutils literal notranslate"><span class="pre">\pm</span></code></td>
+<td><span class="math notranslate nohighlight">\(\prec\)</span> <code class="docutils literal notranslate"><span class="pre">\prec</span></code></td>
+<td><span class="math notranslate nohighlight">\(\precapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\precapprox</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-5686c5a93f.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\preccurlyeq</span></code></td>
-<td><img src="../../_images/mathmpl/math-c6975aea0e.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\preceq</span></code></td>
-<td><img src="../../_images/mathmpl/math-53e4edd44d.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\precnapprox</span></code></td>
-<td><img src="../../_images/mathmpl/math-b7c281dd54.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\precnsim</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\preccurlyeq\)</span> <code class="docutils literal notranslate"><span class="pre">\preccurlyeq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\preceq\)</span> <code class="docutils literal notranslate"><span class="pre">\preceq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\precnapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\precnapprox</span></code></td>
+<td><span class="math notranslate nohighlight">\(\precnsim\)</span> <code class="docutils literal notranslate"><span class="pre">\precnsim</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-58f182e47e.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\precsim</span></code></td>
-<td><img src="../../_images/mathmpl/math-4225d47da8.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\propto</span></code></td>
-<td><img src="../../_images/mathmpl/math-03cbb97a54.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\rightthreetimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-8f609835cb.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\risingdotseq</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\precsim\)</span> <code class="docutils literal notranslate"><span class="pre">\precsim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\propto\)</span> <code class="docutils literal notranslate"><span class="pre">\propto</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightthreetimes\)</span> <code class="docutils literal notranslate"><span class="pre">\rightthreetimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\risingdotseq\)</span> <code class="docutils literal notranslate"><span class="pre">\risingdotseq</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-61a5f3fde0.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\rtimes</span></code></td>
-<td><img src="../../_images/mathmpl/math-10ab63f88f.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\sim</span></code></td>
-<td><img src="../../_images/mathmpl/math-f5e3901a47.png" style="position: relative; bottom: -1px"/> <code class="docutils literal notranslate"><span class="pre">\simeq</span></code></td>
-<td><img src="../../_images/mathmpl/math-cd5adea2d9.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\slash</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\rtimes\)</span> <code class="docutils literal notranslate"><span class="pre">\rtimes</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sim\)</span> <code class="docutils literal notranslate"><span class="pre">\sim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\simeq\)</span> <code class="docutils literal notranslate"><span class="pre">\simeq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\slash\)</span> <code class="docutils literal notranslate"><span class="pre">\slash</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-11c6bdf228.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\smile</span></code></td>
-<td><img src="../../_images/mathmpl/math-2fc0f7c957.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sqcap</span></code></td>
-<td><img src="../../_images/mathmpl/math-f3f9a5c2b6.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sqcup</span></code></td>
-<td><img src="../../_images/mathmpl/math-32710445c4.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sqsubset</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\smile\)</span> <code class="docutils literal notranslate"><span class="pre">\smile</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sqcap\)</span> <code class="docutils literal notranslate"><span class="pre">\sqcap</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sqcup\)</span> <code class="docutils literal notranslate"><span class="pre">\sqcup</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sqsubset\)</span> <code class="docutils literal notranslate"><span class="pre">\sqsubset</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-32710445c4.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sqsubset</span></code></td>
-<td><img src="../../_images/mathmpl/math-6462f633f1.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\sqsubseteq</span></code></td>
-<td><img src="../../_images/mathmpl/math-b373234f3b.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sqsupset</span></code></td>
-<td><img src="../../_images/mathmpl/math-b373234f3b.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sqsupset</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\sqsubset\)</span> <code class="docutils literal notranslate"><span class="pre">\sqsubset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sqsubseteq\)</span> <code class="docutils literal notranslate"><span class="pre">\sqsubseteq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sqsupset\)</span> <code class="docutils literal notranslate"><span class="pre">\sqsupset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sqsupset\)</span> <code class="docutils literal notranslate"><span class="pre">\sqsupset</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-301349a96f.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\sqsupseteq</span></code></td>
-<td><img src="../../_images/mathmpl/math-3ea081f1d9.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\star</span></code></td>
-<td><img src="../../_images/mathmpl/math-d7ee7c1348.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\subset</span></code></td>
-<td><img src="../../_images/mathmpl/math-ab35a80a37.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\subseteq</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\sqsupseteq\)</span> <code class="docutils literal notranslate"><span class="pre">\sqsupseteq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\star\)</span> <code class="docutils literal notranslate"><span class="pre">\star</span></code></td>
+<td><span class="math notranslate nohighlight">\(\subset\)</span> <code class="docutils literal notranslate"><span class="pre">\subset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\subseteq\)</span> <code class="docutils literal notranslate"><span class="pre">\subseteq</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-329584d288.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\subseteqq</span></code></td>
-<td><img src="../../_images/mathmpl/math-26f9e5316b.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\subsetneq</span></code></td>
-<td><img src="../../_images/mathmpl/math-d6c1dc73f3.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\subsetneqq</span></code></td>
-<td><img src="../../_images/mathmpl/math-3b5db3b36b.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\succ</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\subseteqq\)</span> <code class="docutils literal notranslate"><span class="pre">\subseteqq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\subsetneq\)</span> <code class="docutils literal notranslate"><span class="pre">\subsetneq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\subsetneqq\)</span> <code class="docutils literal notranslate"><span class="pre">\subsetneqq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\succ\)</span> <code class="docutils literal notranslate"><span class="pre">\succ</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-29a7c6603c.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\succapprox</span></code></td>
-<td><img src="../../_images/mathmpl/math-764af5d0f7.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\succcurlyeq</span></code></td>
-<td><img src="../../_images/mathmpl/math-f083286645.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\succeq</span></code></td>
-<td><img src="../../_images/mathmpl/math-12e9272240.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\succnapprox</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\succapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\succapprox</span></code></td>
+<td><span class="math notranslate nohighlight">\(\succcurlyeq\)</span> <code class="docutils literal notranslate"><span class="pre">\succcurlyeq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\succeq\)</span> <code class="docutils literal notranslate"><span class="pre">\succeq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\succnapprox\)</span> <code class="docutils literal notranslate"><span class="pre">\succnapprox</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-22a812f02e.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\succnsim</span></code></td>
-<td><img src="../../_images/mathmpl/math-f313a5f9af.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\succsim</span></code></td>
-<td><img src="../../_images/mathmpl/math-7a88315c05.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\supset</span></code></td>
-<td><img src="../../_images/mathmpl/math-b15f9f29ec.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\supseteq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\succnsim\)</span> <code class="docutils literal notranslate"><span class="pre">\succnsim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\succsim\)</span> <code class="docutils literal notranslate"><span class="pre">\succsim</span></code></td>
+<td><span class="math notranslate nohighlight">\(\supset\)</span> <code class="docutils literal notranslate"><span class="pre">\supset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\supseteq\)</span> <code class="docutils literal notranslate"><span class="pre">\supseteq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-2b42f15859.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\supseteqq</span></code></td>
-<td><img src="../../_images/mathmpl/math-0ebac5d490.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\supsetneq</span></code></td>
-<td><img src="../../_images/mathmpl/math-7cafbba6d3.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\supsetneqq</span></code></td>
-<td><img src="../../_images/mathmpl/math-21e977e4ec.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\therefore</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\supseteqq\)</span> <code class="docutils literal notranslate"><span class="pre">\supseteqq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\supsetneq\)</span> <code class="docutils literal notranslate"><span class="pre">\supsetneq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\supsetneqq\)</span> <code class="docutils literal notranslate"><span class="pre">\supsetneqq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\therefore\)</span> <code class="docutils literal notranslate"><span class="pre">\therefore</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-ae7023d9db.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\times</span></code></td>
-<td><img src="../../_images/mathmpl/math-f0fe2a4a9f.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\top</span></code></td>
-<td><img src="../../_images/mathmpl/math-7a5bdaf004.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\triangleleft</span></code></td>
-<td><img src="../../_images/mathmpl/math-3234da3142.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\trianglelefteq</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\times\)</span> <code class="docutils literal notranslate"><span class="pre">\times</span></code></td>
+<td><span class="math notranslate nohighlight">\(\top\)</span> <code class="docutils literal notranslate"><span class="pre">\top</span></code></td>
+<td><span class="math notranslate nohighlight">\(\triangleleft\)</span> <code class="docutils literal notranslate"><span class="pre">\triangleleft</span></code></td>
+<td><span class="math notranslate nohighlight">\(\trianglelefteq\)</span> <code class="docutils literal notranslate"><span class="pre">\trianglelefteq</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-5325d825f0.png" /> <code class="docutils literal notranslate"><span class="pre">\triangleq</span></code></td>
-<td><img src="../../_images/mathmpl/math-61187783ee.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\triangleright</span></code></td>
-<td><img src="../../_images/mathmpl/math-229058201e.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\trianglerighteq</span></code></td>
-<td><img src="../../_images/mathmpl/math-8c6a0f04b9.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\uplus</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\triangleq\)</span> <code class="docutils literal notranslate"><span class="pre">\triangleq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\triangleright\)</span> <code class="docutils literal notranslate"><span class="pre">\triangleright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\trianglerighteq\)</span> <code class="docutils literal notranslate"><span class="pre">\trianglerighteq</span></code></td>
+<td><span class="math notranslate nohighlight">\(\uplus\)</span> <code class="docutils literal notranslate"><span class="pre">\uplus</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-8da9245788.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\vDash</span></code></td>
-<td><img src="../../_images/mathmpl/math-7450111856.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\varpropto</span></code></td>
-<td><img src="../../_images/mathmpl/math-311d2647c5.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\vartriangleleft</span></code></td>
-<td><img src="../../_images/mathmpl/math-7da885dcbf.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\vartriangleright</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\vDash\)</span> <code class="docutils literal notranslate"><span class="pre">\vDash</span></code></td>
+<td><span class="math notranslate nohighlight">\(\varpropto\)</span> <code class="docutils literal notranslate"><span class="pre">\varpropto</span></code></td>
+<td><span class="math notranslate nohighlight">\(\vartriangleleft\)</span> <code class="docutils literal notranslate"><span class="pre">\vartriangleleft</span></code></td>
+<td><span class="math notranslate nohighlight">\(\vartriangleright\)</span> <code class="docutils literal notranslate"><span class="pre">\vartriangleright</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-d8ad6ecbe6.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\vdash</span></code></td>
-<td><img src="../../_images/mathmpl/math-f5af631a03.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\vee</span></code></td>
-<td><img src="../../_images/mathmpl/math-0ca72c02e5.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\veebar</span></code></td>
-<td><img src="../../_images/mathmpl/math-4c229f580d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\wedge</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\vdash\)</span> <code class="docutils literal notranslate"><span class="pre">\vdash</span></code></td>
+<td><span class="math notranslate nohighlight">\(\vee\)</span> <code class="docutils literal notranslate"><span class="pre">\vee</span></code></td>
+<td><span class="math notranslate nohighlight">\(\veebar\)</span> <code class="docutils literal notranslate"><span class="pre">\veebar</span></code></td>
+<td><span class="math notranslate nohighlight">\(\wedge\)</span> <code class="docutils literal notranslate"><span class="pre">\wedge</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-953993beed.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\wr</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\wr\)</span> <code class="docutils literal notranslate"><span class="pre">\wr</span></code></td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
@@ -1024,103 +1050,103 @@ over the i:</p>
 <col width="25%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-0c8ba18b43.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\Downarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-1a6ec6d88f.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Leftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-74b9b263f9.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Leftrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-3ce6141dea.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\Lleftarrow</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\Downarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Downarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Leftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Leftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Leftrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Leftrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Lleftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Lleftarrow</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-e3d8965f58.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\Longleftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-eb3a880058.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Longleftrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-c985be990e.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\Longrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-459d7c5693.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Lsh</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\Longleftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Longleftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Longleftrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Longleftrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Longrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Longrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Lsh\)</span> <code class="docutils literal notranslate"><span class="pre">\Lsh</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-0f08e28a07.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Nearrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-a608a7ae83.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Nwarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-5e42a40994.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Rightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-317920b703.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Rrightarrow</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\Nearrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Nearrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Nwarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Nwarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Rightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Rrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Rrightarrow</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-26fab8f44f.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Rsh</span></code></td>
-<td><img src="../../_images/mathmpl/math-ba64c5e997.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Searrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-6722d13e60.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\Swarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-d00ab41d80.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\Uparrow</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\Rsh\)</span> <code class="docutils literal notranslate"><span class="pre">\Rsh</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Searrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Searrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Swarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Swarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Uparrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Uparrow</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-94ff64057f.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\Updownarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-a59e0fa5ee.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\circlearrowleft</span></code></td>
-<td><img src="../../_images/mathmpl/math-ea5765e8b3.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\circlearrowright</span></code></td>
-<td><img src="../../_images/mathmpl/math-68b96a49a5.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\curvearrowleft</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\Updownarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\Updownarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\circlearrowleft\)</span> <code class="docutils literal notranslate"><span class="pre">\circlearrowleft</span></code></td>
+<td><span class="math notranslate nohighlight">\(\circlearrowright\)</span> <code class="docutils literal notranslate"><span class="pre">\circlearrowright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\curvearrowleft\)</span> <code class="docutils literal notranslate"><span class="pre">\curvearrowleft</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-eb8d6ee4ad.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\curvearrowright</span></code></td>
-<td><img src="../../_images/mathmpl/math-682a5688ef.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\dashleftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-8bc070eada.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\dashrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-56b7078922.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\downarrow</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\curvearrowright\)</span> <code class="docutils literal notranslate"><span class="pre">\curvearrowright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\dashleftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\dashleftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\dashrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\dashrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\downarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\downarrow</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-1d11ce50b2.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\downdownarrows</span></code></td>
-<td><img src="../../_images/mathmpl/math-a019dc17a7.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\downharpoonleft</span></code></td>
-<td><img src="../../_images/mathmpl/math-16b15cdedd.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\downharpoonright</span></code></td>
-<td><img src="../../_images/mathmpl/math-3db5c70042.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\hookleftarrow</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\downdownarrows\)</span> <code class="docutils literal notranslate"><span class="pre">\downdownarrows</span></code></td>
+<td><span class="math notranslate nohighlight">\(\downharpoonleft\)</span> <code class="docutils literal notranslate"><span class="pre">\downharpoonleft</span></code></td>
+<td><span class="math notranslate nohighlight">\(\downharpoonright\)</span> <code class="docutils literal notranslate"><span class="pre">\downharpoonright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\hookleftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\hookleftarrow</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-580fac9571.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\hookrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-09e354a93e.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\leadsto</span></code></td>
-<td><img src="../../_images/mathmpl/math-097464d1cd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\leftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-a2e07eb2ff.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\leftarrowtail</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\hookrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\hookrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leadsto\)</span> <code class="docutils literal notranslate"><span class="pre">\leadsto</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\leftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftarrowtail\)</span> <code class="docutils literal notranslate"><span class="pre">\leftarrowtail</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-792b216977.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\leftharpoondown</span></code></td>
-<td><img src="../../_images/mathmpl/math-3c072a15c0.png" style="position: relative; bottom: --2px"/> <code class="docutils literal notranslate"><span class="pre">\leftharpoonup</span></code></td>
-<td><img src="../../_images/mathmpl/math-433174617c.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\leftleftarrows</span></code></td>
-<td><img src="../../_images/mathmpl/math-bce42da457.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\leftrightarrow</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\leftharpoondown\)</span> <code class="docutils literal notranslate"><span class="pre">\leftharpoondown</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftharpoonup\)</span> <code class="docutils literal notranslate"><span class="pre">\leftharpoonup</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftleftarrows\)</span> <code class="docutils literal notranslate"><span class="pre">\leftleftarrows</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\leftrightarrow</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-dec391be07.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\leftrightarrows</span></code></td>
-<td><img src="../../_images/mathmpl/math-8c68333295.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\leftrightharpoons</span></code></td>
-<td><img src="../../_images/mathmpl/math-1afd9d2af0.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\leftrightsquigarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-0a36be904f.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\leftsquigarrow</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\leftrightarrows\)</span> <code class="docutils literal notranslate"><span class="pre">\leftrightarrows</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftrightharpoons\)</span> <code class="docutils literal notranslate"><span class="pre">\leftrightharpoons</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftrightsquigarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\leftrightsquigarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\leftsquigarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\leftsquigarrow</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-c8fe9fb96c.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\longleftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-91b94c6be9.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\longleftrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-02ce986a2e.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\longmapsto</span></code></td>
-<td><img src="../../_images/mathmpl/math-80a13771b7.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\longrightarrow</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\longleftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\longleftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\longleftrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\longleftrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\longmapsto\)</span> <code class="docutils literal notranslate"><span class="pre">\longmapsto</span></code></td>
+<td><span class="math notranslate nohighlight">\(\longrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\longrightarrow</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-3bfe8e8950.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\looparrowleft</span></code></td>
-<td><img src="../../_images/mathmpl/math-64aa42214e.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\looparrowright</span></code></td>
-<td><img src="../../_images/mathmpl/math-9a483a288a.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\mapsto</span></code></td>
-<td><img src="../../_images/mathmpl/math-c40f3bc7dc.png" /> <code class="docutils literal notranslate"><span class="pre">\multimap</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\looparrowleft\)</span> <code class="docutils literal notranslate"><span class="pre">\looparrowleft</span></code></td>
+<td><span class="math notranslate nohighlight">\(\looparrowright\)</span> <code class="docutils literal notranslate"><span class="pre">\looparrowright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\mapsto\)</span> <code class="docutils literal notranslate"><span class="pre">\mapsto</span></code></td>
+<td><span class="math notranslate nohighlight">\(\multimap\)</span> <code class="docutils literal notranslate"><span class="pre">\multimap</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-ea5241d5f2.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\nLeftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-9119a30630.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\nLeftrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-eeabc86e5f.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\nRightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-640fa94ebe.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\nearrow</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\nLeftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nLeftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nLeftrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nLeftrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nRightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nRightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nearrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nearrow</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-f9cc3f8904.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\nleftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-1278a024c8.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\nleftrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-f11a3eab57.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\nrightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-3223454152.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\nwarrow</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\nleftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nleftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nleftrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nleftrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nrightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nwarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\nwarrow</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-fb1cbbd43f.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\rightarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-2e03b9e387.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\rightarrowtail</span></code></td>
-<td><img src="../../_images/mathmpl/math-41f636a823.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\rightharpoondown</span></code></td>
-<td><img src="../../_images/mathmpl/math-2cdbf2db88.png" style="position: relative; bottom: --2px"/> <code class="docutils literal notranslate"><span class="pre">\rightharpoonup</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\rightarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightarrowtail\)</span> <code class="docutils literal notranslate"><span class="pre">\rightarrowtail</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightharpoondown\)</span> <code class="docutils literal notranslate"><span class="pre">\rightharpoondown</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightharpoonup\)</span> <code class="docutils literal notranslate"><span class="pre">\rightharpoonup</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-2617106b1e.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\rightleftarrows</span></code></td>
-<td><img src="../../_images/mathmpl/math-2617106b1e.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\rightleftarrows</span></code></td>
-<td><img src="../../_images/mathmpl/math-a2eb9bae76.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\rightleftharpoons</span></code></td>
-<td><img src="../../_images/mathmpl/math-a2eb9bae76.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\rightleftharpoons</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\rightleftarrows\)</span> <code class="docutils literal notranslate"><span class="pre">\rightleftarrows</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightleftarrows\)</span> <code class="docutils literal notranslate"><span class="pre">\rightleftarrows</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightleftharpoons\)</span> <code class="docutils literal notranslate"><span class="pre">\rightleftharpoons</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightleftharpoons\)</span> <code class="docutils literal notranslate"><span class="pre">\rightleftharpoons</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-43575c473c.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\rightrightarrows</span></code></td>
-<td><img src="../../_images/mathmpl/math-43575c473c.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\rightrightarrows</span></code></td>
-<td><img src="../../_images/mathmpl/math-2aff52a07e.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\rightsquigarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-93a935b705.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\searrow</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\rightrightarrows\)</span> <code class="docutils literal notranslate"><span class="pre">\rightrightarrows</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightrightarrows\)</span> <code class="docutils literal notranslate"><span class="pre">\rightrightarrows</span></code></td>
+<td><span class="math notranslate nohighlight">\(\rightsquigarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\rightsquigarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\searrow\)</span> <code class="docutils literal notranslate"><span class="pre">\searrow</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-8d37bd9196.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\swarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-306ea70acd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\to</span></code></td>
-<td><img src="../../_images/mathmpl/math-ae2fa40b25.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\twoheadleftarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-8e6cdc7038.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\twoheadrightarrow</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\swarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\swarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\to\)</span> <code class="docutils literal notranslate"><span class="pre">\to</span></code></td>
+<td><span class="math notranslate nohighlight">\(\twoheadleftarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\twoheadleftarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\twoheadrightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\twoheadrightarrow</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-f1bfb0bbf7.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\uparrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-eb3b3a6d5c.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\updownarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-eb3b3a6d5c.png" style="position: relative; bottom: -8px"/> <code class="docutils literal notranslate"><span class="pre">\updownarrow</span></code></td>
-<td><img src="../../_images/mathmpl/math-bbdf3d8983.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\upharpoonleft</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\uparrow\)</span> <code class="docutils literal notranslate"><span class="pre">\uparrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\updownarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\updownarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\updownarrow\)</span> <code class="docutils literal notranslate"><span class="pre">\updownarrow</span></code></td>
+<td><span class="math notranslate nohighlight">\(\upharpoonleft\)</span> <code class="docutils literal notranslate"><span class="pre">\upharpoonleft</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-5fea7c5657.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\upharpoonright</span></code></td>
-<td><img src="../../_images/mathmpl/math-d831d8aa62.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\upuparrows</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\upharpoonright\)</span> <code class="docutils literal notranslate"><span class="pre">\upharpoonright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\upuparrows\)</span> <code class="docutils literal notranslate"><span class="pre">\upuparrows</span></code></td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
@@ -1137,75 +1163,75 @@ over the i:</p>
 <col width="25%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-390d3dc75c.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\$</span></code></td>
-<td><img src="../../_images/mathmpl/math-7ffb7d798c.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\AA</span></code></td>
-<td><img src="../../_images/mathmpl/math-38501d21c9.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Finv</span></code></td>
-<td><img src="../../_images/mathmpl/math-be84d4168e.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Game</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\$\)</span> <code class="docutils literal notranslate"><span class="pre">\$</span></code></td>
+<td><span class="math notranslate nohighlight">\(\AA\)</span> <code class="docutils literal notranslate"><span class="pre">\AA</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Finv\)</span> <code class="docutils literal notranslate"><span class="pre">\Finv</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Game\)</span> <code class="docutils literal notranslate"><span class="pre">\Game</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-3207fff524.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Im</span></code></td>
-<td><img src="../../_images/mathmpl/math-482297a060.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\P</span></code></td>
-<td><img src="../../_images/mathmpl/math-6ea3150bfd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\Re</span></code></td>
-<td><img src="../../_images/mathmpl/math-a99c89f6e1.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\S</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\Im\)</span> <code class="docutils literal notranslate"><span class="pre">\Im</span></code></td>
+<td><span class="math notranslate nohighlight">\(\P\)</span> <code class="docutils literal notranslate"><span class="pre">\P</span></code></td>
+<td><span class="math notranslate nohighlight">\(\Re\)</span> <code class="docutils literal notranslate"><span class="pre">\Re</span></code></td>
+<td><span class="math notranslate nohighlight">\(\S\)</span> <code class="docutils literal notranslate"><span class="pre">\S</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-2fcd70072d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\angle</span></code></td>
-<td><img src="../../_images/mathmpl/math-9db5c962c8.png" style="position: relative; bottom: --4px"/> <code class="docutils literal notranslate"><span class="pre">\backprime</span></code></td>
-<td><img src="../../_images/mathmpl/math-8082fb34e8.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\bigstar</span></code></td>
-<td><img src="../../_images/mathmpl/math-4b07b72122.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\blacksquare</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\angle\)</span> <code class="docutils literal notranslate"><span class="pre">\angle</span></code></td>
+<td><span class="math notranslate nohighlight">\(\backprime\)</span> <code class="docutils literal notranslate"><span class="pre">\backprime</span></code></td>
+<td><span class="math notranslate nohighlight">\(\bigstar\)</span> <code class="docutils literal notranslate"><span class="pre">\bigstar</span></code></td>
+<td><span class="math notranslate nohighlight">\(\blacksquare\)</span> <code class="docutils literal notranslate"><span class="pre">\blacksquare</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-8f8c0c020c.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\blacktriangle</span></code></td>
-<td><img src="../../_images/mathmpl/math-58162c32f0.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\blacktriangledown</span></code></td>
-<td><img src="../../_images/mathmpl/math-e90d63d41d.png" style="position: relative; bottom: -0px"/> <code class="docutils literal notranslate"><span class="pre">\cdots</span></code></td>
-<td><img src="../../_images/mathmpl/math-800bb70468.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\checkmark</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\blacktriangle\)</span> <code class="docutils literal notranslate"><span class="pre">\blacktriangle</span></code></td>
+<td><span class="math notranslate nohighlight">\(\blacktriangledown\)</span> <code class="docutils literal notranslate"><span class="pre">\blacktriangledown</span></code></td>
+<td><span class="math notranslate nohighlight">\(\cdots\)</span> <code class="docutils literal notranslate"><span class="pre">\cdots</span></code></td>
+<td><span class="math notranslate nohighlight">\(\checkmark\)</span> <code class="docutils literal notranslate"><span class="pre">\checkmark</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-762c3b5e9e.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\circledR</span></code></td>
-<td><img src="../../_images/mathmpl/math-52eae78384.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\circledS</span></code></td>
-<td><img src="../../_images/mathmpl/math-4d24dff6f8.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\clubsuit</span></code></td>
-<td><img src="../../_images/mathmpl/math-b225b29af4.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\complement</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\circledR\)</span> <code class="docutils literal notranslate"><span class="pre">\circledR</span></code></td>
+<td><span class="math notranslate nohighlight">\(\circledS\)</span> <code class="docutils literal notranslate"><span class="pre">\circledS</span></code></td>
+<td><span class="math notranslate nohighlight">\(\clubsuit\)</span> <code class="docutils literal notranslate"><span class="pre">\clubsuit</span></code></td>
+<td><span class="math notranslate nohighlight">\(\complement\)</span> <code class="docutils literal notranslate"><span class="pre">\complement</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-8f454df900.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\copyright</span></code></td>
-<td><img src="../../_images/mathmpl/math-dbcc77f1d2.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ddots</span></code></td>
-<td><img src="../../_images/mathmpl/math-bc54d541fc.png" style="position: relative; bottom: -6px"/> <code class="docutils literal notranslate"><span class="pre">\diamondsuit</span></code></td>
-<td><img src="../../_images/mathmpl/math-923c665edb.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ell</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\copyright\)</span> <code class="docutils literal notranslate"><span class="pre">\copyright</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ddots\)</span> <code class="docutils literal notranslate"><span class="pre">\ddots</span></code></td>
+<td><span class="math notranslate nohighlight">\(\diamondsuit\)</span> <code class="docutils literal notranslate"><span class="pre">\diamondsuit</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ell\)</span> <code class="docutils literal notranslate"><span class="pre">\ell</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-51cd44e108.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\emptyset</span></code></td>
-<td><img src="../../_images/mathmpl/math-19f957fc71.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\eth</span></code></td>
-<td><img src="../../_images/mathmpl/math-cac5abe8bf.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\exists</span></code></td>
-<td><img src="../../_images/mathmpl/math-518af824c6.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\flat</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\emptyset\)</span> <code class="docutils literal notranslate"><span class="pre">\emptyset</span></code></td>
+<td><span class="math notranslate nohighlight">\(\eth\)</span> <code class="docutils literal notranslate"><span class="pre">\eth</span></code></td>
+<td><span class="math notranslate nohighlight">\(\exists\)</span> <code class="docutils literal notranslate"><span class="pre">\exists</span></code></td>
+<td><span class="math notranslate nohighlight">\(\flat\)</span> <code class="docutils literal notranslate"><span class="pre">\flat</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-92a896986d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\forall</span></code></td>
-<td><img src="../../_images/mathmpl/math-2525d5d71d.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\hbar</span></code></td>
-<td><img src="../../_images/mathmpl/math-eab5c7cdff.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\heartsuit</span></code></td>
-<td><img src="../../_images/mathmpl/math-dcb2243778.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\hslash</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\forall\)</span> <code class="docutils literal notranslate"><span class="pre">\forall</span></code></td>
+<td><span class="math notranslate nohighlight">\(\hbar\)</span> <code class="docutils literal notranslate"><span class="pre">\hbar</span></code></td>
+<td><span class="math notranslate nohighlight">\(\heartsuit\)</span> <code class="docutils literal notranslate"><span class="pre">\heartsuit</span></code></td>
+<td><span class="math notranslate nohighlight">\(\hslash\)</span> <code class="docutils literal notranslate"><span class="pre">\hslash</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-f8daa97519.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\iiint</span></code></td>
-<td><img src="../../_images/mathmpl/math-14a5baf1f1.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\iint</span></code></td>
-<td><img src="../../_images/mathmpl/math-14a5baf1f1.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\iint</span></code></td>
-<td><img src="../../_images/mathmpl/math-6a5f1c0ebd.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\imath</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\iiint\)</span> <code class="docutils literal notranslate"><span class="pre">\iiint</span></code></td>
+<td><span class="math notranslate nohighlight">\(\iint\)</span> <code class="docutils literal notranslate"><span class="pre">\iint</span></code></td>
+<td><span class="math notranslate nohighlight">\(\iint\)</span> <code class="docutils literal notranslate"><span class="pre">\iint</span></code></td>
+<td><span class="math notranslate nohighlight">\(\imath\)</span> <code class="docutils literal notranslate"><span class="pre">\imath</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-c899412e92.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\infty</span></code></td>
-<td><img src="../../_images/mathmpl/math-cca8605565.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\jmath</span></code></td>
-<td><img src="../../_images/mathmpl/math-ee226905c4.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\ldots</span></code></td>
-<td><img src="../../_images/mathmpl/math-d78cd804a4.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\measuredangle</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\infty\)</span> <code class="docutils literal notranslate"><span class="pre">\infty</span></code></td>
+<td><span class="math notranslate nohighlight">\(\jmath\)</span> <code class="docutils literal notranslate"><span class="pre">\jmath</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ldots\)</span> <code class="docutils literal notranslate"><span class="pre">\ldots</span></code></td>
+<td><span class="math notranslate nohighlight">\(\measuredangle\)</span> <code class="docutils literal notranslate"><span class="pre">\measuredangle</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-07933b21e0.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\natural</span></code></td>
-<td><img src="../../_images/mathmpl/math-21d4b9ec5e.png" style="position: relative; bottom: -1px"/> <code class="docutils literal notranslate"><span class="pre">\neg</span></code></td>
-<td><img src="../../_images/mathmpl/math-a01094061c.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\nexists</span></code></td>
-<td><img src="../../_images/mathmpl/math-fea35fa8ec.png" style="position: relative; bottom: -9px"/> <code class="docutils literal notranslate"><span class="pre">\oiiint</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\natural\)</span> <code class="docutils literal notranslate"><span class="pre">\natural</span></code></td>
+<td><span class="math notranslate nohighlight">\(\neg\)</span> <code class="docutils literal notranslate"><span class="pre">\neg</span></code></td>
+<td><span class="math notranslate nohighlight">\(\nexists\)</span> <code class="docutils literal notranslate"><span class="pre">\nexists</span></code></td>
+<td><span class="math notranslate nohighlight">\(\oiiint\)</span> <code class="docutils literal notranslate"><span class="pre">\oiiint</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-7d9222c03b.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\partial</span></code></td>
-<td><img src="../../_images/mathmpl/math-d4d8611cbc.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\prime</span></code></td>
-<td><img src="../../_images/mathmpl/math-0525bc07de.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\sharp</span></code></td>
-<td><img src="../../_images/mathmpl/math-799e766e98.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\spadesuit</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\partial\)</span> <code class="docutils literal notranslate"><span class="pre">\partial</span></code></td>
+<td><span class="math notranslate nohighlight">\(\prime\)</span> <code class="docutils literal notranslate"><span class="pre">\prime</span></code></td>
+<td><span class="math notranslate nohighlight">\(\sharp\)</span> <code class="docutils literal notranslate"><span class="pre">\sharp</span></code></td>
+<td><span class="math notranslate nohighlight">\(\spadesuit\)</span> <code class="docutils literal notranslate"><span class="pre">\spadesuit</span></code></td>
 </tr>
-<tr class="row-odd"><td><img src="../../_images/mathmpl/math-96aad37e82.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\sphericalangle</span></code></td>
-<td><img src="../../_images/mathmpl/math-e51ac520e2.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\ss</span></code></td>
-<td><img src="../../_images/mathmpl/math-62e1ea5660.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\triangledown</span></code></td>
-<td><img src="../../_images/mathmpl/math-91a36bab96.png" style="position: relative; bottom: -4px"/> <code class="docutils literal notranslate"><span class="pre">\varnothing</span></code></td>
+<tr class="row-odd"><td><span class="math notranslate nohighlight">\(\sphericalangle\)</span> <code class="docutils literal notranslate"><span class="pre">\sphericalangle</span></code></td>
+<td><span class="math notranslate nohighlight">\(\ss\)</span> <code class="docutils literal notranslate"><span class="pre">\ss</span></code></td>
+<td><span class="math notranslate nohighlight">\(\triangledown\)</span> <code class="docutils literal notranslate"><span class="pre">\triangledown</span></code></td>
+<td><span class="math notranslate nohighlight">\(\varnothing\)</span> <code class="docutils literal notranslate"><span class="pre">\varnothing</span></code></td>
 </tr>
-<tr class="row-even"><td><img src="../../_images/mathmpl/math-449680794f.png" style="position: relative; bottom: -2px"/> <code class="docutils literal notranslate"><span class="pre">\vartriangle</span></code></td>
-<td><img src="../../_images/mathmpl/math-0716fbd542.png" style="position: relative; bottom: -5px"/> <code class="docutils literal notranslate"><span class="pre">\vdots</span></code></td>
-<td><img src="../../_images/mathmpl/math-6eca465169.png" style="position: relative; bottom: -7px"/> <code class="docutils literal notranslate"><span class="pre">\wp</span></code></td>
-<td><img src="../../_images/mathmpl/math-12713adf78.png" style="position: relative; bottom: -3px"/> <code class="docutils literal notranslate"><span class="pre">\yen</span></code></td>
+<tr class="row-even"><td><span class="math notranslate nohighlight">\(\vartriangle\)</span> <code class="docutils literal notranslate"><span class="pre">\vartriangle</span></code></td>
+<td><span class="math notranslate nohighlight">\(\vdots\)</span> <code class="docutils literal notranslate"><span class="pre">\vdots</span></code></td>
+<td><span class="math notranslate nohighlight">\(\wp\)</span> <code class="docutils literal notranslate"><span class="pre">\wp</span></code></td>
+<td><span class="math notranslate nohighlight">\(\yen\)</span> <code class="docutils literal notranslate"><span class="pre">\yen</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -1226,9 +1252,9 @@ also be used:</p>
 </div>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-text-mathtext-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/mathtext.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">mathtext.py</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/9e7a113e24611c98a409d35d08b1d8a9/mathtext.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">mathtext.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/mathtext.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">mathtext.ipynb</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/b73272d168a77feda8cd1ce67f8e33c5/mathtext.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">mathtext.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature">Keywords: matplotlib code example, codex, python plot, pyplot
 <a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -1245,10 +1271,10 @@ also be used:</p>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

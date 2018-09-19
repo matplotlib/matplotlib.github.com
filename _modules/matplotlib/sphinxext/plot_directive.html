@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.sphinxext.plot_directive &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.sphinxext.plot_directive &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/sphinxext/plot_directive.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -247,35 +249,29 @@ type="text/css" />
 <span class="sd">    plot_template</span>
 <span class="sd">        Provide a customized template for preparing restructured text.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
-
-<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">io</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">textwrap</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">relpath</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-
-<span class="k">if</span> <span class="ow">not</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">cStringIO</span>
 
 <span class="kn">from</span> <span class="nn">docutils.parsers.rst</span> <span class="k">import</span> <span class="n">directives</span>
 <span class="kn">from</span> <span class="nn">docutils.parsers.rst.directives.images</span> <span class="k">import</span> <span class="n">Image</span>
 <span class="n">align</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">align</span>
 <span class="kn">import</span> <span class="nn">sphinx</span>
 
-<span class="n">sphinx_version</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-<span class="c1"># The split is necessary for sphinx beta versions where the string is</span>
-<span class="c1"># &#39;6b1&#39;</span>
-<span class="n">sphinx_version</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;[^0-9]&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-                        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sphinx_version</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span>
-
 <span class="kn">import</span> <span class="nn">jinja2</span>  <span class="c1"># Sphinx dependency.</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.cbook</span> <span class="k">as</span> <span class="nn">cbook</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="n">FigureManagerBase</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
@@ -285,7 +281,7 @@ type="text/css" />
     <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_pylab_helpers</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_pylab_helpers</span><span class="p">,</span> <span class="n">cbook</span>
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="mi">2</span>
 
@@ -335,7 +331,7 @@ type="text/css" />
 <span class="sd">    the &quot;htmlonly&quot; (or &quot;latexonly&quot;) node to the actual figure node</span>
 <span class="sd">    itself.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">explicit</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">nametypes</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">explicit</span> <span class="ow">in</span> <span class="n">document</span><span class="o">.</span><span class="n">nametypes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">explicit</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">labelid</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">nameids</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
@@ -390,7 +386,7 @@ type="text/css" />
     <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="s1">&#39;plot_working_directory&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="s1">&#39;plot_template&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;doctree-read&#39;</span><span class="p">),</span> <span class="n">mark_plot_labels</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;doctree-read&#39;</span><span class="p">,</span> <span class="n">mark_plot_labels</span><span class="p">)</span>
 
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;parallel_read_safe&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;parallel_write_safe&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">metadata</span>
@@ -459,6 +455,7 @@ type="text/css" />
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remove the coding comment, which six.exec\_ doesn&#39;t like.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remove_coding&#39;</span><span class="p">,</span> <span class="n">removal</span><span class="o">=</span><span class="s1">&#39;3.1&#39;</span><span class="p">)</span>
     <span class="n">sub_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^#\s*-\*-\s*coding:\s*.*-\*-$&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sub_re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
 
@@ -532,7 +529,7 @@ type="text/css" />
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="n">exception_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">.. htmlonly::</span>
+<span class="s2">.. only:: html</span>
 
 <span class="s2">   [`source code &lt;</span><span class="si">%(linkdir)s</span><span class="s2">/</span><span class="si">%(basename)s</span><span class="s2">.py&gt;`__]</span>
 
@@ -580,11 +577,7 @@ type="text/css" />
     <span class="c1"># Change the working directory to the directory of the example, so</span>
     <span class="c1"># it can get at its data files, if any.  Add its path to sys.path</span>
     <span class="c1"># so it can import any helper modules sitting beside it.</span>
-    <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-        <span class="n">pwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwdu</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">pwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-    <span class="n">old_sys_path</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">pwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">setup</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_working_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">setup</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_working_directory</span><span class="p">)</span>
@@ -596,54 +589,36 @@ type="text/css" />
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">`plot_working_directory` option in &#39;</span>
                             <span class="s1">&#39;Sphinx configuration file must be a string or &#39;</span>
                             <span class="s1">&#39;None&#39;</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">setup</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_working_directory</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">code_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">code_path</span><span class="p">))</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dirname</span><span class="p">)</span>
 
-    <span class="c1"># Reset sys.argv</span>
-    <span class="n">old_sys_argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="n">code_path</span><span class="p">]</span>
-
-    <span class="c1"># Redirect stdout</span>
-    <span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
-    <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">cStringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
-
-    <span class="c1"># Assign a do-nothing print function to the namespace.  There</span>
-    <span class="c1"># doesn&#39;t seem to be any other way to provide a way to (not) print</span>
-    <span class="c1"># that works correctly across Python 2 and 3.</span>
-    <span class="k">def</span> <span class="nf">_dummy_print</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg</span><span class="p">):</span>
-        <span class="k">pass</span>
-
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_setattr_cm</span><span class="p">(</span>
+            <span class="n">sys</span><span class="p">,</span> <span class="n">argv</span><span class="o">=</span><span class="p">[</span><span class="n">code_path</span><span class="p">],</span> <span class="n">path</span><span class="o">=</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">]),</span> \
+            <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">StringIO</span><span class="p">()):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">code</span> <span class="o">=</span> <span class="n">unescape_doctest</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">ns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">ns</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">ns</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">setup</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_pre_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="s2">&quot;import numpy as np</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-                    <span class="s2">&quot;from matplotlib import pyplot as plt</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">),</span> <span class="n">ns</span><span class="p">)</span>
+                    <span class="n">exec</span><span class="p">(</span><span class="s1">&#39;import numpy as np</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;from matplotlib import pyplot as plt</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">setup</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_pre_code</span><span class="p">),</span> <span class="n">ns</span><span class="p">)</span>
-            <span class="n">ns</span><span class="p">[</span><span class="s1">&#39;print&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dummy_print</span>
+                    <span class="n">exec</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">setup</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_pre_code</span><span class="p">),</span> <span class="n">ns</span><span class="p">)</span>
             <span class="k">if</span> <span class="s2">&quot;__main__&quot;</span> <span class="ow">in</span> <span class="n">code</span><span class="p">:</span>
-                <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="s2">&quot;__name__ = &#39;__main__&#39;&quot;</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
-            <span class="n">code</span> <span class="o">=</span> <span class="n">remove_coding</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-            <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">function_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">function_name</span> <span class="o">+</span> <span class="s2">&quot;()&quot;</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+                <span class="n">ns</span><span class="p">[</span><span class="s1">&#39;__name__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;__main__&#39;</span>
+
+            <span class="c1"># Patch out non-interactive show() to avoid triggering a warning.</span>
+            <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_setattr_cm</span><span class="p">(</span><span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">exec</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">function_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">exec</span><span class="p">(</span><span class="n">function_name</span> <span class="o">+</span> <span class="s2">&quot;()&quot;</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+
         <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PlotError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">old_sys_argv</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">old_sys_path</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ns</span></div>
 
 
@@ -658,19 +633,14 @@ type="text/css" />
     <span class="n">default_dpi</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="s1">&#39;hires.png&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
     <span class="n">formats</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">plot_formats</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">plot_formats</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plot_formats</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-        <span class="c1"># String Sphinx &lt; 1.3, Split on , to mimic</span>
-        <span class="c1"># Sphinx 1.3 and later. Sphinx 1.3 always</span>
-        <span class="c1"># returns a list.</span>
-        <span class="n">plot_formats</span> <span class="o">=</span> <span class="n">plot_formats</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">plot_formats</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">fmt</span><span class="p">:</span>
                 <span class="n">suffix</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
                 <span class="n">formats</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dpi</span><span class="p">)))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">formats</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fmt</span><span class="p">,</span> <span class="n">default_dpi</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="mi">80</span><span class="p">)))</span>
-        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">formats</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">fmt</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">fmt</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PlotError</span><span class="p">(</span><span class="s1">&#39;invalid image format &quot;</span><span class="si">%r</span><span class="s1">&quot; in plot_formats&#39;</span> <span class="o">%</span> <span class="n">fmt</span><span class="p">)</span>
@@ -695,21 +665,17 @@ type="text/css" />
     <span class="c1"># Look for single-figure output files first</span>
     <span class="n">all_exists</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">ImageFile</span><span class="p">(</span><span class="n">output_base</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
-    <span class="k">for</span> <span class="nb">format</span><span class="p">,</span> <span class="n">dpi</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">out_of_date</span><span class="p">(</span><span class="n">code_path</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">filename</span><span class="p">(</span><span class="nb">format</span><span class="p">)):</span>
-            <span class="n">all_exists</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">break</span>
-        <span class="n">img</span><span class="o">.</span><span class="n">formats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">all_exists</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">out_of_date</span><span class="p">(</span><span class="n">code_path</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">filename</span><span class="p">(</span><span class="n">fmt</span><span class="p">))</span>
+               <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">dpi</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">code</span><span class="p">,</span> <span class="p">[</span><span class="n">img</span><span class="p">])]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">formats</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">fmt</span> <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">dpi</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">)</span>
 
     <span class="c1"># Then look for multi-figure output files</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_exists</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">code_piece</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">code_pieces</span><span class="p">):</span>
         <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code_pieces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">img</span> <span class="o">=</span> <span class="n">ImageFile</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%02d</span><span class="s1">_</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">output_base</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span>
                                 <span class="n">output_dir</span><span class="p">)</span>
@@ -814,12 +780,11 @@ type="text/css" />
         <span class="k">else</span><span class="p">:</span>
             <span class="n">function_name</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">source_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
-            <span class="n">code</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_file_name</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
         <span class="n">output_base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_file_name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">source_file_name</span> <span class="o">=</span> <span class="n">rst_file</span>
-        <span class="n">code</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">,</span> <span class="n">content</span><span class="p">)))</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">)))</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_plot_counter&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">document</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;_plot_counter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">counter</span>
         <span class="n">base</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_file_name</span><span class="p">))</span>
@@ -909,12 +874,10 @@ type="text/css" />
     <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">code_piece</span><span class="p">,</span> <span class="n">images</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;include-source&#39;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">is_doctest</span><span class="p">:</span>
-                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
-                <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">code_piece</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)]</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">code_piece</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.. code-block:: python&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
-                <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;    </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">row</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
-                          <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">code_piece</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)]</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.. code-block:: python&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                         <span class="o">*</span><span class="n">textwrap</span><span class="o">.</span><span class="n">indent</span><span class="p">(</span><span class="n">code_piece</span><span class="p">,</span> <span class="s1">&#39;    &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
             <span class="n">source_code</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">source_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -923,7 +886,7 @@ type="text/css" />
             <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">opts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;:</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+            <span class="s1">&#39;:</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;alt&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="s1">&#39;align&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">)]</span>
 
         <span class="n">only_html</span> <span class="o">=</span> <span class="s2">&quot;.. only:: html&quot;</span>
@@ -959,8 +922,7 @@ type="text/css" />
         <span class="n">state_machine</span><span class="o">.</span><span class="n">insert_input</span><span class="p">(</span><span class="n">total_lines</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source_file_name</span><span class="p">)</span>
 
     <span class="c1"># copy image files to builder&#39;s output directory, if necessary</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">):</span>
-        <span class="n">cbook</span><span class="o">.</span><span class="n">mkdirs</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">)</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">code_piece</span><span class="p">,</span> <span class="n">images</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
@@ -970,13 +932,9 @@ type="text/css" />
                     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">destimg</span><span class="p">)</span>
 
     <span class="c1"># copy script (if necessary)</span>
-    <span class="n">target_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="n">output_base</span> <span class="o">+</span> <span class="n">source_ext</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">target_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">source_file_name</span> <span class="o">==</span> <span class="n">rst_file</span><span class="p">:</span>
-            <span class="n">code_escaped</span> <span class="o">=</span> <span class="n">unescape_doctest</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">code_escaped</span> <span class="o">=</span> <span class="n">code</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">code_escaped</span><span class="p">)</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="n">output_base</span> <span class="o">+</span> <span class="n">source_ext</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+        <span class="n">unescape_doctest</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="k">if</span> <span class="n">source_file_name</span> <span class="o">==</span> <span class="n">rst_file</span> <span class="k">else</span> <span class="n">code</span><span class="p">,</span>
+        <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">errors</span>
 </pre></div>
@@ -990,10 +948,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.backends.backend_cairo &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.backends.backend_cairo &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,17 +28,18 @@ type="text/css" />
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html"
 />
     <link rel="search" title="Search" href="../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../index.html" />
     <link rel="up" title="backends" href="index_backend_api.html" />
-    <link rel="next" title="matplotlib.backends.backend_gtkagg" href="backend_gtkagg_api.html" />
+    <link rel="next" title="matplotlib.backends.backend_gtk3agg" href="backend_gtk3agg_api.html" />
     <link rel="prev" title="matplotlib.backends.backend_agg" href="backend_agg_api.html" />
   <link rel="canonical" href="https://matplotlib.org/api/backend_cairo_api.html" />
 
@@ -50,7 +52,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -70,7 +72,7 @@ type="text/css" />
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="backend_gtkagg_api.html" title="matplotlib.backends.backend_gtkagg"
+          <a href="backend_gtk3agg_api.html" title="matplotlib.backends.backend_gtk3agg"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="backend_agg_api.html" title="matplotlib.backends.backend_agg"
@@ -79,7 +81,7 @@ type="text/css" />
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
           <li><a href="index.html" >The Matplotlib API</a> &raquo;</li>
           <li><a href="index_backend_api.html" accesskey="U">backends</a> &raquo;</li> 
@@ -101,7 +103,7 @@ type="text/css" />
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <h3><a href="../contents.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">matplotlib.backends.backend_cairo</span></code></a><ul>
 <li><a class="reference internal" href="#a-cairo-backend-for-matplotlib">A Cairo backend for matplotlib</a></li>
@@ -115,7 +117,7 @@ type="text/css" />
   <li><a href="index.html">The Matplotlib API</a><ul>
   <li><a href="index_backend_api.html">backends</a><ul>
       <li>Previous: <a href="backend_agg_api.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">matplotlib.backends.backend_agg</span></code></a></li>
-      <li>Next: <a href="backend_gtkagg_api.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">matplotlib.backends.backend_gtkagg</span></code></a></li>
+      <li>Next: <a href="backend_gtk3agg_api.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">matplotlib.backends.backend_gtk3agg</span></code></a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -145,15 +147,19 @@ type="text/css" />
 </tr>
 </tbody>
 </table>
-<p>This backend depends on <a class="reference external" href="http://cairographics.org">cairo</a>, and either on
-cairocffi, or (Python 2 only) on pycairo.</p>
+<p>This backend depends on cairocffi or pycairo.</p>
 <dl class="class">
 <dt id="matplotlib.backends.backend_cairo.ArrayWrapper">
-<em class="property">class </em><code class="descclassname">matplotlib.backends.backend_cairo.</code><code class="descname">ArrayWrapper</code><span class="sig-paren">(</span><em>myarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#ArrayWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.ArrayWrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">matplotlib.backends.backend_cairo.</code><code class="descname">ArrayWrapper</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#ArrayWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.ArrayWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Thin wrapper around numpy ndarray to expose the interface
-expected by cairocffi. Basically replicates the
-array.array interface.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 3.0: </span>The ArrayWrapper class was deprecated in Matplotlib 3.0 and will be removed in 3.2.</p>
+</div>
+<dl class="docutils">
+<dt>Thin wrapper around numpy ndarray to expose the interface</dt>
+<dd>expected by cairocffi. Basically replicates the
+array.array interface.</dd>
+</dl>
 <dl class="method">
 <dt id="matplotlib.backends.backend_cairo.ArrayWrapper.buffer_info">
 <code class="descname">buffer_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#ArrayWrapper.buffer_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.ArrayWrapper.buffer_info" title="Permalink to this definition">¶</a></dt>
@@ -184,6 +190,16 @@ array.array interface.</p>
 <dl class="method">
 <dt id="matplotlib.backends.backend_cairo.FigureCanvasCairo.print_ps">
 <code class="descname">print_ps</code><span class="sig-paren">(</span><em>fobj</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#FigureCanvasCairo.print_ps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.FigureCanvasCairo.print_ps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.backends.backend_cairo.FigureCanvasCairo.print_raw">
+<code class="descname">print_raw</code><span class="sig-paren">(</span><em>fobj</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#matplotlib.backends.backend_cairo.FigureCanvasCairo.print_raw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="matplotlib.backends.backend_cairo.FigureCanvasCairo.print_rgba">
+<code class="descname">print_rgba</code><span class="sig-paren">(</span><em>fobj</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#FigureCanvasCairo.print_rgba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.FigureCanvasCairo.print_rgba" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -302,7 +318,11 @@ and 1.  In the latter case, grayscale is used.</p>
 <dl class="staticmethod">
 <dt id="matplotlib.backends.backend_cairo.RendererCairo.convert_path">
 <em class="property">static </em><code class="descname">convert_path</code><span class="sig-paren">(</span><em>ctx</em>, <em>path</em>, <em>transform</em>, <em>clip=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#RendererCairo.convert_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.RendererCairo.convert_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 3.0: </span>The convert_path function was deprecated in Matplotlib 3.0 and will be removed in 3.2.</p>
+</div>
+<p></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="matplotlib.backends.backend_cairo.RendererCairo.draw_image">
@@ -385,6 +405,29 @@ given affine transform.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="matplotlib.backends.backend_cairo.RendererCairo.draw_path_collection">
+<code class="descname">draw_path_collection</code><span class="sig-paren">(</span><em>gc</em>, <em>master_transform</em>, <em>paths</em>, <em>all_transforms</em>, <em>offsets</em>, <em>offsetTrans</em>, <em>facecolors</em>, <em>edgecolors</em>, <em>linewidths</em>, <em>linestyles</em>, <em>antialiaseds</em>, <em>urls</em>, <em>offset_position</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#RendererCairo.draw_path_collection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.RendererCairo.draw_path_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a collection of paths selecting drawing properties from
+the lists <em>facecolors</em>, <em>edgecolors</em>, <em>linewidths</em>,
+<em>linestyles</em> and <em>antialiaseds</em>. <em>offsets</em> is a list of
+offsets to apply to each of the paths.  The offsets in
+<em>offsets</em> are first transformed by <em>offsetTrans</em> before being
+applied.  <em>offset_position</em> may be either &quot;screen&quot; or &quot;data&quot;
+depending on the space that the offsets are in.</p>
+<p>This provides a fallback implementation of
+<a class="reference internal" href="#matplotlib.backends.backend_cairo.RendererCairo.draw_path_collection" title="matplotlib.backends.backend_cairo.RendererCairo.draw_path_collection"><code class="xref py py-meth docutils literal notranslate"><span class="pre">draw_path_collection()</span></code></a> that makes multiple calls to
+<a class="reference internal" href="#matplotlib.backends.backend_cairo.RendererCairo.draw_path" title="matplotlib.backends.backend_cairo.RendererCairo.draw_path"><code class="xref py py-meth docutils literal notranslate"><span class="pre">draw_path()</span></code></a>.  Some backends may want to override this in
+order to render each set of path data only once, and then
+reference that path multiple times with the different offsets,
+colors, styles etc.  The generator methods
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">_iter_collection_raw_paths()</span></code> and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">_iter_collection()</span></code> are provided to help with (and
+standardize) the implementation across backends.  It is highly
+recommended to use those generators, so that changes to the
+behavior of <a class="reference internal" href="#matplotlib.backends.backend_cairo.RendererCairo.draw_path_collection" title="matplotlib.backends.backend_cairo.RendererCairo.draw_path_collection"><code class="xref py py-meth docutils literal notranslate"><span class="pre">draw_path_collection()</span></code></a> can be made globally.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="matplotlib.backends.backend_cairo.RendererCairo.draw_text">
 <code class="descname">draw_text</code><span class="sig-paren">(</span><em>gc</em>, <em>x</em>, <em>y</em>, <em>s</em>, <em>prop</em>, <em>angle</em>, <em>ismath=False</em>, <em>mtext=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/matplotlib/backends/backend_cairo.html#RendererCairo.draw_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#matplotlib.backends.backend_cairo.RendererCairo.draw_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the text instance</p>
@@ -433,12 +476,12 @@ your text.</p>
 
 <dl class="attribute">
 <dt id="matplotlib.backends.backend_cairo.RendererCairo.fontangles">
-<code class="descname">fontangles</code><em class="property"> = {'italic': &lt;MyCairoCffi name='mock.FONT_SLANT_ITALIC' id='139831684338520'&gt;, 'normal': &lt;MyCairoCffi name='mock.FONT_SLANT_NORMAL' id='139831684351032'&gt;, 'oblique': &lt;MyCairoCffi name='mock.FONT_SLANT_OBLIQUE' id='139831684367584'&gt;}</em><a class="headerlink" href="#matplotlib.backends.backend_cairo.RendererCairo.fontangles" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fontangles</code><em class="property"> = {'italic': &lt;MyCairoCffi name='mock.FONT_SLANT_ITALIC' id='139725888743016'&gt;, 'normal': &lt;MyCairoCffi name='mock.FONT_SLANT_NORMAL' id='139725888751432'&gt;, 'oblique': &lt;MyCairoCffi name='mock.FONT_SLANT_OBLIQUE' id='139725888768040'&gt;}</em><a class="headerlink" href="#matplotlib.backends.backend_cairo.RendererCairo.fontangles" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="matplotlib.backends.backend_cairo.RendererCairo.fontweights">
-<code class="descname">fontweights</code><em class="property"> = {100: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 200: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 300: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 400: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 500: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 600: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 700: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 800: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 900: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 'ultralight': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 'light': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 'normal': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 'medium': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 'regular': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139831685276504'&gt;, 'semibold': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 'bold': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 'heavy': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 'ultrabold': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;, 'black': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139831684321912'&gt;}</em><a class="headerlink" href="#matplotlib.backends.backend_cairo.RendererCairo.fontweights" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fontweights</code><em class="property"> = {100: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 200: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 300: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 400: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 500: &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 600: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 700: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 800: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 900: &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 'ultralight': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 'light': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 'normal': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 'medium': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 'regular': &lt;MyCairoCffi name='mock.FONT_WEIGHT_NORMAL' id='139725888709856'&gt;, 'semibold': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 'bold': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 'heavy': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 'ultrabold': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;, 'black': &lt;MyCairoCffi name='mock.FONT_WEIGHT_BOLD' id='139725919614736'&gt;}</em><a class="headerlink" href="#matplotlib.backends.backend_cairo.RendererCairo.fontweights" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -517,10 +560,10 @@ systems assume some value for pixels per inch:</p>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

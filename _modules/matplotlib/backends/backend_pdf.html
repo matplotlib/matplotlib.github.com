@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.backends.backend_pdf &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.backends.backend_pdf &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/backends/backend_pdf.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -111,17 +113,10 @@ type="text/css" />
           <div class="body">
             
   <h1>Source code for matplotlib.backends.backend_pdf</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">A PDF matplotlib backend</span>
 <span class="sd">Author: Jouni K Seppänen &lt;jks@iki.fi&gt;</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">unichr</span>
 
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">collections</span>
@@ -135,6 +130,7 @@ type="text/css" />
 <span class="kn">import</span> <span class="nn">struct</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">zlib</span>
 
@@ -146,7 +142,7 @@ type="text/css" />
     <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">GraphicsContextBase</span><span class="p">,</span>
     <span class="n">RendererBase</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="k">import</span> <span class="n">MixedModeRenderer</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="p">(</span><span class="n">Bunch</span><span class="p">,</span> <span class="n">get_realpath_and_stat</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="p">(</span><span class="n">get_realpath_and_stat</span><span class="p">,</span>
                               <span class="n">is_writable_file_like</span><span class="p">,</span> <span class="n">maxdict</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
 <span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">is_opentype_cff_font</span><span class="p">,</span> <span class="n">get_font</span>
@@ -264,7 +260,7 @@ type="text/css" />
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">)):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only output finite numbers in PDF&quot;</span><span class="p">)</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%.10f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="si">%.10f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">obj</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
 
     <span class="c1"># Booleans. Needs to be tested before integers since</span>
@@ -273,11 +269,11 @@ type="text/css" />
         <span class="k">return</span> <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;true&#39;</span><span class="p">][</span><span class="n">obj</span><span class="p">]</span>
 
     <span class="c1"># Integers are written as such.</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">integer_types</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">obj</span>
 
     <span class="c1"># Unicode strings are encoded in UTF-16BE with byte-order mark.</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># But maybe it&#39;s really ASCII?</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ASCII&#39;</span><span class="p">)</span>
@@ -355,11 +351,11 @@ type="text/css" />
         <span class="k">return</span> <span class="s2">&quot;&lt;Reference </span><span class="si">%d</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
 
 <div class="viewcode-block" id="Reference.pdfRepr"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.Reference.pdfRepr">[docs]</a>    <span class="k">def</span> <span class="nf">pdfRepr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> 0 R&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> 0 R&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span></div>
 
 <div class="viewcode-block" id="Reference.write"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.Reference.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
         <span class="n">write</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span>
-        <span class="n">write</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> 0 obj</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+        <span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> 0 obj</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">write</span><span class="p">(</span><span class="n">pdfRepr</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
         <span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">endobj</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 
@@ -382,7 +378,7 @@ type="text/css" />
         <span class="k">return</span> <span class="s2">&quot;&lt;Name </span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Name</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
@@ -438,7 +434,8 @@ type="text/css" />
     <span class="n">grestore</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">textpos</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;Td&#39;</span><span class="p">,</span> <span class="n">selectfont</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;Tf&#39;</span><span class="p">,</span> <span class="n">textmatrix</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;Tm&#39;</span><span class="p">,</span>
     <span class="n">show</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;Tj&#39;</span><span class="p">,</span> <span class="n">showkern</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;TJ&#39;</span><span class="p">,</span> <span class="n">setlinewidth</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;sh&#39;</span><span class="p">)</span>
 
-<span class="n">Op</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">Operator</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">_pdfops</span><span class="p">)})</span>
+<span class="n">Op</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">Operator</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">_pdfops</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
 
 
 <span class="k">def</span> <span class="nf">_paint_path</span><span class="p">(</span><span class="n">fill</span><span class="p">,</span> <span class="n">stroke</span><span class="p">):</span>
@@ -496,7 +493,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">_writeHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">write</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">write</span>
-        <span class="n">write</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> 0 obj</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+        <span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> 0 obj</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra</span>
         <span class="nb">dict</span><span class="p">[</span><span class="s1">&#39;Length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len</span>
         <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.compression&#39;</span><span class="p">]:</span>
@@ -689,14 +686,14 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">writeFonts</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeObject</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alphaStateObject</span><span class="p">,</span>
-            <span class="p">{</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphaStates</span><span class="p">)})</span>
+            <span class="p">{</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphaStates</span><span class="o">.</span><span class="n">values</span><span class="p">()})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeHatches</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeGouraudTriangles</span><span class="p">()</span>
         <span class="n">xobjects</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">name</span><span class="p">:</span> <span class="n">ob</span> <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_images</span><span class="p">)}</span>
-        <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">markers</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">ob</span> <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ob</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_images</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">xobjects</span><span class="p">[</span><span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_byte_charprocs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_byte_charprocs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">xobjects</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">filled</span><span class="p">,</span> <span class="n">stroked</span> \
                 <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">:</span>
@@ -752,7 +749,7 @@ type="text/css" />
 <span class="sd">        as the filename of the font.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fontprop</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fontprop</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">fontprop</span>
         <span class="k">elif</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.use14corefonts&#39;</span><span class="p">]:</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">findfont</span><span class="p">(</span>
@@ -773,14 +770,11 @@ type="text/css" />
         <span class="k">return</span> <span class="n">Fx</span></div>
 
     <span class="nd">@property</span>
+    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">texFontMap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># lazy-load texFontMap, it takes a while to parse</span>
         <span class="c1"># and usetex is a relatively rare use case</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_texFontMap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_texFontMap</span> <span class="o">=</span> <span class="n">dviread</span><span class="o">.</span><span class="n">PsfontsMap</span><span class="p">(</span>
-                <span class="n">dviread</span><span class="o">.</span><span class="n">find_tex_file</span><span class="p">(</span><span class="s1">&#39;pdftex.map&#39;</span><span class="p">))</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_texFontMap</span>
+        <span class="k">return</span> <span class="n">dviread</span><span class="o">.</span><span class="n">PsfontsMap</span><span class="p">(</span><span class="n">dviread</span><span class="o">.</span><span class="n">find_tex_file</span><span class="p">(</span><span class="s1">&#39;pdftex.map&#39;</span><span class="p">))</span>
 
 <div class="viewcode-block" id="PdfFile.dviFontName"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.PdfFile.dviFontName">[docs]</a>    <span class="k">def</span> <span class="nf">dviFontName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dvifont</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -793,7 +787,8 @@ type="text/css" />
         <span class="k">if</span> <span class="n">dvi_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">dvi_info</span><span class="o">.</span><span class="n">pdfname</span>
 
-        <span class="n">psfont</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">texFontMap</span><span class="p">[</span><span class="n">dvifont</span><span class="o">.</span><span class="n">texname</span><span class="p">]</span>
+        <span class="n">tex_font_map</span> <span class="o">=</span> <span class="n">dviread</span><span class="o">.</span><span class="n">PsfontsMap</span><span class="p">(</span><span class="n">dviread</span><span class="o">.</span><span class="n">find_tex_file</span><span class="p">(</span><span class="s1">&#39;pdftex.map&#39;</span><span class="p">))</span>
+        <span class="n">psfont</span> <span class="o">=</span> <span class="n">tex_font_map</span><span class="p">[</span><span class="n">dvifont</span><span class="o">.</span><span class="n">texname</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">psfont</span><span class="o">.</span><span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;No usable font file found for </span><span class="si">{}</span><span class="s2"> (TeX: </span><span class="si">{}</span><span class="s2">); &quot;</span>
@@ -803,7 +798,7 @@ type="text/css" />
         <span class="n">pdfname</span> <span class="o">=</span> <span class="n">Name</span><span class="p">(</span><span class="s1">&#39;F</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">nextFont</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nextFont</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Assigning font </span><span class="si">%s</span><span class="s1"> = </span><span class="si">%s</span><span class="s1"> (dvi)&#39;</span><span class="p">,</span> <span class="n">pdfname</span><span class="p">,</span> <span class="n">dvifont</span><span class="o">.</span><span class="n">texname</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dviFontInfo</span><span class="p">[</span><span class="n">dvifont</span><span class="o">.</span><span class="n">texname</span><span class="p">]</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dviFontInfo</span><span class="p">[</span><span class="n">dvifont</span><span class="o">.</span><span class="n">texname</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
             <span class="n">dvifont</span><span class="o">=</span><span class="n">dvifont</span><span class="p">,</span>
             <span class="n">pdfname</span><span class="o">=</span><span class="n">pdfname</span><span class="p">,</span>
             <span class="n">fontfile</span><span class="o">=</span><span class="n">psfont</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
@@ -976,7 +971,7 @@ type="text/css" />
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
             <span class="n">symbol_name</span><span class="p">)</span>
 
-    <span class="n">_identityToUnicodeCMap</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;/CIDInit /ProcSet findresource begin</span>
+    <span class="n">_identityToUnicodeCMap</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;&quot;/CIDInit /ProcSet findresource begin</span>
 <span class="s2">12 dict begin</span>
 <span class="s2">begincmap</span>
 <span class="s2">/CIDSystemInfo</span>
@@ -1090,7 +1085,7 @@ type="text/css" />
             <span class="c1"># Make the charprocs array (using ttconv to generate the</span>
             <span class="c1"># actual outlines)</span>
             <span class="n">rawcharprocs</span> <span class="o">=</span> <span class="n">ttconv</span><span class="o">.</span><span class="n">get_pdf_charprocs</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getfilesystemencoding</span><span class="p">()),</span> <span class="n">glyph_ids</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fsencode</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">glyph_ids</span><span class="p">)</span>
             <span class="n">charprocs</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">charname</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">rawcharprocs</span><span class="p">):</span>
                 <span class="n">stream</span> <span class="o">=</span> <span class="n">rawcharprocs</span><span class="p">[</span><span class="n">charname</span><span class="p">]</span>
@@ -1191,7 +1186,7 @@ type="text/css" />
                                        <span class="n">flags</span><span class="o">=</span><span class="n">LOAD_NO_SCALE</span> <span class="o">|</span> <span class="n">LOAD_NO_HINTING</span><span class="p">)</span>
                 <span class="n">widths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ccode</span><span class="p">,</span> <span class="n">cvt</span><span class="p">(</span><span class="n">glyph</span><span class="o">.</span><span class="n">horiAdvance</span><span class="p">)))</span>
                 <span class="k">if</span> <span class="n">ccode</span> <span class="o">&lt;</span> <span class="mi">65536</span><span class="p">:</span>
-                    <span class="n">cid_to_gid_map</span><span class="p">[</span><span class="n">ccode</span><span class="p">]</span> <span class="o">=</span> <span class="n">unichr</span><span class="p">(</span><span class="n">gind</span><span class="p">)</span>
+                    <span class="n">cid_to_gid_map</span><span class="p">[</span><span class="n">ccode</span><span class="p">]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">gind</span><span class="p">)</span>
                 <span class="n">max_ccode</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccode</span><span class="p">,</span> <span class="n">max_ccode</span><span class="p">)</span>
             <span class="n">widths</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
             <span class="n">cid_to_gid_map</span> <span class="o">=</span> <span class="n">cid_to_gid_map</span><span class="p">[:</span><span class="n">max_ccode</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
@@ -1214,18 +1209,17 @@ type="text/css" />
             <span class="n">unicode_bfrange</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">unicode_groups</span><span class="p">:</span>
                 <span class="n">unicode_bfrange</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="s2">&quot;&lt;</span><span class="si">%04x</span><span class="s2">&gt; &lt;</span><span class="si">%04x</span><span class="s2">&gt; [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span>
+                    <span class="sa">b</span><span class="s2">&quot;&lt;</span><span class="si">%04x</span><span class="s2">&gt; &lt;</span><span class="si">%04x</span><span class="s2">&gt; [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span>
                     <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span>
-                     <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;&lt;</span><span class="si">%04x</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">)])))</span>
+                     <span class="sa">b</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&lt;</span><span class="si">%04x</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">))))</span>
             <span class="n">unicode_cmap</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_identityToUnicodeCMap</span> <span class="o">%</span>
-                            <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unicode_groups</span><span class="p">),</span>
-                             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unicode_bfrange</span><span class="p">)))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unicode_groups</span><span class="p">),</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unicode_bfrange</span><span class="p">)))</span>
 
             <span class="c1"># CIDToGIDMap stream</span>
             <span class="n">cid_to_gid_map</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cid_to_gid_map</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-16be&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">beginStream</span><span class="p">(</span><span class="n">cidToGidMapObject</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                              <span class="kc">None</span><span class="p">,</span>
-                             <span class="p">{</span><span class="s1">&#39;Length&#39;</span><span class="p">:</span>  <span class="nb">len</span><span class="p">(</span><span class="n">cid_to_gid_map</span><span class="p">)})</span>
+                             <span class="p">{</span><span class="s1">&#39;Length&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">cid_to_gid_map</span><span class="p">)})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">currentstream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cid_to_gid_map</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">endStream</span><span class="p">()</span>
 
@@ -1248,15 +1242,7 @@ type="text/css" />
 
         <span class="c1"># Beginning of main embedTTF function...</span>
 
-        <span class="c1"># You are lost in a maze of TrueType tables, all different...</span>
-        <span class="n">sfnt</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_sfnt</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">ps_name</span> <span class="o">=</span> <span class="n">sfnt</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;mac_roman&#39;</span><span class="p">)</span>  <span class="c1"># Macintosh scheme</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="c1"># Microsoft scheme:</span>
-            <span class="n">ps_name</span> <span class="o">=</span> <span class="n">sfnt</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mh">0x0409</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-16be&#39;</span><span class="p">)</span>
-            <span class="c1"># (see freetype/ttnameid.h)</span>
-        <span class="n">ps_name</span> <span class="o">=</span> <span class="n">ps_name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+        <span class="n">ps_name</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">postscript_name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">)</span>
         <span class="n">ps_name</span> <span class="o">=</span> <span class="n">Name</span><span class="p">(</span><span class="n">ps_name</span><span class="p">)</span>
         <span class="n">pclt</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_sfnt_table</span><span class="p">(</span><span class="s1">&#39;pclt&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{</span><span class="s1">&#39;capHeight&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;xHeight&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="n">post</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_sfnt_table</span><span class="p">(</span><span class="s1">&#39;post&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{</span><span class="s1">&#39;italicAngle&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)}</span>
@@ -1345,7 +1331,7 @@ type="text/css" />
 <div class="viewcode-block" id="PdfFile.writeHatches"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.PdfFile.writeHatches">[docs]</a>    <span class="k">def</span> <span class="nf">writeHatches</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">hatchDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="n">sidelen</span> <span class="o">=</span> <span class="mf">72.0</span>
-        <span class="k">for</span> <span class="n">hatch_style</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hatchPatterns</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">hatch_style</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hatchPatterns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">ob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reserveObject</span><span class="p">(</span><span class="s1">&#39;hatch pattern&#39;</span><span class="p">)</span>
             <span class="n">hatchDict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ob</span>
             <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Procsets&#39;</span><span class="p">:</span>
@@ -1412,9 +1398,9 @@ type="text/css" />
 
             <span class="n">streamarr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],),</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;flags&#39;</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;u1&#39;</span><span class="p">)),</span>
-                       <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;points&#39;</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;&gt;u4&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)),</span>
-                       <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;colors&#39;</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;u1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))])</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;flags&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">),</span>
+                       <span class="p">(</span><span class="s1">&#39;points&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;u4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)),</span>
+                       <span class="p">(</span><span class="s1">&#39;colors&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))])</span>
             <span class="n">streamarr</span><span class="p">[</span><span class="s1">&#39;flags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">streamarr</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">flat_points</span> <span class="o">-</span> <span class="n">points_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span>
             <span class="n">streamarr</span><span class="p">[</span><span class="s1">&#39;colors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flat_colors</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mf">255.0</span>
@@ -1523,7 +1509,7 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">endStream</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PdfFile.writeImages"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.PdfFile.writeImages">[docs]</a>    <span class="k">def</span> <span class="nf">writeImages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">img</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_images</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">img</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ob</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_images</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">adata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">adata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">smaskObject</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reserveObject</span><span class="p">(</span><span class="s2">&quot;smask&quot;</span><span class="p">)</span>
@@ -1564,7 +1550,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="PdfFile.writeMarkers"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.PdfFile.writeMarkers">[docs]</a>    <span class="k">def</span> <span class="nf">writeMarkers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="p">((</span><span class="n">pathops</span><span class="p">,</span> <span class="n">fill</span><span class="p">,</span> <span class="n">stroke</span><span class="p">,</span> <span class="n">joinstyle</span><span class="p">,</span> <span class="n">capstyle</span><span class="p">),</span>
-             <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">lw</span><span class="p">))</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">markers</span><span class="p">):</span>
+             <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">lw</span><span class="p">))</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">bbox</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">padded</span><span class="p">(</span><span class="n">lw</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">beginStream</span><span class="p">(</span>
                 <span class="n">ob</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
@@ -1647,7 +1633,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;Write out the xref table.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">startxref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tell_base</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">((</span><span class="s2">&quot;xref</span><span class="se">\n</span><span class="s2">0 </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">nextObject</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;xref</span><span class="se">\n</span><span class="s2">0 </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">nextObject</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">borken</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">offset</span><span class="p">,</span> <span class="n">generation</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">xrefTable</span><span class="p">:</span>
@@ -1656,12 +1642,9 @@ type="text/css" />
                       <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
                 <span class="n">borken</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;the zero object&#39;</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;f&quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%010d</span><span class="s2"> </span><span class="si">%05d</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">generation</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;f&quot;</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;the zero object&#39;</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;n&quot;</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="si">%010d</span><span class="s2"> </span><span class="si">%05d</span><span class="s2"> %b </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">generation</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">borken</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Indirect object does not exist&#39;</span><span class="p">)</span></div>
@@ -1670,7 +1653,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;Write out the info dictionary, checking it for good form&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">is_string_like</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">is_date</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">datetime</span><span class="p">)</span>
@@ -1689,10 +1672,11 @@ type="text/css" />
                     <span class="s1">&#39;Trapped&#39;</span><span class="p">:</span> <span class="n">check_trapped</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Unknown infodict keyword: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Unknown infodict keyword: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">keywords</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Bad value for infodict keyword </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Bad value for infodict keyword </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">,</span>
+                                  <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">infoObject</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reserveObject</span><span class="p">(</span><span class="s1">&#39;info&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infoObject</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">infoDict</span><span class="p">)</span></div>
@@ -1706,8 +1690,7 @@ type="text/css" />
              <span class="s1">&#39;Root&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootObject</span><span class="p">,</span>
              <span class="s1">&#39;Info&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">infoObject</span><span class="p">}))</span>
         <span class="c1"># Could add &#39;ID&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">((</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">startxref</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="si">%%%%</span><span class="s2">EOF</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">startxref</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">startxref</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="si">%%%%</span><span class="s2">EOF</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">startxref</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="RendererPdf"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.RendererPdf">[docs]</a><span class="k">class</span> <span class="nc">RendererPdf</span><span class="p">(</span><span class="n">RendererBase</span><span class="p">):</span>
@@ -1756,17 +1739,17 @@ type="text/css" />
 <div class="viewcode-block" id="RendererPdf.track_characters"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.RendererPdf.track_characters">[docs]</a>    <span class="k">def</span> <span class="nf">track_characters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Keeps track of which characters are required from</span>
 <span class="sd">        each font.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">fname</span> <span class="o">=</span> <span class="n">font</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fname</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">fname</span>
         <span class="n">realpath</span><span class="p">,</span> <span class="n">stat_key</span> <span class="o">=</span> <span class="n">get_realpath_and_stat</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
         <span class="n">used_characters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">used_characters</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
             <span class="n">stat_key</span><span class="p">,</span> <span class="p">(</span><span class="n">realpath</span><span class="p">,</span> <span class="nb">set</span><span class="p">()))</span>
-        <span class="n">used_characters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="nb">ord</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span></div>
+        <span class="n">used_characters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="RendererPdf.merge_used_characters"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.RendererPdf.merge_used_characters">[docs]</a>    <span class="k">def</span> <span class="nf">merge_used_characters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">stat_key</span><span class="p">,</span> <span class="p">(</span><span class="n">realpath</span><span class="p">,</span> <span class="n">charset</span><span class="p">)</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">stat_key</span><span class="p">,</span> <span class="p">(</span><span class="n">realpath</span><span class="p">,</span> <span class="n">charset</span><span class="p">)</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">used_characters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">used_characters</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
                 <span class="n">stat_key</span><span class="p">,</span> <span class="p">(</span><span class="n">realpath</span><span class="p">,</span> <span class="nb">set</span><span class="p">()))</span>
             <span class="n">used_characters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">charset</span><span class="p">)</span></div>
@@ -1920,8 +1903,8 @@ type="text/css" />
                 <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">):</span>
                 <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span>
-                        <span class="n">x</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mi">72</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mi">72</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mi">72</span>
+                        <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mi">72</span><span class="p">):</span>
                     <span class="k">continue</span>
                 <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">lastx</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">lasty</span>
                 <span class="n">output</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">concat_matrix</span><span class="p">,</span>
@@ -1994,7 +1977,7 @@ type="text/css" />
                     <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">fontName</span><span class="p">(</span><span class="n">fontname</span><span class="p">),</span> <span class="n">fontsize</span><span class="p">,</span>
                                      <span class="n">Op</span><span class="o">.</span><span class="n">selectfont</span><span class="p">)</span>
                     <span class="n">prev_font</span> <span class="o">=</span> <span class="n">fontname</span><span class="p">,</span> <span class="n">fontsize</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encode_string</span><span class="p">(</span><span class="n">unichr</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="n">fonttype</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encode_string</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="n">fonttype</span><span class="p">),</span>
                                  <span class="n">Op</span><span class="o">.</span><span class="n">show</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">end_text</span><span class="p">)</span>
 
@@ -2048,10 +2031,7 @@ type="text/css" />
                 <span class="n">pdfname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">dviFontName</span><span class="p">(</span><span class="n">dvifont</span><span class="p">)</span>
                 <span class="n">seq</span> <span class="o">+=</span> <span class="p">[[</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">pdfname</span><span class="p">,</span> <span class="n">dvifont</span><span class="o">.</span><span class="n">size</span><span class="p">]]</span>
                 <span class="n">oldfont</span> <span class="o">=</span> <span class="n">dvifont</span>
-            <span class="c1"># We need to convert the glyph numbers to bytes, and the easiest</span>
-            <span class="c1"># way to do this on both Python 2 and 3 is .encode(&#39;latin-1&#39;)</span>
-            <span class="n">seq</span> <span class="o">+=</span> <span class="p">[[</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span>
-                     <span class="p">[</span><span class="n">six</span><span class="o">.</span><span class="n">unichr</span><span class="p">(</span><span class="n">glyph</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)],</span> <span class="n">x1</span><span class="o">+</span><span class="n">width</span><span class="p">]]</span>
+            <span class="n">seq</span> <span class="o">+=</span> <span class="p">[[</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">([</span><span class="n">glyph</span><span class="p">])],</span> <span class="n">x1</span><span class="o">+</span><span class="n">width</span><span class="p">]]</span>
 
         <span class="c1"># Find consecutive text strings with constant y coordinate and</span>
         <span class="c1"># combine into a sequence of strings and kerns, or just one</span>
@@ -2159,7 +2139,7 @@ type="text/css" />
                 <span class="k">if</span> <span class="n">fonttype</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="c1"># Break the string into chunks where each chunk is either</span>
                     <span class="c1"># a string of chars &lt;= 255, or a single character &gt; 255.</span>
-                    <span class="n">s</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
                         <span class="k">if</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">:</span>
                             <span class="n">char_type</span> <span class="o">=</span> <span class="mi">1</span>
@@ -2407,7 +2387,7 @@ type="text/css" />
         <span class="k">if</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Op</span><span class="o">.</span><span class="n">setgray_stroke</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">rgb</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="p">[</span><span class="n">Op</span><span class="o">.</span><span class="n">setrgb_stroke</span><span class="p">]</span></div>
+            <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">rgb</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">Op</span><span class="o">.</span><span class="n">setrgb_stroke</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GraphicsContextPdf.fillcolor_cmd"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.GraphicsContextPdf.fillcolor_cmd">[docs]</a>    <span class="k">def</span> <span class="nf">fillcolor_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rgb</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">rgb</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.inheritcolor&#39;</span><span class="p">]:</span>
@@ -2415,7 +2395,7 @@ type="text/css" />
         <span class="k">elif</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Op</span><span class="o">.</span><span class="n">setgray_nonstroke</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">rgb</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="p">[</span><span class="n">Op</span><span class="o">.</span><span class="n">setrgb_nonstroke</span><span class="p">]</span></div>
+            <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">rgb</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">Op</span><span class="o">.</span><span class="n">setrgb_nonstroke</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GraphicsContextPdf.push"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.GraphicsContextPdf.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="n">GraphicsContextPdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
@@ -2681,21 +2661,22 @@ type="text/css" />
 <div class="viewcode-block" id="FigureCanvasPdf.get_default_filetype"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.FigureCanvasPdf.get_default_filetype">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_filetype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;pdf&#39;</span></div>
 
-<div class="viewcode-block" id="FigureCanvasPdf.print_pdf"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.FigureCanvasPdf.print_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">print_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">image_dpi</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dpi&#39;</span><span class="p">,</span> <span class="mi">72</span><span class="p">)</span>  <span class="c1"># dpi to use for images</span>
+<div class="viewcode-block" id="FigureCanvasPdf.print_pdf"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.FigureCanvasPdf.print_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">print_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                  <span class="n">dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span>  <span class="c1"># dpi to use for images</span>
+                  <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="mi">72</span><span class="p">)</span>            <span class="c1"># there are 72 pdf points to an inch</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">PdfPages</span><span class="p">):</span>
             <span class="n">file</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">_file</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">file</span> <span class="o">=</span> <span class="n">PdfFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">PdfFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">newPage</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
-            <span class="n">_bbox_inches_restore</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;bbox_inches_restore&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">renderer</span> <span class="o">=</span> <span class="n">MixedModeRenderer</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">image_dpi</span><span class="p">,</span>
-                <span class="n">RendererPdf</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">image_dpi</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span>
-                <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="n">_bbox_inches_restore</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span>
+                <span class="n">RendererPdf</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span>
+                <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="n">bbox_inches_restore</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
             <span class="n">renderer</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">PdfPages</span><span class="p">):</span>
@@ -2707,14 +2688,12 @@ type="text/css" />
                 <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="FigureManagerPdf"><a class="viewcode-back" href="../../../api/backend_pdf_api.html#matplotlib.backends.backend_pdf.FigureManagerPdf">[docs]</a><span class="k">class</span> <span class="nc">FigureManagerPdf</span><span class="p">(</span><span class="n">FigureManagerBase</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+<span class="n">FigureManagerPdf</span> <span class="o">=</span> <span class="n">FigureManagerBase</span>
 
 
 <span class="nd">@_Backend</span><span class="o">.</span><span class="n">export</span>
 <span class="k">class</span> <span class="nc">_BackendPdf</span><span class="p">(</span><span class="n">_Backend</span><span class="p">):</span>
     <span class="n">FigureCanvas</span> <span class="o">=</span> <span class="n">FigureCanvasPdf</span>
-    <span class="n">FigureManager</span> <span class="o">=</span> <span class="n">FigureManagerPdf</span>
 </pre></div>
 
           </div>
@@ -2726,10 +2705,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

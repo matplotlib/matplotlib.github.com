@@ -64,7 +64,12 @@ Colormaps are often split into several categories based on their function (see,
    middle value, such as topography or when the data deviates around
    zero.
 
-3. Qualitative: often are miscellaneous colors; should be used to
+3. Cyclic: change in lightness of two different colors that meet in
+   the middle and beginning/end at an unsaturated color; should be
+   used for values that wrap around at the endpoints, such as phase
+   angle, wind direction, or time of day.
+
+4. Qualitative: often are miscellaneous colors; should be used to
    represent information which does not have ordering or
    relationships.
 
@@ -172,6 +177,36 @@ doesn't span a wide range of :math:`L^*` values (see grayscale section below).
 
 
 
+Cyclic
+------
+
+For Cyclic maps, we want to start and end on the same color, and meet a
+symmetric center point in the middle. :math:`L^*` should change monotonically
+from start to middle, and inversely from middle to end. It should be symmetric
+on the increasing and decreasing side, and only differ in hue. At the ends and
+middle, :math:`L^*` will reverse direction, which should be smoothed in
+:math:`L^*` space to reduce artifacts. See [kovesi-colormaps]_ for more
+information on the design of cyclic maps.
+
+The often-used HSV colormap is included in this set of colormaps, although it
+is not symmetric to a center point. Additionally, the :math:`L^*` values vary
+widely throughout the colormap, making it a poor choice for representing data
+for viewers to see perceptually. See an extension on this idea at
+[mycarta-jet]_.
+
+
+
+.. code-block:: python
+
+
+    cmaps['Cyclic'] = ['twilight', 'twilight_shifted', 'hsv']
+
+
+
+
+
+
+
 Qualitative
 -----------
 
@@ -220,7 +255,7 @@ extension on this idea at [mycarta-jet]_.
 
     cmaps['Miscellaneous'] = [
                 'flag', 'prism', 'ocean', 'gist_earth', 'terrain', 'gist_stern',
-                'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg', 'hsv',
+                'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg',
                 'gist_rainbow', 'rainbow', 'jet', 'nipy_spectral', 'gist_ncar']
 
 
@@ -302,6 +337,11 @@ to change more "quickly" than others.
       .. image:: /tutorials/colors/images/sphx_glr_colormaps_006.png
             :class: sphx-glr-multi-img
 
+    *
+
+      .. image:: /tutorials/colors/images/sphx_glr_colormaps_007.png
+            :class: sphx-glr-multi-img
+
 
 
 
@@ -321,13 +361,13 @@ Note that some documentation on the colormaps is available
 
     # Number of colormap per subplot for particular cmap categories
     _DSUBS = {'Perceptually Uniform Sequential': 5, 'Sequential': 6,
-              'Sequential (2)': 6, 'Diverging': 6, 'Qualitative': 4,
-              'Miscellaneous': 6}
+              'Sequential (2)': 6, 'Diverging': 6, 'Cyclic': 3,
+              'Qualitative': 4, 'Miscellaneous': 6}
 
     # Spacing between the colormaps of a subplot
     _DC = {'Perceptually Uniform Sequential': 1.4, 'Sequential': 0.7,
-           'Sequential (2)': 1.4, 'Diverging': 1.4, 'Qualitative': 1.4,
-           'Miscellaneous': 1.4}
+           'Sequential (2)': 1.4, 'Diverging': 1.4, 'Cyclic': 1.4,
+           'Qualitative': 1.4, 'Miscellaneous': 1.4}
 
     # Indices to step through colormap
     x = np.linspace(0.0, 1.0, 100)
@@ -376,7 +416,7 @@ Note that some documentation on the colormaps is available
                 if cmap_category in ('Perceptually Uniform Sequential',
                                      'Sequential'):
                     locs.append(x[-1] + j*dc)
-                elif cmap_category in ('Diverging', 'Qualitative',
+                elif cmap_category in ('Diverging', 'Qualitative', 'Cyclic',
                                        'Miscellaneous', 'Sequential (2)'):
                     locs.append(x[int(x.size/2.)] + j*dc)
 
@@ -410,11 +450,6 @@ Note that some documentation on the colormaps is available
 
     *
 
-      .. image:: /tutorials/colors/images/sphx_glr_colormaps_007.png
-            :class: sphx-glr-multi-img
-
-    *
-
       .. image:: /tutorials/colors/images/sphx_glr_colormaps_008.png
             :class: sphx-glr-multi-img
 
@@ -436,6 +471,16 @@ Note that some documentation on the colormaps is available
     *
 
       .. image:: /tutorials/colors/images/sphx_glr_colormaps_012.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /tutorials/colors/images/sphx_glr_colormaps_013.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /tutorials/colors/images/sphx_glr_colormaps_014.png
             :class: sphx-glr-multi-img
 
 
@@ -531,16 +576,6 @@ printed in grayscale.
 
     *
 
-      .. image:: /tutorials/colors/images/sphx_glr_colormaps_013.png
-            :class: sphx-glr-multi-img
-
-    *
-
-      .. image:: /tutorials/colors/images/sphx_glr_colormaps_014.png
-            :class: sphx-glr-multi-img
-
-    *
-
       .. image:: /tutorials/colors/images/sphx_glr_colormaps_015.png
             :class: sphx-glr-multi-img
 
@@ -557,6 +592,21 @@ printed in grayscale.
     *
 
       .. image:: /tutorials/colors/images/sphx_glr_colormaps_018.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /tutorials/colors/images/sphx_glr_colormaps_019.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /tutorials/colors/images/sphx_glr_colormaps_020.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /tutorials/colors/images/sphx_glr_colormaps_021.png
             :class: sphx-glr-multi-img
 
 
@@ -584,13 +634,14 @@ References
 .. [list-colormaps] https://gist.github.com/endolith/2719900#id7
 .. [mycarta-banding] https://mycarta.wordpress.com/2012/10/14/the-rainbow-is-deadlong-live-the-rainbow-part-4-cie-lab-heated-body/
 .. [mycarta-jet] https://mycarta.wordpress.com/2012/10/06/the-rainbow-is-deadlong-live-the-rainbow-part-3/
+.. [kovesi-colormaps] https://arxiv.org/abs/1509.03700
 .. [bw] http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/
 .. [colorblindness] http://www.color-blindness.com/
 .. [vischeck] http://www.vischeck.com/vischeck/
 .. [IBM] http://www.research.ibm.com/people/l/lloydt/color/color.HTM
 
 
-**Total running time of the script:** ( 0 minutes  2.559 seconds)
+**Total running time of the script:** ( 0 minutes  2.670 seconds)
 
 
 .. _sphx_glr_download_tutorials_colors_colormaps.py:

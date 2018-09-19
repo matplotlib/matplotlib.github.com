@@ -142,18 +142,17 @@ Additionally you will need to copy :file:`setup.cfg.template` to
 In either case you can then run the tests to check your work
 environment is set up properly::
 
-  python tests.py
+  pytest
 
 .. _pytest: http://doc.pytest.org/en/latest/
 .. _pep8: https://pep8.readthedocs.io/en/latest/
-.. _mock: https://docs.python.org/dev/library/unittest.mock.html
 .. _Ghostscript: https://www.ghostscript.com/
 .. _Inkscape: https://inkscape.org>
 
 .. note::
 
-  **Additional dependencies for testing**: pytest_ (version 3.1 or later),
-  mock_ (if Python 2), Ghostscript_, Inkscape_
+  **Additional dependencies for testing**: pytest_ (version 3.4 or later),
+  Ghostscript_, Inkscape_
 
 .. seealso::
 
@@ -266,7 +265,7 @@ tools:
 * Code with a good unittest coverage (at least 70%, better 100%), check with::
 
    python -mpip install coverage
-   python tests.py --with-coverage
+   pytest --cov=matplotlib --showlocals -v
 
 * No pyflakes warnings, check with::
 
@@ -395,41 +394,20 @@ on, use the key/value keyword args in the function definition rather
 than the ``**kwargs`` idiom.
 
 In some cases, you may want to consume some keys in the local
-function, and let others pass through.  You can ``pop`` the ones to be
-used locally and pass on the rest.  For example, in
+function, and let others pass through.  Instead of poping arguments to
+use off ``**kwargs``, specify them as keyword-only arguments to the local
+function.  This makes it obvious at a glance which arguments will be
+consumed in the function.  For example, in
 :meth:`~matplotlib.axes.Axes.plot`, ``scalex`` and ``scaley`` are
 local arguments and the rest are passed on as
 :meth:`~matplotlib.lines.Line2D` keyword arguments::
 
   # in axes/_axes.py
-  def plot(self, *args, **kwargs):
-      scalex = kwargs.pop('scalex', True)
-      scaley = kwargs.pop('scaley', True)
-      if not self._hold: self.cla()
+  def plot(self, *args, scalex=True, scaley=True, **kwargs):
       lines = []
       for line in self._get_lines(*args, **kwargs):
           self.add_line(line)
           lines.append(line)
-
-Note: there is a use case when ``kwargs`` are meant to be used locally
-in the function (not passed on), but you still need the ``**kwargs``
-idiom.  That is when you want to use ``*args`` to allow variable
-numbers of non-keyword args.  In this case, python will not allow you
-to use named keyword args after the ``*args`` usage, so you will be
-forced to use ``**kwargs``.  An example is
-:meth:`matplotlib.contour.ContourLabeler.clabel`::
-
-  # in contour.py
-  def clabel(self, *args, **kwargs):
-      fontsize = kwargs.get('fontsize', None)
-      inline = kwargs.get('inline', 1)
-      self.fmt = kwargs.get('fmt', '%1.3f')
-      colors = kwargs.get('colors', None)
-      if len(args) == 0:
-          levels = self.levels
-          indices = range(len(self.levels))
-      elif len(args) == 1:
-         ...etc...
 
 .. _using_logging:
 

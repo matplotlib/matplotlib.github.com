@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.colors &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.colors &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/colors.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -157,16 +159,9 @@ type="text/css" />
 <span class="sd">All string specifications of color, other than &quot;CN&quot;, are case-insensitive.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">zip</span>
-
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Sized</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="k">import</span> <span class="n">Sized</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cbook</span> <span class="k">as</span> <span class="nn">cbook</span>
@@ -175,15 +170,15 @@ type="text/css" />
 
 <span class="k">class</span> <span class="nc">_ColorMapping</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">_ColorMapping</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">_ColorMapping</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">_ColorMapping</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
 
@@ -219,13 +214,12 @@ type="text/css" />
 
 <span class="k">def</span> <span class="nf">_is_nth_color</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return whether *c* can be interpreted as an item in the color cycle.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\AC[0-9]\Z&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\AC[0-9]\Z&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="is_color_like"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.colors.is_color_like.html#matplotlib.colors.is_color_like">[docs]</a><span class="k">def</span> <span class="nf">is_color_like</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return whether *c* can be interpreted as an RGB(A) color.&quot;&quot;&quot;</span>
-    <span class="c1"># Special-case nth color syntax because it cannot be parsed during</span>
-    <span class="c1"># setup.</span>
+    <span class="c1"># Special-case nth color syntax because it cannot be parsed during setup.</span>
     <span class="k">if</span> <span class="n">_is_nth_color</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">try</span><span class="p">:</span>
@@ -293,7 +287,7 @@ type="text/css" />
 <span class="sd">    ``&quot;none&quot;`` (case-insensitive), which always maps to ``(0, 0, 0, 0)``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">orig_c</span> <span class="o">=</span> <span class="n">c</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
         <span class="c1"># Named color.</span>
@@ -302,7 +296,7 @@ type="text/css" />
             <span class="n">c</span> <span class="o">=</span> <span class="n">_colors_full_map</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># hex color with no alpha.</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\A#[a-fA-F0-9]</span><span class="si">{6}</span><span class="s2">\Z&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
@@ -368,7 +362,7 @@ type="text/css" />
     <span class="c1"># Note that this occurs *after* handling inputs that are already arrays, as</span>
     <span class="c1"># `to_rgba(c, alpha)` (below) is expensive for such inputs, due to the need</span>
     <span class="c1"># to format the array in the ValueError message(!).</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_str_lower_equal</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)],</span> <span class="nb">float</span><span class="p">)</span>
@@ -635,8 +629,7 @@ type="text/css" />
             <span class="n">lut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lut</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Don&#39;t let alpha modify original _lut.</span>
 
         <span class="k">if</span> <span class="n">alpha</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">alpha</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># alpha must be between 0 and 1</span>
-            <span class="n">alpha</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">bytes</span><span class="p">:</span>
                 <span class="n">alpha</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">lut</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
@@ -668,7 +661,7 @@ type="text/css" />
 <div class="viewcode-block" id="Colormap.set_bad"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap.set_bad">[docs]</a>    <span class="k">def</span> <span class="nf">set_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set color to be used for masked values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rgba_bad</span> <span class="o">=</span> <span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rgba_bad</span> <span class="o">=</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isinit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_set_extremes</span><span class="p">()</span></div>
 
@@ -676,7 +669,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;Set color to be used for low out-of-range values.</span>
 <span class="sd">           Requires norm.clip = False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rgba_under</span> <span class="o">=</span> <span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rgba_under</span> <span class="o">=</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isinit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_set_extremes</span><span class="p">()</span></div>
 
@@ -684,7 +677,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;Set color to be used for high out-of-range values.</span>
 <span class="sd">           Requires norm.clip = False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rgba_over</span> <span class="o">=</span> <span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rgba_over</span> <span class="o">=</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isinit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_set_extremes</span><span class="p">()</span></div>
 
@@ -831,7 +824,7 @@ type="text/css" />
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;colors must be iterable&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Sized</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span>
-                <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)):</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">)):</span>
             <span class="c1"># List of value, color pairs</span>
             <span class="n">vals</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -839,7 +832,7 @@ type="text/css" />
 
         <span class="n">cdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">red</span><span class="o">=</span><span class="p">[],</span> <span class="n">green</span><span class="o">=</span><span class="p">[],</span> <span class="n">blue</span><span class="o">=</span><span class="p">[],</span> <span class="n">alpha</span><span class="o">=</span><span class="p">[])</span>
         <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
-            <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+            <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
             <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">val</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
             <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;green&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">val</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span>
             <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">val</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
@@ -877,13 +870,9 @@ type="text/css" />
                 <span class="k">return</span> <span class="n">dat</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">func_r</span>
 
-        <span class="n">data_r</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_segmentdata</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-                <span class="n">data_r</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">factory</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">new_data</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">data</span><span class="p">)]</span>
-                <span class="n">data_r</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_data</span>
+        <span class="n">data_r</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="p">(</span><span class="n">factory</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">else</span>
+                        <span class="p">[(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">data</span><span class="p">)])</span>
+                  <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segmentdata</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
         <span class="k">return</span> <span class="n">LinearSegmentedColormap</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data_r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">)</span></div></div>
 
@@ -924,7 +913,7 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span>
             <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">monochrome</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">elif</span> <span class="n">cbook</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">colors</span><span class="p">):</span>
@@ -943,9 +932,8 @@ type="text/css" />
         <span class="n">Colormap</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">rgba</span> <span class="o">=</span> <span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_lut</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">rgba</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lut</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_rgba_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_isinit</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_extremes</span><span class="p">()</span>
 
@@ -1068,11 +1056,6 @@ type="text/css" />
             <span class="n">resdat</span> <span class="o">-=</span> <span class="n">vmin</span>
             <span class="n">resdat</span> <span class="o">/=</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resdat</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="c1"># Agg cannot handle float128.  We actually only need 32-bit of</span>
-        <span class="c1"># precision, but on Windows, `np.dtype(np.longdouble) == np.float64`,</span>
-        <span class="c1"># so casting to float32 would lose precision on float64s as well.</span>
-        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">longdouble</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">is_scalar</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">result</span>
@@ -1243,7 +1226,8 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inplace transformation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">masked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+            <span class="n">masked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span>
         <span class="n">sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">masked</span><span class="p">])</span>
         <span class="n">log</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_linscale_adj</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">masked</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span><span class="p">))</span>
         <span class="n">log</span> <span class="o">*=</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span>
@@ -1300,8 +1284,8 @@ type="text/css" />
 
 <div class="viewcode-block" id="PowerNorm"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.colors.PowerNorm.html#matplotlib.colors.PowerNorm">[docs]</a><span class="k">class</span> <span class="nc">PowerNorm</span><span class="p">(</span><span class="n">Normalize</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Normalize a given value to the ``[0, 1]`` interval with a power-law</span>
-<span class="sd">    scaling. This will clip any negative data points to 0.</span>
+<span class="sd">    Linearly map a given value to the 0-1 range and then apply</span>
+<span class="sd">    a power-law normalization over that range.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">Normalize</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span>
@@ -1321,18 +1305,17 @@ type="text/css" />
         <span class="k">elif</span> <span class="n">vmin</span> <span class="o">==</span> <span class="n">vmax</span><span class="p">:</span>
             <span class="n">result</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">res_mask</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">0</span>
             <span class="k">if</span> <span class="n">clip</span><span class="p">:</span>
                 <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">getmask</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="n">vmax</span><span class="p">),</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">),</span>
                                      <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
             <span class="n">resdat</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
             <span class="n">resdat</span> <span class="o">-=</span> <span class="n">vmin</span>
+            <span class="n">resdat</span><span class="p">[</span><span class="n">resdat</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">resdat</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">resdat</span><span class="p">)</span>
             <span class="n">resdat</span> <span class="o">/=</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span><span class="p">)</span> <span class="o">**</span> <span class="n">gamma</span>
 
             <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resdat</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">result</span><span class="p">[</span><span class="n">res_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">is_scalar</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">result</span>
@@ -1354,10 +1337,6 @@ type="text/css" />
 <span class="sd">        Set *vmin*, *vmax* to min, max of *A*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Power-law scaling on negative values is &quot;</span>
-                          <span class="s2">&quot;ill-defined, clamping to 0.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">A</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PowerNorm.autoscale_None"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.colors.PowerNorm.html#matplotlib.colors.PowerNorm.autoscale_None">[docs]</a>    <span class="k">def</span> <span class="nf">autoscale_None</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -1365,10 +1344,6 @@ type="text/css" />
         <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Power-law scaling on negative values is &quot;</span>
-                              <span class="s2">&quot;ill-defined, clamping to 0.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">max</span><span class="p">()</span></div></div>
 
@@ -1609,8 +1584,7 @@ type="text/css" />
     <span class="n">g</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
     <span class="n">b</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
 
-    <span class="c1"># `np.stack([r, g, b], axis=-1)` (numpy 1.10).</span>
-    <span class="n">rgb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">g</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rgb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">in_ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">rgb</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span>
@@ -1630,17 +1604,6 @@ type="text/css" />
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
         <span class="n">sum_sq</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sum_sq</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_vector_dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="c1"># things that don&#39;t work here:</span>
-    <span class="c1">#   * a.dot(b) - fails on masked arrays until 1.10</span>
-    <span class="c1">#   * np.ma.dot(a, b) - doesn&#39;t mask enough things</span>
-    <span class="c1">#   * np.ma.dot(a, b, strict=True) - returns a maskedarray with no mask</span>
-    <span class="n">dot</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="n">dot</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">dot</span>
 
 
 <div class="viewcode-block" id="LightSource"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.colors.LightSource.html#matplotlib.colors.LightSource">[docs]</a><span class="k">class</span> <span class="nc">LightSource</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1779,7 +1742,7 @@ type="text/css" />
 <span class="sd">            completely in shadow and 1 is completely illuminated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">intensity</span> <span class="o">=</span> <span class="n">_vector_dot</span><span class="p">(</span><span class="n">normals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
+        <span class="n">intensity</span> <span class="o">=</span> <span class="n">normals</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
 
         <span class="c1"># Apply contrast stretch</span>
         <span class="n">imin</span><span class="p">,</span> <span class="n">imax</span> <span class="o">=</span> <span class="n">intensity</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">intensity</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
@@ -2149,10 +2112,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

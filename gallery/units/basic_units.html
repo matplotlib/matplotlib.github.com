@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basic Units &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>Basic Units &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
   <link rel="canonical" href="https://matplotlib.org/gallery/units/basic_units.html" />
 
 
@@ -47,7 +49,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -70,7 +72,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li> 
       </ul>
     </div>
@@ -114,15 +116,12 @@ type="text/css" />
 </div>
 <div class="sphx-glr-example-title section" id="basic-units">
 <span id="sphx-glr-gallery-units-basic-units-py"></span><h1>Basic Units<a class="headerlink" href="#basic-units" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">six</span>
-
-<span class="kn">import</span> <span class="nn">math</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.units</span> <span class="kn">as</span> <span class="nn">units</span>
 <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="kn">as</span> <span class="nn">ticker</span>
-<span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
 <span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <a href="../../api/cbook_api.html#matplotlib.cbook.iterable" title="View documentation for matplotlib.cbook.iterable"><span class="n">iterable</span></a>
 
 
@@ -136,13 +135,13 @@ type="text/css" />
 
 
 <span class="k">class</span> <span class="nc">TaggedValueMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">fn_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_proxies</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">fn_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proxies</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">dummy</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">)</span>
+                <span class="n">dummy</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">,</span>
-                        <span class="n">ProxyDelegate</span><span class="p">(</span><span class="n">fn_name</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_proxies</span><span class="p">[</span><span class="n">fn_name</span><span class="p">]))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">,</span>
+                        <span class="n">ProxyDelegate</span><span class="p">(</span><span class="n">fn_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proxies</span><span class="p">[</span><span class="n">fn_name</span><span class="p">]))</span>
 
 
 <span class="k">class</span> <span class="nc">PassThroughProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -220,7 +219,7 @@ type="text/css" />
         <span class="k">return</span> <span class="n">TaggedValue</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">ret_unit</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">TaggedValue</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">TaggedValueMeta</span><span class="p">)):</span>
+<span class="k">class</span> <span class="nc">TaggedValue</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">TaggedValueMeta</span><span class="p">):</span>
 
     <span class="n">_proxies</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;__add__&#39;</span><span class="p">:</span> <span class="n">ConvertAllProxy</span><span class="p">,</span>
                 <span class="s1">&#39;__sub__&#39;</span><span class="p">:</span> <span class="n">ConvertAllProxy</span><span class="p">,</span>
@@ -266,7 +265,7 @@ type="text/css" />
         <span class="k">return</span> <span class="n">TaggedValue</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;TaggedValue(&#39;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;TaggedValue({!r}, {!r})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; in &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
@@ -361,13 +360,13 @@ type="text/css" />
 <span class="k">class</span> <span class="nc">UnitResolver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">addition_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a><span class="p">):</span>
         <span class="k">for</span> <span class="n">unit_1</span><span class="p">,</span> <span class="n">unit_2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">unit_1</span> <span class="o">!=</span> <span class="n">unit_2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">unit_1</span> <span class="o">!=</span> <span class="n">unit_2</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">NotImplemented</span>
         <span class="k">return</span> <a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">multiplication_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a><span class="p">):</span>
         <span class="n">non_null</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a> <span class="k">if</span> <span class="n">u</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">non_null</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_null</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span>
         <span class="k">return</span> <span class="n">non_null</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -380,7 +379,7 @@ type="text/css" />
         <span class="s1">&#39;__rsub__&#39;</span><span class="p">:</span> <span class="n">addition_rule</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_dict</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_dict</span><span class="p">[</span><span class="n">operation</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <a href="../../api/units_api.html#module-matplotlib.units" title="View documentation for matplotlib.units"><span class="n">units</span></a><span class="p">)</span>
@@ -485,9 +484,9 @@ type="text/css" />
 </div>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-gallery-units-basic-units-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/basic_units.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">basic_units.py</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/ed936b25273390c4c08ea9b52bc95351/basic_units.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">basic_units.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/basic_units.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">basic_units.ipynb</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/b9ab9185207ba0b1f762b4e2380974eb/basic_units.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">basic_units.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature">Keywords: matplotlib code example, codex, python plot, pyplot
 <a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -503,10 +502,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

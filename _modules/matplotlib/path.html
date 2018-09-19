@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.path &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.path &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/path.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -122,18 +124,13 @@ type="text/css" />
 <span class="sd">visualisation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
 <span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">WeakValueDictionary</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_path</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">.cbook</span> <span class="k">import</span> <span class="p">(</span><span class="n">_to_unmasked_float_array</span><span class="p">,</span> <span class="n">simple_linear_interpolation</span><span class="p">,</span>
-                    <span class="n">maxdict</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.cbook</span> <span class="k">import</span> <span class="n">_to_unmasked_float_array</span><span class="p">,</span> <span class="n">simple_linear_interpolation</span>
 
 
 <div class="viewcode-block" id="Path"><a class="viewcode-back" href="../../api/path_api.html#matplotlib.path.Path">[docs]</a><span class="k">class</span> <span class="nc">Path</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -243,19 +240,19 @@ type="text/css" />
 <span class="sd">            and codes as read-only arrays.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vertices</span> <span class="o">=</span> <span class="n">_to_unmasked_float_array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">vertices</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">vertices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">vertices</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">vertices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;&#39;vertices&#39; must be a 2D list or array with shape Nx2&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">codes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_type</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">codes</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">codes</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;codes&#39; must be a 1D list or array with the &quot;</span>
                                  <span class="s2">&quot;same length of &#39;vertices&#39;&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span> <span class="ow">and</span> <span class="n">codes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MOVETO</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The first element of &#39;code&#39; must be equal &quot;</span>
                                  <span class="s2">&quot;to &#39;MOVETO&#39; (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MOVETO</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">closed</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">closed</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">):</span>
             <span class="n">codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">code_type</span><span class="p">)</span>
             <span class="n">codes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MOVETO</span>
             <span class="n">codes</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LINETO</span>
@@ -421,7 +418,7 @@ type="text/css" />
 <span class="sd">        numsides x 2) numpy array of vertices.  Return object is a</span>
 <span class="sd">        :class:`Path`</span>
 
-<span class="sd">        .. plot:: gallery/api/histogram_path.py</span>
+<span class="sd">        .. plot:: gallery/misc/histogram_path.py</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -696,7 +693,7 @@ type="text/css" />
 <span class="sd">        polygon/polyline is an Nx2 array of vertices.  In other words,</span>
 <span class="sd">        each polygon has no ``MOVETO`` instructions or curves.  This</span>
 <span class="sd">        is useful for displaying in backends that do not support</span>
-<span class="sd">        compound paths or Bezier curves, such as GDK.</span>
+<span class="sd">        compound paths or Bezier curves.</span>
 
 <span class="sd">        If *width* and *height* are both non-zero then the lines will</span>
 <span class="sd">        be simplified so that vertices outside of (0, 0), (width,</span>
@@ -722,7 +719,7 @@ type="text/css" />
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
                     <span class="k">return</span> <span class="p">[]</span>
                 <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-                    <span class="n">vertices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">vertices</span><span class="p">,</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
             <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">vertices</span><span class="p">]</span>
@@ -756,22 +753,20 @@ type="text/css" />
 <div class="viewcode-block" id="Path.unit_regular_polygon"><a class="viewcode-back" href="../../api/path_api.html#matplotlib.path.Path.unit_regular_polygon">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">unit_regular_polygon</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">numVertices</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a :class:`Path` instance for a unit regular</span>
-<span class="sd">        polygon with the given *numVertices* and radius of 1.0,</span>
-<span class="sd">        centered at (0, 0).</span>
+<span class="sd">        Return a :class:`Path` instance for a unit regular polygon with the</span>
+<span class="sd">        given *numVertices* and radius of 1.0, centered at (0, 0).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">numVertices</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_unit_regular_polygons</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">numVertices</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">numVertices</span> <span class="o">*</span>
-                     <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">numVertices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">numVertices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-            <span class="c1"># This initial rotation is to make sure the polygon always</span>
-            <span class="c1"># &quot;points-up&quot;</span>
-            <span class="n">theta</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span>
-            <span class="n">verts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">numVertices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,))</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">numVertices</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">numVertices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                     <span class="c1"># This initial rotation is to make sure the polygon always</span>
+                     <span class="c1"># &quot;points-up&quot;.</span>
+                     <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)))</span>
+            <span class="n">codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">numVertices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">codes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MOVETO</span>
             <span class="n">codes</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">LINETO</span>
             <span class="n">codes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CLOSEPOLY</span>
@@ -785,9 +780,8 @@ type="text/css" />
 <div class="viewcode-block" id="Path.unit_regular_star"><a class="viewcode-back" href="../../api/path_api.html#matplotlib.path.Path.unit_regular_star">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">unit_regular_star</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">numVertices</span><span class="p">,</span> <span class="n">innerCircle</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a :class:`Path` for a unit regular star</span>
-<span class="sd">        with the given numVertices and radius of 1.0, centered at (0,</span>
-<span class="sd">        0).</span>
+<span class="sd">        Return a :class:`Path` for a unit regular star with the given</span>
+<span class="sd">        numVertices and radius of 1.0, centered at (0, 0).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">numVertices</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_unit_regular_stars</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">numVertices</span><span class="p">,</span> <span class="n">innerCircle</span><span class="p">))</span>
@@ -814,9 +808,8 @@ type="text/css" />
 <div class="viewcode-block" id="Path.unit_regular_asterisk"><a class="viewcode-back" href="../../api/path_api.html#matplotlib.path.Path.unit_regular_asterisk">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">unit_regular_asterisk</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">numVertices</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a :class:`Path` for a unit regular</span>
-<span class="sd">        asterisk with the given numVertices and radius of 1.0,</span>
-<span class="sd">        centered at (0, 0).</span>
+<span class="sd">        Return a :class:`Path` for a unit regular asterisk with the given</span>
+<span class="sd">        numVertices and radius of 1.0, centered at (0, 0).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">unit_regular_star</span><span class="p">(</span><span class="n">numVertices</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span></div>
 
@@ -1049,27 +1042,17 @@ type="text/css" />
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
 
-    <span class="n">_hatch_dict</span> <span class="o">=</span> <span class="n">maxdict</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Path.hatch"><a class="viewcode-back" href="../../api/path_api.html#matplotlib.path.Path.hatch">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">hatch</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hatchpattern</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+<div class="viewcode-block" id="Path.hatch"><a class="viewcode-back" href="../../api/path_api.html#matplotlib.path.Path.hatch">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">hatch</span><span class="p">(</span><span class="n">hatchpattern</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given a hatch specifier, *hatchpattern*, generates a Path that</span>
 <span class="sd">        can be used in a repeated hatching pattern.  *density* is the</span>
 <span class="sd">        number of lines per unit square.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">matplotlib.hatch</span> <span class="k">import</span> <span class="n">get_path</span>
-
-        <span class="k">if</span> <span class="n">hatchpattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="n">hatch_path</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_hatch_dict</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">hatchpattern</span><span class="p">,</span> <span class="n">density</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">hatch_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">hatch_path</span>
-
-        <span class="n">hatch_path</span> <span class="o">=</span> <span class="n">get_path</span><span class="p">(</span><span class="n">hatchpattern</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">_hatch_dict</span><span class="p">[(</span><span class="n">hatchpattern</span><span class="p">,</span> <span class="n">density</span><span class="p">)]</span> <span class="o">=</span> <span class="n">hatch_path</span>
-        <span class="k">return</span> <span class="n">hatch_path</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">get_path</span><span class="p">(</span><span class="n">hatchpattern</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">hatchpattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Path.clip_to_bbox"><a class="viewcode-back" href="../../api/path_api.html#matplotlib.path.Path.clip_to_bbox">[docs]</a>    <span class="k">def</span> <span class="nf">clip_to_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">inside</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1150,10 +1133,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

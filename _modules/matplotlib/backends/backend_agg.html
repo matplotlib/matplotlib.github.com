@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.backends.backend_agg &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.backends.backend_agg &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/backends/backend_agg.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -132,24 +134,16 @@ type="text/css" />
 <span class="sd">  * integrate screen dpi w/ ppi and text</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">threading</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">dummy_threading</span> <span class="k">as</span> <span class="nn">threading</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">rcParams</span><span class="p">,</span> <span class="n">__version__</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">RendererBase</span><span class="p">,</span> <span class="n">cursors</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">maxdict</span>
-<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
+    <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">RendererBase</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">get_font</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="k">import</span> <span class="p">(</span><span class="n">LOAD_FORCE_AUTOHINT</span><span class="p">,</span> <span class="n">LOAD_NO_HINTING</span><span class="p">,</span>
                                 <span class="n">LOAD_DEFAULT</span><span class="p">,</span> <span class="n">LOAD_NO_AUTOHINT</span><span class="p">)</span>
@@ -161,11 +155,10 @@ type="text/css" />
 <span class="kn">from</span> <span class="nn">matplotlib.backends._backend_agg</span> <span class="k">import</span> <span class="n">RendererAgg</span> <span class="k">as</span> <span class="n">_RendererAgg</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span>
 
-<span class="k">try</span><span class="p">:</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="n">_has_pil</span>
+
+<span class="k">if</span> <span class="n">_has_pil</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
-    <span class="n">_has_pil</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">_has_pil</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">backend_version</span> <span class="o">=</span> <span class="s1">&#39;v2.2&#39;</span>
 
@@ -186,11 +179,6 @@ type="text/css" />
 <span class="sd">    The renderer handles all the drawing primitives using a graphics</span>
 <span class="sd">    context instance that controls the colors/styles</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;2.2&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mi">1</span>
 
     <span class="c1"># we want to cache the fonts at the class level so that when</span>
     <span class="c1"># multiple figures are created we can reuse them.  This helps with</span>
@@ -227,25 +215,13 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">_get_hinting_flag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.hinting&#39;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="n">LOAD_FORCE_AUTOHINT</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">LOAD_NO_HINTING</span>
-
-    <span class="c1"># for filtering to work with rasterization, methods needs to be wrapped.</span>
-    <span class="c1"># maybe there is better way to do it.</span>
-<div class="viewcode-block" id="RendererAgg.draw_markers"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.RendererAgg.draw_markers">[docs]</a>    <span class="k">def</span> <span class="nf">draw_markers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">kl</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_markers</span><span class="p">(</span><span class="o">*</span><span class="n">kl</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="RendererAgg.draw_path_collection"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.RendererAgg.draw_path_collection">[docs]</a>    <span class="k">def</span> <span class="nf">draw_path_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">kl</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_path_collection</span><span class="p">(</span><span class="o">*</span><span class="n">kl</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
-
     <span class="k">def</span> <span class="nf">_update_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_quad_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_quad_mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_gouraud_triangle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_gouraud_triangle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_gouraud_triangles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_gouraud_triangles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_markers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_markers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_path_collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_path_collection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_quad_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_quad_mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">copy_from_bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">copy_from_bbox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_content_extents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">get_content_extents</span>
 
@@ -289,7 +265,6 @@ type="text/css" />
             <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;Exceeded cell block limit (set &quot;</span>
                                     <span class="s2">&quot;&#39;agg.path.chunksize&#39; rcparam)&quot;</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="RendererAgg.draw_mathtext"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.RendererAgg.draw_mathtext">[docs]</a>    <span class="k">def</span> <span class="nf">draw_mathtext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -387,7 +362,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">_get_agg_font</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the font for text instance t, cacheing for efficiency</span>
+<span class="sd">        Get the font for text instance t, caching for efficiency</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="n">findfont</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
         <span class="n">font</span> <span class="o">=</span> <span class="n">get_font</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
@@ -403,7 +378,7 @@ type="text/css" />
 <span class="sd">        convert point measures to pixes using dpi and the pixels per</span>
 <span class="sd">        inch of the display</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">points</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dpi</span><span class="o">/</span><span class="mf">72.0</span></div>
+        <span class="k">return</span> <span class="n">points</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mi">72</span></div>
 
 <div class="viewcode-block" id="RendererAgg.tostring_rgb"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.RendererAgg.tostring_rgb">[docs]</a>    <span class="k">def</span> <span class="nf">tostring_rgb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">tostring_rgb</span><span class="p">()</span></div>
@@ -491,14 +466,9 @@ type="text/css" />
 <span class="sd">        post_processing is plotted (using draw_image) on it.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># WARNING:  For agg_filter to work, the renderer&#39;s method need to</span>
-        <span class="c1"># overridden in the class. See draw_markers and draw_path_collections.</span>
-
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
 
-        <span class="n">buffer</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tostring_rgba_minimized</span><span class="p">()</span>
-
-        <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">bounds</span>
+        <span class="n">buffer</span><span class="p">,</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tostring_rgba_minimized</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_renderers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_methods</span><span class="p">()</span>
@@ -511,8 +481,7 @@ type="text/css" />
             <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>
                 <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span> <span class="o">*</span> <span class="mf">255.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
             <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_image</span><span class="p">(</span>
-                <span class="n">gc</span><span class="p">,</span> <span class="n">l</span> <span class="o">+</span> <span class="n">ox</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">b</span> <span class="o">-</span> <span class="n">h</span> <span class="o">+</span> <span class="n">oy</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">draw_image</span><span class="p">(</span><span class="n">gc</span><span class="p">,</span> <span class="n">l</span> <span class="o">+</span> <span class="n">ox</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">b</span> <span class="o">-</span> <span class="n">h</span> <span class="o">+</span> <span class="n">oy</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="FigureCanvasAgg"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg">[docs]</a><span class="k">class</span> <span class="nc">FigureCanvasAgg</span><span class="p">(</span><span class="n">FigureCanvasBase</span><span class="p">):</span>
@@ -537,7 +506,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="FigureCanvasAgg.draw"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draw the figure using the renderer</span>
+<span class="sd">        Draw the figure using the renderer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">(</span><span class="n">cleared</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># acquire a lock on the shared font cache</span>
@@ -545,15 +514,11 @@ type="text/css" />
 
         <span class="n">toolbar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolbar</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># if toolbar:</span>
-            <span class="c1">#     toolbar.set_cursor(cursors.WAIT)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">)</span>
             <span class="c1"># A GUI class may be need to update a window using this draw, so</span>
             <span class="c1"># don&#39;t forget to call the superclass.</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">FigureCanvasAgg</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="c1"># if toolbar:</span>
-            <span class="c1">#     toolbar.set_cursor(toolbar._lastCursor)</span>
             <span class="n">RendererAgg</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FigureCanvasAgg.get_renderer"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.get_renderer">[docs]</a>    <span class="k">def</span> <span class="nf">get_renderer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cleared</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -571,7 +536,7 @@ type="text/css" />
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span></div>
 
 <div class="viewcode-block" id="FigureCanvasAgg.tostring_rgb"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.tostring_rgb">[docs]</a>    <span class="k">def</span> <span class="nf">tostring_rgb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Get the image as an RGB byte string</span>
+        <span class="sd">&#39;&#39;&#39;Get the image as an RGB byte string.</span>
 
 <span class="sd">        `draw` must be called at least once before this function will work and</span>
 <span class="sd">        to update the renderer for any subsequent changes to the Figure.</span>
@@ -596,7 +561,7 @@ type="text/css" />
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">tostring_argb</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FigureCanvasAgg.buffer_rgba"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.buffer_rgba">[docs]</a>    <span class="k">def</span> <span class="nf">buffer_rgba</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Get the image as an RGBA byte string</span>
+        <span class="sd">&#39;&#39;&#39;Get the image as an RGBA byte string.</span>
 
 <span class="sd">        `draw` must be called at least once before this function will work and</span>
 <span class="sd">        to update the renderer for any subsequent changes to the Figure.</span>
@@ -610,66 +575,93 @@ type="text/css" />
 <div class="viewcode-block" id="FigureCanvasAgg.print_raw"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.print_raw">[docs]</a>    <span class="k">def</span> <span class="nf">print_raw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_or_obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">FigureCanvasAgg</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">()</span>
-        <span class="n">original_dpi</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span>
-        <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename_or_obj</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-            <span class="n">fileobj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_or_obj</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
-            <span class="n">close</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fileobj</span> <span class="o">=</span> <span class="n">filename_or_obj</span>
-            <span class="n">close</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">fileobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">buffer_rgba</span><span class="p">())</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">close</span><span class="p">:</span>
-                <span class="n">fileobj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="n">original_dpi</span></div>
+        <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_setattr_cm</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">),</span> \
+                <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">filename_or_obj</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">buffer_rgba</span><span class="p">())</span></div>
     <span class="n">print_rgba</span> <span class="o">=</span> <span class="n">print_raw</span>
 
 <div class="viewcode-block" id="FigureCanvasAgg.print_png"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.print_png">[docs]</a>    <span class="k">def</span> <span class="nf">print_png</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_or_obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the figure to a PNG file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename_or_obj : str or PathLike or file-like object</span>
+<span class="sd">            The file to write to.</span>
+
+<span class="sd">        metadata : dict, optional</span>
+<span class="sd">            Metadata in the PNG file as key-value pairs of bytes or latin-1</span>
+<span class="sd">            encodable strings.</span>
+<span class="sd">            According to the PNG specification, keys must be shorter than 79</span>
+<span class="sd">            chars.</span>
+
+<span class="sd">            The `PNG specification`_ defines some common keywords that may be</span>
+<span class="sd">            used as appropriate:</span>
+
+<span class="sd">            - Title: Short (one line) title or caption for image.</span>
+<span class="sd">            - Author: Name of image&#39;s creator.</span>
+<span class="sd">            - Description: Description of image (possibly long).</span>
+<span class="sd">            - Copyright: Copyright notice.</span>
+<span class="sd">            - Creation Time: Time of original image creation</span>
+<span class="sd">              (usually RFC 1123 format).</span>
+<span class="sd">            - Software: Software used to create the image.</span>
+<span class="sd">            - Disclaimer: Legal disclaimer.</span>
+<span class="sd">            - Warning: Warning of nature of content.</span>
+<span class="sd">            - Source: Device used to create the image.</span>
+<span class="sd">            - Comment: Miscellaneous comment;</span>
+<span class="sd">              conversion from other image format.</span>
+
+<span class="sd">            Other keywords may be invented for other purposes.</span>
+
+<span class="sd">            If &#39;Software&#39; is not given, an autogenerated value for matplotlib</span>
+<span class="sd">            will be used.</span>
+
+<span class="sd">            For more details see the `PNG specification`_.</span>
+
+<span class="sd">            .. _PNG specification: \</span>
+<span class="sd">                https://www.w3.org/TR/2003/REC-PNG-20031110/#11keywords</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FigureCanvasAgg</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">()</span>
-        <span class="n">original_dpi</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span>
-        <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span>
 
-        <span class="n">version_str</span> <span class="o">=</span> <span class="s1">&#39;matplotlib version &#39;</span> <span class="o">+</span> <span class="n">__version__</span> <span class="o">+</span> \
-            <span class="s1">&#39;, http://matplotlib.org/&#39;</span>
+        <span class="n">version_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;matplotlib version &#39;</span> <span class="o">+</span> <span class="n">__version__</span> <span class="o">+</span> <span class="s1">&#39;, http://matplotlib.org/&#39;</span><span class="p">)</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span><span class="s1">&#39;Software&#39;</span><span class="p">:</span> <span class="n">version_str</span><span class="p">})</span>
         <span class="n">user_metadata</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user_metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">user_metadata</span><span class="p">)</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">filename_or_obj</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-                <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">_renderer</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span>
-                               <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="n">original_dpi</span></div>
+        <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_setattr_cm</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">),</span> \
+                <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">filename_or_obj</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">_renderer</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FigureCanvasAgg.print_to_buffer"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.print_to_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">print_to_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">FigureCanvasAgg</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">()</span>
-        <span class="n">original_dpi</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span>
-        <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">buffer_rgba</span><span class="p">(),</span>
-                      <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="n">renderer</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="n">original_dpi</span>
-        <span class="k">return</span> <span class="n">result</span></div>
+        <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_setattr_cm</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">buffer_rgba</span><span class="p">(),</span>
+                    <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span></div>
 
     <span class="k">if</span> <span class="n">_has_pil</span><span class="p">:</span>
         <span class="c1"># add JPEG support</span>
-<div class="viewcode-block" id="FigureCanvasAgg.print_jpg"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.print_jpg">[docs]</a>        <span class="k">def</span> <span class="nf">print_jpg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_or_obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FigureCanvasAgg.print_jpg"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.print_jpg">[docs]</a>        <span class="k">def</span> <span class="nf">print_jpg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_or_obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Write the figure to a JPEG file.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            filename_or_obj : str or PathLike or file-like object</span>
+<span class="sd">                The file to write to.</span>
+
 <span class="sd">            Other Parameters</span>
 <span class="sd">            ----------------</span>
 <span class="sd">            quality : int</span>
-<span class="sd">                The image quality, on a scale from 1 (worst) to</span>
-<span class="sd">                95 (best). The default is 95, if not given in the</span>
-<span class="sd">                matplotlibrc file in the savefig.jpeg_quality parameter.</span>
-<span class="sd">                Values above 95 should be avoided; 100 completely</span>
-<span class="sd">                disables the JPEG quantization stage.</span>
+<span class="sd">                The image quality, on a scale from 1 (worst) to 100 (best).</span>
+<span class="sd">                The default is :rc:`savefig.jpeg_quality`.  Values above</span>
+<span class="sd">                95 should be avoided; 100 completely disables the JPEG</span>
+<span class="sd">                quantization stage.</span>
 
 <span class="sd">            optimize : bool</span>
 <span class="sd">                If present, indicates that the encoder should</span>
@@ -681,13 +673,13 @@ type="text/css" />
 <span class="sd">                should be stored as a progressive JPEG file.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">buf</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_to_buffer</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;dryrun&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">dryrun</span><span class="p">:</span>
                 <span class="k">return</span>
             <span class="c1"># The image is &quot;pasted&quot; onto a white background image to safely</span>
             <span class="c1"># handle any transparency</span>
             <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">rgba</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.facecolor&#39;</span><span class="p">])</span>
-            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mf">255.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rgba</span><span class="p">[:</span><span class="mi">3</span><span class="p">]])</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rgba</span><span class="p">[:</span><span class="mi">3</span><span class="p">]])</span>
             <span class="n">background</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
             <span class="n">background</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
             <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
@@ -702,14 +694,13 @@ type="text/css" />
         <span class="n">print_jpeg</span> <span class="o">=</span> <span class="n">print_jpg</span>
 
         <span class="c1"># add TIFF support</span>
-<div class="viewcode-block" id="FigureCanvasAgg.print_tif"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.print_tif">[docs]</a>        <span class="k">def</span> <span class="nf">print_tif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_or_obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FigureCanvasAgg.print_tif"><a class="viewcode-back" href="../../../api/backend_agg_api.html#matplotlib.backends.backend_agg.FigureCanvasAgg.print_tif">[docs]</a>        <span class="k">def</span> <span class="nf">print_tif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_or_obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">buf</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_to_buffer</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;dryrun&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">dryrun</span><span class="p">:</span>
                 <span class="k">return</span>
             <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">dpi</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename_or_obj</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tiff&#39;</span><span class="p">,</span>
-                              <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename_or_obj</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tiff&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span></div>
         <span class="n">print_tiff</span> <span class="o">=</span> <span class="n">print_tif</span></div>
 
 
@@ -728,10 +719,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

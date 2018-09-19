@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.figure &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.figure &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/figure.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -124,12 +126,8 @@ type="text/css" />
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Integral</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -137,6 +135,7 @@ type="text/css" />
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">rcParams</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">docstring</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_mpl_version</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">get_backend</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.artist</span> <span class="k">as</span> <span class="nn">martist</span>
 <span class="kn">from</span> <span class="nn">matplotlib.artist</span> <span class="k">import</span> <span class="n">Artist</span><span class="p">,</span> <span class="n">allow_rasterization</span>
@@ -157,7 +156,7 @@ type="text/css" />
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="k">import</span> <span class="n">Rectangle</span>
 <span class="kn">from</span> <span class="nn">matplotlib.projections</span> <span class="k">import</span> <span class="p">(</span><span class="n">get_projection_names</span><span class="p">,</span>
                                     <span class="n">process_projection_requirements</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.text</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">_process_text_args</span>
+<span class="kn">from</span> <span class="nn">matplotlib.text</span> <span class="k">import</span> <span class="n">Text</span><span class="p">,</span> <span class="n">TextWithDash</span>
 <span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="p">(</span><span class="n">Affine2D</span><span class="p">,</span> <span class="n">Bbox</span><span class="p">,</span> <span class="n">BboxTransformTo</span><span class="p">,</span>
                                    <span class="n">TransformedBbox</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">matplotlib._layoutbox</span> <span class="k">as</span> <span class="nn">layoutbox</span>
@@ -195,7 +194,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="AxesStack.as_list"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.AxesStack.html#matplotlib.figure.AxesStack.as_list">[docs]</a>    <span class="k">def</span> <span class="nf">as_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a list of the Axes instances that have been added to the figure</span>
+<span class="sd">        Return a list of the Axes instances that have been added to the figure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ia_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">]</span>
         <span class="n">ia_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -204,7 +203,7 @@ type="text/css" />
 <div class="viewcode-block" id="AxesStack.get"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.AxesStack.html#matplotlib.figure.AxesStack.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the Axes instance that was added with *key*.</span>
-<span class="sd">        If it is not present, return None.</span>
+<span class="sd">        If it is not present, return *None*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">item</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -486,10 +485,6 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_artist_props</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">set_aa</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_hold</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.hold&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_hold</span> <span class="o">=</span> <span class="kc">True</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_suptitle</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -514,10 +509,8 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_align_xlabel_grp</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Grouper</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_align_ylabel_grp</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Grouper</span><span class="p">()</span>
 
-    <span class="nd">@property</span>
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;2.1&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;`.Figure.patch`&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">figurePatch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch</span>
+        <span class="c1"># list of child gridspecs for this figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gridspecs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># TODO: I&#39;d like to dynamically add the _repr_html_ method</span>
     <span class="c1"># to the figure in the right context, but then IPython doesn&#39;t</span>
@@ -542,7 +535,7 @@ type="text/css" />
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        warm : bool</span>
+<span class="sd">        warn : bool</span>
 <span class="sd">            If ``True``, issue warning when called on a non-GUI backend</span>
 
 <span class="sd">        Notes</span>
@@ -565,10 +558,9 @@ type="text/css" />
             <span class="k">except</span> <span class="n">NonGuiException</span><span class="p">:</span>
                 <span class="k">pass</span>
         <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">warnings</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;matplotlib is currently using a non-GUI backend, &quot;</span>
-                <span class="s2">&quot;so cannot show the figure&quot;</span><span class="p">)</span></div>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Matplotlib is currently using </span><span class="si">%s</span><span class="s1">, which is a &#39;</span>
+                          <span class="s1">&#39;non-GUI backend, so cannot show the figure.&#39;</span>
+                          <span class="o">%</span> <span class="n">get_backend</span><span class="p">())</span></div>
 
     <span class="k">def</span> <span class="nf">_get_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axstack</span><span class="o">.</span><span class="n">as_list</span><span class="p">()</span>
@@ -615,11 +607,6 @@ type="text/css" />
 <span class="sd">            If ``None``, use the ``figure.autolayout`` rcparam instead.</span>
 <span class="sd">            If a dict, pass it as kwargs to `.tight_layout`, overriding the</span>
 <span class="sd">            default paddings.</span>
-
-<span class="sd">            ..</span>
-<span class="sd">                ACCEPTS: [ bool</span>
-<span class="sd">                         | dict with keys &quot;pad&quot;, &quot;w_pad&quot;, &quot;h_pad&quot;, &quot;rect&quot;</span>
-<span class="sd">                         | None ]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">tight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tight</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.autolayout&#39;</span><span class="p">]</span>
@@ -645,9 +632,11 @@ type="text/css" />
 <span class="sd">        overridden.  These pads are in inches and default to 3.0/72.0.</span>
 <span class="sd">        ``w_pad`` is the width padding and ``h_pad`` is the height padding.</span>
 
-<span class="sd">        ACCEPTS: [True | False | dict | None ]</span>
-
 <span class="sd">        See :doc:`/tutorials/intermediate/constrainedlayout_guide`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        constrained : bool or dict or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constrained_layout_pads</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constrained_layout_pads</span><span class="p">[</span><span class="s1">&#39;w_pad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -808,40 +797,64 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a centered title to the figure.</span>
 
-<span class="sd">        kwargs are :class:`matplotlib.text.Text` properties.  Using figure</span>
-<span class="sd">        coordinates, the defaults are:</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : str</span>
+<span class="sd">            The title text.</span>
 
-<span class="sd">          x : 0.5</span>
-<span class="sd">            The x location of the text in figure coords</span>
+<span class="sd">        x : float, default 0.5</span>
+<span class="sd">            The x location of the text in figure coordinates.</span>
 
-<span class="sd">          y : 0.98</span>
-<span class="sd">            The y location of the text in figure coords</span>
+<span class="sd">        y : float, default 0.98</span>
+<span class="sd">            The y location of the text in figure coordinates.</span>
 
-<span class="sd">          horizontalalignment : &#39;center&#39;</span>
-<span class="sd">            The horizontal alignment of the text</span>
+<span class="sd">        horizontalalignment, ha : {&#39;center&#39;, &#39;left&#39;, right&#39;}, default: &#39;center&#39;</span>
+<span class="sd">            The horizontal alignment of the text.</span>
 
-<span class="sd">          verticalalignment : &#39;top&#39;</span>
-<span class="sd">            The vertical alignment of the text</span>
+<span class="sd">        verticalalignment, va : {&#39;top&#39;, &#39;center&#39;, &#39;bottom&#39;, &#39;baseline&#39;}, \</span>
+<span class="sd">default: &#39;top&#39;</span>
+<span class="sd">            The vertical alignment of the text.</span>
 
-<span class="sd">        If the `fontproperties` keyword argument is given then the</span>
-<span class="sd">        rcParams defaults for `fontsize` (`figure.titlesize`) and</span>
-<span class="sd">        `fontweight` (`figure.titleweight`) will be ignored in favour</span>
-<span class="sd">        of the `FontProperties` defaults.</span>
+<span class="sd">        fontsize, size : default: :rc:`figure.titlesize`</span>
+<span class="sd">            The font size of the text. See `.Text.set_size` for possible</span>
+<span class="sd">            values.</span>
 
-<span class="sd">        A :class:`matplotlib.text.Text` instance is returned.</span>
+<span class="sd">        fontweight, weight : default: :rc:`figure.titleweight`</span>
+<span class="sd">            The font weight of the text. See `.Text.set_weight` for possible</span>
+<span class="sd">            values.</span>
 
-<span class="sd">        Example::</span>
 
-<span class="sd">          fig.suptitle(&#39;this is the figure title&#39;, fontsize=12)</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            text</span>
+<span class="sd">                The `.Text` instance of the title.</span>
+
+
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        fontproperties : None or dict, optional</span>
+<span class="sd">            A dict of font properties. If *fontproperties* is given the</span>
+<span class="sd">            default values for font size and weight are taken from the</span>
+<span class="sd">            `FontProperties` defaults. :rc:`figure.titlesize` and</span>
+<span class="sd">            :rc:`figure.titleweight` are ignored in this case.</span>
+
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional kwargs are :class:`matplotlib.text.Text` properties.</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt; fig.suptitle(&#39;This is the figure title&#39;, fontsize=12)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">manual_position</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;x&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">or</span> <span class="s1">&#39;y&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;horizontalalignment&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;ha&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;horizontalalignment&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s1">&#39;ha&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;horizontalalignment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;verticalalignment&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;va&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;verticalalignment&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s1">&#39;va&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;verticalalignment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;top&#39;</span>
 
         <span class="k">if</span> <span class="s1">&#39;fontproperties&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -881,28 +894,11 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the canvas that contains the figure</span>
 
-<span class="sd">        ACCEPTS: a FigureCanvas instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        canvas : FigureCanvas</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">canvas</span></div>
-
-<div class="viewcode-block" id="Figure.hold"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.hold">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;2.0&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">hold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the hold state.  If hold is None (default), toggle the</span>
-<span class="sd">        hold state.  Else set the hold state to boolean value b.</span>
-
-<span class="sd">        e.g.::</span>
-
-<span class="sd">            hold()      # toggle hold</span>
-<span class="sd">            hold(True)  # hold is on</span>
-<span class="sd">            hold(False) # hold is off</span>
-
-<span class="sd">        All &quot;hold&quot; machinery is deprecated.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_hold</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hold</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_hold</span> <span class="o">=</span> <span class="n">b</span></div>
 
 <div class="viewcode-block" id="Figure.figimage"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.figimage">[docs]</a>    <span class="k">def</span> <span class="nf">figimage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">xo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -973,10 +969,6 @@ type="text/css" />
 <span class="sd">            plt.show()</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hold</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="n">resize</span><span class="p">:</span>
             <span class="n">dpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dpi</span><span class="p">()</span>
             <span class="n">figsize</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">/</span> <span class="n">dpi</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
@@ -990,14 +982,14 @@ type="text/css" />
         <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">im</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
-        <span class="n">im</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">im</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">remove</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">im</span></div>
 
 <div class="viewcode-block" id="Figure.set_size_inches"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.set_size_inches">[docs]</a>    <span class="k">def</span> <span class="nf">set_size_inches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the figure size in inches (1in == 2.54cm)</span>
+        <span class="sd">&quot;&quot;&quot;Set the figure size in inches.</span>
 
-<span class="sd">        Usage ::</span>
+<span class="sd">        Call signatures::</span>
 
 <span class="sd">             fig.set_size_inches(w, h)  # OR</span>
 <span class="sd">             fig.set_size_inches((w, h))</span>
@@ -1006,7 +998,7 @@ type="text/css" />
 <span class="sd">        automatically updated; e.g., you can resize the figure window</span>
 <span class="sd">        from the shell</span>
 
-<span class="sd">        ACCEPTS: a w, h tuple with w, h in inches</span>
+<span class="sd">        ACCEPTS: a (w, h) tuple with w, h in inches</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
@@ -1077,7 +1069,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the edge color of the Figure rectangle.</span>
 
-<span class="sd">        ACCEPTS: any matplotlib color - see help(colors)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        color : color</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span></div>
 
@@ -1085,15 +1079,19 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the face color of the Figure rectangle.</span>
 
-<span class="sd">        ACCEPTS: any matplotlib color - see help(colors)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        color : color</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Figure.set_dpi"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.set_dpi">[docs]</a>    <span class="k">def</span> <span class="nf">set_dpi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the dots-per-inch of the figure.</span>
+<span class="sd">        Set the resolution of the figure in dots-per-inch.</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        val : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="n">val</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1102,7 +1100,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the width of the figure in inches.</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        .. ACCEPTS: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_figheight</span><span class="p">(),</span> <span class="n">forward</span><span class="o">=</span><span class="n">forward</span><span class="p">)</span></div>
 
@@ -1110,15 +1108,17 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the height of the figure in inches.</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        .. ACCEPTS: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_figwidth</span><span class="p">(),</span> <span class="n">val</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="n">forward</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Figure.set_frameon"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.set_frameon">[docs]</a>    <span class="k">def</span> <span class="nf">set_frameon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set whether the figure frame (background) is displayed or invisible</span>
+<span class="sd">        Set whether the figure frame (background) is displayed or invisible.</span>
 
-<span class="sd">        ACCEPTS: boolean</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        b : bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frameon</span> <span class="o">=</span> <span class="n">b</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1160,73 +1160,136 @@ type="text/css" />
                 <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
 
-        <span class="n">key</span> <span class="o">=</span> <span class="n">fixlist</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">fixitems</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">fixlist</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">fixitems</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">key</span>
 
-<div class="viewcode-block" id="Figure.add_axes"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_axes">[docs]</a>    <span class="k">def</span> <span class="nf">add_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Figure.add_artist"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_artist">[docs]</a>    <span class="k">def</span> <span class="nf">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">artist</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add an axes to the figure.</span>
+<span class="sd">        Add any :class:`~matplotlib.artist.Artist` to the figure.</span>
 
-<span class="sd">        Call signature::</span>
-
-<span class="sd">            add_axes(rect, projection=None, polar=False, **kwargs)</span>
+<span class="sd">        Usually artists are added to axes objects using</span>
+<span class="sd">        :meth:`matplotlib.axes.Axes.add_artist`, but use this method in the</span>
+<span class="sd">        rare cases that adding directly to the figure is necessary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        artist : `~matplotlib.artist.Artist`</span>
+<span class="sd">            The artist to add to the figure. If the added artist has no</span>
+<span class="sd">            transform previously set, its transform will be set to</span>
+<span class="sd">            ``figure.transFigure``.</span>
+<span class="sd">        clip : bool, optional, default ``False``</span>
+<span class="sd">            An optional parameter ``clip`` determines whether the added artist</span>
+<span class="sd">            should be clipped by the figure patch. Default is *False*,</span>
+<span class="sd">            i.e. no clipping.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        artist : The added `~matplotlib.artist.Artist`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">artist</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artist</span><span class="p">)</span>
+        <span class="n">artist</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">remove</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">artist</span><span class="o">.</span><span class="n">is_transform_set</span><span class="p">():</span>
+            <span class="n">artist</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transFigure</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">clip</span><span class="p">:</span>
+            <span class="n">artist</span><span class="o">.</span><span class="n">set_clip_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">artist</span></div>
+
+<div class="viewcode-block" id="Figure.add_axes"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_axes">[docs]</a>    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent_interpd</span>
+    <span class="k">def</span> <span class="nf">add_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an axes to the figure.</span>
+
+<span class="sd">        Call signatures::</span>
+
+<span class="sd">            add_axes(rect, projection=None, polar=False, **kwargs)</span>
+<span class="sd">            add_axes(ax)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
 <span class="sd">        rect : sequence of float</span>
 <span class="sd">            The dimensions [left, bottom, width, height] of the new axes. All</span>
 <span class="sd">            quantities are in fractions of figure width and height.</span>
 
 <span class="sd">        projection : {None, &#39;aitoff&#39;, &#39;hammer&#39;, &#39;lambert&#39;, &#39;mollweide&#39;, \</span>
-<span class="sd">&#39;polar&#39;, rectilinear&#39;}, optional</span>
-<span class="sd">            The projection type of the axes.</span>
+<span class="sd">&#39;polar&#39;, &#39;rectilinear&#39;, str}, optional</span>
+<span class="sd">            The projection type of the `~.axes.Axes`. *str* is the name of</span>
+<span class="sd">            a custom projection, see `~matplotlib.projections`. The default</span>
+<span class="sd">            None results in a &#39;rectilinear&#39; projection.</span>
 
 <span class="sd">        polar : boolean, optional</span>
 <span class="sd">            If True, equivalent to projection=&#39;polar&#39;.</span>
 
+<span class="sd">        sharex, sharey : `~.axes.Axes`, optional</span>
+<span class="sd">            Share the x or y `~matplotlib.axis` with sharex and/or sharey.</span>
+<span class="sd">            The axis will have the same limits, ticks, and scale as the axis</span>
+<span class="sd">            of the shared axes.</span>
+
+<span class="sd">        label : str</span>
+<span class="sd">            A label for the returned axes.</span>
+
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            This method also takes the keyword arguments for</span>
-<span class="sd">            :class:`~matplotlib.axes.Axes`.</span>
+<span class="sd">            the returned axes class. The keyword arguments for the</span>
+<span class="sd">            rectilinear axes class `~.axes.Axes` can be found in</span>
+<span class="sd">            the following table but there might also be other keyword</span>
+<span class="sd">            arguments if another projection is used, see the actual axes</span>
+<span class="sd">            class.</span>
+<span class="sd">            %(Axes)s</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        axes : Axes</span>
-<span class="sd">            The added axes.</span>
+<span class="sd">        axes : `~.axes.Axes` (or a subclass of `~.axes.Axes`)</span>
+<span class="sd">            The returned axes class depends on the projection used. It is</span>
+<span class="sd">            `~.axes.Axes` if rectilinear projection are used and</span>
+<span class="sd">            `.projections.polar.PolarAxes` if polar projection</span>
+<span class="sd">            are used.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If the figure already has an axes with key (*args*,</span>
+<span class="sd">        *kwargs*) then it will simply make that axes current and</span>
+<span class="sd">        return it.  This behavior is deprecated. Meanwhile, if you do</span>
+<span class="sd">        not want this behavior (i.e., you want to force the creation of a</span>
+<span class="sd">        new axes), you must use a unique set of args and kwargs.  The axes</span>
+<span class="sd">        *label* attribute has been exposed for this purpose: if you want</span>
+<span class="sd">        two axes that are otherwise identical to be added to the figure,</span>
+<span class="sd">        make sure you give them unique labels.</span>
+
+<span class="sd">        In rare circumstances, `.add_axes` may be called with a single</span>
+<span class="sd">        argument, a axes instance already created in the present figure but</span>
+<span class="sd">        not in the figure&#39;s list of axes.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .Figure.add_subplot</span>
+<span class="sd">        .pyplot.subplot</span>
+<span class="sd">        .pyplot.axes</span>
+<span class="sd">        .Figure.subplots</span>
+<span class="sd">        .pyplot.subplots</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        Some simple examples::</span>
 
 <span class="sd">            rect = l, b, w, h</span>
-<span class="sd">            fig.add_axes(rect)</span>
+<span class="sd">            fig = plt.figure(1)</span>
+<span class="sd">            fig.add_axes(rect,label=label1)</span>
+<span class="sd">            fig.add_axes(rect,label=label2)</span>
 <span class="sd">            fig.add_axes(rect, frameon=False, facecolor=&#39;g&#39;)</span>
 <span class="sd">            fig.add_axes(rect, polar=True)</span>
-<span class="sd">            fig.add_axes(rect, projection=&#39;polar&#39;)</span>
+<span class="sd">            ax=fig.add_axes(rect, projection=&#39;polar&#39;)</span>
+<span class="sd">            fig.delaxes(ax)</span>
 <span class="sd">            fig.add_axes(ax)</span>
-
-<span class="sd">        If the figure already has an axes with the same parameters, then it</span>
-<span class="sd">        will simply make that axes current and return it.  This behavior</span>
-<span class="sd">        has been deprecated as of Matplotlib 2.1.  Meanwhile, if you do</span>
-<span class="sd">        not want this behavior (i.e., you want to force the creation of a</span>
-<span class="sd">        new Axes), you must use a unique set of args and kwargs.  The axes</span>
-<span class="sd">        :attr:`~matplotlib.axes.Axes.label` attribute has been exposed for this</span>
-<span class="sd">        purpose: if you want two axes that are otherwise identical to be added</span>
-<span class="sd">        to the figure, make sure you give them unique labels::</span>
-
-<span class="sd">            fig.add_axes(rect, label=&#39;axes1&#39;)</span>
-<span class="sd">            fig.add_axes(rect, label=&#39;axes2&#39;)</span>
-
-<span class="sd">        In rare circumstances, add_axes may be called with a single</span>
-<span class="sd">        argument, an Axes instance already created in the present</span>
-<span class="sd">        figure but not in the figure&#39;s list of axes.  For example,</span>
-<span class="sd">        if an axes has been removed with :meth:`delaxes`, it can</span>
-<span class="sd">        be restored with::</span>
-
-<span class="sd">            fig.add_axes(ax)</span>
-
-<span class="sd">        In all cases, the :class:`~matplotlib.axes.Axes` instance</span>
-<span class="sd">        will be returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="k">return</span>
 
@@ -1263,76 +1326,128 @@ type="text/css" />
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_axstack</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-        <span class="n">a</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__remove_ax</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_ax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">a</span><span class="o">.</span><span class="n">stale_callback</span> <span class="o">=</span> <span class="n">_stale_figure_callback</span>
         <span class="k">return</span> <span class="n">a</span></div>
 
-<div class="viewcode-block" id="Figure.add_subplot"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_subplot">[docs]</a>    <span class="k">def</span> <span class="nf">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Figure.add_subplot"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_subplot">[docs]</a>    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent_interpd</span>
+    <span class="k">def</span> <span class="nf">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add a subplot.</span>
+<span class="sd">        Add an `~.axes.Axes` to the figure as part of a subplot arrangement.</span>
 
 <span class="sd">        Call signatures::</span>
 
 <span class="sd">           add_subplot(nrows, ncols, index, **kwargs)</span>
 <span class="sd">           add_subplot(pos, **kwargs)</span>
+<span class="sd">           add_subplot(ax)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        *args</span>
 <span class="sd">            Either a 3-digit integer or three separate integers</span>
 <span class="sd">            describing the position of the subplot. If the three</span>
-<span class="sd">            integers are R, C, and P in order, the subplot will take</span>
-<span class="sd">            the Pth position on a grid with R rows and C columns.</span>
+<span class="sd">            integers are *nrows*, *ncols*, and *index* in order, the</span>
+<span class="sd">            subplot will take the *index* position on a grid with *nrows*</span>
+<span class="sd">            rows and *ncols* columns. *index* starts at 1 in the upper left</span>
+<span class="sd">            corner and increases to the right.</span>
+
+<span class="sd">            *pos* is a three digit integer, where the first digit is the</span>
+<span class="sd">            number of rows, the second the number of columns, and the third</span>
+<span class="sd">            the index of the subplot. i.e. fig.add_subplot(235) is the same as</span>
+<span class="sd">            fig.add_subplot(2, 3, 5). Note that all integers must be less than</span>
+<span class="sd">            10 for this form to work.</span>
 
 <span class="sd">        projection : {None, &#39;aitoff&#39;, &#39;hammer&#39;, &#39;lambert&#39;, &#39;mollweide&#39;, \</span>
-<span class="sd">&#39;polar&#39;, rectilinear&#39;}, optional</span>
-<span class="sd">            The projection type of the axes.</span>
+<span class="sd">&#39;polar&#39;, &#39;rectilinear&#39;, str}, optional</span>
+<span class="sd">            The projection type of the subplot (`~.axes.Axes`). *str* is the</span>
+<span class="sd">            name of a custom projection, see `~matplotlib.projections`. The</span>
+<span class="sd">            default None results in a &#39;rectilinear&#39; projection.</span>
 
 <span class="sd">        polar : boolean, optional</span>
 <span class="sd">            If True, equivalent to projection=&#39;polar&#39;.</span>
 
+<span class="sd">        sharex, sharey : `~.axes.Axes`, optional</span>
+<span class="sd">            Share the x or y `~matplotlib.axis` with sharex and/or sharey.</span>
+<span class="sd">            The axis will have the same limits, ticks, and scale as the axis</span>
+<span class="sd">            of the shared axes.</span>
+
+<span class="sd">        label : str</span>
+<span class="sd">            A label for the returned axes.</span>
+
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            This method also takes the keyword arguments for</span>
-<span class="sd">            :class:`~matplotlib.axes.Axes`.</span>
+<span class="sd">            the returned axes base class. The keyword arguments for the</span>
+<span class="sd">            rectilinear base class `~.axes.Axes` can be found in</span>
+<span class="sd">            the following table but there might also be other keyword</span>
+<span class="sd">            arguments if another projection is used.</span>
+<span class="sd">            %(Axes)s</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        axes : Axes</span>
-<span class="sd">            The axes of the subplot.</span>
+<span class="sd">        axes : an `.axes.SubplotBase` subclass of `~.axes.Axes` (or a \</span>
+<span class="sd">               subclass of `~.axes.Axes`)</span>
+
+<span class="sd">            The axes of the subplot. The returned axes base class depends on</span>
+<span class="sd">            the projection used. It is `~.axes.Axes` if rectilinear projection</span>
+<span class="sd">            are used and `.projections.polar.PolarAxes` if polar projection</span>
+<span class="sd">            are used. The returned axes is then a subplot subclass of the</span>
+<span class="sd">            base class.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        If the figure already has a subplot with key (*args*,</span>
 <span class="sd">        *kwargs*) then it will simply make that subplot current and</span>
-<span class="sd">        return it.  This behavior is deprecated.</span>
+<span class="sd">        return it.  This behavior is deprecated. Meanwhile, if you do</span>
+<span class="sd">        not want this behavior (i.e., you want to force the creation of a</span>
+<span class="sd">        new suplot), you must use a unique set of args and kwargs.  The axes</span>
+<span class="sd">        *label* attribute has been exposed for this purpose: if you want</span>
+<span class="sd">        two subplots that are otherwise identical to be added to the figure,</span>
+<span class="sd">        make sure you give them unique labels.</span>
+
+<span class="sd">        In rare circumstances, `.add_subplot` may be called with a single</span>
+<span class="sd">        argument, a subplot axes instance already created in the</span>
+<span class="sd">        present figure but not in the figure&#39;s list of axes.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .Figure.add_axes</span>
+<span class="sd">        .pyplot.subplot</span>
+<span class="sd">        .pyplot.axes</span>
+<span class="sd">        .Figure.subplots</span>
+<span class="sd">        .pyplot.subplots</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        ::</span>
 
-<span class="sd">            fig.add_subplot(111)</span>
+<span class="sd">            fig=plt.figure(1)</span>
+<span class="sd">            fig.add_subplot(221)</span>
 
 <span class="sd">            # equivalent but more general</span>
-<span class="sd">            fig.add_subplot(1, 1, 1)</span>
+<span class="sd">            ax1=fig.add_subplot(2, 2, 1)</span>
 
-<span class="sd">            # add subplot with red background</span>
-<span class="sd">            fig.add_subplot(212, facecolor=&#39;r&#39;)</span>
+<span class="sd">            # add a subplot with no frame</span>
+<span class="sd">            ax2=fig.add_subplot(222, frameon=False)</span>
 
 <span class="sd">            # add a polar subplot</span>
-<span class="sd">            fig.add_subplot(111, projection=&#39;polar&#39;)</span>
+<span class="sd">            fig.add_subplot(223, projection=&#39;polar&#39;)</span>
 
-<span class="sd">            # add Subplot instance sub</span>
-<span class="sd">            fig.add_subplot(sub)</span>
+<span class="sd">            # add a red subplot that share the x-axis with ax1</span>
+<span class="sd">            fig.add_subplot(224, sharex=ax1, facecolor=&#39;red&#39;)</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        matplotlib.pyplot.subplot : for an explanation of the args.</span>
+<span class="sd">            #delete x2 from the figure</span>
+<span class="sd">            fig.delaxes(ax2)</span>
+
+<span class="sd">            #add x2 to the figure again</span>
+<span class="sd">            fig.add_subplot(ax2)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="k">return</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Integral</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="mi">100</span> <span class="o">&lt;=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">999</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Integer subplot specification must be a &quot;</span>
                                  <span class="s2">&quot;three-digit number, not </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -1370,7 +1485,7 @@ type="text/css" />
             <span class="n">a</span> <span class="o">=</span> <span class="n">subplot_class_factory</span><span class="p">(</span><span class="n">projection_class</span><span class="p">)(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axstack</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-        <span class="n">a</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__remove_ax</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_ax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">a</span><span class="o">.</span><span class="n">stale_callback</span> <span class="o">=</span> <span class="n">_stale_figure_callback</span>
         <span class="k">return</span> <span class="n">a</span></div>
@@ -1380,10 +1495,13 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a set of subplots to this figure.</span>
 
+<span class="sd">        This utility wrapper makes it convenient to create common layouts of</span>
+<span class="sd">        subplots in a single call.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        nrows, ncols : int, default: 1</span>
-<span class="sd">            Number of rows/cols of the subplot grid.</span>
+<span class="sd">        nrows, ncols : int, optional, default: 1</span>
+<span class="sd">            Number of rows/columns of the subplot grid.</span>
 
 <span class="sd">        sharex, sharey : bool or {&#39;none&#39;, &#39;all&#39;, &#39;row&#39;, &#39;col&#39;}, default: False</span>
 <span class="sd">            Controls sharing of properties among x (`sharex`) or y (`sharey`)</span>
@@ -1400,7 +1518,7 @@ type="text/css" />
 <span class="sd">            labels of the bottom subplot are created. Similarly, when subplots</span>
 <span class="sd">            have a shared y-axis along a row, only the y tick labels of the</span>
 <span class="sd">            first column subplot are created. To later turn other subplots&#39;</span>
-<span class="sd">            ticklabels on, use :meth:`~matplotlib.axes.Axes.tick_params`.</span>
+<span class="sd">            ticklabels on, use `~matplotlib.axes.Axes.tick_params`.</span>
 
 <span class="sd">        squeeze : bool, optional, default: True</span>
 <span class="sd">            - If True, extra dimensions are squeezed out from the returned</span>
@@ -1417,28 +1535,71 @@ type="text/css" />
 <span class="sd">              is always a 2D array containing Axes instances, even if it ends</span>
 <span class="sd">              up being 1x1.</span>
 
-<span class="sd">        subplot_kw : dict, default: {}</span>
+<span class="sd">        subplot_kw : dict, optional</span>
 <span class="sd">            Dict with keywords passed to the</span>
 <span class="sd">            :meth:`~matplotlib.figure.Figure.add_subplot` call used to create</span>
-<span class="sd">            each subplots.</span>
+<span class="sd">            each subplot.</span>
 
-<span class="sd">        gridspec_kw : dict, default: {}</span>
+<span class="sd">        gridspec_kw : dict, optional</span>
 <span class="sd">            Dict with keywords passed to the</span>
-<span class="sd">            :class:`~matplotlib.gridspec.GridSpec` constructor used to create</span>
+<span class="sd">            `~matplotlib.gridspec.GridSpec` constructor used to create</span>
 <span class="sd">            the grid the subplots are placed on.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        ax : single Axes object or array of Axes objects</span>
-<span class="sd">            The added axes.  The dimensions of the resulting array can be</span>
-<span class="sd">            controlled with the squeeze keyword, see above.</span>
+<span class="sd">        ax : `~.axes.Axes` object or array of Axes objects.</span>
+<span class="sd">            *ax* can be either a single `~matplotlib.axes.Axes` object or</span>
+<span class="sd">            an array of Axes objects if more than one subplot was created. The</span>
+<span class="sd">            dimensions of the resulting array can be controlled with the</span>
+<span class="sd">            squeeze keyword, see above.</span>
 
-<span class="sd">        See Also</span>
+<span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        pyplot.subplots : pyplot API; docstring includes examples.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        ::</span>
 
-        <span class="c1"># for backwards compatibility</span>
+<span class="sd">            # First create some toy data:</span>
+<span class="sd">            x = np.linspace(0, 2*np.pi, 400)</span>
+<span class="sd">            y = np.sin(x**2)</span>
+
+<span class="sd">            # Create a figure</span>
+<span class="sd">            plt.figure(1, clear=True)</span>
+
+<span class="sd">            # Creates a subplot</span>
+<span class="sd">            ax = fig.subplots()</span>
+<span class="sd">            ax.plot(x, y)</span>
+<span class="sd">            ax.set_title(&#39;Simple plot&#39;)</span>
+
+<span class="sd">            # Creates two subplots and unpacks the output array immediately</span>
+<span class="sd">            ax1, ax2 = fig.subplots(1, 2, sharey=True)</span>
+<span class="sd">            ax1.plot(x, y)</span>
+<span class="sd">            ax1.set_title(&#39;Sharing Y axis&#39;)</span>
+<span class="sd">            ax2.scatter(x, y)</span>
+
+<span class="sd">            # Creates four polar axes, and accesses them through the</span>
+<span class="sd">            # returned array</span>
+<span class="sd">            axes = fig.subplots(2, 2, subplot_kw=dict(polar=True))</span>
+<span class="sd">            axes[0, 0].plot(x, y)</span>
+<span class="sd">            axes[1, 1].scatter(x, y)</span>
+
+<span class="sd">            # Share a X axis with each column of subplots</span>
+<span class="sd">            fig.subplots(2, 2, sharex=&#39;col&#39;)</span>
+
+<span class="sd">            # Share a Y axis with each row of subplots</span>
+<span class="sd">            fig.subplots(2, 2, sharey=&#39;row&#39;)</span>
+
+<span class="sd">            # Share both X and Y axes with all subplots</span>
+<span class="sd">            fig.subplots(2, 2, sharex=&#39;all&#39;, sharey=&#39;all&#39;)</span>
+
+<span class="sd">            # Note that this is the same as</span>
+<span class="sd">            fig.subplots(2, 2, sharex=True, sharey=True)</span>
+
+<span class="sd">            See Also</span>
+<span class="sd">            --------</span>
+<span class="sd">            .pyplot.subplots</span>
+<span class="sd">            .Figure.add_subplot</span>
+<span class="sd">            .pyplot.subplot</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sharex</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
             <span class="n">sharex</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span> <span class="k">if</span> <span class="n">sharex</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sharey</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -1450,7 +1611,7 @@ type="text/css" />
             <span class="c1"># In most cases, no error will ever occur, but mysterious behavior</span>
             <span class="c1"># will result because what was intended to be the subplot index is</span>
             <span class="c1"># instead treated as a bool for sharex.</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sharex</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sharex</span><span class="p">,</span> <span class="n">Integral</span><span class="p">):</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                     <span class="s2">&quot;sharex argument to subplots() was an integer. &quot;</span>
                     <span class="s2">&quot;Did you intend to use subplot() (without &#39;s&#39;)?&quot;</span><span class="p">)</span>
@@ -1464,12 +1625,16 @@ type="text/css" />
             <span class="n">subplot_kw</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">gridspec_kw</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">gridspec_kw</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># don&#39;t mutate kwargs passed by user...</span>
+        <span class="n">subplot_kw</span> <span class="o">=</span> <span class="n">subplot_kw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">gridspec_kw</span> <span class="o">=</span> <span class="n">gridspec_kw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_constrained_layout</span><span class="p">():</span>
             <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">gridspec_kw</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># this should turn constrained_layout off if we don&#39;t want it</span>
             <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">gridspec_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gridspecs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
 
         <span class="c1"># Create array to hold all axes.</span>
         <span class="n">axarr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
@@ -1503,7 +1668,7 @@ type="text/css" />
             <span class="c1"># Returned axis array will be always 2-d, even if nrows=ncols=1.</span>
             <span class="k">return</span> <span class="n">axarr</span></div>
 
-    <span class="k">def</span> <span class="nf">__remove_ax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_remove_ax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">_reset_loc_form</span><span class="p">(</span><span class="n">axis</span><span class="p">):</span>
             <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">axis</span><span class="o">.</span><span class="n">get_major_formatter</span><span class="p">())</span>
             <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">axis</span><span class="o">.</span><span class="n">get_major_locator</span><span class="p">())</span>
@@ -1515,9 +1680,8 @@ type="text/css" />
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">siblings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">grouper</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">last_ax</span> <span class="ow">in</span> <span class="n">siblings</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="n">last_ax</span><span class="p">:</span>
-                        <span class="k">continue</span>
-                    <span class="k">return</span> <span class="n">last_ax</span>
+                    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">last_ax</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">last_ax</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
@@ -1587,10 +1751,7 @@ type="text/css" />
         <span class="k">try</span><span class="p">:</span>
             <span class="n">renderer</span><span class="o">.</span><span class="n">open_group</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_constrained_layout</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
-                <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">execute_constrained_layout</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute_constrained_layout</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tight_layout</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span>
@@ -1676,172 +1837,7 @@ type="text/css" />
 <span class="sd">        Other Parameters</span>
 <span class="sd">        ----------------</span>
 
-<span class="sd">        loc : int or string or pair of floats, default: &#39;upper right&#39;</span>
-<span class="sd">            The location of the legend. Possible codes are:</span>
-
-<span class="sd">                ===============   =============</span>
-<span class="sd">                Location String   Location Code</span>
-<span class="sd">                ===============   =============</span>
-<span class="sd">                &#39;best&#39;            0</span>
-<span class="sd">                &#39;upper right&#39;     1</span>
-<span class="sd">                &#39;upper left&#39;      2</span>
-<span class="sd">                &#39;lower left&#39;      3</span>
-<span class="sd">                &#39;lower right&#39;     4</span>
-<span class="sd">                &#39;right&#39;           5</span>
-<span class="sd">                &#39;center left&#39;     6</span>
-<span class="sd">                &#39;center right&#39;    7</span>
-<span class="sd">                &#39;lower center&#39;    8</span>
-<span class="sd">                &#39;upper center&#39;    9</span>
-<span class="sd">                &#39;center&#39;          10</span>
-<span class="sd">                ===============   =============</span>
-
-
-<span class="sd">            Alternatively can be a 2-tuple giving ``x, y`` of the lower-left</span>
-<span class="sd">            corner of the legend in axes coordinates (in which case</span>
-<span class="sd">            ``bbox_to_anchor`` will be ignored).</span>
-
-<span class="sd">        bbox_to_anchor : `.BboxBase` or pair of floats</span>
-<span class="sd">            Specify any arbitrary location for the legend in `bbox_transform`</span>
-<span class="sd">            coordinates (default Axes coordinates).</span>
-
-<span class="sd">            For example, to put the legend&#39;s upper right hand corner in the</span>
-<span class="sd">            center of the axes the following keywords can be used::</span>
-
-<span class="sd">               loc=&#39;upper right&#39;, bbox_to_anchor=(0.5, 0.5)</span>
-
-<span class="sd">        ncol : integer</span>
-<span class="sd">            The number of columns that the legend has. Default is 1.</span>
-
-<span class="sd">        prop : None or :class:`matplotlib.font_manager.FontProperties` or dict</span>
-<span class="sd">            The font properties of the legend. If None (default), the current</span>
-<span class="sd">            :data:`matplotlib.rcParams` will be used.</span>
-
-<span class="sd">        fontsize : int or float or {&#39;xx-small&#39;, &#39;x-small&#39;, &#39;small&#39;, &#39;medium&#39;, \</span>
-<span class="sd">&#39;large&#39;, &#39;x-large&#39;, &#39;xx-large&#39;}</span>
-<span class="sd">            Controls the font size of the legend. If the value is numeric the</span>
-<span class="sd">            size will be the absolute font size in points. String values are</span>
-<span class="sd">            relative to the current default font size. This argument is only</span>
-<span class="sd">            used if `prop` is not specified.</span>
-
-<span class="sd">        numpoints : None or int</span>
-<span class="sd">            The number of marker points in the legend when creating a legend</span>
-<span class="sd">            entry for a `.Line2D` (line).</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.numpoints`.</span>
-
-<span class="sd">        scatterpoints : None or int</span>
-<span class="sd">            The number of marker points in the legend when creating</span>
-<span class="sd">            a legend entry for a `.PathCollection` (scatter plot).</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.scatterpoints`.</span>
-
-<span class="sd">        scatteryoffsets : iterable of floats</span>
-<span class="sd">            The vertical offset (relative to the font size) for the markers</span>
-<span class="sd">            created for a scatter plot legend entry. 0.0 is at the base the</span>
-<span class="sd">            legend text, and 1.0 is at the top. To draw all markers at the</span>
-<span class="sd">            same height, set to ``[0.5]``. Default is ``[0.375, 0.5, 0.3125]``.</span>
-
-<span class="sd">        markerscale : None or int or float</span>
-<span class="sd">            The relative size of legend markers compared with the originally</span>
-<span class="sd">            drawn ones.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.markerscale`.</span>
-
-<span class="sd">        markerfirst : bool</span>
-<span class="sd">            If *True*, legend marker is placed to the left of the legend label.</span>
-<span class="sd">            If *False*, legend marker is placed to the right of the legend</span>
-<span class="sd">            label.</span>
-<span class="sd">            Default is *True*.</span>
-
-<span class="sd">        frameon : None or bool</span>
-<span class="sd">            Control whether the legend should be drawn on a patch</span>
-<span class="sd">            (frame).</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.frameon`.</span>
-
-<span class="sd">        fancybox : None or bool</span>
-<span class="sd">            Control whether round edges should be enabled around the</span>
-<span class="sd">            :class:`~matplotlib.patches.FancyBboxPatch` which makes up the</span>
-<span class="sd">            legend&#39;s background.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.fancybox`.</span>
-
-<span class="sd">        shadow : None or bool</span>
-<span class="sd">            Control whether to draw a shadow behind the legend.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.shadow`.</span>
-
-<span class="sd">        framealpha : None or float</span>
-<span class="sd">            Control the alpha transparency of the legend&#39;s background.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.framealpha`.  If shadow is activated and</span>
-<span class="sd">            *framealpha* is ``None``, the default value is ignored.</span>
-
-<span class="sd">        facecolor : None or &quot;inherit&quot; or a color spec</span>
-<span class="sd">            Control the legend&#39;s background color.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.facecolor`.  If ``&quot;inherit&quot;``, it will take</span>
-<span class="sd">            :rc:`axes.facecolor`.</span>
-
-<span class="sd">        edgecolor : None or &quot;inherit&quot; or a color spec</span>
-<span class="sd">            Control the legend&#39;s background patch edge color.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.edgecolor` If ``&quot;inherit&quot;``, it will take</span>
-<span class="sd">            :rc:`axes.edgecolor`.</span>
-
-<span class="sd">        mode : {&quot;expand&quot;, None}</span>
-<span class="sd">            If `mode` is set to ``&quot;expand&quot;`` the legend will be horizontally</span>
-<span class="sd">            expanded to fill the axes area (or `bbox_to_anchor` if defines</span>
-<span class="sd">            the legend&#39;s size).</span>
-
-<span class="sd">        bbox_transform : None or :class:`matplotlib.transforms.Transform`</span>
-<span class="sd">            The transform for the bounding box (`bbox_to_anchor`). For a value</span>
-<span class="sd">            of ``None`` (default) the Axes&#39;</span>
-<span class="sd">            :data:`~matplotlib.axes.Axes.transAxes` transform will be used.</span>
-
-<span class="sd">        title : str or None</span>
-<span class="sd">            The legend&#39;s title. Default is no title (``None``).</span>
-
-<span class="sd">        borderpad : float or None</span>
-<span class="sd">            The fractional whitespace inside the legend border.</span>
-<span class="sd">            Measured in font-size units.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.borderpad`.</span>
-
-<span class="sd">        labelspacing : float or None</span>
-<span class="sd">            The vertical space between the legend entries.</span>
-<span class="sd">            Measured in font-size units.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.labelspacing`.</span>
-
-<span class="sd">        handlelength : float or None</span>
-<span class="sd">            The length of the legend handles.</span>
-<span class="sd">            Measured in font-size units.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.handlelength`.</span>
-
-<span class="sd">        handletextpad : float or None</span>
-<span class="sd">            The pad between the legend handle and text.</span>
-<span class="sd">            Measured in font-size units.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.handletextpad`.</span>
-
-<span class="sd">        borderaxespad : float or None</span>
-<span class="sd">            The pad between the axes and legend border.</span>
-<span class="sd">            Measured in font-size units.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.borderaxespad`.</span>
-
-<span class="sd">        columnspacing : float or None</span>
-<span class="sd">            The spacing between columns.</span>
-<span class="sd">            Measured in font-size units.</span>
-<span class="sd">            Default is ``None``, which will take the value from</span>
-<span class="sd">            :rc:`legend.columnspacing`.</span>
-
-<span class="sd">        handler_map : dict or None</span>
-<span class="sd">            The custom dictionary mapping instances or types to a legend</span>
-<span class="sd">            handler. This `handler_map` updates the default handler map</span>
-<span class="sd">            found at :func:`matplotlib.legend.Legend.get_legend_handler_map`.</span>
+<span class="sd">        %(_legend_kw_doc)s</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1870,37 +1866,68 @@ type="text/css" />
             <span class="k">pass</span>
         <span class="n">l</span> <span class="o">=</span> <span class="n">mlegend</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">legends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-        <span class="n">l</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">legends</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">legends</span><span class="o">.</span><span class="n">remove</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">l</span></div>
 
 <div class="viewcode-block" id="Figure.text"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.text">[docs]</a>    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent_interpd</span>
-    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">withdash</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add text to figure.</span>
 
-<span class="sd">        Call signature::</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x, y : float</span>
+<span class="sd">            The position to place the text. By default, this is in figure</span>
+<span class="sd">            coordinates, floats in [0, 1]. The coordinate system can be changed</span>
+<span class="sd">            using the *transform* keyword.</span>
 
-<span class="sd">          text(x, y, s, fontdict=None, **kwargs)</span>
+<span class="sd">        s : str</span>
+<span class="sd">            The text string.</span>
 
-<span class="sd">        Add text to figure at location *x*, *y* (relative 0-1</span>
-<span class="sd">        coords). See :func:`~matplotlib.pyplot.text` for the meaning</span>
-<span class="sd">        of the other arguments.</span>
+<span class="sd">        fontdict : dictionary, optional, default: None</span>
+<span class="sd">            A dictionary to override the default text properties. If fontdict</span>
+<span class="sd">            is None, the defaults are determined by your rc parameters. A</span>
+<span class="sd">            property in *kwargs* override the same property in fontdict.</span>
 
-<span class="sd">        kwargs control the :class:`~matplotlib.text.Text` properties:</span>
+<span class="sd">        withdash : boolean, optional, default: False</span>
+<span class="sd">            Creates a `~matplotlib.text.TextWithDash` instance instead of a</span>
+<span class="sd">            `~matplotlib.text.Text` instance.</span>
 
-<span class="sd">        %(Text)s</span>
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        **kwargs : `~matplotlib.text.Text` properties</span>
+<span class="sd">            Other miscellaneous text parameters.</span>
+<span class="sd">            %(Text)s</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        text : `~.text.Text`</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .Axes.text</span>
+<span class="sd">        .pyplot.text</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transFigure</span><span class="p">)</span>
 
-        <span class="n">override</span> <span class="o">=</span> <span class="n">_process_text_args</span><span class="p">({},</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">withdash</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">TextWithDash</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
 
-        <span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">override</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_artist_props</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">texts</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">text</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fontdict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fontdict</span><span class="p">)</span>
+        <span class="n">text</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">text</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">text</span><span class="o">.</span><span class="n">stale_callback</span> <span class="o">=</span> <span class="n">_stale_figure_callback</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">text</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">texts</span><span class="o">.</span><span class="n">remove</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="n">t</span></div>
+        <span class="k">return</span> <span class="n">text</span></div>
 
     <span class="k">def</span> <span class="nf">_set_artist_props</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
@@ -1933,11 +1960,8 @@ type="text/css" />
             <span class="c1"># if the user has specified particular projection detail</span>
             <span class="c1"># then build up a key which can represent this</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># we don&#39;t want to modify the original kwargs</span>
-                <span class="c1"># so take a copy so that we can do what we like to it</span>
-                <span class="n">kwargs_copy</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="n">projection_class</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">process_projection_requirements</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs_copy</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
                 <span class="c1"># let the returned axes have any gridspec by removing it from</span>
                 <span class="c1"># the key</span>
@@ -1985,9 +2009,8 @@ type="text/css" />
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Figure</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
 
-        <span class="c1"># print(&#39;\n\n\nStarting pickle&#39;)</span>
         <span class="c1"># the axobservers cannot currently be pickled.</span>
         <span class="c1"># Additionally, the canvas cannot currently be pickled, but this has</span>
         <span class="c1"># the benefit of meaning that a figure can be detached from one canvas,</span>
@@ -1999,18 +2022,14 @@ type="text/css" />
         <span class="c1"># add version information to the state</span>
         <span class="n">state</span><span class="p">[</span><span class="s1">&#39;__mpl_version__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_mpl_version</span>
 
-        <span class="c1"># check to see if the figure has a manager and whether it is registered</span>
-        <span class="c1"># with pyplot</span>
-        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">,</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">manager</span>
-            <span class="kn">import</span> <span class="nn">matplotlib._pylab_helpers</span>
-            <span class="k">if</span> <span class="n">manager</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span>
-                    <span class="n">matplotlib</span><span class="o">.</span><span class="n">_pylab_helpers</span><span class="o">.</span><span class="n">Gcf</span><span class="o">.</span><span class="n">figs</span><span class="p">)):</span>
-                <span class="n">state</span><span class="p">[</span><span class="s1">&#39;_restore_to_pylab&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># check whether the figure manager (if any) is registered with pyplot</span>
+        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_pylab_helpers</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">,</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> \
+                <span class="ow">in</span> <span class="n">_pylab_helpers</span><span class="o">.</span><span class="n">Gcf</span><span class="o">.</span><span class="n">figs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">state</span><span class="p">[</span><span class="s1">&#39;_restore_to_pylab&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="c1"># set all the layoutbox information to None.  kiwisolver</span>
-        <span class="c1"># objects can&#39;t be pickeled, so we lose the layout options</span>
-        <span class="c1"># at this point.</span>
+        <span class="c1"># set all the layoutbox information to None.  kiwisolver objects can&#39;t</span>
+        <span class="c1"># be pickled, so we lose the layout options at this point.</span>
         <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;_layoutbox&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="c1"># suptitle:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suptitle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2066,7 +2085,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;Whenever the axes state change, ``func(self)`` will be called.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axobservers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Figure.savefig"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.savefig">[docs]</a>    <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Figure.savefig"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.savefig">[docs]</a>    <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current figure.</span>
 
@@ -2075,7 +2094,7 @@ type="text/css" />
 <span class="sd">          savefig(fname, dpi=None, facecolor=&#39;w&#39;, edgecolor=&#39;w&#39;,</span>
 <span class="sd">                  orientation=&#39;portrait&#39;, papertype=None, format=None,</span>
 <span class="sd">                  transparent=False, bbox_inches=None, pad_inches=0.1,</span>
-<span class="sd">                  frameon=None)</span>
+<span class="sd">                  frameon=None, metadata=None)</span>
 
 <span class="sd">        The output formats available depend on the backend being used.</span>
 
@@ -2089,8 +2108,7 @@ type="text/css" />
 
 <span class="sd">            If *format* is *None* and *fname* is a string, the output</span>
 <span class="sd">            format is deduced from the extension of the filename. If</span>
-<span class="sd">            the filename has no extension, the value of the rc parameter</span>
-<span class="sd">            ``savefig.format`` is used.</span>
+<span class="sd">            the filename has no extension, :rc:`savefig.format` is used.</span>
 
 <span class="sd">            If *fname* is not a string, remember to specify *format* to</span>
 <span class="sd">            ensure that the correct backend is used.</span>
@@ -2098,19 +2116,27 @@ type="text/css" />
 <span class="sd">        Other Parameters</span>
 <span class="sd">        ----------------</span>
 
-<span class="sd">        dpi : [ *None* | scalar &gt; 0 | &#39;figure&#39;]</span>
-<span class="sd">            The resolution in dots per inch.  If *None* it will default to</span>
-<span class="sd">            the value ``savefig.dpi`` in the matplotlibrc file. If &#39;figure&#39;</span>
-<span class="sd">            it will set the dpi to be the value of the figure.</span>
+<span class="sd">        dpi : [ *None* | scalar &gt; 0 | &#39;figure&#39; ]</span>
+<span class="sd">            The resolution in dots per inch.  If *None*, defaults to</span>
+<span class="sd">            :rc:`savefig.dpi`.  If &#39;figure&#39;, uses the figure&#39;s dpi value.</span>
+
+<span class="sd">        quality : [ *None* | 1 &lt;= scalar &lt;= 100 ]</span>
+<span class="sd">            The image quality, on a scale from 1 (worst) to 95 (best).</span>
+<span class="sd">            Applicable only if *format* is jpg or jpeg, ignored otherwise.</span>
+<span class="sd">            If *None*, defaults to :rc:`savefig.jpeg_quality` (95 by default).</span>
+<span class="sd">            Values above 95 should be avoided; 100 completely disables the</span>
+<span class="sd">            JPEG quantization stage.</span>
 
 <span class="sd">        facecolor : color spec or None, optional</span>
-<span class="sd">            the facecolor of the figure; if None, defaults to savefig.facecolor</span>
+<span class="sd">            The facecolor of the figure; if *None*, defaults to</span>
+<span class="sd">            :rc:`savefig.facecolor`.</span>
 
 <span class="sd">        edgecolor : color spec or None, optional</span>
-<span class="sd">            the edgecolor of the figure; if None, defaults to savefig.edgecolor</span>
+<span class="sd">            The edgecolor of the figure; if *None*, defaults to</span>
+<span class="sd">            :rc:`savefig.edgecolor`</span>
 
 <span class="sd">        orientation : {&#39;landscape&#39;, &#39;portrait&#39;}</span>
-<span class="sd">            not supported on all backends; currently only on postscript output</span>
+<span class="sd">            Currently only supported by the postscript backend.</span>
 
 <span class="sd">        papertype : str</span>
 <span class="sd">            One of &#39;letter&#39;, &#39;legal&#39;, &#39;executive&#39;, &#39;ledger&#39;, &#39;a0&#39; through</span>
@@ -2148,11 +2174,22 @@ type="text/css" />
 <span class="sd">            A list of extra artists that will be considered when the</span>
 <span class="sd">            tight bbox is calculated.</span>
 
+<span class="sd">        metadata : dict, optional</span>
+<span class="sd">            Key/value pairs to store in the image metadata. The supported keys</span>
+<span class="sd">            and defaults depend on the image format and backend:</span>
+
+<span class="sd">            - &#39;png&#39; with Agg backend: See the parameter ``metadata`` of</span>
+<span class="sd">              `~.FigureCanvasAgg.print_png`.</span>
+<span class="sd">            - &#39;pdf&#39; with pdf backend: See the parameter ``metadata`` of</span>
+<span class="sd">              `~.backend_pdf.PdfPages`.</span>
+<span class="sd">            - &#39;eps&#39; and &#39;ps&#39; with PS backend: Only &#39;Creator&#39; is supported.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;dpi&#39;</span><span class="p">,</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.dpi&#39;</span><span class="p">])</span>
-        <span class="n">frameon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;frameon&#39;</span><span class="p">,</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.frameon&#39;</span><span class="p">])</span>
-        <span class="n">transparent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;transparent&#39;</span><span class="p">,</span>
-                                 <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.transparent&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">frameon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">frameon</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.frameon&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">transparent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">transparent</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.transparent&#39;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">transparent</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;facecolor&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -2187,7 +2224,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a colorbar for a ScalarMappable instance, *mappable*.</span>
 
-<span class="sd">        Documentation for the pylab thin wrapper:</span>
+<span class="sd">        Documentation for the pyplot thin wrapper:</span>
 <span class="sd">        %(colorbar_doc)s</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2202,7 +2239,6 @@ type="text/css" />
                 <span class="n">cax</span><span class="p">,</span> <span class="n">kw</span> <span class="o">=</span> <span class="n">cbar</span><span class="o">.</span><span class="n">make_axes_gridspec</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cax</span><span class="p">,</span> <span class="n">kw</span> <span class="o">=</span> <span class="n">cbar</span><span class="o">.</span><span class="n">make_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="n">cax</span><span class="o">.</span><span class="n">_hold</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># need to remove kws that cannot be passed to Colorbar</span>
         <span class="n">NON_COLORBAR_KEYS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fraction&#39;</span><span class="p">,</span> <span class="s1">&#39;pad&#39;</span><span class="p">,</span> <span class="s1">&#39;shrink&#39;</span><span class="p">,</span> <span class="s1">&#39;aspect&#39;</span><span class="p">,</span> <span class="s1">&#39;anchor&#39;</span><span class="p">,</span>
@@ -2214,13 +2250,9 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">cb</span></div>
 
-<div class="viewcode-block" id="Figure.subplots_adjust"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.subplots_adjust">[docs]</a>    <span class="k">def</span> <span class="nf">subplots_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Figure.subplots_adjust"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.subplots_adjust">[docs]</a>    <span class="k">def</span> <span class="nf">subplots_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">wspace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Call signature::</span>
-
-<span class="sd">          subplots_adjust(left=None, bottom=None, right=None, top=None,</span>
-<span class="sd">                              wspace=None, hspace=None)</span>
-
 <span class="sd">        Update the :class:`SubplotParams` with *kwargs* (defaulting to rc when</span>
 <span class="sd">        *None*) and update the subplot locations.</span>
 
@@ -2231,8 +2263,7 @@ type="text/css" />
                           <span class="s2">&quot;but that is incompatible with subplots_adjust and &quot;</span>
                           <span class="s2">&quot;or tight_layout: setting &quot;</span>
                           <span class="s2">&quot;constrained_layout==False. &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subplotpars</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">subplotpars</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">wspace</span><span class="p">,</span> <span class="n">hspace</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">SubplotBase</span><span class="p">):</span>
                 <span class="c1"># Check if sharing a subplots axis</span>
@@ -2315,7 +2346,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="Figure.get_default_bbox_extra_artists"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.get_default_bbox_extra_artists">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_bbox_extra_artists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">bbox_artists</span> <span class="o">=</span> <span class="p">[</span><span class="n">artist</span> <span class="k">for</span> <span class="n">artist</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">artist</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()]</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">artist</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()</span> <span class="ow">and</span> <span class="n">artist</span><span class="o">.</span><span class="n">get_in_layout</span><span class="p">())]</span>
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_visible</span><span class="p">():</span>
                 <span class="n">bbox_artists</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_default_bbox_extra_artists</span><span class="p">())</span>
@@ -2323,18 +2354,44 @@ type="text/css" />
         <span class="n">bbox_artists</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">bbox_artists</span></div>
 
-<div class="viewcode-block" id="Figure.get_tightbbox"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.get_tightbbox">[docs]</a>    <span class="k">def</span> <span class="nf">get_tightbbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+<div class="viewcode-block" id="Figure.get_tightbbox"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.get_tightbbox">[docs]</a>    <span class="k">def</span> <span class="nf">get_tightbbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a (tight) bounding box of the figure in inches.</span>
 
-<span class="sd">        It only accounts axes title, axis labels, and axis</span>
-<span class="sd">        ticklabels. Needs improvement.</span>
+<span class="sd">        Artists that have ``artist.set_in_layout(False)`` are not included</span>
+<span class="sd">        in the bbox.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        renderer : `.RendererBase` instance</span>
+<span class="sd">            renderer that will be used to draw the figures (i.e.</span>
+<span class="sd">            ``fig.canvas.get_renderer()``)</span>
+
+<span class="sd">        bbox_extra_artists : list of `.Artist` or ``None``</span>
+<span class="sd">            List of artists to include in the tight bounding box.  If</span>
+<span class="sd">            ``None`` (default), then all artist children of each axes are</span>
+<span class="sd">            included in the tight bounding box.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bbox : `.BboxBase`</span>
+<span class="sd">            containing the bounding box (in figure inches).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">bb</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">bbox_extra_artists</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">artists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_bbox_extra_artists</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">artists</span> <span class="o">=</span> <span class="n">bbox_extra_artists</span>
+
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">artists</span><span class="p">:</span>
+            <span class="n">bbox</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">get_tightbbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_visible</span><span class="p">():</span>
-                <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_tightbbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">))</span>
+                <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_tightbbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_inches</span>
@@ -2361,20 +2418,18 @@ type="text/css" />
 <span class="sd">        See also `.set_constrained_layout_pads`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">matplotlib._constrained_layout</span> <span class="k">import</span> <span class="p">(</span><span class="n">do_constrained_layout</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">matplotlib._constrained_layout</span> <span class="k">import</span> <span class="n">do_constrained_layout</span>
 
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing constrainedlayout&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Calling figure.constrained_layout, but figure &quot;</span>
-                          <span class="s2">&quot;not setup to do constrained layout.  &quot;</span>
-                          <span class="s2">&quot;   You either called GridSpec without the &quot;</span>
-                          <span class="s2">&quot;fig keyword, you are using plt.subplot, &quot;</span>
-                          <span class="s2">&quot;or you need to call figure or subplots&quot;</span>
-                          <span class="s2">&quot;with the constrained_layout=True kwarg.&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Calling figure.constrained_layout, but figure not &quot;</span>
+                          <span class="s2">&quot;setup to do constrained layout.  You either called &quot;</span>
+                          <span class="s2">&quot;GridSpec without the fig keyword, you are using &quot;</span>
+                          <span class="s2">&quot;plt.subplot, or you need to call figure or &quot;</span>
+                          <span class="s2">&quot;subplots with the constrained_layout=True kwarg.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="n">w_pad</span><span class="p">,</span> <span class="n">h_pad</span><span class="p">,</span> <span class="n">wspace</span><span class="p">,</span> <span class="n">hspace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_constrained_layout_pads</span><span class="p">()</span>
         <span class="c1"># convert to unit-relative lengths</span>
-
         <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
         <span class="n">w_pad</span> <span class="o">=</span> <span class="n">w_pad</span> <span class="o">/</span> <span class="n">width</span>
@@ -2386,22 +2441,32 @@ type="text/css" />
 <div class="viewcode-block" id="Figure.tight_layout"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.tight_layout">[docs]</a>    <span class="k">def</span> <span class="nf">tight_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">1.08</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">w_pad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">rect</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adjust subplot parameters to give specified padding.</span>
+<span class="sd">        Automatically adjust subplot parameters to give specified padding.</span>
+
+<span class="sd">        To exclude an artist on the axes from the bounding box calculation</span>
+<span class="sd">        that determines the subplot parameters (i.e. legend, or annotation),</span>
+<span class="sd">        then set `a.set_in_layout(False)` for that artist.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        pad : float</span>
-<span class="sd">            padding between the figure edge and the edges of subplots,</span>
-<span class="sd">            as a fraction of the font-size.</span>
+<span class="sd">        renderer : subclass of `~.backend_bases.RendererBase`, optional</span>
+<span class="sd">            Defaults to the renderer for the figure.</span>
 
+<span class="sd">        pad : float, optional</span>
+<span class="sd">            Padding between the figure edge and the edges of subplots,</span>
+<span class="sd">            as a fraction of the font size.</span>
 <span class="sd">        h_pad, w_pad : float, optional</span>
-<span class="sd">            padding (height/width) between edges of adjacent subplots.</span>
-<span class="sd">            Defaults to `pad_inches`.</span>
-
+<span class="sd">            Padding (height/width) between edges of adjacent subplots,</span>
+<span class="sd">            as a fraction of the font size.  Defaults to *pad*.</span>
 <span class="sd">        rect : tuple (left, bottom, right, top), optional</span>
-<span class="sd">            a rectangle (left, bottom, right, top) in the normalized</span>
+<span class="sd">            A rectangle (left, bottom, right, top) in the normalized</span>
 <span class="sd">            figure coordinate that the whole subplots area (including</span>
 <span class="sd">            labels) will fit into. Default is (0, 0, 1, 1).</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .Figure.set_tight_layout</span>
+<span class="sd">        .pyplot.tight_layout</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="kn">from</span> <span class="nn">.tight_layout</span> <span class="k">import</span> <span class="p">(</span>
@@ -2580,35 +2645,98 @@ type="text/css" />
 <span class="sd">        matplotlib.figure.Figure.align_ylabels</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">align_xlabels</span><span class="p">(</span><span class="n">axs</span><span class="o">=</span><span class="n">axs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">(</span><span class="n">axs</span><span class="o">=</span><span class="n">axs</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">(</span><span class="n">axs</span><span class="o">=</span><span class="n">axs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Figure.add_gridspec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_gridspec">[docs]</a>    <span class="k">def</span> <span class="nf">add_gridspec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a `.GridSpec` that has this figure as a parent.  This allows</span>
+<span class="sd">        complex layout of axes in the figure.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nrows : int</span>
+<span class="sd">            Number of rows in grid.</span>
+
+<span class="sd">        ncols : int</span>
+<span class="sd">            Number or columns in grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        gridspec : `.GridSpec`</span>
+
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        *kwargs* are passed to `.GridSpec`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        matplotlib.pyplot.subplots</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Adding a subplot that spans two rows::</span>
+
+<span class="sd">            fig = plt.figure()</span>
+<span class="sd">            gs = fig.add_gridspec(2, 2)</span>
+<span class="sd">            ax1 = fig.add_subplot(gs[0, 0])</span>
+<span class="sd">            ax2 = fig.add_subplot(gs[1, 0])</span>
+<span class="sd">            # spans two rows:</span>
+<span class="sd">            ax3 = fig.add_subplot(gs[:, 1])</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># pop in case user has added this...</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">ncols</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gridspecs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gs</span></div></div>
 
 
 <div class="viewcode-block" id="figaspect"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.figaspect.html#matplotlib.figure.figaspect">[docs]</a><span class="k">def</span> <span class="nf">figaspect</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a figure with specified aspect ratio.  If *arg* is a number,</span>
-<span class="sd">    use that aspect ratio.  If *arg* is an array, figaspect will</span>
-<span class="sd">    determine the width and height for a figure that would fit array</span>
-<span class="sd">    preserving aspect ratio.  The figure width, height in inches are</span>
-<span class="sd">    returned.  Be sure to create an axes with equal with and height,</span>
-<span class="sd">    e.g.,</span>
+<span class="sd">    Calculate the width and height for a figure with a specified aspect ratio.</span>
 
-<span class="sd">    Example usage::</span>
+<span class="sd">    While the height is taken from :rc:`figure.figsize`, the width is</span>
+<span class="sd">    adjusted to match the desired aspect ratio. Additionally, it is ensured</span>
+<span class="sd">    that the width is in the range [4., 16.] and the height is in the range</span>
+<span class="sd">    [2., 16.]. If necessary, the default height is adjusted to ensure this.</span>
 
-<span class="sd">      # make a figure twice as tall as it is wide</span>
-<span class="sd">      w, h = figaspect(2.)</span>
-<span class="sd">      fig = Figure(figsize=(w,h))</span>
-<span class="sd">      ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])</span>
-<span class="sd">      ax.imshow(A, **kwargs)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arg : scalar or 2d array</span>
+<span class="sd">        If a scalar, this defines the aspect ratio (i.e. the ratio height /</span>
+<span class="sd">        width).</span>
+<span class="sd">        In case of an array the aspect ratio is number of rows / number of</span>
+<span class="sd">        columns, so that the array could be fitted in the figure undistorted.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    width, height</span>
+<span class="sd">        The figure size in inches.</span>
 
-<span class="sd">      # make a figure with the proper aspect for an array</span>
-<span class="sd">      A = rand(5,3)</span>
-<span class="sd">      w, h = figaspect(A)</span>
-<span class="sd">      fig = Figure(figsize=(w,h))</span>
-<span class="sd">      ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])</span>
-<span class="sd">      ax.imshow(A, **kwargs)</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If you want to create an axes within the figure, that still preserves the</span>
+<span class="sd">    aspect ratio, be sure to create it with equal width and height. See</span>
+<span class="sd">    examples below.</span>
 
-<span class="sd">    Thanks to Fernando Perez for this function</span>
+<span class="sd">    Thanks to Fernando Perez for this function.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Make a figure twice as tall as it is wide::</span>
+
+<span class="sd">        w, h = figaspect(2.)</span>
+<span class="sd">        fig = Figure(figsize=(w, h))</span>
+<span class="sd">        ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])</span>
+<span class="sd">        ax.imshow(A, **kwargs)</span>
+
+<span class="sd">    Make a figure with the proper aspect for an array::</span>
+
+<span class="sd">        A = rand(5,3)</span>
+<span class="sd">        w, h = figaspect(A)</span>
+<span class="sd">        fig = Figure(figsize=(w, h))</span>
+<span class="sd">        ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])</span>
+<span class="sd">        ax.imshow(A, **kwargs)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">isarray</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
@@ -2654,10 +2782,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

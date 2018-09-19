@@ -18,6 +18,9 @@ subplot(s) fits in to the figure area. This is an experimental
 feature and may not work for some cases. It only checks the extents
 of ticklabels, axis labels, and titles.
 
+An alternative to *tight_layout* is :doc:`constrained_layout
+</tutorials/intermediate/constrainedlayout_guide>`.
+
 
 Simple Example
 ==============
@@ -444,6 +447,61 @@ gridspec. Same thing for the top.
 
 
 
+Legends and Annotations
+=======================
+
+Pre Matplotlih 2.2, legends and annotations were excluded from the bounding
+box calculations that decide the layout.  Subsequently these artists were
+added to the calculation, but sometimes it is undesirable to include them.
+For instance in this case it might be good to have the axes shring a bit
+to make room for the legend:
+
+
+
+.. code-block:: python
+
+
+    fig, ax = plt.subplots(figsize=(4, 3))
+    lines = ax.plot(range(10), label='A simple plot')
+    ax.legend(bbox_to_anchor=(0.7, 0.5), loc='center left',)
+    fig.tight_layout()
+    plt.show()
+
+
+
+
+.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_013.png
+    :class: sphx-glr-single-img
+
+
+
+
+However, sometimes this is not desired (quite often when using
+``fig.savefig('outname.png', bbox_inches='tight')``).  In order to
+remove the legend from the bounding box calculation, we simply set its
+bounding ``leg.set_in_layout(False)`` and the legend will be ignored.
+
+
+
+.. code-block:: python
+
+
+    fig, ax = plt.subplots(figsize=(4, 3))
+    lines = ax.plot(range(10), label='B simple plot')
+    leg = ax.legend(bbox_to_anchor=(0.7, 0.5), loc='center left',)
+    leg.set_in_layout(False)
+    fig.tight_layout()
+    plt.show()
+
+
+
+
+.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_014.png
+    :class: sphx-glr-single-img
+
+
+
+
 Use with AxesGrid1
 ==================
 
@@ -471,7 +529,7 @@ While limited, the axes_grid1 toolkit is also supported.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_013.png
+.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_015.png
     :class: sphx-glr-single-img
 
 
@@ -502,7 +560,7 @@ colorbar as a subplot using the gridspec.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_014.png
+.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_016.png
     :class: sphx-glr-single-img
 
 
@@ -531,11 +589,13 @@ explicitly create an axes for colorbar.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_015.png
+.. image:: /tutorials/intermediate/images/sphx_glr_tight_layout_guide_017.png
     :class: sphx-glr-single-img
 
 
 
+
+**Total running time of the script:** ( 0 minutes  1.001 seconds)
 
 
 .. _sphx_glr_download_tutorials_intermediate_tight_layout_guide.py:

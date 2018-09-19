@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.backends.backend_pgf &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.backends.backend_pgf &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/backends/backend_pgf.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -111,58 +113,40 @@ type="text/css" />
           <div class="body">
             
   <h1>Source code for matplotlib.backends.backend_pgf</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
-<span class="kn">import</span> <span class="nn">atexit</span>
+<span></span><span class="kn">import</span> <span class="nn">atexit</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">font_manager</span> <span class="k">as</span> <span class="n">fm</span><span class="p">,</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">rcParams</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">GraphicsContextBase</span><span class="p">,</span>
     <span class="n">RendererBase</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="k">import</span> <span class="n">MixedModeRenderer</span>
 <span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">is_writable_file_like</span>
-<span class="kn">from</span> <span class="nn">matplotlib.compat</span> <span class="k">import</span> <span class="n">subprocess</span>
-<span class="kn">from</span> <span class="nn">matplotlib.compat.subprocess</span> <span class="k">import</span> <span class="n">check_output</span>
 <span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
+<span class="kn">from</span> <span class="nn">matplotlib._pylab_helpers</span> <span class="k">import</span> <span class="n">Gcf</span>
+
+<span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="c1">###############################################################################</span>
 
-<span class="c1"># create a list of system fonts, all of these should work with xe/lua-latex</span>
-<span class="n">system_fonts</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;win&#39;</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">font_manager</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">font_manager</span><span class="o">.</span><span class="n">win32InstalledFonts</span><span class="p">():</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">system_fonts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">font_manager</span><span class="o">.</span><span class="n">get_font</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">))</span><span class="o">.</span><span class="n">family_name</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span> <span class="c1"># unknown error, skip this font</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># assuming fontconfig is installed and the command &#39;fc-list&#39; exists</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># list scalable (non-bitmap) fonts</span>
-        <span class="n">fc_list</span> <span class="o">=</span> <span class="n">check_output</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;fc-list&#39;</span><span class="p">),</span> <span class="s1">&#39;:outline,scalable&#39;</span><span class="p">,</span> <span class="s1">&#39;family&#39;</span><span class="p">])</span>
-        <span class="n">fc_list</span> <span class="o">=</span> <span class="n">fc_list</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
-        <span class="n">system_fonts</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fc_list</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
-        <span class="n">system_fonts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">system_fonts</span><span class="p">))</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;error getting fonts from fc-list&#39;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
 
-<div class="viewcode-block" id="get_texcommand"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.get_texcommand">[docs]</a><span class="k">def</span> <span class="nf">get_texcommand</span><span class="p">():</span>
+<div class="viewcode-block" id="get_texcommand"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.get_texcommand">[docs]</a><span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_texcommand</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Get chosen TeX system from rc.&quot;&quot;&quot;</span>
     <span class="n">texsystem_options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;xelatex&quot;</span><span class="p">,</span> <span class="s2">&quot;lualatex&quot;</span><span class="p">,</span> <span class="s2">&quot;pdflatex&quot;</span><span class="p">]</span>
     <span class="n">texsystem</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.texsystem&quot;</span><span class="p">]</span>
@@ -172,23 +156,20 @@ type="text/css" />
 <div class="viewcode-block" id="get_fontspec"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.get_fontspec">[docs]</a><span class="k">def</span> <span class="nf">get_fontspec</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Build fontspec preamble from rc.&quot;&quot;&quot;</span>
     <span class="n">latex_fontspec</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">texcommand</span> <span class="o">=</span> <span class="n">get_texcommand</span><span class="p">()</span>
+    <span class="n">texcommand</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.texsystem&quot;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">texcommand</span> <span class="o">!=</span> <span class="s2">&quot;pdflatex&quot;</span><span class="p">:</span>
         <span class="n">latex_fontspec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">usepackage</span><span class="si">{fontspec}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">texcommand</span> <span class="o">!=</span> <span class="s2">&quot;pdflatex&quot;</span> <span class="ow">and</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.rcfonts&quot;</span><span class="p">]:</span>
-        <span class="c1"># try to find fonts from rc parameters</span>
-        <span class="n">families</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;serif&quot;</span><span class="p">,</span> <span class="s2">&quot;sans-serif&quot;</span><span class="p">,</span> <span class="s2">&quot;monospace&quot;</span><span class="p">]</span>
-        <span class="n">fontspecs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;\setmainfont{</span><span class="si">%s</span><span class="s2">}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\setsansfont{</span><span class="si">%s</span><span class="s2">}&quot;</span><span class="p">,</span>
-                     <span class="sa">r</span><span class="s2">&quot;\setmonofont{</span><span class="si">%s</span><span class="s2">}&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">family</span><span class="p">,</span> <span class="n">fontspec</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">families</span><span class="p">,</span> <span class="n">fontspecs</span><span class="p">):</span>
-            <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.&quot;</span> <span class="o">+</span> <span class="n">family</span><span class="p">]</span>
-                       <span class="k">if</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">system_fonts</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
-                <span class="n">latex_fontspec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fontspec</span> <span class="o">%</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">pass</span>  <span class="c1"># no fonts found, fallback to LaTeX defaule</span>
+        <span class="n">families</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;serif&quot;</span><span class="p">,</span> <span class="s2">&quot;sans</span><span class="se">\\</span><span class="s2">-serif&quot;</span><span class="p">,</span> <span class="s2">&quot;monospace&quot;</span><span class="p">]</span>
+        <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;setmainfont&quot;</span><span class="p">,</span> <span class="s2">&quot;setsansfont&quot;</span><span class="p">,</span> <span class="s2">&quot;setmonofont&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">family</span><span class="p">,</span> <span class="n">command</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">families</span><span class="p">,</span> <span class="n">commands</span><span class="p">):</span>
+            <span class="c1"># 1) Forward slashes also work on Windows, so don&#39;t mess with</span>
+            <span class="c1"># backslashes.  2) The dirname needs to include a separator.</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">fm</span><span class="o">.</span><span class="n">findfont</span><span class="p">(</span><span class="n">family</span><span class="p">))</span>
+            <span class="n">latex_fontspec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\</span><span class="si">%s</span><span class="s2">{</span><span class="si">%s</span><span class="s2">}[Path=</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">command</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">latex_fontspec</span><span class="p">)</span></div>
 
@@ -258,7 +239,8 @@ type="text/css" />
     <span class="n">family</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">get_family</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">family</span> <span class="ow">in</span> <span class="n">families</span><span class="p">:</span>
         <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">families</span><span class="p">[</span><span class="n">family</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">family</span> <span class="ow">in</span> <span class="n">system_fonts</span> <span class="ow">and</span> <span class="n">get_texcommand</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;pdflatex&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">family</span> <span class="k">for</span> <span class="n">font</span> <span class="ow">in</span> <span class="n">fm</span><span class="o">.</span><span class="n">fontManager</span><span class="o">.</span><span class="n">ttflist</span><span class="p">)</span>
+          <span class="ow">and</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.texsystem&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;pdflatex&quot;</span><span class="p">):</span>
         <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\setmainfont{</span><span class="si">%s</span><span class="s2">}\rmfamily&quot;</span> <span class="o">%</span> <span class="n">family</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">pass</span>  <span class="c1"># print warning?</span>
@@ -286,9 +268,9 @@ type="text/css" />
     <span class="n">tools_available</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># check for pdftocairo</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">check_output</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;pdftocairo&quot;</span><span class="p">),</span> <span class="s2">&quot;-v&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;pdftocairo&quot;</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
         <span class="n">tools_available</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;pdftocairo&quot;</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="k">pass</span>
     <span class="c1"># check for ghostscript</span>
     <span class="n">gs</span><span class="p">,</span> <span class="n">ver</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">checkdep_ghostscript</span><span class="p">()</span>
@@ -298,19 +280,19 @@ type="text/css" />
     <span class="c1"># pick converter</span>
     <span class="k">if</span> <span class="s2">&quot;pdftocairo&quot;</span> <span class="ow">in</span> <span class="n">tools_available</span><span class="p">:</span>
         <span class="k">def</span> <span class="nf">cairo_convert</span><span class="p">(</span><span class="n">pdffile</span><span class="p">,</span> <span class="n">pngfile</span><span class="p">,</span> <span class="n">dpi</span><span class="p">):</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;pdftocairo&quot;</span><span class="p">),</span> <span class="s2">&quot;-singlefile&quot;</span><span class="p">,</span> <span class="s2">&quot;-png&quot;</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">dpi</span><span class="p">,</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pdftocairo&quot;</span><span class="p">,</span> <span class="s2">&quot;-singlefile&quot;</span><span class="p">,</span> <span class="s2">&quot;-png&quot;</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">dpi</span><span class="p">,</span>
                    <span class="n">pdffile</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">pngfile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
-            <span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cairo_convert</span>
     <span class="k">elif</span> <span class="s2">&quot;gs&quot;</span> <span class="ow">in</span> <span class="n">tools_available</span><span class="p">:</span>
         <span class="k">def</span> <span class="nf">gs_convert</span><span class="p">(</span><span class="n">pdffile</span><span class="p">,</span> <span class="n">pngfile</span><span class="p">,</span> <span class="n">dpi</span><span class="p">):</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">gs</span><span class="p">),</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">gs</span><span class="p">,</span>
                    <span class="s1">&#39;-dQUIET&#39;</span><span class="p">,</span> <span class="s1">&#39;-dSAFER&#39;</span><span class="p">,</span> <span class="s1">&#39;-dBATCH&#39;</span><span class="p">,</span> <span class="s1">&#39;-dNOPAUSE&#39;</span><span class="p">,</span> <span class="s1">&#39;-dNOPROMPT&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;-dUseCIEColor&#39;</span><span class="p">,</span> <span class="s1">&#39;-dTextAlphaBits=4&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;-dGraphicsAlphaBits=4&#39;</span><span class="p">,</span> <span class="s1">&#39;-dDOINTERPOLATE&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;-sDEVICE=png16m&#39;</span><span class="p">,</span> <span class="s1">&#39;-sOutputFile=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">pngfile</span><span class="p">,</span>
                    <span class="s1">&#39;-r</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">dpi</span><span class="p">,</span> <span class="n">pdffile</span><span class="p">]</span>
-            <span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">gs_convert</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No suitable pdf to png renderer found.&quot;</span><span class="p">)</span></div>
@@ -318,34 +300,32 @@ type="text/css" />
 
 <div class="viewcode-block" id="LatexError"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.LatexError">[docs]</a><span class="k">class</span> <span class="nc">LatexError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">latex_output</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="ne">Exception</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latex_output</span> <span class="o">=</span> <span class="n">latex_output</span></div>
 
 
-<div class="viewcode-block" id="LatexManagerFactory"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.LatexManagerFactory">[docs]</a><span class="k">class</span> <span class="nc">LatexManagerFactory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="LatexManagerFactory"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.LatexManagerFactory">[docs]</a><span class="k">class</span> <span class="nc">LatexManagerFactory</span><span class="p">:</span>
     <span class="n">previous_instance</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="LatexManagerFactory.get_latex_manager"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.LatexManagerFactory.get_latex_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_latex_manager</span><span class="p">():</span>
-        <span class="n">texcommand</span> <span class="o">=</span> <span class="n">get_texcommand</span><span class="p">()</span>
+        <span class="n">texcommand</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.texsystem&quot;</span><span class="p">]</span>
         <span class="n">latex_header</span> <span class="o">=</span> <span class="n">LatexManager</span><span class="o">.</span><span class="n">_build_latex_header</span><span class="p">()</span>
         <span class="n">prev</span> <span class="o">=</span> <span class="n">LatexManagerFactory</span><span class="o">.</span><span class="n">previous_instance</span>
 
         <span class="c1"># Check if the previous instance of LatexManager can be reused.</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">prev</span> <span class="ow">and</span> <span class="n">prev</span><span class="o">.</span><span class="n">latex_header</span> <span class="o">==</span> <span class="n">latex_header</span>
                 <span class="ow">and</span> <span class="n">prev</span><span class="o">.</span><span class="n">texcommand</span> <span class="o">==</span> <span class="n">texcommand</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.debug&quot;</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;reusing LatexManager&quot;</span><span class="p">)</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reusing LatexManager&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">prev</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.debug&quot;</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;creating LatexManager&quot;</span><span class="p">)</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;creating LatexManager&quot;</span><span class="p">)</span>
             <span class="n">new_inst</span> <span class="o">=</span> <span class="n">LatexManager</span><span class="p">()</span>
             <span class="n">LatexManagerFactory</span><span class="o">.</span><span class="n">previous_instance</span> <span class="o">=</span> <span class="n">new_inst</span>
             <span class="k">return</span> <span class="n">new_inst</span></div></div>
 
 
-<div class="viewcode-block" id="LatexManager"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.LatexManager">[docs]</a><span class="k">class</span> <span class="nc">LatexManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="LatexManager"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.LatexManager">[docs]</a><span class="k">class</span> <span class="nc">LatexManager</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The LatexManager opens an instance of the LaTeX application for</span>
 <span class="sd">    determining the metrics of text elements. The LaTeX environment can be</span>
@@ -398,29 +378,26 @@ type="text/css" />
         <span class="c1"># store references for __del__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_os_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_shutil</span> <span class="o">=</span> <span class="n">shutil</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.debug&quot;</span><span class="p">]</span>
 
         <span class="c1"># create a tmp directory for running latex, remember to cleanup</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;mpl_pgf_lm_&quot;</span><span class="p">)</span>
         <span class="n">LatexManager</span><span class="o">.</span><span class="n">_unclean_instances</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="c1"># test the LaTeX setup to ensure a clean startup of the subprocess</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span> <span class="o">=</span> <span class="n">get_texcommand</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.texsystem&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latex_header</span> <span class="o">=</span> <span class="n">LatexManager</span><span class="o">.</span><span class="n">_build_latex_header</span><span class="p">()</span>
         <span class="n">latex_end</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\\</span><span class="s2">makeatletter</span><span class="se">\n\\</span><span class="s2">@@end</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">latex</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">),</span> <span class="s2">&quot;-halt-on-error&quot;</span><span class="p">],</span>
+            <span class="n">latex</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">,</span> <span class="s2">&quot;-halt-on-error&quot;</span><span class="p">],</span>
                                      <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                      <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                      <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                    <span class="s2">&quot;Latex command not found. Install </span><span class="si">%r</span><span class="s2"> or change &quot;</span>
-                    <span class="s2">&quot;pgf.texsystem to the desired command.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                    <span class="s2">&quot;Error starting process </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Latex command not found. Install </span><span class="si">%r</span><span class="s2"> or change &quot;</span>
+                <span class="s2">&quot;pgf.texsystem to the desired command.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Error starting process </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">)</span>
         <span class="n">test_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">latex_header</span> <span class="o">+</span> <span class="n">latex_end</span>
         <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">latex</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">test_input</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">latex</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -428,7 +405,7 @@ type="text/css" />
                              <span class="s2">&quot;or error in preamble:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">stdout</span><span class="p">)</span>
 
         <span class="c1"># open LaTeX process for real work</span>
-        <span class="n">latex</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">),</span> <span class="s2">&quot;-halt-on-error&quot;</span><span class="p">],</span>
+        <span class="n">latex</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">texcommand</span><span class="p">,</span> <span class="s2">&quot;-halt-on-error&quot;</span><span class="p">],</span>
                                  <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                  <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latex</span> <span class="o">=</span> <span class="n">latex</span>
@@ -449,17 +426,16 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">latex</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">latex_stdin_utf8</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">latex</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">except</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">)</span>
             <span class="n">LatexManager</span><span class="o">.</span><span class="n">_unclean_instances</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;error deleting tmp directory </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;deleting LatexManager&quot;</span><span class="p">)</span>
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;deleting LatexManager&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LatexManager.get_width_height_descent"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.LatexManager.get_width_height_descent">[docs]</a>    <span class="k">def</span> <span class="nf">get_width_height_descent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">prop</span><span class="p">):</span>
@@ -542,7 +518,7 @@ type="text/css" />
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;streamed pgf-code does not support raster &quot;</span>
                               <span class="s2">&quot;graphics, consider using the pgf-to-pdf option&quot;</span><span class="p">,</span>
-                              <span class="ne">UserWarning</span><span class="p">)</span>
+                              <span class="ne">UserWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;draw_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="RendererPgf.draw_markers"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.RendererPgf.draw_markers">[docs]</a>    <span class="k">def</span> <span class="nf">draw_markers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">marker_path</span><span class="p">,</span> <span class="n">marker_trans</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span>
@@ -812,11 +788,10 @@ type="text/css" />
             <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\pgfsetfillopacity{</span><span class="si">%f</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">alpha</span><span class="p">)</span>
             <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\pgfsetstrokeopacity{</span><span class="si">%f</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">alpha</span><span class="p">)</span>
         <span class="n">rgb</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">gc</span><span class="o">.</span><span class="n">get_rgb</span><span class="p">())[:</span><span class="mi">3</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">rgb</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\definecolor</span><span class="si">{textcolor}{rgb}</span><span class="s2">{</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">rgb</span><span class="p">)</span>
-            <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\pgfsetstrokecolor</span><span class="si">{textcolor}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\pgfsetfillcolor</span><span class="si">{textcolor}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\color</span><span class="si">{textcolor}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">s</span>
+        <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\definecolor</span><span class="si">{textcolor}{rgb}</span><span class="s2">{</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">rgb</span><span class="p">)</span>
+        <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\pgfsetstrokecolor</span><span class="si">{textcolor}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">writeln</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\pgfsetfillcolor</span><span class="si">{textcolor}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\color</span><span class="si">{textcolor}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">s</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span>
         <span class="n">text_args</span> <span class="o">=</span> <span class="p">[]</span>
@@ -826,7 +801,8 @@ type="text/css" />
                 <span class="n">mtext</span><span class="o">.</span><span class="n">get_va</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;center_baseline&quot;</span><span class="p">):</span>
             <span class="c1"># if text anchoring can be supported, get the original coordinates</span>
             <span class="c1"># and add alignment information</span>
-            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mtext</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span><span class="o">.</span><span class="n">transform_point</span><span class="p">(</span><span class="n">mtext</span><span class="o">.</span><span class="n">get_position</span><span class="p">())</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">mtext</span><span class="o">.</span><span class="n">get_unitless_position</span><span class="p">()</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mtext</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span><span class="o">.</span><span class="n">transform_point</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
             <span class="n">text_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;x=</span><span class="si">%f</span><span class="s2">in&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">f</span><span class="p">))</span>
             <span class="n">text_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;y=</span><span class="si">%f</span><span class="s2">in&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">f</span><span class="p">))</span>
 
@@ -879,7 +855,7 @@ type="text/css" />
 <span class="c1">########################################################################</span>
 
 
-<div class="viewcode-block" id="TmpDirCleaner"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.TmpDirCleaner">[docs]</a><span class="k">class</span> <span class="nc">TmpDirCleaner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="TmpDirCleaner"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.TmpDirCleaner">[docs]</a><span class="k">class</span> <span class="nc">TmpDirCleaner</span><span class="p">:</span>
     <span class="n">remaining_tmpdirs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TmpDirCleaner.add"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.TmpDirCleaner.add">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -889,10 +865,10 @@ type="text/css" />
 <div class="viewcode-block" id="TmpDirCleaner.cleanup_remaining_tmpdirs"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.TmpDirCleaner.cleanup_remaining_tmpdirs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">cleanup_remaining_tmpdirs</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">tmpdir</span> <span class="ow">in</span> <span class="n">TmpDirCleaner</span><span class="o">.</span><span class="n">remaining_tmpdirs</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;error deleting tmp directory </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">tmpdir</span><span class="p">)</span></div></div>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span>
+                <span class="n">tmpdir</span><span class="p">,</span>
+                <span class="n">onerror</span><span class="o">=</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error deleting tmp directory </span><span class="si">%s</span><span class="s2">&quot;</span>
+                                            <span class="o">%</span> <span class="n">tmpdir</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="FigureCanvasPgf"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.FigureCanvasPgf">[docs]</a><span class="k">class</span> <span class="nc">FigureCanvasPgf</span><span class="p">(</span><span class="n">FigureCanvasBase</span><span class="p">):</span>
@@ -903,8 +879,9 @@ type="text/css" />
 <div class="viewcode-block" id="FigureCanvasPgf.get_default_filetype"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.FigureCanvasPgf.get_default_filetype">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_filetype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;pdf&#39;</span></div>
 
-    <span class="k">def</span> <span class="nf">_print_pgf_to_fh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dryrun&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_print_pgf_to_fh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                         <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dryrun</span><span class="p">:</span>
             <span class="n">renderer</span> <span class="o">=</span> <span class="n">RendererPgf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dummy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
             <span class="k">return</span>
@@ -950,10 +927,9 @@ type="text/css" />
                 <span class="sa">r</span><span class="s2">&quot;\pgfpathrectangle{\pgfpointorigin}{\pgfqpoint{</span><span class="si">%f</span><span class="s2">in}{</span><span class="si">%f</span><span class="s2">in}}&quot;</span>
                 <span class="o">%</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
         <span class="n">writeln</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\pgfusepath{use as bounding box, clip}&quot;</span><span class="p">)</span>
-        <span class="n">_bbox_inches_restore</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;bbox_inches_restore&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">renderer</span> <span class="o">=</span> <span class="n">MixedModeRenderer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span>
                                      <span class="n">RendererPgf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">fh</span><span class="p">),</span>
-                                     <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="n">_bbox_inches_restore</span><span class="p">)</span>
+                                     <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="n">bbox_inches_restore</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
 
         <span class="c1"># end the pgfpicture environment</span>
@@ -971,8 +947,8 @@ type="text/css" />
             <span class="k">return</span>
 
         <span class="c1"># figure out where the pgf is to be written to</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_print_pgf_to_fh</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">is_writable_file_like</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">):</span>
             <span class="n">fh</span> <span class="o">=</span> <span class="n">codecs</span><span class="o">.</span><span class="n">getwriter</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)(</span><span class="n">fname_or_fh</span><span class="p">)</span>
@@ -1006,14 +982,14 @@ type="text/css" />
 <span class="se">\\</span><span class="s2">centering</span>
 <span class="se">\\</span><span class="s2">input</span><span class="si">{figure.pgf}</span><span class="s2"></span>
 <span class="se">\\</span><span class="s2">end</span><span class="si">{document}</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">latex_preamble</span><span class="p">,</span> <span class="n">latex_fontspec</span><span class="p">)</span>
-            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname_tex</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh_tex</span><span class="p">:</span>
-                <span class="n">fh_tex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">latexcode</span><span class="p">)</span>
+            <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">fname_tex</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">latexcode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 
-            <span class="n">texcommand</span> <span class="o">=</span> <span class="n">get_texcommand</span><span class="p">()</span>
-            <span class="n">cmdargs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">texcommand</span><span class="p">),</span> <span class="s2">&quot;-interaction=nonstopmode&quot;</span><span class="p">,</span>
+            <span class="n">texcommand</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.texsystem&quot;</span><span class="p">]</span>
+            <span class="n">cmdargs</span> <span class="o">=</span> <span class="p">[</span><span class="n">texcommand</span><span class="p">,</span> <span class="s2">&quot;-interaction=nonstopmode&quot;</span><span class="p">,</span>
                        <span class="s2">&quot;-halt-on-error&quot;</span><span class="p">,</span> <span class="s2">&quot;figure.tex&quot;</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">check_output</span><span class="p">(</span><span class="n">cmdargs</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">tmpdir</span><span class="p">)</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
+                    <span class="n">cmdargs</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">tmpdir</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not able to process your file.</span><span class="se">\n\n</span><span class="s2">Full log:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span>
@@ -1037,7 +1013,7 @@ type="text/css" />
             <span class="k">return</span>
 
         <span class="c1"># figure out where the pdf is to be written to</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_print_pdf_to_fh</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">is_writable_file_like</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">):</span>
@@ -1073,7 +1049,7 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">_print_pgf_to_fh</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_print_png_to_fh</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">is_writable_file_like</span><span class="p">(</span><span class="n">fname_or_fh</span><span class="p">):</span>
@@ -1086,8 +1062,7 @@ type="text/css" />
 
 
 <div class="viewcode-block" id="FigureManagerPgf"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.FigureManagerPgf">[docs]</a><span class="k">class</span> <span class="nc">FigureManagerPgf</span><span class="p">(</span><span class="n">FigureManagerBase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">FigureManagerBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+    <span class="k">pass</span></div>
 
 
 <span class="nd">@_Backend</span><span class="o">.</span><span class="n">export</span>
@@ -1100,7 +1075,220 @@ type="text/css" />
     <span class="n">LatexManager</span><span class="o">.</span><span class="n">_cleanup_remaining_instances</span><span class="p">()</span>
     <span class="n">TmpDirCleaner</span><span class="o">.</span><span class="n">cleanup_remaining_tmpdirs</span><span class="p">()</span>
 
+
 <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">_cleanup_all</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PdfPages"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.PdfPages">[docs]</a><span class="k">class</span> <span class="nc">PdfPages</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A multi-page PDF file using the pgf backend</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; # Initialize:</span>
+<span class="sd">    &gt;&gt;&gt; with PdfPages(&#39;foo.pdf&#39;) as pdf:</span>
+<span class="sd">    ...     # As many times as you like, create a figure fig and save it:</span>
+<span class="sd">    ...     fig = plt.figure()</span>
+<span class="sd">    ...     pdf.savefig(fig)</span>
+<span class="sd">    ...     # When no figure is specified the current figure is saved</span>
+<span class="sd">    ...     pdf.savefig()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;_outputfile&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;keep_empty&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_tmpdir&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_basename&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_fname_tex&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_fname_pdf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_n_figures&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_file&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">keep_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new PdfPages object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        filename : str</span>
+<span class="sd">            Plots using :meth:`PdfPages.savefig` will be written to a file at</span>
+<span class="sd">            this location. Any older file with the same name is overwritten.</span>
+<span class="sd">        keep_empty : bool, optional</span>
+<span class="sd">            If set to False, then empty pdf files will be deleted automatically</span>
+<span class="sd">            when closed.</span>
+<span class="sd">        metadata : dictionary, optional</span>
+<span class="sd">            Information dictionary object (see PDF reference section 10.2.1</span>
+<span class="sd">            &#39;Document Information Dictionary&#39;), e.g.:</span>
+<span class="sd">            `{&#39;Creator&#39;: &#39;My software&#39;, &#39;Author&#39;: &#39;Me&#39;,</span>
+<span class="sd">            &#39;Title&#39;: &#39;Awesome fig&#39;}`</span>
+
+<span class="sd">            The standard keys are `&#39;Title&#39;`, `&#39;Author&#39;`, `&#39;Subject&#39;`,</span>
+<span class="sd">            `&#39;Keywords&#39;`, `&#39;Producer&#39;`, `&#39;Creator&#39;` and `&#39;Trapped&#39;`.</span>
+<span class="sd">            Values have been predefined for `&#39;Creator&#39;` and `&#39;Producer&#39;`.</span>
+<span class="sd">            They can be removed by setting them to the empty string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputfile</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_figures</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keep_empty</span> <span class="o">=</span> <span class="n">keep_empty</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="c1"># create temporary directory for compiling the figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;mpl_pgf_pdfpages_&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_basename</span> <span class="o">=</span> <span class="s1">&#39;pdf_pages&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fname_tex</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tmpdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basename</span> <span class="o">+</span> <span class="s2">&quot;.tex&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fname_pdf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tmpdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basename</span> <span class="o">+</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fname_tex</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_write_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width_inches</span><span class="p">,</span> <span class="n">height_inches</span><span class="p">):</span>
+        <span class="n">supported_keys</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="s1">&#39;keywords&#39;</span><span class="p">,</span> <span class="s1">&#39;creator&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;producer&#39;</span><span class="p">,</span> <span class="s1">&#39;trapped&#39;</span>
+        <span class="p">}</span>
+        <span class="n">infoDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;creator&#39;</span><span class="p">:</span> <span class="s1">&#39;matplotlib </span><span class="si">%s</span><span class="s1">, https://matplotlib.org&#39;</span> <span class="o">%</span> <span class="n">__version__</span><span class="p">,</span>
+            <span class="s1">&#39;producer&#39;</span><span class="p">:</span> <span class="s1">&#39;matplotlib pgf backend </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">__version__</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">infoDict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="n">hyperref_options</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">infoDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_keys</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Not a supported pdf metadata field: &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">hyperref_options</span> <span class="o">+=</span> <span class="s1">&#39;pdf&#39;</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="s1">&#39;={&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;},&#39;</span>
+
+        <span class="n">latex_preamble</span> <span class="o">=</span> <span class="n">get_preamble</span><span class="p">()</span>
+        <span class="n">latex_fontspec</span> <span class="o">=</span> <span class="n">get_fontspec</span><span class="p">()</span>
+        <span class="n">latex_header</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;\PassOptionsToPackage{{</span>
+<span class="s2">  </span><span class="si">{metadata}</span><span class="s2"></span>
+<span class="s2">}}{{hyperref}}</span>
+<span class="s2">\RequirePackage{{hyperref}}</span>
+<span class="s2">\documentclass[12pt]{{minimal}}</span>
+<span class="s2">\usepackage[</span>
+<span class="s2">    paperwidth=</span><span class="si">{width}</span><span class="s2">in,</span>
+<span class="s2">    paperheight=</span><span class="si">{height}</span><span class="s2">in,</span>
+<span class="s2">    margin=0in</span>
+<span class="s2">]{{geometry}}</span>
+<span class="si">{preamble}</span><span class="s2"></span>
+<span class="si">{fontspec}</span><span class="s2"></span>
+<span class="s2">\usepackage{{pgf}}</span>
+<span class="s2">\setlength{{\parindent}}{{0pt}}</span>
+
+<span class="s2">\begin{{document}}</span><span class="si">%%</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width_inches</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height_inches</span><span class="p">,</span>
+            <span class="n">preamble</span><span class="o">=</span><span class="n">latex_preamble</span><span class="p">,</span>
+            <span class="n">fontspec</span><span class="o">=</span><span class="n">latex_fontspec</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">hyperref_options</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">latex_header</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PdfPages.close"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.PdfPages.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finalize this object, running LaTeX in a temporary directory</span>
+<span class="sd">        and moving the final pdf file to `filename`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">rb</span><span class="s1">&#39;\end</span><span class="si">{document}</span><span class="s1">\n&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_figures</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_run_latex</span><span class="p">()</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tmpdir</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">TmpDirCleaner</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tmpdir</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_empty</span><span class="p">:</span>
+            <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_outputfile</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_run_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">texcommand</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;pgf.texsystem&quot;</span><span class="p">]</span>
+        <span class="n">cmdargs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">texcommand</span><span class="p">,</span>
+            <span class="s2">&quot;-interaction=nonstopmode&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-halt-on-error&quot;</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fname_tex</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
+                <span class="n">cmdargs</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tmpdir</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not able to process your file.</span><span class="se">\n\n</span><span class="s2">Full log:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">texcommand</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)))</span>
+
+        <span class="c1"># copy file contents to target</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fname_pdf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputfile</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfPages.savefig"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.PdfPages.savefig">[docs]</a>    <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves a :class:`~matplotlib.figure.Figure` to this file as a new page.</span>
+
+<span class="sd">        Any other keyword arguments are passed to</span>
+<span class="sd">        :meth:`~matplotlib.figure.Figure.savefig`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        figure : :class:`~matplotlib.figure.Figure` or int, optional</span>
+<span class="sd">            Specifies what figure is saved to file. If not specified, the</span>
+<span class="sd">            active figure is saved. If a :class:`~matplotlib.figure.Figure`</span>
+<span class="sd">            instance is provided, this figure is saved. If an int is specified,</span>
+<span class="sd">            the figure instance to save is looked up by number.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">Figure</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">figure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">manager</span> <span class="o">=</span> <span class="n">Gcf</span><span class="o">.</span><span class="n">get_active</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">manager</span> <span class="o">=</span> <span class="n">Gcf</span><span class="o">.</span><span class="n">get_fig_manager</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">manager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No figure </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">figure</span><span class="p">))</span>
+            <span class="n">figure</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">figure</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">orig_canvas</span> <span class="o">=</span> <span class="n">figure</span><span class="o">.</span><span class="n">canvas</span>
+            <span class="n">figure</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvasPgf</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+
+            <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_figures</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_write_header</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># \pdfpagewidth and \pdfpageheight exist on pdftex, xetex, and</span>
+                <span class="c1"># luatex&lt;0.85; they were renamed to \pagewidth and \pageheight</span>
+                <span class="c1"># on luatex&gt;=0.85.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="sa">br</span><span class="s1">&#39;\newpage&#39;</span>
+                    <span class="sa">br</span><span class="s1">&#39;\ifdefined\pdfpagewidth\pdfpagewidth&#39;</span>
+                    <span class="sa">br</span><span class="s1">&#39;\else\pagewidth\fi=%ain&#39;</span>
+                    <span class="sa">br</span><span class="s1">&#39;\ifdefined\pdfpageheight\pdfpageheight&#39;</span>
+                    <span class="sa">br</span><span class="s1">&#39;\else\pageheight\fi=%ain&#39;</span>
+                    <span class="sa">b</span><span class="s1">&#39;</span><span class="si">%%</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pgf&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_figures</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">figure</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">orig_canvas</span></div>
+
+<div class="viewcode-block" id="PdfPages.get_pagecount"><a class="viewcode-back" href="../../../api/backend_pgf_api.html#matplotlib.backends.backend_pgf.PdfPages.get_pagecount">[docs]</a>    <span class="k">def</span> <span class="nf">get_pagecount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the current number of pages in the multipage pdf file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_figures</span></div></div>
 </pre></div>
 
           </div>
@@ -1112,10 +1300,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>mpl_toolkits.mplot3d.axes3d &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>mpl_toolkits.mplot3d.axes3d &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/mpl_toolkits/mplot3d/axes3d.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
@@ -119,18 +121,14 @@ type="text/css" />
 <span class="sd">Module containing Axes3D, an object which can plot 3D objects on a</span>
 <span class="sd">2D matplotlib figure.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">map</span><span class="p">,</span> <span class="n">xrange</span><span class="p">,</span> <span class="nb">zip</span><span class="p">,</span> <span class="n">reduce</span>
-
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">artist</span>
 <span class="kn">import</span> <span class="nn">matplotlib.axes</span> <span class="k">as</span> <span class="nn">maxes</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cbook</span> <span class="k">as</span> <span class="nn">cbook</span>
 <span class="kn">import</span> <span class="nn">matplotlib.collections</span> <span class="k">as</span> <span class="nn">mcoll</span>
@@ -139,7 +137,6 @@ type="text/css" />
 <span class="kn">import</span> <span class="nn">matplotlib.scale</span> <span class="k">as</span> <span class="nn">mscale</span>
 <span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">mtransforms</span>
 <span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="k">import</span> <span class="n">Axes</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">_backports</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">Normalize</span><span class="p">,</span> <span class="n">LightSource</span>
 <span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Bbox</span>
 <span class="kn">from</span> <span class="nn">matplotlib.tri.triangulation</span> <span class="k">import</span> <span class="n">Triangulation</span>
@@ -161,7 +158,10 @@ type="text/css" />
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;3d&#39;</span>
     <span class="n">_shared_z_axes</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Grouper</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="n">azim</span><span class="o">=-</span><span class="mi">60</span><span class="p">,</span> <span class="n">elev</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">zscale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sharez</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proj_type</span><span class="o">=</span><span class="s1">&#39;persp&#39;</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Build an :class:`Axes3D` instance in</span>
 <span class="sd">        :class:`~matplotlib.figure.Figure` *fig* with</span>
@@ -189,11 +189,9 @@ type="text/css" />
             <span class="n">rect</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cids</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_azim</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;azim&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_elev</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;elev&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-        <span class="n">zscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zscale&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">sharez</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;sharez&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_proj_type</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;proj_type&#39;</span><span class="p">,</span> <span class="s1">&#39;persp&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_azim</span> <span class="o">=</span> <span class="n">azim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_elev</span> <span class="o">=</span> <span class="n">elev</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_proj_type</span><span class="p">(</span><span class="n">proj_type</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">xy_viewLim</span> <span class="o">=</span> <span class="n">unit_bbox</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zz_viewLim</span> <span class="o">=</span> <span class="n">unit_bbox</span><span class="p">()</span>
@@ -209,11 +207,9 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">_shared_z_axes</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sharez</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_adjustable</span> <span class="o">=</span> <span class="s1">&#39;datalim&#39;</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span>
-                                     <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                     <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># Disable drawing of axes by base class</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
         <span class="c1"># Enable drawing of axes by Axes3D class</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_on</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="kc">None</span>
@@ -273,8 +269,7 @@ type="text/css" />
 <span class="sd">        Look for unit *kwargs* and update the axis instances as necessary</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_process_unit_info</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">ydata</span><span class="p">,</span>
-                                               <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_process_unit_info</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">ydata</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
@@ -304,8 +299,8 @@ type="text/css" />
 
         <span class="c1"># This is purposely using the 2D Axes&#39;s set_xlim and set_ylim,</span>
         <span class="c1"># because we are trying to place our viewing pane.</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="n">xdwl</span><span class="p">,</span> <span class="n">xdw</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">ydwl</span><span class="p">,</span> <span class="n">ydw</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="n">xdwl</span><span class="p">,</span> <span class="n">xdw</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">ydwl</span><span class="p">,</span> <span class="n">ydw</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_init_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Init 3D axes; overrides creation of regular X/Y axes&#39;&#39;&#39;</span>
@@ -323,17 +318,21 @@ type="text/css" />
             <span class="n">ax</span><span class="o">.</span><span class="n">init3d</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Axes3D.get_children"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.get_children">[docs]</a>    <span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span><span class="p">,</span> <span class="p">]</span> <span class="o">+</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span><span class="p">]</span> <span class="o">+</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_get_axis_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_get_axis_list</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span><span class="p">,</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_axis_list</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span><span class="p">,</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="Axes3D.unit_cube"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.unit_cube">[docs]</a>    <span class="k">def</span> <span class="nf">unit_cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vals</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">vals</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_w_lims</span><span class="p">()</span>
-        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="p">([</span><span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">minx</span><span class="p">,</span> <span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">minx</span><span class="p">],</span>
-                      <span class="p">[</span><span class="n">miny</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxy</span><span class="p">],</span>
-                      <span class="p">[</span><span class="n">minz</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxz</span><span class="p">,</span> <span class="n">maxz</span><span class="p">,</span> <span class="n">maxz</span><span class="p">,</span> <span class="n">maxz</span><span class="p">])</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">minz</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">minz</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxz</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxz</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span><span class="p">)]</span></div>
 
 <div class="viewcode-block" id="Axes3D.tunit_cube"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.tunit_cube">[docs]</a>    <span class="k">def</span> <span class="nf">tunit_cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -360,7 +359,8 @@ type="text/css" />
                  <span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">tc</span><span class="p">[</span><span class="mi">4</span><span class="p">])]</span>
         <span class="k">return</span> <span class="n">edges</span></div>
 
-<div class="viewcode-block" id="Axes3D.draw"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.draw"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.draw">[docs]</a>    <span class="nd">@artist</span><span class="o">.</span><span class="n">allow_rasterization</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
         <span class="c1"># draw the background patch</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_frameon</span> <span class="o">=</span> <span class="kc">False</span>
@@ -384,31 +384,31 @@ type="text/css" />
         <span class="n">renderer</span><span class="o">.</span><span class="n">eye</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eye</span>
         <span class="n">renderer</span><span class="o">.</span><span class="n">get_axis_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_axis_position</span>
 
-        <span class="c1"># Calculate projection of collections and zorder them</span>
+        <span class="c1"># Calculate projection of collections and patches and zorder them.</span>
+        <span class="c1"># Make sure they are drawn above the grids.</span>
+        <span class="n">zorder_offset</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">axis</span><span class="o">.</span><span class="n">get_zorder</span><span class="p">()</span>
+                            <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_axis_list</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
                 <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="p">,</span>
                        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">do_3d_projection</span><span class="p">(</span><span class="n">renderer</span><span class="p">),</span>
                        <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
-            <span class="n">col</span><span class="o">.</span><span class="n">zorder</span> <span class="o">=</span> <span class="n">i</span>
-
-        <span class="c1"># Calculate projection of patches and zorder them</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">zorder</span> <span class="o">=</span> <span class="n">zorder_offset</span> <span class="o">+</span> <span class="n">i</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">patch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
                 <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patches</span><span class="p">,</span>
                        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">patch</span><span class="p">:</span> <span class="n">patch</span><span class="o">.</span><span class="n">do_3d_projection</span><span class="p">(</span><span class="n">renderer</span><span class="p">),</span>
                        <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
-            <span class="n">patch</span><span class="o">.</span><span class="n">zorder</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">patch</span><span class="o">.</span><span class="n">zorder</span> <span class="o">=</span> <span class="n">zorder_offset</span> <span class="o">+</span> <span class="n">i</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis3don</span><span class="p">:</span>
-            <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span><span class="p">)</span>
             <span class="c1"># Draw panes first</span>
-            <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">draw_pane</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_axis_list</span><span class="p">():</span>
+                <span class="n">axis</span><span class="o">.</span><span class="n">draw_pane</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
             <span class="c1"># Then axes</span>
-            <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_axis_list</span><span class="p">():</span>
+                <span class="n">axis</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
 
         <span class="c1"># Then rest</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Axes3D.get_axis_position"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.get_axis_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_axis_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_w_lims</span><span class="p">()</span>
@@ -437,7 +437,7 @@ type="text/css" />
 <span class="sd">        .. versionadded :: 1.1.0</span>
 <span class="sd">            This function was added, but not tested. Please report any bugs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_autoscale_on</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_autoscalez_on</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_autoscale_on</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_autoscalez_on</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Axes3D.get_autoscalez_on"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.get_autoscalez_on">[docs]</a>    <span class="k">def</span> <span class="nf">get_autoscalez_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -458,9 +458,8 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        b : bool</span>
-<span class="sd">            .. ACCEPTS: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_autoscale_on</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_autoscale_on</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_autoscalez_on</span><span class="p">(</span><span class="n">b</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Axes3D.set_autoscalez_on"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_autoscalez_on">[docs]</a>    <span class="k">def</span> <span class="nf">set_autoscalez_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -473,7 +472,6 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        b : bool</span>
-<span class="sd">            .. ACCEPTS: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_autoscaleZon</span> <span class="o">=</span> <span class="n">b</span></div>
 
@@ -494,7 +492,7 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_zmargin</span> <span class="o">=</span> <span class="n">m</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Axes3D.margins"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.margins">[docs]</a>    <span class="k">def</span> <span class="nf">margins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.margins"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.margins">[docs]</a>    <span class="k">def</span> <span class="nf">margins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">margins</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convenience method to set or retrieve autoscaling margins.</span>
 
@@ -514,8 +512,12 @@ type="text/css" />
 <span class="sd">            margins(..., tight=False)</span>
 
 <span class="sd">        All forms above set the xmargin, ymargin and zmargin</span>
-<span class="sd">        parameters. All keyword parameters are optional.  A single argument</span>
-<span class="sd">        specifies xmargin, ymargin and zmargin.  The *tight* parameter</span>
+<span class="sd">        parameters. All keyword parameters are optional.  A single</span>
+<span class="sd">        positional argument specifies xmargin, ymargin and zmargin.</span>
+<span class="sd">        Passing both positional and keyword arguments for xmargin,</span>
+<span class="sd">        ymargin, and/or zmargin is invalid.</span>
+
+<span class="sd">        The *tight* parameter</span>
 <span class="sd">        is passed to :meth:`autoscale_view`, which is executed after</span>
 <span class="sd">        a margin is changed; the default here is *True*, on the</span>
 <span class="sd">        assumption that when margins are specified, no additional</span>
@@ -530,41 +532,33 @@ type="text/css" />
 <span class="sd">        .. versionadded :: 1.1.0</span>
 <span class="sd">            This function was added, but not tested. Please report any bugs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kw</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">margins</span> <span class="ow">and</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">z</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both positional and keyword &#39;</span>
+                            <span class="s1">&#39;arguments for x, y, and/or z.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">margins</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="n">margins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">margins</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">margins</span>
+        <span class="k">elif</span> <span class="n">margins</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Must pass a single positional argument for all &#39;</span>
+                            <span class="s1">&#39;margins, or one for each margin (x, y, z).&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;ignoring tight=</span><span class="si">%r</span><span class="s1"> in get mode&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tight</span><span class="p">,))</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xmargin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ymargin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zmargin</span>
 
-        <span class="n">tight</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="n">mx</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">my</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">mz</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-            <span class="k">pass</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">mx</span> <span class="o">=</span> <span class="n">my</span> <span class="o">=</span> <span class="n">mz</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;Passing exactly two positional arguments to Axes3D.margins &quot;</span>
-                <span class="s2">&quot;is deprecated.  If needed, pass them as keyword arguments &quot;</span>
-                <span class="s2">&quot;instead&quot;</span><span class="p">,</span> <span class="n">cbook</span><span class="o">.</span><span class="n">mplDeprecation</span><span class="p">)</span>
-            <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">args</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">,</span> <span class="n">mz</span> <span class="o">=</span> <span class="n">args</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Axes3D.margins takes at most three positional arguments&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">mx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_xmargin</span><span class="p">(</span><span class="n">mx</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">my</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_ymargin</span><span class="p">(</span><span class="n">my</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">mz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_zmargin</span><span class="p">(</span><span class="n">mz</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_xmargin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_ymargin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">z</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_zmargin</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
-        <span class="n">scalex</span> <span class="o">=</span> <span class="n">mx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="n">scaley</span> <span class="o">=</span> <span class="n">my</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="n">scalez</span> <span class="o">=</span> <span class="n">mz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">autoscale_view</span><span class="p">(</span><span class="n">tight</span><span class="o">=</span><span class="n">tight</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="n">scalex</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="n">scaley</span><span class="p">,</span>
-                                         <span class="n">scalez</span><span class="o">=</span><span class="n">scalez</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">autoscale_view</span><span class="p">(</span>
+            <span class="n">tight</span><span class="o">=</span><span class="n">tight</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">),</span> <span class="n">scaley</span><span class="o">=</span><span class="p">(</span><span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">scalez</span><span class="o">=</span><span class="p">(</span><span class="n">z</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Axes3D.autoscale"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.autoscale">[docs]</a>    <span class="k">def</span> <span class="nf">autoscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -639,16 +633,14 @@ type="text/css" />
         <span class="c1"># of data and decides how to scale the view portal to fit it.</span>
         <span class="k">if</span> <span class="n">tight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># if image data only just use the datalim</span>
-            <span class="n">_tight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tight</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span>
-                                     <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span>
-                                     <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">_tight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tight</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_tight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tight</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">tight</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">scalex</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autoscaleXon</span><span class="p">:</span>
-            <span class="n">xshared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shared_x_axes</span><span class="o">.</span><span class="n">get_siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="n">dl</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">dataLim</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">xshared</span><span class="p">]</span>
-            <span class="n">bb</span> <span class="o">=</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">BboxBase</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shared_x_axes</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
             <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xy_dataLim</span><span class="o">.</span><span class="n">intervalx</span>
             <span class="n">xlocator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_major_locator</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
@@ -665,9 +657,7 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">set_xbound</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">scaley</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autoscaleYon</span><span class="p">:</span>
-            <span class="n">yshared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shared_y_axes</span><span class="o">.</span><span class="n">get_siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="n">dl</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">dataLim</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">yshared</span><span class="p">]</span>
-            <span class="n">bb</span> <span class="o">=</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">BboxBase</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shared_y_axes</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
             <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xy_dataLim</span><span class="o">.</span><span class="n">intervaly</span>
             <span class="n">ylocator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_major_locator</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
@@ -684,9 +674,7 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">set_ybound</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">scalez</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autoscaleZon</span><span class="p">:</span>
-            <span class="n">zshared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shared_z_axes</span><span class="o">.</span><span class="n">get_siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="n">dl</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">dataLim</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">zshared</span><span class="p">]</span>
-            <span class="n">bb</span> <span class="o">=</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">BboxBase</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shared_z_axes</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
             <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zz_dataLim</span><span class="o">.</span><span class="n">intervalx</span>
             <span class="n">zlocator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span><span class="o">.</span><span class="n">get_major_locator</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
@@ -717,22 +705,28 @@ type="text/css" />
             <span class="n">xmax</span> <span class="o">+=</span> <span class="mf">0.05</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Axes3D.set_xlim3d"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_xlim3d">[docs]</a>    <span class="k">def</span> <span class="nf">set_xlim3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.set_xlim3d"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_xlim3d">[docs]</a>    <span class="k">def</span> <span class="nf">set_xlim3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="o">*</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set 3D x limits.</span>
 
 <span class="sd">        See :meth:`matplotlib.axes.Axes.set_xlim` for full documentation.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s1">&#39;xmin&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="n">left</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;xmin&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;xmax&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="n">right</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;xmax&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unrecognized kwargs: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">list</span><span class="p">(</span><span class="n">kw</span><span class="p">))</span>
-
         <span class="k">if</span> <span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cbook</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">left</span><span class="p">):</span>
             <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="k">if</span> <span class="n">xmin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;`xmin`&#39;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;`left`&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;argument&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both `xmin` and `left`&#39;</span><span class="p">)</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">xmin</span>
+        <span class="k">if</span> <span class="n">xmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;`xmax`&#39;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;`right`&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;argument&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both `xmax` and `right`&#39;</span><span class="p">)</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">xmax</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_unit_info</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">))</span>
         <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_converted_limits</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_xunits</span><span class="p">)</span>
@@ -769,22 +763,28 @@ type="text/css" />
         <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span></div>
     <span class="n">set_xlim</span> <span class="o">=</span> <span class="n">set_xlim3d</span>
 
-<div class="viewcode-block" id="Axes3D.set_ylim3d"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_ylim3d">[docs]</a>    <span class="k">def</span> <span class="nf">set_ylim3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.set_ylim3d"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_ylim3d">[docs]</a>    <span class="k">def</span> <span class="nf">set_ylim3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="o">*</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set 3D y limits.</span>
 
 <span class="sd">        See :meth:`matplotlib.axes.Axes.set_ylim` for full documentation.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s1">&#39;ymin&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="n">bottom</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ymin&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;ymax&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="n">top</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ymax&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unrecognized kwargs: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">list</span><span class="p">(</span><span class="n">kw</span><span class="p">))</span>
-
         <span class="k">if</span> <span class="n">top</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cbook</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">bottom</span><span class="p">):</span>
             <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="n">bottom</span>
+        <span class="k">if</span> <span class="n">ymin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;`ymin`&#39;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;`bottom`&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;argument&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bottom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both `ymin` and `bottom`&#39;</span><span class="p">)</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">ymin</span>
+        <span class="k">if</span> <span class="n">ymax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;`ymax`&#39;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;`top`&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;argument&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">top</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both `ymax` and `top`&#39;</span><span class="p">)</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">ymax</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_unit_info</span><span class="p">(</span><span class="n">ydata</span><span class="o">=</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span>
         <span class="n">bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_converted_limits</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_yunits</span><span class="p">)</span>
@@ -821,22 +821,28 @@ type="text/css" />
         <span class="k">return</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span></div>
     <span class="n">set_ylim</span> <span class="o">=</span> <span class="n">set_ylim3d</span>
 
-<div class="viewcode-block" id="Axes3D.set_zlim3d"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_zlim3d">[docs]</a>    <span class="k">def</span> <span class="nf">set_zlim3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.set_zlim3d"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_zlim3d">[docs]</a>    <span class="k">def</span> <span class="nf">set_zlim3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="o">*</span><span class="p">,</span> <span class="n">zmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set 3D z limits.</span>
 
 <span class="sd">        See :meth:`matplotlib.axes.Axes.set_ylim` for full documentation</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s1">&#39;zmin&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="n">bottom</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zmin&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;zmax&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="n">top</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zmax&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unrecognized kwargs: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">list</span><span class="p">(</span><span class="n">kw</span><span class="p">))</span>
-
         <span class="k">if</span> <span class="n">top</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cbook</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">bottom</span><span class="p">):</span>
             <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="n">bottom</span>
+        <span class="k">if</span> <span class="n">zmin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;`zmin`&#39;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;`bottom`&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;argument&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bottom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both `zmin` and `bottom`&#39;</span><span class="p">)</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">zmin</span>
+        <span class="k">if</span> <span class="n">zmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;`zmax`&#39;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;`top`&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;argument&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">top</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both `zmax` and `top`&#39;</span><span class="p">)</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">zmax</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_unit_info</span><span class="p">(</span><span class="n">zdata</span><span class="o">=</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span>
         <span class="n">bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_converted_limits</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_zunits</span><span class="p">)</span>
@@ -1208,7 +1214,7 @@ type="text/css" />
         <span class="c1"># Disabling mouse interaction might have been needed a long</span>
         <span class="c1"># time ago, but I can&#39;t find a reason for it now - BVR (2012-03)</span>
         <span class="c1">#self.disable_mouse_rotation()</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zaxis</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sharez</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1385,37 +1391,8 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        b : bool</span>
-<span class="sd">            .. ACCEPTS: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_frameon</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
-
-<div class="viewcode-block" id="Axes3D.get_axisbelow"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.get_axisbelow">[docs]</a>    <span class="k">def</span> <span class="nf">get_axisbelow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get whether axis below is true or not.</span>
-
-<span class="sd">        For axes3d objects, this will always be *True*</span>
-
-<span class="sd">        .. versionadded :: 1.1.0</span>
-<span class="sd">            This function was added for completeness.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-
-<div class="viewcode-block" id="Axes3D.set_axisbelow"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_axisbelow">[docs]</a>    <span class="k">def</span> <span class="nf">set_axisbelow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set whether axis ticks and gridlines are above or below most artists.</span>
-
-<span class="sd">        For axes3d objects, this will ignore any settings and just use *True*</span>
-
-<span class="sd">        .. versionadded :: 1.1.0</span>
-<span class="sd">            This function was added for completeness.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        b : bool</span>
-<span class="sd">            .. ACCEPTS: bool</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_axisbelow</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Axes3D.grid"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.grid">[docs]</a>    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1437,7 +1414,8 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_draw_grid</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_string_to_bool</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Axes3D.ticklabel_format"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.ticklabel_format">[docs]</a>    <span class="k">def</span> <span class="nf">ticklabel_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.ticklabel_format"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.ticklabel_format">[docs]</a>    <span class="k">def</span> <span class="nf">ticklabel_format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useOffset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convenience method for manipulating the ScalarFormatter</span>
 <span class="sd">        used by default for linear axes in Axed3D objects.</span>
@@ -1451,10 +1429,8 @@ type="text/css" />
 <span class="sd">        .. versionadded :: 1.1.0</span>
 <span class="sd">            This function was added, but not tested. Please report any bugs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">style</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">scilimits</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;scilimits&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">useOffset</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;useOffset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">axis</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;axis&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">scilimits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">scilimits</span>
@@ -1463,13 +1439,8 @@ type="text/css" />
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scilimits must be a sequence of 2 integers&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">style</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;sci&#39;</span><span class="p">:</span>
             <span class="n">sb</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;plain&#39;</span><span class="p">,</span> <span class="s1">&#39;comma&#39;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;plain&#39;</span><span class="p">:</span>
             <span class="n">sb</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;plain&#39;</span><span class="p">:</span>
-                <span class="n">cb</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">cb</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;comma style remains to be added&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="n">sb</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1505,7 +1476,7 @@ type="text/css" />
 <span class="sd">        Convenience method for controlling tick locators.</span>
 
 <span class="sd">        See :meth:`matplotlib.axes.Axes.locator_params` for full</span>
-<span class="sd">        documentation  Note that this is for Axes3D objects,</span>
+<span class="sd">        documentation.  Note that this is for Axes3D objects,</span>
 <span class="sd">        therefore, setting *axis* to &#39;both&#39; will result in the</span>
 <span class="sd">        parameters being set for all three axes.  Also, *axis*</span>
 <span class="sd">        can also take a value of &#39;z&#39; to apply parameters to the</span>
@@ -1552,7 +1523,7 @@ type="text/css" />
 <span class="sd">        .. versionadded :: 1.1.0</span>
 <span class="sd">            This function was added, but not tested. Please report any bugs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]</span> <span class="p">:</span>
             <span class="n">zkw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="n">zkw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -1632,14 +1603,14 @@ type="text/css" />
 <span class="sd">        except for the `zdir` keyword, which sets the direction to be</span>
 <span class="sd">        used as the z direction.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">art3d</span><span class="o">.</span><span class="n">text_2d_to_3d</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">zdir</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">text</span></div>
 
     <span class="n">text3D</span> <span class="o">=</span> <span class="n">text</span>
     <span class="n">text2D</span> <span class="o">=</span> <span class="n">Axes</span><span class="o">.</span><span class="n">text</span>
 
-<div class="viewcode-block" id="Axes3D.plot"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.plot"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Plot 2D or 3D data.</span>
 
@@ -1662,19 +1633,18 @@ type="text/css" />
         <span class="c1"># `zs` can be passed positionally or as keyword; checking whether</span>
         <span class="c1"># args[0] is a string matches the behavior of 2D `plot` (via</span>
         <span class="c1"># `_process_plot_var_args`).</span>
-        <span class="k">if</span> <span class="n">args</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">args</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">zs</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="k">if</span> <span class="s1">&#39;zs&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;plot() for multiple values for argument &#39;z&#39;&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">zs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zs&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">zdir</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zdir&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
 
         <span class="c1"># Match length</span>
-        <span class="n">zs</span> <span class="o">=</span> <span class="n">_backports</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+        <span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
 
-        <span class="n">lines</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
             <span class="n">art3d</span><span class="o">.</span><span class="n">line_2d_to_3d</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">zs</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="n">zdir</span><span class="p">)</span>
 
@@ -1684,7 +1654,8 @@ type="text/css" />
 
     <span class="n">plot3D</span> <span class="o">=</span> <span class="n">plot</span>
 
-<div class="viewcode-block" id="Axes3D.plot_surface"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.plot_surface">[docs]</a>    <span class="k">def</span> <span class="nf">plot_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.plot_surface"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.plot_surface">[docs]</a>    <span class="k">def</span> <span class="nf">plot_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lightsource</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a surface plot.</span>
 
@@ -1763,15 +1734,15 @@ type="text/css" />
             <span class="c1"># Strides have priority over counts in classic mode.</span>
             <span class="c1"># So, only compute strides from counts</span>
             <span class="c1"># if counts were explicitly given</span>
-            <span class="k">if</span> <span class="n">has_count</span><span class="p">:</span>
-                <span class="n">rstride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">rows</span> <span class="o">/</span> <span class="n">rcount</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
-                <span class="n">cstride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cols</span> <span class="o">/</span> <span class="n">ccount</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">compute_strides</span> <span class="o">=</span> <span class="n">has_count</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># If the strides are provided then it has priority.</span>
             <span class="c1"># Otherwise, compute the strides from the counts.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_stride</span><span class="p">:</span>
-                <span class="n">rstride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">rows</span> <span class="o">/</span> <span class="n">rcount</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
-                <span class="n">cstride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cols</span> <span class="o">/</span> <span class="n">ccount</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">compute_strides</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">has_stride</span>
+
+        <span class="k">if</span> <span class="n">compute_strides</span><span class="p">:</span>
+            <span class="n">rstride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">rows</span> <span class="o">/</span> <span class="n">rcount</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">cstride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cols</span> <span class="o">/</span> <span class="n">ccount</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="s1">&#39;facecolors&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">fcolors</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;facecolors&#39;</span><span class="p">)</span>
@@ -1783,83 +1754,66 @@ type="text/css" />
             <span class="n">fcolors</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cmap&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">vmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;vmin&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">vmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;vmax&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">shade</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;shade&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">lightsource</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lightsource&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Shade the data</span>
         <span class="k">if</span> <span class="n">shade</span> <span class="ow">and</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fcolors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fcolors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shade_colors_lightsource</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">lightsource</span><span class="p">)</span>
 
+        <span class="c1"># evenly spaced, and including both endpoints</span>
+        <span class="n">row_inds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rstride</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">col_inds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">colset</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># the sampled facecolor</span>
         <span class="n">polys</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1"># Only need these vectors to shade if there is no cmap</span>
-        <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">shade</span> <span class="p">:</span>
-            <span class="n">totpts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">rstride</span><span class="p">)</span> <span class="o">*</span>
-                         <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">cstride</span><span class="p">))</span>
-            <span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">totpts</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-            <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">totpts</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-            <span class="c1"># This indexes the vertex points</span>
-            <span class="n">which_pt</span> <span class="o">=</span> <span class="mi">0</span>
-
-
-        <span class="c1">#colset contains the data for coloring: either average z or the facecolor</span>
-        <span class="n">colset</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">rs</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rstride</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">cs</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="p">):</span>
-                <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">):</span>
-                    <span class="n">ztop</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">rs</span><span class="p">,</span><span class="n">cs</span><span class="p">:</span><span class="nb">min</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">cs</span><span class="o">+</span><span class="n">cstride</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
-                    <span class="n">zleft</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">rs</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="nb">min</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">rs</span><span class="o">+</span><span class="n">rstride</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-                              <span class="nb">min</span><span class="p">(</span><span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cs</span><span class="o">+</span><span class="n">cstride</span><span class="p">)]</span>
-                    <span class="n">zbase</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rs</span><span class="o">+</span><span class="n">rstride</span><span class="p">),</span> <span class="n">cs</span><span class="p">:</span><span class="nb">min</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">cs</span><span class="o">+</span><span class="n">cstride</span><span class="o">+</span><span class="mi">1</span><span class="p">):][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="n">zright</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">rs</span><span class="p">:</span><span class="nb">min</span><span class="p">(</span><span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rs</span><span class="o">+</span><span class="n">rstride</span><span class="p">):,</span> <span class="n">cs</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ztop</span><span class="p">,</span> <span class="n">zleft</span><span class="p">,</span> <span class="n">zbase</span><span class="p">,</span> <span class="n">zright</span><span class="p">))</span>
-                    <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-
-                <span class="c1"># The construction leaves the array with duplicate points, which</span>
-                <span class="c1"># are removed here.</span>
-                <span class="n">ps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">ps</span><span class="p">))</span>
-                <span class="n">lastp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-                <span class="n">ps2</span> <span class="o">=</span> <span class="p">[</span><span class="n">ps</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ps</span><span class="p">))</span> <span class="k">if</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-                <span class="n">avgzsum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps2</span><span class="p">)</span>
-                <span class="n">polys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ps2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rs</span><span class="p">,</span> <span class="n">rs_next</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">row_inds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">row_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="k">for</span> <span class="n">cs</span><span class="p">,</span> <span class="n">cs_next</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">col_inds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">col_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+                <span class="n">ps</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="c1"># +1 ensures we share edges between polygons</span>
+                    <span class="n">cbook</span><span class="o">.</span><span class="n">_array_perimeter</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">rs</span><span class="p">:</span><span class="n">rs_next</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span><span class="n">cs_next</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="c1"># ps = np.stack(ps, axis=-1)</span>
+                <span class="n">ps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+                <span class="n">polys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">fcolors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">colset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fcolors</span><span class="p">[</span><span class="n">rs</span><span class="p">][</span><span class="n">cs</span><span class="p">])</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">colset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avgzsum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ps2</span><span class="p">))</span>
 
-                <span class="c1"># Only need vectors to shade if no cmap</span>
-                <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">shade</span><span class="p">:</span>
-                    <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i3</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ps2</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ps2</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
-                    <span class="n">v1</span><span class="p">[</span><span class="n">which_pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps2</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps2</span><span class="p">[</span><span class="n">i2</span><span class="p">])</span>
-                    <span class="n">v2</span><span class="p">[</span><span class="n">which_pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps2</span><span class="p">[</span><span class="n">i2</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps2</span><span class="p">[</span><span class="n">i3</span><span class="p">])</span>
-                    <span class="n">which_pt</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">shade</span><span class="p">:</span>
-            <span class="n">normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
-        <span class="k">else</span> <span class="p">:</span>
-            <span class="n">normals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">def</span> <span class="nf">get_normals</span><span class="p">(</span><span class="n">polygons</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Takes a list of polygons and return an array of their normals</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">polygons</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">polygons</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">poly_i</span><span class="p">,</span> <span class="n">ps</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">polygons</span><span class="p">):</span>
+                <span class="c1"># pick three points around the polygon at which to find the normal</span>
+                <span class="c1"># doesn&#39;t vectorize because polygons is jagged</span>
+                <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i3</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">//</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">//</span><span class="mi">3</span>
+                <span class="n">v1</span><span class="p">[</span><span class="n">poly_i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">ps</span><span class="p">[</span><span class="n">i1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">ps</span><span class="p">[</span><span class="n">i2</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">v2</span><span class="p">[</span><span class="n">poly_i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">ps</span><span class="p">[</span><span class="n">i2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">ps</span><span class="p">[</span><span class="n">i3</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
 
+        <span class="c1"># note that the striding causes some polygons to have more coordinates</span>
+        <span class="c1"># than others</span>
         <span class="n">polyc</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">polys</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">fcolors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">shade</span><span class="p">:</span>
-                <span class="n">colset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shade_colors</span><span class="p">(</span><span class="n">colset</span><span class="p">,</span> <span class="n">normals</span><span class="p">)</span>
+                <span class="n">colset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shade_colors</span><span class="p">(</span><span class="n">colset</span><span class="p">,</span> <span class="n">get_normals</span><span class="p">(</span><span class="n">polys</span><span class="p">))</span>
             <span class="n">polyc</span><span class="o">.</span><span class="n">set_facecolors</span><span class="p">(</span><span class="n">colset</span><span class="p">)</span>
             <span class="n">polyc</span><span class="o">.</span><span class="n">set_edgecolors</span><span class="p">(</span><span class="n">colset</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">cmap</span><span class="p">:</span>
-            <span class="n">colset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">colset</span><span class="p">)</span>
-            <span class="n">polyc</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">colset</span><span class="p">)</span>
+            <span class="c1"># doesn&#39;t vectorize because polys is jagged</span>
+            <span class="n">avg_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ps</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">ps</span> <span class="ow">in</span> <span class="n">polys</span><span class="p">])</span>
+            <span class="n">polyc</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">avg_z</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">polyc</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">polyc</span><span class="o">.</span><span class="n">set_norm</span><span class="p">(</span><span class="n">norm</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">shade</span><span class="p">:</span>
-                <span class="n">colset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shade_colors</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">normals</span><span class="p">)</span>
+                <span class="n">colset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shade_colors</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">get_normals</span><span class="p">(</span><span class="n">polys</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">colset</span> <span class="o">=</span> <span class="n">color</span>
             <span class="n">polyc</span><span class="o">.</span><span class="n">set_facecolors</span><span class="p">(</span><span class="n">colset</span><span class="p">)</span>
@@ -1992,14 +1946,14 @@ type="text/css" />
         <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span><span class="p">,</span> <span class="n">tZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">rstride</span><span class="p">:</span>
-            <span class="n">rii</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">rstride</span><span class="p">))</span>
+            <span class="n">rii</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">rstride</span><span class="p">))</span>
             <span class="c1"># Add the last index only if needed</span>
             <span class="k">if</span> <span class="n">rows</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">rii</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">rii</span> <span class="o">+=</span> <span class="p">[</span><span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">rii</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">cstride</span><span class="p">:</span>
-            <span class="n">cii</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">cstride</span><span class="p">))</span>
+            <span class="n">cii</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">cstride</span><span class="p">))</span>
             <span class="c1"># Add the last index only if needed</span>
             <span class="k">if</span> <span class="n">cols</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">cii</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="n">cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">cii</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -2034,7 +1988,8 @@ type="text/css" />
 
         <span class="k">return</span> <span class="n">linec</span></div>
 
-<div class="viewcode-block" id="Axes3D.plot_trisurf"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.plot_trisurf">[docs]</a>    <span class="k">def</span> <span class="nf">plot_trisurf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.plot_trisurf"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.plot_trisurf">[docs]</a>    <span class="k">def</span> <span class="nf">plot_trisurf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">lightsource</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        ============= ================================================</span>
 <span class="sd">        Argument      Description</span>
@@ -2086,18 +2041,12 @@ type="text/css" />
         <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
         <span class="c1"># TODO: Support custom face colours</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_lines</span><span class="o">.</span><span class="n">get_next_color</span><span class="p">()</span>
         <span class="n">color</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mcolors</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">color</span><span class="p">))</span>
 
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cmap&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">vmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;vmin&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">vmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;vmax&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">shade</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;shade&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">lightsource</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lightsource&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="n">tri</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="o">.</span><span class="n">get_from_args_and_kwargs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;Z&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -2111,11 +2060,7 @@ type="text/css" />
         <span class="n">xt</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">triangles</span><span class="p">]</span>
         <span class="n">yt</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">triangles</span><span class="p">]</span>
         <span class="n">zt</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">triangles</span><span class="p">]</span>
-
-        <span class="c1"># verts = np.stack((xt, yt, zt), axis=-1)</span>
-        <span class="n">verts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span>
-            <span class="n">xt</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">yt</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">zt</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-        <span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">verts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">zt</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">polyc</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -2152,8 +2097,11 @@ type="text/css" />
         <span class="n">dz</span> <span class="o">=</span> <span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
 
         <span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">linec</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">colls</span><span class="p">):</span>
-            <span class="n">topverts</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">paths_to_3d_segments</span><span class="p">(</span><span class="n">linec</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(),</span> <span class="n">z</span> <span class="o">-</span> <span class="n">dz</span><span class="p">)</span>
-            <span class="n">botverts</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">paths_to_3d_segments</span><span class="p">(</span><span class="n">linec</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(),</span> <span class="n">z</span> <span class="o">+</span> <span class="n">dz</span><span class="p">)</span>
+            <span class="n">paths</span> <span class="o">=</span> <span class="n">linec</span><span class="o">.</span><span class="n">get_paths</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">paths</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">topverts</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">paths_to_3d_segments</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">z</span> <span class="o">-</span> <span class="n">dz</span><span class="p">)</span>
+            <span class="n">botverts</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">paths_to_3d_segments</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">z</span> <span class="o">+</span> <span class="n">dz</span><span class="p">)</span>
 
             <span class="n">color</span> <span class="o">=</span> <span class="n">linec</span><span class="o">.</span><span class="n">get_color</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -2208,7 +2156,8 @@ type="text/css" />
             <span class="n">art3d</span><span class="o">.</span><span class="n">poly_collection_2d_to_3d</span><span class="p">(</span><span class="n">linec</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="n">zdir</span><span class="p">)</span>
             <span class="n">linec</span><span class="o">.</span><span class="n">set_sort_zpos</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Axes3D.contour"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.contour">[docs]</a>    <span class="k">def</span> <span class="nf">contour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.contour"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.contour">[docs]</a>    <span class="k">def</span> <span class="nf">contour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                <span class="n">extend3d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create a 3D contour plot.</span>
 
@@ -2230,15 +2179,10 @@ type="text/css" />
 <span class="sd">        Returns a :class:`~matplotlib.axes.Axes.contour`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
-        <span class="n">extend3d</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extend3d&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="n">stride</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;stride&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">zdir</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zdir&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
         <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
         <span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">rotate_axes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">zdir</span><span class="p">)</span>
-        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_contour_set</span><span class="p">(</span><span class="n">cset</span><span class="p">,</span> <span class="n">extend3d</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">zdir</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">had_data</span><span class="p">)</span>
@@ -2246,7 +2190,8 @@ type="text/css" />
 
     <span class="n">contour3D</span> <span class="o">=</span> <span class="n">contour</span>
 
-<div class="viewcode-block" id="Axes3D.tricontour"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.tricontour">[docs]</a>    <span class="k">def</span> <span class="nf">tricontour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.tricontour"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.tricontour">[docs]</a>    <span class="k">def</span> <span class="nf">tricontour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                   <span class="n">extend3d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a 3D contour plot.</span>
 
@@ -2274,11 +2219,6 @@ type="text/css" />
 <span class="sd">        longstanding bug in 3D PolyCollection rendering.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">extend3d</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extend3d&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="n">stride</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;stride&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">zdir</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zdir&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
         <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
         <span class="n">tri</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="o">.</span><span class="n">get_from_args_and_kwargs</span><span class="p">(</span>
@@ -2295,13 +2235,13 @@ type="text/css" />
         <span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">rotate_axes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">zdir</span><span class="p">)</span>
         <span class="n">tri</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">tri</span><span class="o">.</span><span class="n">triangles</span><span class="p">,</span> <span class="n">tri</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
 
-        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">tricontour</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tricontour</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_contour_set</span><span class="p">(</span><span class="n">cset</span><span class="p">,</span> <span class="n">extend3d</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">zdir</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">had_data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cset</span></div>
 
-<div class="viewcode-block" id="Axes3D.contourf"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.contourf">[docs]</a>    <span class="k">def</span> <span class="nf">contourf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.contourf"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.contourf">[docs]</a>    <span class="k">def</span> <span class="nf">contourf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create a 3D contourf plot.</span>
 
@@ -2324,13 +2264,10 @@ type="text/css" />
 <span class="sd">            The *zdir* and *offset* kwargs were added.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
-        <span class="n">zdir</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zdir&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
         <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
         <span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">rotate_axes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">zdir</span><span class="p">)</span>
-        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_contourf_set</span><span class="p">(</span><span class="n">cset</span><span class="p">,</span> <span class="n">zdir</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">had_data</span><span class="p">)</span>
@@ -2338,7 +2275,7 @@ type="text/css" />
 
     <span class="n">contourf3D</span> <span class="o">=</span> <span class="n">contourf</span>
 
-<div class="viewcode-block" id="Axes3D.tricontourf"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.tricontourf">[docs]</a>    <span class="k">def</span> <span class="nf">tricontourf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.tricontourf"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.tricontourf">[docs]</a>    <span class="k">def</span> <span class="nf">tricontourf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a 3D contourf plot.</span>
 
@@ -2363,8 +2300,6 @@ type="text/css" />
 <span class="sd">        EXPERIMENTAL:  This method currently produces incorrect output due to a</span>
 <span class="sd">        longstanding bug in 3D PolyCollection rendering.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">zdir</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;zdir&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
@@ -2382,7 +2317,7 @@ type="text/css" />
         <span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">jZ</span> <span class="o">=</span> <span class="n">art3d</span><span class="o">.</span><span class="n">rotate_axes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">zdir</span><span class="p">)</span>
         <span class="n">tri</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="n">jX</span><span class="p">,</span> <span class="n">jY</span><span class="p">,</span> <span class="n">tri</span><span class="o">.</span><span class="n">triangles</span><span class="p">,</span> <span class="n">tri</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
 
-        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">cset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span> <span class="n">jZ</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_contourf_set</span><span class="p">(</span><span class="n">cset</span><span class="p">,</span> <span class="n">zdir</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">had_data</span><span class="p">)</span>
@@ -2419,7 +2354,7 @@ type="text/css" />
             <span class="n">art3d</span><span class="o">.</span><span class="n">patch_collection_2d_to_3d</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">zs</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="n">zdir</span><span class="p">)</span>
             <span class="n">col</span><span class="o">.</span><span class="n">set_sort_zpos</span><span class="p">(</span><span class="n">zsortval</span><span class="p">)</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">col</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">col</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Axes3D.scatter"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.scatter">[docs]</a>    <span class="k">def</span> <span class="nf">scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">depthshade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -2468,10 +2403,9 @@ type="text/css" />
 
         <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">delete_masked_points</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
-        <span class="n">patches</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-            <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">patches</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">is_2d</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">cbook</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
-        <span class="n">zs</span> <span class="o">=</span> <span class="n">_backports</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+        <span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
         <span class="n">art3d</span><span class="o">.</span><span class="n">patch_collection_2d_to_3d</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">zs</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="n">zdir</span><span class="p">,</span>
                                         <span class="n">depthshade</span><span class="o">=</span><span class="n">depthshade</span><span class="p">)</span>
 
@@ -2508,9 +2442,9 @@ type="text/css" />
 
         <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
-        <span class="n">patches</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">patches</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="n">zs</span> <span class="o">=</span> <span class="n">_backports</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
+        <span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
 
         <span class="n">verts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">verts_zs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2651,14 +2585,15 @@ type="text/css" />
         <span class="k">return</span> <span class="n">col</span></div>
 
 <div class="viewcode-block" id="Axes3D.set_title"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.set_title">[docs]</a>    <span class="k">def</span> <span class="nf">set_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">ret</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Axes3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="n">fontdict</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span>
-                                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="n">fontdict</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="mf">0.92</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret</span></div>
     <span class="n">set_title</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">maxes</span><span class="o">.</span><span class="n">Axes</span><span class="o">.</span><span class="n">set_title</span><span class="o">.</span><span class="vm">__doc__</span>
 
-<div class="viewcode-block" id="Axes3D.quiver"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.quiver">[docs]</a>    <span class="k">def</span> <span class="nf">quiver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.quiver"><a class="viewcode-back" href="../../../tutorials/toolkits/mplot3d.html#mpl_toolkits.mplot3d.axes3d.Axes3D.quiver">[docs]</a>    <span class="k">def</span> <span class="nf">quiver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+               <span class="n">length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrow_length_ratio</span><span class="o">=.</span><span class="mi">3</span><span class="p">,</span> <span class="n">pivot</span><span class="o">=</span><span class="s1">&#39;tail&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a 3D field of arrows.</span>
 
@@ -2735,16 +2670,6 @@ type="text/css" />
 
         <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
-        <span class="c1"># handle kwargs</span>
-        <span class="c1"># shaft length</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="c1"># arrow length ratio to the shaft length</span>
-        <span class="n">arrow_length_ratio</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;arrow_length_ratio&#39;</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
-        <span class="c1"># pivot point</span>
-        <span class="n">pivot</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;pivot&#39;</span><span class="p">,</span> <span class="s1">&#39;tail&#39;</span><span class="p">)</span>
-        <span class="c1"># normalize</span>
-        <span class="n">normalize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;normalize&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-
         <span class="c1"># handle args</span>
         <span class="n">argi</span> <span class="o">=</span> <span class="mi">6</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">argi</span><span class="p">:</span>
@@ -2798,8 +2723,7 @@ type="text/css" />
         <span class="n">UVW</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span><span class="n">input_args</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="n">argi</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="c1"># Normalize rows of UVW</span>
-        <span class="c1"># Note: with numpy 1.9+, could use np.linalg.norm(UVW, axis=1)</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">UVW</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">UVW</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># If any row of UVW is all zeros, don&#39;t make a quiver for it</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -2821,7 +2745,7 @@ type="text/css" />
             <span class="c1"># transpose to get a list of lines</span>
             <span class="n">heads</span> <span class="o">=</span> <span class="n">heads</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-            <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">shafts</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">heads</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">shafts</span><span class="p">,</span> <span class="o">*</span><span class="n">heads</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -2834,7 +2758,7 @@ type="text/css" />
 
     <span class="n">quiver3D</span> <span class="o">=</span> <span class="n">quiver</span>
 
-<div class="viewcode-block" id="Axes3D.voxels"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.voxels">[docs]</a>    <span class="k">def</span> <span class="nf">voxels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axes3D.voxels"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D.voxels">[docs]</a>    <span class="k">def</span> <span class="nf">voxels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        ax.voxels([x, y, z,] /, filled, **kwargs)</span>
 
@@ -2924,13 +2848,12 @@ type="text/css" />
         <span class="k">if</span> <span class="n">xyz</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">coord_shape</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">_backports</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">coord_shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">coord_shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_broadcast_color_arg</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">color</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="c1"># single color, like &quot;red&quot; or [1, 0, 0]</span>
-                <span class="k">return</span> <span class="n">_backports</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span>
-                    <span class="n">color</span><span class="p">,</span> <span class="n">filled</span><span class="o">.</span><span class="n">shape</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">color</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">filled</span><span class="o">.</span><span class="n">shape</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">color</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">color</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
                 <span class="c1"># 3D array of strings, or 4D array with last axis rgb</span>
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">color</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="n">filled</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
@@ -2941,14 +2864,12 @@ type="text/css" />
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid </span><span class="si">{}</span><span class="s2"> argument&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
-        <span class="c1"># intercept the facecolors, handling defaults and broacasting</span>
-        <span class="n">facecolors</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;facecolors&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># broadcast and default on facecolors</span>
         <span class="k">if</span> <span class="n">facecolors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">facecolors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_patches_for_fill</span><span class="o">.</span><span class="n">get_next_color</span><span class="p">()</span>
         <span class="n">facecolors</span> <span class="o">=</span> <span class="n">_broadcast_color_arg</span><span class="p">(</span><span class="n">facecolors</span><span class="p">,</span> <span class="s1">&#39;facecolors&#39;</span><span class="p">)</span>
 
         <span class="c1"># broadcast but no default on edgecolors</span>
-        <span class="n">edgecolors</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;edgecolors&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">edgecolors</span> <span class="o">=</span> <span class="n">_broadcast_color_arg</span><span class="p">(</span><span class="n">edgecolors</span><span class="p">,</span> <span class="s1">&#39;edgecolors&#39;</span><span class="p">)</span>
 
         <span class="c1"># always scale to the full array, even if the data is only in the center</span>
@@ -3077,10 +2998,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

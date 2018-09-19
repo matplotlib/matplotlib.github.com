@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.gridspec &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.gridspec &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/gridspec.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -126,10 +128,6 @@ type="text/css" />
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -137,10 +135,9 @@ type="text/css" />
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_pylab_helpers</span><span class="p">,</span> <span class="n">tight_layout</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_pylab_helpers</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">tight_layout</span><span class="p">,</span> <span class="n">rcParams</span>
 <span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Bbox</span>
 <span class="kn">import</span> <span class="nn">matplotlib._layoutbox</span> <span class="k">as</span> <span class="nn">layoutbox</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">mplDeprecation</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -160,6 +157,18 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_nrows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncols</span> <span class="o">=</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_height_ratios</span><span class="p">(</span><span class="n">height_ratios</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_width_ratios</span><span class="p">(</span><span class="n">width_ratios</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">height_arg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;, height_ratios=</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span>
+                      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">width_arg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;, width_ratios=</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span>
+                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{clsname}</span><span class="s1">(</span><span class="si">{nrows}</span><span class="s1">, </span><span class="si">{ncols}{optionals}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">clsname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">nrows</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nrows</span><span class="p">,</span>
+            <span class="n">ncols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ncols</span><span class="p">,</span>
+            <span class="n">optionals</span><span class="o">=</span><span class="n">height_arg</span> <span class="o">+</span> <span class="n">width_arg</span><span class="p">,</span>
+            <span class="p">)</span>
 
 <div class="viewcode-block" id="GridSpecBase.get_geometry"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.get_geometry">[docs]</a>    <span class="k">def</span> <span class="nf">get_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s1">&#39;get the geometry of the grid, e.g., 2,3&#39;</span>
@@ -302,6 +311,21 @@ type="text/css" />
 <span class="sd">        ncols : int</span>
 <span class="sd">            Number or columns in grid.</span>
 
+<span class="sd">        figure : ~.figure.Figure, optional</span>
+
+<span class="sd">        left, right, top, bottom : float</span>
+<span class="sd">            Extent of the subplots as a fraction of figure width or height.</span>
+<span class="sd">            Left cannot be larger than right, and bottom cannot be larger than</span>
+<span class="sd">            top.</span>
+
+<span class="sd">        wspace : float</span>
+<span class="sd">            The amount of width reserved for space between subplots,</span>
+<span class="sd">            expressed as a fraction of the average axis width.</span>
+
+<span class="sd">        hspace : float</span>
+<span class="sd">            The amount of height reserved for space between subplots,</span>
+<span class="sd">            expressed as a fraction of the average axis height.</span>
+
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        See `~.figure.SubplotParams` for descriptions of the layout parameters.</span>
@@ -318,7 +342,7 @@ type="text/css" />
                               <span class="n">width_ratios</span><span class="o">=</span><span class="n">width_ratios</span><span class="p">,</span>
                               <span class="n">height_ratios</span><span class="o">=</span><span class="n">height_ratios</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_constrained_layout</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_constrained_layout</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">init_layoutbox</span><span class="p">()</span>
@@ -351,13 +375,13 @@ type="text/css" />
 <span class="sd">        the current value, if set, otherwise to rc.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AllowedKeys</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is unknown keyword&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,))</span>
 
-        <span class="k">for</span> <span class="n">figmanager</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="n">_pylab_helpers</span><span class="o">.</span><span class="n">Gcf</span><span class="o">.</span><span class="n">figs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">figmanager</span> <span class="ow">in</span> <span class="n">_pylab_helpers</span><span class="o">.</span><span class="n">Gcf</span><span class="o">.</span><span class="n">figs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">figmanager</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
                 <span class="c1"># copied from Figure.subplots_adjust</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">SubplotBase</span><span class="p">):</span>
@@ -382,8 +406,8 @@ type="text/css" />
 <span class="sd">        parameters are from rcParams unless a figure attribute is set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;the &#39;fig&#39; kwarg is deprecated &quot;</span>
-                          <span class="s2">&quot;use &#39;figure&#39; instead&quot;</span><span class="p">,</span> <span class="n">mplDeprecation</span><span class="p">)</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s2">&quot;2.2&quot;</span><span class="p">,</span> <span class="s2">&quot;fig&quot;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s2">&quot;keyword argument&quot;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;figure&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">figure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">figure</span> <span class="o">=</span> <span class="n">fig</span>
 
@@ -393,8 +417,7 @@ type="text/css" />
         <span class="k">else</span><span class="p">:</span>
             <span class="n">subplotpars</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">figure</span><span class="o">.</span><span class="n">subplotpars</span><span class="p">)</span>
 
-        <span class="n">update_kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AllowedKeys</span><span class="p">}</span>
-        <span class="n">subplotpars</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">update_kw</span><span class="p">)</span>
+        <span class="n">subplotpars</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AllowedKeys</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">subplotpars</span></div>
 
@@ -473,8 +496,8 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;Return a dictionary of subplot layout parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;the &#39;fig&#39; kwarg is deprecated &quot;</span>
-                          <span class="s2">&quot;use &#39;figure&#39; instead&quot;</span><span class="p">,</span> <span class="n">mplDeprecation</span><span class="p">)</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s2">&quot;2.2&quot;</span><span class="p">,</span> <span class="s2">&quot;fig&quot;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s2">&quot;keyword argument&quot;</span><span class="p">,</span>
+                                  <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;figure&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">figure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">figure</span> <span class="o">=</span> <span class="n">fig</span>
 
@@ -603,12 +626,49 @@ type="text/css" />
                     <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;num1&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">()),</span>
                     <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;num2&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">())))</span>
 
-    <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-        <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-            <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
-
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_gridspec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_gridspec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SubplotSpec.subgridspec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec.subgridspec">[docs]</a>    <span class="k">def</span> <span class="nf">subgridspec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a `.GridSpecFromSubplotSpec` that has this subplotspec as</span>
+<span class="sd">        a parent.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nrows : int</span>
+<span class="sd">            Number of rows in grid.</span>
+
+<span class="sd">        ncols : int</span>
+<span class="sd">            Number or columns in grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        gridspec : `.GridSpec`</span>
+
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            All other parameters are passed to `.GridSpec`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        matplotlib.pyplot.subplots</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Adding three subplots in the space occupied by a single subplot::</span>
+
+<span class="sd">            fig = plt.figure()</span>
+<span class="sd">            gs0 = fig.add_gridspec(3, 1)</span>
+<span class="sd">            ax1 = fig.add_subplot(gs0[0])</span>
+<span class="sd">            ax2 = fig.add_subplot(gs0[1])</span>
+<span class="sd">            gssub = gs0[2].subgridspec(1, 3)</span>
+<span class="sd">            for i in range(3):</span>
+<span class="sd">                fig.add_subplot(gssub[0, i])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">GridSpecFromSubplotSpec</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -620,10 +680,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

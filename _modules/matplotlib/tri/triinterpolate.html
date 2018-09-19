@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.tri.triinterpolate &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.tri.triinterpolate &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/tri/triinterpolate.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -114,17 +116,14 @@ type="text/css" />
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Interpolation inside triangular grids.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">matplotlib.tri</span> <span class="k">import</span> <span class="n">Triangulation</span>
 <span class="kn">from</span> <span class="nn">matplotlib.tri.trifinder</span> <span class="k">import</span> <span class="n">TriFinder</span>
 <span class="kn">from</span> <span class="nn">matplotlib.tri.tritools</span> <span class="k">import</span> <span class="n">TriAnalyzer</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;TriInterpolator&#39;</span><span class="p">,</span> <span class="s1">&#39;LinearTriInterpolator&#39;</span><span class="p">,</span> <span class="s1">&#39;CubicTriInterpolator&#39;</span><span class="p">)</span>
 
@@ -192,13 +191,12 @@ type="text/css" />
 <span class="s2">        Returns</span>
 <span class="s2">        -------</span>
 <span class="s2">        z : np.ma.array</span>
-<span class="s2">            Masked array of the same shape as *x* and *y* ; values</span>
-<span class="s2">            corresponding to (*x*, *y*) points outside of the triangulation</span>
-<span class="s2">            are masked out.</span>
+<span class="s2">            Masked array of the same shape as *x* and *y*; values corresponding</span>
+<span class="s2">            to (*x*, *y*) points outside of the triangulation are masked out.</span>
 
 <span class="s2">        &quot;&quot;&quot;</span>
 
-    <span class="n">_docstringgradient</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">_docstringgradient</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        Returns a list of 2 masked arrays containing interpolated derivatives</span>
 <span class="s2">        at the specified x,y points.</span>
 
@@ -211,12 +209,12 @@ type="text/css" />
 <span class="s2">        Returns</span>
 <span class="s2">        -------</span>
 <span class="s2">        dzdx, dzdy : np.ma.array</span>
-<span class="s2">            2  masked arrays of the same shape as *x* and *y* ; values</span>
+<span class="s2">            2 masked arrays of the same shape as *x* and *y*; values</span>
 <span class="s2">            corresponding to (x,y) points outside of the triangulation</span>
 <span class="s2">            are masked out.</span>
 <span class="s2">            The first returned array contains the values of</span>
-<span class="s2">            :math:`</span><span class="se">\\</span><span class="s2">frac{</span><span class="se">\\</span><span class="s2">partial z}{</span><span class="se">\\</span><span class="s2">partial x}` and the second those of</span>
-<span class="s2">            :math:`</span><span class="se">\\</span><span class="s2">frac{</span><span class="se">\\</span><span class="s2">partial z}{</span><span class="se">\\</span><span class="s2">partial y}`.</span>
+<span class="s2">            :math:`\frac{\partial z}{\partial x}` and the second those of</span>
+<span class="s2">            :math:`\frac{\partial z}{\partial y}`.</span>
 
 <span class="s2">        &quot;&quot;&quot;</span>
 
@@ -292,7 +290,7 @@ type="text/css" />
         <span class="k">if</span> <span class="n">tri_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tri_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trifinder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">tri_index</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">sh_ret</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">tri_index</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">sh_ret</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;tri_index array is provided and shall&quot;</span>
                     <span class="s2">&quot; have same shape as x and y. Given: &quot;</span>
@@ -408,7 +406,7 @@ type="text/css" />
 
 
 <div class="viewcode-block" id="CubicTriInterpolator"><a class="viewcode-back" href="../../../api/tri_api.html#matplotlib.tri.CubicTriInterpolator">[docs]</a><span class="k">class</span> <span class="nc">CubicTriInterpolator</span><span class="p">(</span><span class="n">TriInterpolator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A CubicTriInterpolator performs cubic interpolation on triangular grids.</span>
 
 <span class="sd">    In one-dimension - on a segment - a cubic interpolating function is</span>
@@ -483,11 +481,11 @@ type="text/css" />
 
 <span class="sd">        .. math::</span>
 
-<span class="sd">            E(z) = \\ \\frac{1}{2} \\int_{\\Omega}   \\left(</span>
-<span class="sd">            \\left( \\frac{\\partial^2{z}}{\\partial{x}^2} \\right)^2 +</span>
-<span class="sd">            \\left( \\frac{\\partial^2{z}}{\\partial{y}^2} \\right)^2 +</span>
-<span class="sd">            2\\left( \\frac{\\partial^2{z}}{\\partial{y}\\partial{x}}</span>
-<span class="sd">            \\right)^2 \\right)  dx\\,dy</span>
+<span class="sd">            E(z) = \frac{1}{2} \int_{\Omega} \left(</span>
+<span class="sd">                \left( \frac{\partial^2{z}}{\partial{x}^2} \right)^2 +</span>
+<span class="sd">                \left( \frac{\partial^2{z}}{\partial{y}^2} \right)^2 +</span>
+<span class="sd">                2\left( \frac{\partial^2{z}}{\partial{y}\partial{x}} \right)^2</span>
+<span class="sd">            \right) dx\,dy</span>
 
 <span class="sd">    If the case *kind* =&#39;geom&#39; is chosen by the user, a simple geometric</span>
 <span class="sd">    approximation is used (weighted average of the triangle normal</span>
@@ -582,7 +580,7 @@ type="text/css" />
 <span class="sd">            Choice of the _DOF_estimator subclass to perform the gradient</span>
 <span class="sd">            estimation.</span>
 <span class="sd">        dz: tuple of array_likes (dzdx, dzdy), optional</span>
-<span class="sd">            Used only if *kind=user ; in this case passed to the</span>
+<span class="sd">            Used only if *kind*=user; in this case passed to the</span>
 <span class="sd">            :class:`_DOF_estimator_user`.</span>
 
 <span class="sd">        Returns</span>
@@ -602,7 +600,7 @@ type="text/css" />
         <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;min_E&#39;</span><span class="p">:</span>
             <span class="n">TE</span> <span class="o">=</span> <span class="n">_DOF_estimator_min_E</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;CubicTriInterpolator *kind* proposed: </span><span class="si">{0}</span><span class="s2"> ; &quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;CubicTriInterpolator *kind* proposed: </span><span class="si">{0}</span><span class="s2">; &quot;</span>
                              <span class="s2">&quot;should be one of: &quot;</span>
                              <span class="s2">&quot;&#39;user&#39;, &#39;geom&#39;, &#39;min_E&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kind</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">TE</span><span class="o">.</span><span class="n">compute_dof_from_df</span><span class="p">()</span>
@@ -630,12 +628,9 @@ type="text/css" />
 
         <span class="n">a</span> <span class="o">=</span> <span class="n">tris_pts</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">tris_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">tris_pts</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">tris_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="n">abT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ndim</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-                              <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ndim</span><span class="o">+</span><span class="mi">1</span><span class="p">)],</span> <span class="n">ndim</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">abT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">ab</span> <span class="o">=</span> <span class="n">_transpose_vectorized</span><span class="p">(</span><span class="n">abT</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)</span>
-        <span class="n">OM</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">ndim</span><span class="p">)</span> <span class="o">-</span> <span class="n">tris_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">OM</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">tris_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 
         <span class="n">metric</span> <span class="o">=</span> <span class="n">_prod_vectorized</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="n">abT</span><span class="p">)</span>
         <span class="c1"># Here we try to deal with the colinear cases.</span>
@@ -1038,7 +1033,7 @@ type="text/css" />
 <span class="sd">        to global coordinates.</span>
 <span class="sd">        if *return_area* is True, returns also the triangle area (0.5*det(J))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Here we try to deal with the simplest colinear cases ; a null</span>
+        <span class="c1"># Here we try to deal with the simplest colinear cases; a null</span>
         <span class="c1"># energy and area is imposed.</span>
         <span class="n">J_inv</span> <span class="o">=</span> <span class="n">_safe_inv22_vectorized</span><span class="p">(</span><span class="n">J</span><span class="p">)</span>
         <span class="n">Ji00</span> <span class="o">=</span> <span class="n">J_inv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
@@ -1257,9 +1252,9 @@ type="text/css" />
             <span class="c1"># In the below formula we could take modulo 2. but</span>
             <span class="c1"># modulo 1. is safer regarding round-off errors (flat triangles).</span>
             <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">((</span><span class="n">alpha2</span><span class="o">-</span><span class="n">alpha1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">1.</span><span class="p">))</span>
-            <span class="c1"># Weight proportional to angle up np.pi/2 ; null weight for</span>
-            <span class="c1"># degenerated cases 0. and np.pi (Note that `angle` is normalized</span>
-            <span class="c1"># by np.pi)</span>
+            <span class="c1"># Weight proportional to angle up np.pi/2; null weight for</span>
+            <span class="c1"># degenerated cases 0 and np.pi (note that `angle` is normalized</span>
+            <span class="c1"># by np.pi).</span>
             <span class="n">weights</span><span class="p">[:,</span> <span class="n">ipt</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">angle</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">weights</span>
 
@@ -1320,9 +1315,9 @@ type="text/css" />
             <span class="n">J</span><span class="p">,</span> <span class="n">eccs</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">Uc</span><span class="p">)</span>
 
         <span class="c1"># Building sparse matrix and solving minimization problem</span>
-        <span class="c1"># We could use scipy.sparse direct solver ; however to avoid this</span>
+        <span class="c1"># We could use scipy.sparse direct solver; however to avoid this</span>
         <span class="c1"># external dependency an implementation of a simple PCG solver with</span>
-        <span class="c1"># a simplendiagonal Jocabi preconditioner is implemented.</span>
+        <span class="c1"># a simple diagonal Jacobi preconditioner is implemented.</span>
         <span class="n">tol</span> <span class="o">=</span> <span class="mf">1.e-10</span>
         <span class="n">n_dof</span> <span class="o">=</span> <span class="n">Ff</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">Kff_coo</span> <span class="o">=</span> <span class="n">_Sparse_Matrix_coo</span><span class="p">(</span><span class="n">Kff_vals</span><span class="p">,</span> <span class="n">Kff_rows</span><span class="p">,</span> <span class="n">Kff_cols</span><span class="p">,</span>
@@ -1495,7 +1490,6 @@ type="text/css" />
 
 
 <span class="c1"># The following private functions:</span>
-<span class="c1">#     :func:`_inv22_vectorized`</span>
 <span class="c1">#     :func:`_safe_inv22_vectorized`</span>
 <span class="c1">#     :func:`_pseudo_inv22sym_vectorized`</span>
 <span class="c1">#     :func:`_prod_vectorized`</span>
@@ -1506,20 +1500,6 @@ type="text/css" />
 <span class="c1">#     :func:`_extract_submatrices`</span>
 <span class="c1"># provide fast numpy implementation of some standard operations on arrays of</span>
 <span class="c1"># matrices - stored as (:, n_rows, n_cols)-shaped np.arrays.</span>
-<span class="k">def</span> <span class="nf">_inv22_vectorized</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Inversion of arrays of (2,2) matrices.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="n">M_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">delta_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">M</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">M</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">M</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">M</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-    <span class="n">M_inv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">delta_inv</span>
-    <span class="n">M_inv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">M</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">delta_inv</span>
-    <span class="n">M_inv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">M</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">delta_inv</span>
-    <span class="n">M_inv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">delta_inv</span>
-    <span class="k">return</span> <span class="n">M_inv</span>
-
 
 <span class="c1"># Development note: Dealing with pathologic &#39;flat&#39; triangles in the</span>
 <span class="c1"># CubicTriInterpolator code and impact on (2,2)-matrix inversion functions</span>
@@ -1569,7 +1549,7 @@ type="text/css" />
     <span class="n">prod1</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">M</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">delta</span> <span class="o">=</span> <span class="n">prod1</span> <span class="o">-</span> <span class="n">M</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">M</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
-    <span class="c1"># We set delta_inv to 0. in case of a rank deficient matrix ; a</span>
+    <span class="c1"># We set delta_inv to 0. in case of a rank deficient matrix; a</span>
     <span class="c1"># rank-deficient input matrix *M* will lead to a null matrix in output</span>
     <span class="n">rank2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-8</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">prod1</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">rank2</span><span class="p">):</span>
@@ -1589,7 +1569,7 @@ type="text/css" />
 
 <span class="k">def</span> <span class="nf">_pseudo_inv22sym_vectorized</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Inversion of arrays of (2,2) SYMMETRIC matrices ; returns the</span>
+<span class="sd">    Inversion of arrays of (2,2) SYMMETRIC matrices; returns the</span>
 <span class="sd">    (Moore-Penrose) pseudo-inverse for rank-deficient matrices.</span>
 
 <span class="sd">    In case M is of rank 1, we have M = trace(M) x P where P is the orthogonal</span>
@@ -1646,7 +1626,7 @@ type="text/css" />
     <span class="k">assert</span> <span class="n">sh1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">sh2</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="n">ndim1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sh1</span><span class="p">)</span>
-    <span class="n">t1_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="n">ndim1</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">ndim1</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndim1</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">t1_index</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="n">ndim1</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">ndim1</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndim1</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">M1</span><span class="p">,</span> <span class="n">t1_index</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span>
                   <span class="n">M2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:],</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
 
@@ -1662,9 +1642,7 @@ type="text/css" />
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transposition of an array of matrices *M*.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">ndim</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">ndim</span>
-    <span class="k">assert</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndim</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
 
 <span class="k">def</span> <span class="nf">_roll_vectorized</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">roll_indices</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
@@ -1706,7 +1684,7 @@ type="text/css" />
 <span class="sd">        M_res[...,i,j] = M[i][j]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">M</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">M</span><span class="p">)</span>
     <span class="n">c_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">M</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">c_vec</span><span class="o">-</span><span class="n">c_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">r</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
@@ -1759,10 +1737,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

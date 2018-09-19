@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.axis &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.axis &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/axis.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -114,12 +116,12 @@ type="text/css" />
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Classes for the ticks and x and y axis</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">rcParams</span>
 <span class="kn">import</span> <span class="nn">matplotlib.artist</span> <span class="k">as</span> <span class="nn">artist</span>
@@ -134,8 +136,6 @@ type="text/css" />
 <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
 <span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">mtransforms</span>
 <span class="kn">import</span> <span class="nn">matplotlib.units</span> <span class="k">as</span> <span class="nn">munits</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -145,7 +145,7 @@ type="text/css" />
 <span class="c1"># allows all Line2D kwargs.</span>
 <span class="n">_line_AI</span> <span class="o">=</span> <span class="n">artist</span><span class="o">.</span><span class="n">ArtistInspector</span><span class="p">(</span><span class="n">mlines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">)</span>
 <span class="n">_line_param_names</span> <span class="o">=</span> <span class="n">_line_AI</span><span class="o">.</span><span class="n">get_setters</span><span class="p">()</span>
-<span class="n">_line_param_aliases</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">_line_AI</span><span class="o">.</span><span class="n">aliasd</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+<span class="n">_line_param_aliases</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">_line_AI</span><span class="o">.</span><span class="n">aliasd</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
 <span class="n">_gridline_param_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;grid_&#39;</span> <span class="o">+</span> <span class="n">name</span>
                          <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_line_param_names</span> <span class="o">+</span> <span class="n">_line_param_aliases</span><span class="p">]</span>
 
@@ -303,7 +303,7 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">update_position</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_set_labelrotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labelrotation</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labelrotation</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labelrotation</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">mode</span> <span class="o">=</span> <span class="n">labelrotation</span>
             <span class="n">angle</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labelrotation</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
@@ -349,7 +349,7 @@ type="text/css" />
     <span class="n">set_clip_path</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">artist</span><span class="o">.</span><span class="n">Artist</span><span class="o">.</span><span class="n">set_clip_path</span><span class="o">.</span><span class="vm">__doc__</span>
 
 <div class="viewcode-block" id="Tick.get_pad_pixels"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Tick.get_pad_pixels.html#matplotlib.axis.Tick.get_pad_pixels">[docs]</a>    <span class="k">def</span> <span class="nf">get_pad_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_pad</span> <span class="o">/</span> <span class="mf">72.0</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_pad</span> <span class="o">/</span> <span class="mi">72</span></div>
 
 <div class="viewcode-block" id="Tick.contains"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Tick.contains.html#matplotlib.axis.Tick.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouseevent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -366,7 +366,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the tick label pad in points</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        val : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_apply_params</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="n">val</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -423,9 +425,11 @@ type="text/css" />
 
 <div class="viewcode-block" id="Tick.set_label1"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Tick.set_label1.html#matplotlib.axis.Tick.set_label1">[docs]</a>    <span class="k">def</span> <span class="nf">set_label1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the text of ticklabel</span>
+<span class="sd">        Set the label1 text.</span>
 
-<span class="sd">        ACCEPTS: str</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -434,9 +438,11 @@ type="text/css" />
 
 <div class="viewcode-block" id="Tick.set_label2"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Tick.set_label2.html#matplotlib.axis.Tick.set_label2">[docs]</a>    <span class="k">def</span> <span class="nf">set_label2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the text of ticklabel2</span>
+<span class="sd">        Set the label2 text.</span>
 
-<span class="sd">        ACCEPTS: str</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -449,12 +455,10 @@ type="text/css" />
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Derived must override&#39;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_apply_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="n">switchkw</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gridOn&#39;</span><span class="p">,</span> <span class="s1">&#39;tick1On&#39;</span><span class="p">,</span> <span class="s1">&#39;tick2On&#39;</span><span class="p">,</span> <span class="s1">&#39;label1On&#39;</span><span class="p">,</span> <span class="s1">&#39;label2On&#39;</span><span class="p">]</span>
-        <span class="n">switches</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">switchkw</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">switches</span><span class="p">:</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-        <span class="n">newmarker</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;pad&#39;</span><span class="p">,</span> <span class="s1">&#39;tickdir&#39;</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">newmarker</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;gridOn&#39;</span><span class="p">,</span> <span class="s1">&#39;tick1On&#39;</span><span class="p">,</span> <span class="s1">&#39;tick2On&#39;</span><span class="p">,</span> <span class="s1">&#39;label1On&#39;</span><span class="p">,</span> <span class="s1">&#39;label2On&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;pad&#39;</span><span class="p">,</span> <span class="s1">&#39;tickdir&#39;</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size</span><span class="p">)</span>
             <span class="c1"># Width could be handled outside this block, but it is</span>
             <span class="c1"># convenient to leave it here.</span>
@@ -473,39 +477,33 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
             <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_text2_transform</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
-        <span class="n">tick_kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
-                   <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="s1">&#39;zorder&#39;</span><span class="p">]}</span>
-        <span class="k">if</span> <span class="n">tick_kw</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tick1line</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">tick_kw</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tick2line</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">tick_kw</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">tick_kw</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">tick_kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="s1">&#39;zorder&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tick1line</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">tick_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tick2line</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">tick_kw</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tick_kw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s1">&#39;labelrotation&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_set_labelrotation</span><span class="p">(</span><span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;labelrotation&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_labelrotation</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_labelrotation</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="n">label_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
-                      <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;labelsize&#39;</span><span class="p">,</span> <span class="s1">&#39;labelcolor&#39;</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">label_list</span><span class="p">:</span>
-            <span class="n">label_kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">:]:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">label_list</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">label_kw</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">label_kw</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">label_kw</span><span class="p">):</span>
-                <span class="c1"># for labelsize the text objects covert str (&#39;small&#39;)</span>
-                <span class="c1"># -&gt; points. grab the integer from the `Text` object</span>
-                <span class="c1"># instead of saving the string representation</span>
-                <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="p">,</span> <span class="s1">&#39;get_&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">)()</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_label&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">label_kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">:]:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;labelsize&#39;</span><span class="p">,</span> <span class="s1">&#39;labelcolor&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">label_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">label_kw</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">label_kw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># for labelsize the text objects covert str (&#39;small&#39;)</span>
+            <span class="c1"># -&gt; points. grab the integer from the `Text` object</span>
+            <span class="c1"># instead of saving the string representation</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="p">,</span> <span class="s1">&#39;get_&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">)()</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_label&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
-        <span class="n">grid_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
-                     <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">_gridline_param_names</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">grid_list</span><span class="p">:</span>
-            <span class="n">grid_kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">:]:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">grid_list</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gridline</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">grid_kw</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">grid_kw</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_grid_&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="n">grid_kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">:]:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                   <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_gridline_param_names</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gridline</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">grid_kw</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">grid_kw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_grid_&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Tick.update_position"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Tick.update_position.html#matplotlib.axis.Tick.update_position">[docs]</a>    <span class="k">def</span> <span class="nf">update_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
         <span class="s1">&#39;Set the location of tick in data coords with scalar *loc*&#39;</span>
@@ -1098,8 +1096,7 @@ type="text/css" />
             <span class="p">(</span><span class="n">minorTicks</span><span class="p">,</span> <span class="n">minorLocs</span><span class="p">,</span> <span class="n">minorLabels</span><span class="p">)]</span>
 
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">major_minor</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">group</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="n">tick</span></div>
+            <span class="k">yield from</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">group</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Axis.get_ticklabel_extents"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.get_ticklabel_extents.html#matplotlib.axis.Axis.get_ticklabel_extents">[docs]</a>    <span class="k">def</span> <span class="nf">get_ticklabel_extents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1269,8 +1266,10 @@ type="text/css" />
         <span class="n">bb</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetText</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">get_visible</span><span class="p">():</span>
-                <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="p">))</span>
+            <span class="n">bbox</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="n">a</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()):</span>
+                <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
 
         <span class="n">bb</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ticklabelBoxes</span><span class="p">)</span>
         <span class="n">bb</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ticklabelBoxes2</span><span class="p">)</span>
@@ -1288,9 +1287,7 @@ type="text/css" />
             <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">majorTicks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_tick_padding</span><span class="p">())</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minorTicks</span><span class="p">):</span>
             <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minorTicks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_tick_padding</span><span class="p">())</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mf">0.0</span></div>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Axis.draw"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.draw.html#matplotlib.axis.Axis.draw">[docs]</a>    <span class="nd">@allow_rasterization</span>
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1535,16 +1532,25 @@ type="text/css" />
 
 <div class="viewcode-block" id="Axis.grid"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.grid.html#matplotlib.axis.Axis.grid">[docs]</a>    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the axis grid on or off; b is a boolean. Use *which* =</span>
-<span class="sd">        &#39;major&#39; | &#39;minor&#39; | &#39;both&#39; to set the grid for major or minor ticks.</span>
+<span class="sd">        Configure the grid lines.</span>
 
-<span class="sd">        If *b* is *None* and len(kwargs)==0, toggle the grid state.  If</span>
-<span class="sd">        *kwargs* are supplied, it is assumed you want the grid on and *b*</span>
-<span class="sd">        will be set to True.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        b : bool or None</span>
+<span class="sd">            Whether to show the grid lines. If any *kwargs* are supplied,</span>
+<span class="sd">            it is assumed you want the grid on and *b* will be set to True.</span>
 
-<span class="sd">        *kwargs* are used to set the line properties of the grids, e.g.,</span>
+<span class="sd">            If *b* is *None* and there are no *kwargs*, this toggles the</span>
+<span class="sd">            visibility of the lines.</span>
 
-<span class="sd">          xax.grid(color=&#39;r&#39;, linestyle=&#39;-&#39;, linewidth=2)</span>
+<span class="sd">        which : {&#39;major&#39;, &#39;minor&#39;, &#39;both&#39;}</span>
+<span class="sd">            The grid lines to apply the changes on.</span>
+
+<span class="sd">        **kwargs : `.Line2D` properties</span>
+<span class="sd">            Define the line properties of the grid, e.g.::</span>
+
+<span class="sd">                grid(color=&#39;r&#39;, linestyle=&#39;-&#39;, linewidth=2)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">b</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1664,7 +1670,8 @@ type="text/css" />
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span></div>
 
 <div class="viewcode-block" id="Axis.set_label_text"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_label_text.html#matplotlib.axis.Axis.set_label_text">[docs]</a>    <span class="k">def</span> <span class="nf">set_label_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;  Sets the text value of the axis label</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the text value of the axis label.</span>
 
 <span class="sd">        ACCEPTS: A string value for the label</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1678,10 +1685,15 @@ type="text/css" />
 
 <div class="viewcode-block" id="Axis.set_major_formatter"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_major_formatter.html#matplotlib.axis.Axis.set_major_formatter">[docs]</a>    <span class="k">def</span> <span class="nf">set_major_formatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the formatter of the major ticker</span>
+<span class="sd">        Set the formatter of the major ticker.</span>
 
-<span class="sd">        ACCEPTS: A :class:`~matplotlib.ticker.Formatter` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        formatter : ~matplotlib.ticker.Formatter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">formatter</span><span class="p">,</span> <span class="n">mticker</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;formatter argument should be instance of &quot;</span>
+                    <span class="s2">&quot;matplotlib.ticker.Formatter&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isDefault_majfmt</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="o">.</span><span class="n">formatter</span> <span class="o">=</span> <span class="n">formatter</span>
         <span class="n">formatter</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1689,10 +1701,15 @@ type="text/css" />
 
 <div class="viewcode-block" id="Axis.set_minor_formatter"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_minor_formatter.html#matplotlib.axis.Axis.set_minor_formatter">[docs]</a>    <span class="k">def</span> <span class="nf">set_minor_formatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the formatter of the minor ticker</span>
+<span class="sd">        Set the formatter of the minor ticker.</span>
 
-<span class="sd">        ACCEPTS: A :class:`~matplotlib.ticker.Formatter` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        formatter : ~matplotlib.ticker.Formatter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">formatter</span><span class="p">,</span> <span class="n">mticker</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;formatter argument should be instance of &quot;</span>
+                    <span class="s2">&quot;matplotlib.ticker.Formatter&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isDefault_minfmt</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="o">.</span><span class="n">formatter</span> <span class="o">=</span> <span class="n">formatter</span>
         <span class="n">formatter</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1700,10 +1717,15 @@ type="text/css" />
 
 <div class="viewcode-block" id="Axis.set_major_locator"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_major_locator.html#matplotlib.axis.Axis.set_major_locator">[docs]</a>    <span class="k">def</span> <span class="nf">set_major_locator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locator</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the locator of the major ticker</span>
+<span class="sd">        Set the locator of the major ticker.</span>
 
-<span class="sd">        ACCEPTS: a :class:`~matplotlib.ticker.Locator` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        locator : ~matplotlib.ticker.Locator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locator</span><span class="p">,</span> <span class="n">mticker</span><span class="o">.</span><span class="n">Locator</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;formatter argument should be instance of &quot;</span>
+                    <span class="s2">&quot;matplotlib.ticker.Locator&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isDefault_majloc</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">locator</span>
         <span class="n">locator</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1711,10 +1733,15 @@ type="text/css" />
 
 <div class="viewcode-block" id="Axis.set_minor_locator"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_minor_locator.html#matplotlib.axis.Axis.set_minor_locator">[docs]</a>    <span class="k">def</span> <span class="nf">set_minor_locator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locator</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the locator of the minor ticker</span>
+<span class="sd">        Set the locator of the minor ticker.</span>
 
-<span class="sd">        ACCEPTS: a :class:`~matplotlib.ticker.Locator` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        locator : ~matplotlib.ticker.Locator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locator</span><span class="p">,</span> <span class="n">mticker</span><span class="o">.</span><span class="n">Locator</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;formatter argument should be instance of &quot;</span>
+                    <span class="s2">&quot;matplotlib.ticker.Locator&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isDefault_minloc</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">locator</span>
         <span class="n">locator</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1722,13 +1749,15 @@ type="text/css" />
 
 <div class="viewcode-block" id="Axis.set_pickradius"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_pickradius.html#matplotlib.axis.Axis.set_pickradius">[docs]</a>    <span class="k">def</span> <span class="nf">set_pickradius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pickradius</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the depth of the axis used by the picker</span>
+<span class="sd">        Set the depth of the axis used by the picker.</span>
 
-<span class="sd">        ACCEPTS: a distance in points</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pickradius :  float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span> <span class="o">=</span> <span class="n">pickradius</span></div>
 
-<div class="viewcode-block" id="Axis.set_ticklabels"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_ticklabels.html#matplotlib.axis.Axis.set_ticklabels">[docs]</a>    <span class="k">def</span> <span class="nf">set_ticklabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticklabels</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Axis.set_ticklabels"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.set_ticklabels.html#matplotlib.axis.Axis.set_ticklabels">[docs]</a>    <span class="k">def</span> <span class="nf">set_ticklabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticklabels</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the text values of the tick labels. Return a list of Text</span>
 <span class="sd">        instances.  Use *kwarg* *minor=True* to select minor ticks.</span>
@@ -1757,7 +1786,6 @@ type="text/css" />
         <span class="c1"># replace the ticklabels list with the processed one</span>
         <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">get_labels</span>
 
-        <span class="n">minor</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">minor</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">mticker</span><span class="o">.</span><span class="n">FixedFormatter</span><span class="p">(</span><span class="n">ticklabels</span><span class="p">))</span>
             <span class="n">ticks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_minor_ticks</span><span class="p">()</span>
@@ -1839,14 +1867,12 @@ type="text/css" />
 <span class="sd">        *tz* is a :class:`tzinfo` instance or a timezone string.</span>
 <span class="sd">        This timezone is used to create date labels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># By providing a sample datetime instance with the desired</span>
-        <span class="c1"># timezone, the registered converter can be selected,</span>
-        <span class="c1"># and the &quot;units&quot; attribute, which is the timezone, can</span>
-        <span class="c1"># be set.</span>
-        <span class="kn">import</span> <span class="nn">datetime</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tz</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-            <span class="kn">import</span> <span class="nn">pytz</span>
-            <span class="n">tz</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+        <span class="c1"># By providing a sample datetime instance with the desired timezone,</span>
+        <span class="c1"># the registered converter can be selected, and the &quot;units&quot; attribute,</span>
+        <span class="c1"># which is the timezone, can be set.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tz</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="kn">import</span> <span class="nn">dateutil.tz</span>
+            <span class="n">tz</span> <span class="o">=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">tz</span><span class="o">.</span><span class="n">gettz</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_units</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tz</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Axis.get_tick_space"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.Axis.get_tick_space.html#matplotlib.axis.Axis.get_tick_space">[docs]</a>    <span class="k">def</span> <span class="nf">get_tick_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1866,7 +1892,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the label position (top or bottom)</span>
 
-<span class="sd">        ACCEPTS: [ &#39;top&#39; | &#39;bottom&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : {&#39;top&#39;, &#39;bottom&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
@@ -1892,9 +1920,9 @@ type="text/css" />
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{}</span>
         <span class="n">l</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform_point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="n">r</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform_point</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">inaxis</span> <span class="o">=</span> <span class="n">xaxes</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">xaxes</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span>
-            <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span><span class="p">)</span> <span class="ow">or</span>
-            <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span><span class="p">))</span>
+        <span class="n">inaxis</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">xaxes</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">b</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="ow">or</span>
+            <span class="n">t</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">inaxis</span><span class="p">,</span> <span class="p">{}</span></div>
 
     <span class="k">def</span> <span class="nf">_get_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">major</span><span class="p">):</span>
@@ -1976,7 +2004,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the label position (top or bottom)</span>
 
-<span class="sd">        ACCEPTS: [ &#39;top&#39; | &#39;bottom&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : {&#39;top&#39;, &#39;bottom&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_verticalalignment</span><span class="p">(</span><span class="s1">&#39;baseline&#39;</span><span class="p">)</span>
@@ -2031,7 +2061,7 @@ type="text/css" />
             <span class="n">bottom</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">y0</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mf">72.0</span><span class="p">)</span>
+                <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mi">72</span><span class="p">)</span>
             <span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -2046,7 +2076,7 @@ type="text/css" />
             <span class="n">top</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">y1</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mf">72.0</span><span class="p">)</span>
+                <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mi">72</span><span class="p">)</span>
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_offset_text_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bboxes</span><span class="p">,</span> <span class="n">bboxes2</span><span class="p">):</span>
@@ -2061,7 +2091,7 @@ type="text/css" />
             <span class="n">bbox</span> <span class="o">=</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">Bbox</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">bboxes</span><span class="p">)</span>
             <span class="n">bottom</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">y0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offsetText</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">OFFSETTEXTPAD</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mf">72.0</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">OFFSETTEXTPAD</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mi">72</span><span class="p">)</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="XAxis.get_text_heights"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.XAxis.get_text_heights.html#matplotlib.axis.XAxis.get_text_heights">[docs]</a>    <span class="k">def</span> <span class="nf">get_text_heights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
@@ -2095,7 +2125,9 @@ type="text/css" />
 <span class="sd">        can be used if you don&#39;t want any ticks. &#39;none&#39; and &#39;both&#39;</span>
 <span class="sd">        affect only the ticks, not the labels.</span>
 
-<span class="sd">        ACCEPTS: [ &#39;top&#39; | &#39;bottom&#39; | &#39;both&#39; | &#39;default&#39; | &#39;none&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : {&#39;top&#39;, &#39;bottom&#39;, &#39;both&#39;, &#39;default&#39;, &#39;none&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labeltop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -2233,7 +2265,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="XAxis.get_tick_space"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.XAxis.get_tick_space.html#matplotlib.axis.XAxis.get_tick_space">[docs]</a>    <span class="k">def</span> <span class="nf">get_tick_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ends</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="p">((</span><span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span> <span class="o">*</span> <span class="mf">72.0</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="p">((</span><span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">72</span>
         <span class="n">tick</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tick</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># There is a heuristic here that the aspect ratio of tick text</span>
         <span class="c1"># is no more than 3:1</span>
@@ -2264,9 +2296,9 @@ type="text/css" />
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{}</span>
         <span class="n">l</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform_point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="n">r</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform_point</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">inaxis</span> <span class="o">=</span> <span class="n">yaxes</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">yaxes</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span>
-            <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">l</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">l</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span><span class="p">)</span> <span class="ow">or</span>
-            <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span><span class="p">))</span>
+        <span class="n">inaxis</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">yaxes</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">l</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">l</span> <span class="ow">or</span>
+            <span class="n">r</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">inaxis</span><span class="p">,</span> <span class="p">{}</span></div>
 
     <span class="k">def</span> <span class="nf">_get_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">major</span><span class="p">):</span>
@@ -2343,7 +2375,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the label position (left or right)</span>
 
-<span class="sd">        ACCEPTS: [ &#39;left&#39; | &#39;right&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : {&#39;left&#39;, &#39;right&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_rotation_mode</span><span class="p">(</span><span class="s1">&#39;anchor&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_horizontalalignment</span><span class="p">(</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
@@ -2399,7 +2433,7 @@ type="text/css" />
             <span class="n">bbox</span> <span class="o">=</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">Bbox</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">bboxes</span> <span class="o">+</span> <span class="p">[</span><span class="n">spinebbox</span><span class="p">])</span>
             <span class="n">left</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">x0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">left</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mf">72.0</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="p">(</span><span class="n">left</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mi">72</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -2414,7 +2448,7 @@ type="text/css" />
             <span class="n">right</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">x1</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">right</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mf">72.0</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="p">(</span><span class="n">right</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelpad</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mi">72</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_offset_text_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bboxes</span><span class="p">,</span> <span class="n">bboxes2</span><span class="p">):</span>
@@ -2425,12 +2459,14 @@ type="text/css" />
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetText</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span>
         <span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">ymax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offsetText</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">OFFSETTEXTPAD</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mf">72.0</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">OFFSETTEXTPAD</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mi">72</span><span class="p">)</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="YAxis.set_offset_position"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.YAxis.set_offset_position.html#matplotlib.axis.YAxis.set_offset_position">[docs]</a>    <span class="k">def</span> <span class="nf">set_offset_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. ACCEPTS: [ &#39;left&#39; | &#39;right&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : {&#39;left&#39;, &#39;right&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetText</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="s1">&#39;left&#39;</span><span class="p">:</span>
@@ -2471,7 +2507,9 @@ type="text/css" />
 <span class="sd">        can be used if you don&#39;t want any ticks. &#39;none&#39; and &#39;both&#39;</span>
 <span class="sd">        affect only the ticks, not the labels.</span>
 
-<span class="sd">        ACCEPTS: [ &#39;left&#39; | &#39;right&#39; | &#39;both&#39; | &#39;default&#39; | &#39;none&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : {&#39;left&#39;, &#39;right&#39;, &#39;both&#39;, &#39;default&#39;, &#39;none&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelright</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -2612,7 +2650,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="YAxis.get_tick_space"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.axis.YAxis.get_tick_space.html#matplotlib.axis.YAxis.get_tick_space">[docs]</a>    <span class="k">def</span> <span class="nf">get_tick_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ends</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">transform</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="p">((</span><span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span> <span class="o">*</span> <span class="mf">72.0</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="p">((</span><span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">72</span>
         <span class="n">tick</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tick</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># Having a spacing of at least 2 just looks good.</span>
         <span class="n">size</span> <span class="o">=</span> <span class="n">tick</span><span class="o">.</span><span class="n">label1</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">*</span> <span class="mf">2.0</span>
@@ -2631,10 +2669,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

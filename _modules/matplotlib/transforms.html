@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.transforms &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.transforms &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/transforms.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -146,20 +148,15 @@ type="text/css" />
 <span class="c1"># `np.minimum` instead of the builtin `min`, and likewise for `max`.  This is</span>
 <span class="c1"># done so that `nan`s are propagated, instead of being silently dropped.</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib._path</span> <span class="k">import</span> <span class="p">(</span><span class="n">affine_transform</span><span class="p">,</span> <span class="n">count_bboxes_overlapping_bbox</span><span class="p">,</span>
-    <span class="n">update_path_extents</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">inv</span>
 
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">weakref</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-
+<span class="kn">from</span> <span class="nn">matplotlib._path</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">affine_transform</span><span class="p">,</span> <span class="n">count_bboxes_overlapping_bbox</span><span class="p">,</span> <span class="n">update_path_extents</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">cbook</span>
 <span class="kn">from</span> <span class="nn">.path</span> <span class="k">import</span> <span class="n">Path</span>
 
@@ -218,22 +215,19 @@ type="text/css" />
 
     <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
         <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="c1"># either just return the name of this TransformNode, or it&#39;s repr</span>
+            <span class="c1"># either just return the name of this TransformNode, or its repr</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shorthand_name</span> <span class="ow">or</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="c1"># turn the dictionary with weak values into a normal dictionary</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;_parents&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">())</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span>
-                             <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parents</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span>
+                <span class="s1">&#39;_parents&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parents</span><span class="o">.</span><span class="n">items</span><span class="p">()}}</span>
 
     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">data_dict</span>
-        <span class="c1"># turn the normal dictionary back into a dictionary with weak</span>
-        <span class="c1"># values</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_parents</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span>
-                             <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parents</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># turn the normal dictionary back into a dictionary with weak values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parents</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parents</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
@@ -272,7 +266,7 @@ type="text/css" />
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pass_through</span> <span class="ow">or</span> <span class="n">status_changed</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_invalid</span> <span class="o">=</span> <span class="n">value</span>
 
-            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parents</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parents</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
                 <span class="c1"># Dereference the weak reference</span>
                 <span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -343,20 +337,14 @@ type="text/css" />
                     <span class="n">props</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span>
                 <span class="n">props</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span>
                 <span class="n">props</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">label</span>
-                <span class="n">props</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-                                  <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span>
-                                  <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">props</span><span class="p">)])</span>
+                <span class="n">props</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0[0]}</span><span class="s1">=</span><span class="si">{0[1]}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">props</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
 
-                <span class="n">fobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> [</span><span class="si">%s</span><span class="s1">];</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span>
-                           <span class="p">(</span><span class="nb">hash</span><span class="p">(</span><span class="n">root</span><span class="p">),</span> <span class="n">props</span><span class="p">))</span>
+                <span class="n">fobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> [</span><span class="si">%s</span><span class="s1">];</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">hash</span><span class="p">(</span><span class="n">root</span><span class="p">),</span> <span class="n">props</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;_children&#39;</span><span class="p">):</span>
                     <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
-                        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;?&#39;</span>
-                        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">):</span>
-                            <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="n">child</span><span class="p">:</span>
-                                <span class="n">name</span> <span class="o">=</span> <span class="n">key</span>
-                                <span class="k">break</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                                     <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="n">child</span><span class="p">),</span> <span class="s1">&#39;?&#39;</span><span class="p">)</span>
                         <span class="n">fobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot; -&gt; &quot;</span><span class="si">%s</span><span class="s1">&quot; [label=&quot;</span><span class="si">%s</span><span class="s1">&quot;, fontsize=10];</span><span class="se">\n</span><span class="s1">&#39;</span>
                                     <span class="o">%</span> <span class="p">(</span><span class="nb">hash</span><span class="p">(</span><span class="n">root</span><span class="p">),</span>
                                     <span class="nb">hash</span><span class="p">(</span><span class="n">child</span><span class="p">),</span>
@@ -701,7 +689,7 @@ type="text/css" />
         <span class="k">if</span> <span class="n">container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">bounds</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">=</span> <span class="n">c</span>
@@ -753,7 +741,7 @@ type="text/css" />
 <span class="sd">        splitting the original one with vertical lines at fractional</span>
 <span class="sd">        positions *f1*, *f2*, ...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">xf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">xf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extents</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Bbox</span><span class="p">([[</span><span class="n">x0</span> <span class="o">+</span> <span class="n">xf0</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">y0</span><span class="p">],</span> <span class="p">[</span><span class="n">x0</span> <span class="o">+</span> <span class="n">xf1</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">y1</span><span class="p">]])</span>
@@ -767,7 +755,7 @@ type="text/css" />
 <span class="sd">        splitting the original one with horizontal lines at fractional</span>
 <span class="sd">        positions *f1*, *f2*, ...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">yf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">yf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extents</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Bbox</span><span class="p">([[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">+</span> <span class="n">yf0</span> <span class="o">*</span> <span class="n">h</span><span class="p">],</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y0</span> <span class="o">+</span> <span class="n">yf1</span> <span class="o">*</span> <span class="n">h</span><span class="p">]])</span>
@@ -1415,10 +1403,6 @@ type="text/css" />
     <span class="c1"># override `__eq__`), but some subclasses, such as TransformWrapper &amp;</span>
     <span class="c1"># AffineBase, override this behavior.</span>
 
-    <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-        <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-            <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">other</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">_iter_break_from_left_to_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns an iterator breaking down this transform stack from left to</span>
@@ -1785,30 +1769,6 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_child</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-
-    <span class="c1"># NOTE: Transform.__[gs]etstate__ should be sufficient when using only</span>
-    <span class="c1"># Python 3.4+.</span>
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># only store the child information and parents</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;child&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_child</span><span class="p">,</span>
-            <span class="s1">&#39;input_dims&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span><span class="p">,</span>
-            <span class="s1">&#39;output_dims&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dims</span><span class="p">,</span>
-            <span class="c1"># turn the weak-values dictionary into a normal dictionary</span>
-            <span class="s1">&#39;parents&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">())</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span>
-                            <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parents</span><span class="p">))</span>
-        <span class="p">}</span>
-
-    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="c1"># re-initialise the TransformWrapper with the state&#39;s child</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;child&#39;</span><span class="p">])</span>
-        <span class="c1"># The child may not be unpickled yet, so restore its information.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_dims</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s1">&#39;input_dims&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dims</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s1">&#39;output_dims&#39;</span><span class="p">]</span>
-        <span class="c1"># turn the normal dictionary back into a dictionary with weak</span>
-        <span class="c1"># values</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_parents</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span>
-                             <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;parents&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -2554,15 +2514,16 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">CompositeGenericTransform</span><span class="p">,</span> <span class="n">CompositeAffine2D</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">other</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_a</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">other</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_a</span>
+                                     <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">_iter_break_from_left_to_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span>
-        <span class="k">for</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">+</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span>
+        <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span>
+        <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">+</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">depth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -2663,10 +2624,10 @@ type="text/css" />
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="o">.</span><span class="n">depth</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="o">.</span><span class="n">depth</span>
 
     <span class="k">def</span> <span class="nf">_iter_break_from_left_to_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span>
-        <span class="k">for</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">+</span> <span class="n">lh_compliment</span><span class="p">,</span> <span class="n">rh_compliment</span>
+        <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span>
+        <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="o">.</span><span class="n">_iter_break_from_left_to_right</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">+</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -3147,10 +3108,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

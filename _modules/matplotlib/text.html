@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.text &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.text &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/text.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -114,10 +116,6 @@ type="text/css" />
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Classes for including text in a figure.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">zip</span>
 
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -141,7 +139,7 @@ type="text/css" />
 
 
 <span class="k">def</span> <span class="nf">_process_text_args</span><span class="p">(</span><span class="n">override</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="s2">&quot;Return an override dict.  See :func:`~pyplot.text&#39; docstring for info&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an override dict.  See `~pyplot.text&#39; docstring for info.&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">fontdict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">override</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fontdict</span><span class="p">)</span>
@@ -168,25 +166,21 @@ type="text/css" />
 <span class="c1"># Extracted from Text&#39;s method to serve as a function</span>
 <div class="viewcode-block" id="get_rotation"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.get_rotation">[docs]</a><span class="k">def</span> <span class="nf">get_rotation</span><span class="p">(</span><span class="n">rotation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the text angle as float. The returned</span>
-<span class="sd">    angle is between 0 and 360 deg.</span>
+<span class="sd">    Return the text angle as float between 0 and 360 degrees.</span>
 
 <span class="sd">    *rotation* may be &#39;horizontal&#39;, &#39;vertical&#39;, or a numeric value in degrees.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">angle</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-        <span class="n">isString</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">((</span><span class="n">isString</span> <span class="ow">and</span> <span class="n">rotation</span> <span class="o">==</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">rotation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">isString</span> <span class="ow">and</span> <span class="n">rotation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span><span class="p">):</span>
-            <span class="n">angle</span> <span class="o">=</span> <span class="mf">90.</span>
+        <span class="k">if</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_str_equal</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">rotation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.</span>
+        <span class="k">elif</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_str_equal</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="s1">&#39;vertical&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mf">90.</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;rotation is </span><span class="si">{0}</span><span class="s2"> expected either &#39;horizontal&#39;&quot;</span>
-                             <span class="s2">&quot; &#39;vertical&#39;, numeric value or&quot;</span>
-                             <span class="s2">&quot;None&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rotation</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">angle</span> <span class="o">%</span> <span class="mi">360</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;rotation is </span><span class="si">{!r}</span><span class="s2">; expected either &#39;horizontal&#39;, &quot;</span>
+                             <span class="s2">&quot;&#39;vertical&#39;, numeric value, or None&quot;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rotation</span><span class="p">))</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_textbox</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
@@ -222,22 +216,32 @@ type="text/css" />
     <span class="n">xt_box</span><span class="p">,</span> <span class="n">yt_box</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">projected_xs</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">projected_ys</span><span class="p">)</span>
     <span class="n">w_box</span><span class="p">,</span> <span class="n">h_box</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">projected_xs</span><span class="p">)</span> <span class="o">-</span> <span class="n">xt_box</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">projected_ys</span><span class="p">)</span> <span class="o">-</span> <span class="n">yt_box</span>
 
-    <span class="n">tr</span> <span class="o">=</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-
-    <span class="n">x_box</span><span class="p">,</span> <span class="n">y_box</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">transform_point</span><span class="p">((</span><span class="n">xt_box</span><span class="p">,</span> <span class="n">yt_box</span><span class="p">))</span>
+    <span class="n">x_box</span><span class="p">,</span> <span class="n">y_box</span> <span class="o">=</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">.</span><span class="n">transform_point</span><span class="p">((</span><span class="n">xt_box</span><span class="p">,</span> <span class="n">yt_box</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">x_box</span><span class="p">,</span> <span class="n">y_box</span><span class="p">,</span> <span class="n">w_box</span><span class="p">,</span> <span class="n">h_box</span>
 
 
-<div class="viewcode-block" id="Text"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text">[docs]</a><span class="k">class</span> <span class="nc">Text</span><span class="p">(</span><span class="n">Artist</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Handle storing and drawing of text in window or data coordinates.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Text"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text">[docs]</a><span class="nd">@cbook</span><span class="o">.</span><span class="n">_define_aliases</span><span class="p">({</span>
+    <span class="s2">&quot;fontfamily&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;fontproperties&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;font_properties&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;horizontalalignment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ha&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;multialignment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ma&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;fontname&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;fontstretch&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;stretch&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;fontstyle&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;fontvariant&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;variant&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;verticalalignment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;va&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;fontweight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span>
+<span class="p">})</span>
+<span class="k">class</span> <span class="nc">Text</span><span class="p">(</span><span class="n">Artist</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Handle storing and drawing of text in window or data coordinates.&quot;&quot;&quot;</span>
+
     <span class="n">zorder</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">_cached</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">maxdict</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Text(</span><span class="si">%g</span><span class="s2">,</span><span class="si">%g</span><span class="s2">,</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;Text(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -254,8 +258,7 @@ type="text/css" />
                  <span class="o">**</span><span class="n">kwargs</span>
                  <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a :class:`~matplotlib.text.Text` instance at *x*, *y*</span>
-<span class="sd">        with string *text*.</span>
+<span class="sd">        Create a `.Text` instance at *x*, *y* with string *text*.</span>
 
 <span class="sd">        Valid kwargs are</span>
 <span class="sd">        %(Text)s</span>
@@ -268,15 +271,16 @@ type="text/css" />
             <span class="n">color</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.color&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">fontproperties</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fontproperties</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fontproperties</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fontproperties</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">fontproperties</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">(</span><span class="n">fontproperties</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_usetex</span><span class="p">(</span><span class="n">usetex</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_wrap</span><span class="p">(</span><span class="n">wrap</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_verticalalignment</span> <span class="o">=</span> <span class="n">verticalalignment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalalignment</span> <span class="o">=</span> <span class="n">horizontalalignment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_verticalalignment</span><span class="p">(</span><span class="n">verticalalignment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_horizontalalignment</span><span class="p">(</span><span class="n">horizontalalignment</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_multialignment</span> <span class="o">=</span> <span class="n">multialignment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">=</span> <span class="n">rotation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span> <span class="o">=</span> <span class="n">fontproperties</span>
@@ -295,12 +299,12 @@ type="text/css" />
         <span class="c1"># Update bbox last, as it depends on font properties.</span>
         <span class="n">sentinel</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>  <span class="c1"># bbox can be None, so use another sentinel.</span>
         <span class="n">bbox</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;bbox&quot;</span><span class="p">,</span> <span class="n">sentinel</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">sentinel</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_bbox</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
         <span class="c1"># remove the cached _renderer (if it exists)</span>
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;_renderer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">d</span>
@@ -311,7 +315,9 @@ type="text/css" />
 <span class="sd">        In the case of text, a hit is true anywhere in the</span>
 <span class="sd">        axis-aligned bounding-box containing the text.</span>
 
-<span class="sd">        Returns True or False.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool : bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_contains</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouseevent</span><span class="p">)</span>
@@ -336,7 +342,9 @@ type="text/css" />
         <span class="k">return</span> <span class="n">inside</span><span class="p">,</span> <span class="n">cattr</span></div>
 
     <span class="k">def</span> <span class="nf">_get_xy_display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;get the (possibly unit converted) transformed x, y in display coords&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the (possibly unit converted) transformed x, y in display coords.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unitless_position</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span><span class="o">.</span><span class="n">transform_point</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 
@@ -347,18 +355,16 @@ type="text/css" />
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalalignment</span>
 
 <div class="viewcode-block" id="Text.get_rotation"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_rotation">[docs]</a>    <span class="k">def</span> <span class="nf">get_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;return the text angle as float in degrees&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Return the text angle as float in degrees.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_rotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="p">)</span>  <span class="c1"># string_or_number -&gt; number</span></div>
 
 <div class="viewcode-block" id="Text.set_rotation_mode"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_rotation_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_rotation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set text rotation mode.</span>
 
-<span class="sd">        .. ACCEPTS: [ None | &quot;default&quot; | &quot;anchor&quot; ]</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        m : ``None`` or ``&quot;default&quot;`` or ``&quot;anchor&quot;``</span>
+<span class="sd">        m : {None, &#39;default&#39;, &#39;anchor&#39;}</span>
 <span class="sd">            If ``None`` or ``&quot;default&quot;``, the text will be first rotated, then</span>
 <span class="sd">            aligned according to their horizontal and vertical alignments.  If</span>
 <span class="sd">            ``&quot;anchor&quot;``, then alignment occurs before rotation.</span>
@@ -370,11 +376,11 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Text.get_rotation_mode"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_rotation_mode">[docs]</a>    <span class="k">def</span> <span class="nf">get_rotation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;get text rotation mode&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the text rotation mode.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_mode</span></div>
 
 <div class="viewcode-block" id="Text.update_from"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="s1">&#39;Copy properties from other to self&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Copy properties from other to self.&quot;&quot;&quot;</span>
         <span class="n">Artist</span><span class="o">.</span><span class="n">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_color</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">_color</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_multialignment</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">_multialignment</span>
@@ -541,15 +547,19 @@ type="text/css" />
 
 <div class="viewcode-block" id="Text.set_bbox"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_bbox">[docs]</a>    <span class="k">def</span> <span class="nf">set_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rectprops</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draw a bounding box around self.  rectprops are any settable</span>
-<span class="sd">        properties for a FancyBboxPatch, e.g., facecolor=&#39;red&#39;, alpha=0.5.</span>
+<span class="sd">        Draw a bounding box around self.</span>
 
-<span class="sd">          t.set_bbox(dict(facecolor=&#39;red&#39;, alpha=0.5))</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rectprops : dict with properties for `.patches.FancyBboxPatch`</span>
+<span class="sd">             The default boxstyle is &#39;square&#39;. The mutation</span>
+<span class="sd">             scale of the `.patches.FancyBboxPatch` is set to the fontsize.</span>
 
-<span class="sd">        The default boxstyle is &#39;square&#39;. The mutation</span>
-<span class="sd">        scale of the FancyBboxPatch is set to the fontsize.</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        ::</span>
 
-<span class="sd">        ACCEPTS: FancyBboxPatch prop dict</span>
+<span class="sd">            t.set_bbox(dict(facecolor=&#39;red&#39;, alpha=0.5))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">rectprops</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -566,8 +576,7 @@ type="text/css" />
                     <span class="n">pad</span> <span class="o">=</span> <span class="mf">0.3</span>
 
             <span class="c1"># boxstyle could be a callable or a string</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">boxstyle</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span>
-                    <span class="ow">and</span> <span class="s2">&quot;pad&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">boxstyle</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">boxstyle</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;pad&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">boxstyle</span><span class="p">:</span>
                 <span class="n">boxstyle</span> <span class="o">+=</span> <span class="s2">&quot;,pad=</span><span class="si">%0.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pad</span>
 
             <span class="n">bbox_transmuter</span> <span class="o">=</span> <span class="n">props</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;bbox_transmuter&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -586,16 +595,17 @@ type="text/css" />
 
 <div class="viewcode-block" id="Text.get_bbox_patch"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_bbox_patch">[docs]</a>    <span class="k">def</span> <span class="nf">get_bbox_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the bbox Patch object. Returns None if the</span>
-<span class="sd">        FancyBboxPatch is not made.</span>
+<span class="sd">        Return the bbox Patch, or None if the `.patches.FancyBboxPatch`</span>
+<span class="sd">        is not made.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_patch</span></div>
 
 <div class="viewcode-block" id="Text.update_bbox_position_size"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.update_bbox_position_size">[docs]</a>    <span class="k">def</span> <span class="nf">update_bbox_position_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the location and the size of the bbox. This method</span>
-<span class="sd">        should be used when the position and size of the bbox needs to</span>
-<span class="sd">        be updated before actually drawing the bbox.</span>
+<span class="sd">        Update the location and the size of the bbox.</span>
+
+<span class="sd">        This method should be used when the position and size of the bbox needs</span>
+<span class="sd">        to be updated before actually drawing the bbox.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_patch</span><span class="p">:</span>
@@ -619,9 +629,9 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_patch</span><span class="o">.</span><span class="n">set_mutation_scale</span><span class="p">(</span><span class="n">fontsize_in_pixel</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_draw_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">posx</span><span class="p">,</span> <span class="n">posy</span><span class="p">):</span>
-
-        <span class="sd">&quot;&quot;&quot; Update the location and the size of the bbox</span>
-<span class="sd">        (FancyBboxPatch), and draw</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the location and size of the bbox (`.patches.FancyBboxPatch`),</span>
+<span class="sd">        and draw.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">x_box</span><span class="p">,</span> <span class="n">y_box</span><span class="p">,</span> <span class="n">w_box</span><span class="p">,</span> <span class="n">h_box</span> <span class="o">=</span> <span class="n">_get_textbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">)</span>
@@ -638,27 +648,28 @@ type="text/css" />
         <span class="n">clipprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">clip_box</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">clipbox</span><span class="p">,</span>
                          <span class="n">clip_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_clippath</span><span class="p">,</span>
                          <span class="n">clip_on</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_clipon</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_patch</span><span class="p">:</span>
             <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_patch</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">clipprops</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Text.set_clip_box"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_clip_box">[docs]</a>    <span class="k">def</span> <span class="nf">set_clip_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clipbox</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the artist&#39;s clip :class:`~matplotlib.transforms.Bbox`.</span>
+<span class="sd">        Set the artist&#39;s clip `~.transforms.Bbox`.</span>
 
-<span class="sd">        ACCEPTS: a :class:`matplotlib.transforms.Bbox` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clipbox : `matplotlib.transforms.Bbox`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_clip_box</span><span class="p">(</span><span class="n">clipbox</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_clip_box</span><span class="p">(</span><span class="n">clipbox</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_clip_properties</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Text.set_clip_path"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_clip_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_clip_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the artist&#39;s clip path, which may be:</span>
 
-<span class="sd">          * a :class:`~matplotlib.patches.Patch` (or subclass) instance</span>
+<span class="sd">          * a `~matplotlib.patches.Patch` (or subclass) instance</span>
 
-<span class="sd">          * a :class:`~matplotlib.path.Path` instance, in which case</span>
-<span class="sd">             an optional :class:`~matplotlib.transforms.Transform`</span>
+<span class="sd">          * a `~matplotlib.path.Path` instance, in which case</span>
+<span class="sd">             an optional `~matplotlib.transforms.Transform`</span>
 <span class="sd">             instance may be provided, which will be applied to the</span>
 <span class="sd">             path before using it for clipping.</span>
 
@@ -668,11 +679,10 @@ type="text/css" />
 <span class="sd">        rectangle, this method will set the clipping box to the</span>
 <span class="sd">        corresponding rectangle and set the clipping path to *None*.</span>
 
-<span class="sd">        ACCEPTS: [ (:class:`~matplotlib.path.Path`,</span>
-<span class="sd">        :class:`~matplotlib.transforms.Transform`) |</span>
-<span class="sd">        :class:`~matplotlib.patches.Patch` | None ]</span>
+<span class="sd">        ACCEPTS: { (`.path.Path`, `.transforms.Transform`),</span>
+<span class="sd">                  `.patches.Patch`, None }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_clip_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_clip_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_clip_properties</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Text.set_clip_on"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_clip_on">[docs]</a>    <span class="k">def</span> <span class="nf">set_clip_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -685,29 +695,27 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        b : bool</span>
-<span class="sd">            .. ACCEPTS: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_clip_on</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_clip_on</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_clip_properties</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Text.get_wrap"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_wrap">[docs]</a>    <span class="k">def</span> <span class="nf">get_wrap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the wrapping state for the text.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the wrapping state for the text.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrap</span></div>
 
 <div class="viewcode-block" id="Text.set_wrap"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_wrap">[docs]</a>    <span class="k">def</span> <span class="nf">set_wrap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrap</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sets the wrapping state for the text.</span>
+        <span class="sd">&quot;&quot;&quot;Set the wrapping state for the text.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        wrap : bool</span>
-<span class="sd">            .. ACCEPTS: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wrap</span> <span class="o">=</span> <span class="n">wrap</span></div>
 
     <span class="k">def</span> <span class="nf">_get_wrap_line_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the maximum line width for wrapping text based on the</span>
-<span class="sd">        current orientation.</span>
+<span class="sd">        Return the maximum line width for wrapping text based on the current</span>
+<span class="sd">        orientation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_position</span><span class="p">())</span>
         <span class="n">figure_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">()</span>
@@ -719,10 +727,7 @@ type="text/css" />
 
         <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dist_to_box</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">figure_box</span><span class="p">)</span>
         <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dist_to_box</span><span class="p">(</span>
-            <span class="p">(</span><span class="mi">180</span> <span class="o">+</span> <span class="n">rotation</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span><span class="p">,</span>
-            <span class="n">x0</span><span class="p">,</span>
-            <span class="n">y0</span><span class="p">,</span>
-            <span class="n">figure_box</span><span class="p">)</span>
+            <span class="p">(</span><span class="mi">180</span> <span class="o">+</span> <span class="n">rotation</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">figure_box</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">alignment</span> <span class="o">==</span> <span class="s1">&#39;left&#39;</span><span class="p">:</span>
             <span class="n">line_width</span> <span class="o">=</span> <span class="n">left</span>
@@ -735,8 +740,8 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">_get_dist_to_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">figure_box</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the distance from the given points, to the boundaries</span>
-<span class="sd">        of a rotated box in pixels.</span>
+<span class="sd">        Return the distance from the given points to the boundaries of a</span>
+<span class="sd">        rotated box, in pixels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">rotation</span> <span class="o">&gt;</span> <span class="mi">270</span><span class="p">:</span>
             <span class="n">quad</span> <span class="o">=</span> <span class="n">rotation</span> <span class="o">-</span> <span class="mi">270</span>
@@ -758,7 +763,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">_get_rendered_text_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the width of a given text string, in pixels.</span>
+<span class="sd">        Return the width of a given text string, in pixels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="o">.</span><span class="n">get_text_width_height_descent</span><span class="p">(</span>
             <span class="n">text</span><span class="p">,</span>
@@ -804,7 +809,7 @@ type="text/css" />
 <div class="viewcode-block" id="Text.draw"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.draw">[docs]</a>    <span class="nd">@artist</span><span class="o">.</span><span class="n">allow_rasterization</span>
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draws the :class:`Text` object to the given *renderer*.</span>
+<span class="sd">        Draws the `.Text` object to the given *renderer*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">renderer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span> <span class="o">=</span> <span class="n">renderer</span>
@@ -876,72 +881,78 @@ type="text/css" />
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color</span></div>
 
 <div class="viewcode-block" id="Text.get_fontproperties"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontproperties">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontproperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the :class:`~font_manager.FontProperties` object&quot;</span>
+        <span class="s2">&quot;Return the `.font_manager.FontProperties` object&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span></div>
 
-<div class="viewcode-block" id="Text.get_font_properties"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_font_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_font_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_fontproperties&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fontproperties</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Text.get_fontfamily"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontfamily">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontfamily</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the list of font families used for font lookup</span>
 
-<div class="viewcode-block" id="Text.get_family"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_family">[docs]</a>    <span class="k">def</span> <span class="nf">get_family</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the list of font families used for font lookup&quot;</span>
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.get_family</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">get_family</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Text.get_fontfamily"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontfamily">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontfamily</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_family&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_family</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Text.get_fontname"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontname">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the font name as string</span>
 
-<div class="viewcode-block" id="Text.get_name"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font name as string&quot;</span>
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.get_name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Text.get_style"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_style">[docs]</a>    <span class="k">def</span> <span class="nf">get_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font style as string&quot;</span>
+<div class="viewcode-block" id="Text.get_fontstyle"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontstyle">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontstyle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the font style as string</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.get_style</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">get_style</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Text.get_size"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_size">[docs]</a>    <span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font size as integer&quot;</span>
+<div class="viewcode-block" id="Text.get_fontsize"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontsize">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontsize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the font size as integer</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.get_size_in_points</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">get_size_in_points</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Text.get_variant"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_variant">[docs]</a>    <span class="k">def</span> <span class="nf">get_variant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font variant as a string&quot;</span>
+<div class="viewcode-block" id="Text.get_fontvariant"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontvariant">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontvariant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the font variant as a string</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.get_variant</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">get_variant</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Text.get_fontvariant"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontvariant">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontvariant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_variant&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variant</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Text.get_fontweight"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontweight">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontweight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the font weight as string or number</span>
 
-<div class="viewcode-block" id="Text.get_weight"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_weight">[docs]</a>    <span class="k">def</span> <span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Get the font weight as string or number&quot;</span>
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.get_weight</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">get_weight</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Text.get_fontname"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontname">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_name&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Text.get_fontstyle"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontstyle">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontstyle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_style&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Text.get_fontsize"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontsize">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontsize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_size&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Text.get_fontweight"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontweight">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontweight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_weight&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_weight</span><span class="p">()</span></div>
-
 <div class="viewcode-block" id="Text.get_stretch"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_stretch">[docs]</a>    <span class="k">def</span> <span class="nf">get_stretch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;Get the font stretch as a string or number&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the font stretch as a string or number</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.get_stretch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">get_stretch</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Text.get_fontstretch"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_fontstretch">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontstretch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_stretch&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stretch</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Text.get_ha"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_ha">[docs]</a>    <span class="k">def</span> <span class="nf">get_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for get_horizontalalignment&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_horizontalalignment</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Text.get_horizontalalignment"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_horizontalalignment">[docs]</a>    <span class="k">def</span> <span class="nf">get_horizontalalignment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -986,10 +997,6 @@ type="text/css" />
         <span class="s2">&quot;Get the text as string&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span></div>
 
-<div class="viewcode-block" id="Text.get_va"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_va">[docs]</a>    <span class="k">def</span> <span class="nf">get_va</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s1">&#39;alias for :meth:`getverticalalignment`&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_verticalalignment</span><span class="p">()</span></div>
-
 <div class="viewcode-block" id="Text.get_verticalalignment"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_verticalalignment">[docs]</a>    <span class="k">def</span> <span class="nf">get_verticalalignment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the vertical alignment as string.  Will be one of</span>
@@ -999,7 +1006,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="Text.get_window_extent"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.get_window_extent">[docs]</a>    <span class="k">def</span> <span class="nf">get_window_extent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Return a :class:`~matplotlib.transforms.Bbox` object bounding</span>
+<span class="sd">        Return a `~matplotlib.transforms.Bbox` object bounding</span>
 <span class="sd">        the text, in display units.</span>
 
 <span class="sd">        In addition to being used internally, this is useful for</span>
@@ -1008,9 +1015,9 @@ type="text/css" />
 <span class="sd">        *renderer* defaults to the _renderer attribute of the text</span>
 <span class="sd">        object.  This is not assigned until the first execution of</span>
 <span class="sd">        :meth:`draw`, so you must use this kwarg if you want</span>
-<span class="sd">        to call :meth:`get_window_extent` prior to the first</span>
-<span class="sd">        :meth:`draw`.  For getting web page regions, it is</span>
-<span class="sd">        simpler to call the method after saving the figure.</span>
+<span class="sd">        to call `.get_window_extent` prior to the first `draw`.  For</span>
+<span class="sd">        getting web page regions, it is simpler to call the method after</span>
+<span class="sd">        saving the figure.</span>
 
 <span class="sd">        *dpi* defaults to self.figure.dpi; the renderer dpi is</span>
 <span class="sd">        irrelevant.  For the web application, if figure.dpi is not</span>
@@ -1030,6 +1037,8 @@ type="text/css" />
         <span class="k">if</span> <span class="n">renderer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span> <span class="o">=</span> <span class="n">renderer</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">_cachedRenderer</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Cannot get window extent w/o renderer&#39;</span><span class="p">)</span>
 
         <span class="n">bbox</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">descent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_layout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_renderer</span><span class="p">)</span>
@@ -1044,12 +1053,13 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the background color of the text by updating the bbox.</span>
 
-<span class="sd">        .. seealso::</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        color : color</span>
 
-<span class="sd">            :meth:`set_bbox`</span>
-<span class="sd">               To change the position of the bounding box.</span>
-
-<span class="sd">        ACCEPTS: any matplotlib color</span>
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .set_bbox : To change the position of the bounding box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_patch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_bbox</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">color</span><span class="p">))</span>
@@ -1063,7 +1073,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the foreground color of the text</span>
 
-<span class="sd">        ACCEPTS: any matplotlib color</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        color : color</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Make sure it is hashable, or get_prop_tup will fail.</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1073,15 +1085,13 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_color</span> <span class="o">=</span> <span class="n">color</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_ha"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_ha">[docs]</a>    <span class="k">def</span> <span class="nf">set_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">align</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_horizontalalignment&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_horizontalalignment</span><span class="p">(</span><span class="n">align</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="Text.set_horizontalalignment"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_horizontalalignment">[docs]</a>    <span class="k">def</span> <span class="nf">set_horizontalalignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">align</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the horizontal alignment to one of</span>
 
-<span class="sd">        ACCEPTS: [ &#39;center&#39; | &#39;right&#39; | &#39;left&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        align : {&#39;center&#39;, &#39;right&#39;, &#39;left&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">legal</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">align</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">legal</span><span class="p">:</span>
@@ -1090,10 +1100,6 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalalignment</span> <span class="o">=</span> <span class="n">align</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_ma"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_ma">[docs]</a>    <span class="k">def</span> <span class="nf">set_ma</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">align</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_multialignment&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_multialignment</span><span class="p">(</span><span class="n">align</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="Text.set_multialignment"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_multialignment">[docs]</a>    <span class="k">def</span> <span class="nf">set_multialignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">align</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the alignment for multiple lines layout.  The layout of the</span>
@@ -1101,7 +1107,9 @@ type="text/css" />
 <span class="sd">        and verticalalignment properties, but the multiline text within that</span>
 <span class="sd">        box can be</span>
 
-<span class="sd">        ACCEPTS: [&#39;left&#39; | &#39;right&#39; | &#39;center&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        align : {&#39;left&#39;, &#39;right&#39;, &#39;center&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">legal</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">align</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">legal</span><span class="p">:</span>
@@ -1115,153 +1123,166 @@ type="text/css" />
 <span class="sd">        Set the line spacing as a multiple of the font size.</span>
 <span class="sd">        Default is 1.2.</span>
 
-<span class="sd">        ACCEPTS: float (multiple of font size)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        spacing : float (multiple of font size)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_linespacing</span> <span class="o">=</span> <span class="n">spacing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_family"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_family">[docs]</a>    <span class="k">def</span> <span class="nf">set_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">):</span>
+<div class="viewcode-block" id="Text.set_fontfamily"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontfamily">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontfamily</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the font family.  May be either a single string, or a list</span>
-<span class="sd">        of strings in decreasing priority.  Each string may be either</span>
-<span class="sd">        a real font name or a generic font class name.  If the latter,</span>
-<span class="sd">        the specific font names will be looked up in the</span>
-<span class="sd">        :file:`matplotlibrc` file.</span>
+<span class="sd">        Set the font family.  May be either a single string, or a list of</span>
+<span class="sd">        strings in decreasing priority.  Each string may be either a real font</span>
+<span class="sd">        name or a generic font class name.  If the latter, the specific font</span>
+<span class="sd">        names will be looked up in the corresponding rcParams.</span>
 
-<span class="sd">        ACCEPTS: [FONTNAME | &#39;serif&#39; | &#39;sans-serif&#39; | &#39;cursive&#39; | &#39;fantasy&#39; |</span>
-<span class="sd">                  &#39;monospace&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fontname : {FONTNAME, &#39;serif&#39;, &#39;sans-serif&#39;, &#39;cursive&#39;, &#39;fantasy&#39;, \</span>
+<span class="sd">&#39;monospace&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.set_family</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">set_family</span><span class="p">(</span><span class="n">fontname</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_variant"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_variant">[docs]</a>    <span class="k">def</span> <span class="nf">set_variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variant</span><span class="p">):</span>
+<div class="viewcode-block" id="Text.set_fontvariant"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontvariant">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontvariant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variant</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the font variant, either &#39;normal&#39; or &#39;small-caps&#39;.</span>
 
-<span class="sd">        ACCEPTS: [ &#39;normal&#39; | &#39;small-caps&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variant : {&#39;normal&#39;, &#39;small-caps&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.set_variant</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">set_variant</span><span class="p">(</span><span class="n">variant</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_fontvariant"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontvariant">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontvariant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variant</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_variant&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_variant</span><span class="p">(</span><span class="n">variant</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Text.set_name"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_name">[docs]</a>    <span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;alias for set_family&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_family</span><span class="p">(</span><span class="n">fontname</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Text.set_fontname"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontname">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;alias for set_family&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_family</span><span class="p">(</span><span class="n">fontname</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Text.set_style"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_style">[docs]</a>    <span class="k">def</span> <span class="nf">set_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontstyle</span><span class="p">):</span>
+<div class="viewcode-block" id="Text.set_fontstyle"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontstyle">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontstyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontstyle</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the font style.</span>
 
-<span class="sd">        ACCEPTS: [ &#39;normal&#39; | &#39;italic&#39; | &#39;oblique&#39;]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fontstyle : {&#39;normal&#39;, &#39;italic&#39;, &#39;oblique&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.set_style</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">fontstyle</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_fontstyle"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontstyle">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontstyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontstyle</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_style&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">fontstyle</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Text.set_size"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">):</span>
+<div class="viewcode-block" id="Text.set_fontsize"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontsize">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the font size.  May be either a size string, relative to</span>
 <span class="sd">        the default font size, or an absolute font size in points.</span>
 
-<span class="sd">        ACCEPTS: [size in points | &#39;xx-small&#39; | &#39;x-small&#39; | &#39;small&#39; |</span>
-<span class="sd">                  &#39;medium&#39; | &#39;large&#39; | &#39;x-large&#39; | &#39;xx-large&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fontsize : {size in points, &#39;xx-small&#39;, &#39;x-small&#39;, &#39;small&#39;, &#39;medium&#39;, \</span>
+<span class="sd">&#39;large&#39;, &#39;x-large&#39;, &#39;xx-large&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.set_size</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_fontsize"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontsize">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_size&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Text.set_weight"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_weight">[docs]</a>    <span class="k">def</span> <span class="nf">set_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
+<div class="viewcode-block" id="Text.set_fontweight"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontweight">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontweight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the font weight.</span>
 
-<span class="sd">        ACCEPTS: [a numeric value in range 0-1000 | &#39;ultralight&#39; | &#39;light&#39; |</span>
-<span class="sd">                  &#39;normal&#39; | &#39;regular&#39; | &#39;book&#39; | &#39;medium&#39; | &#39;roman&#39; |</span>
-<span class="sd">                  &#39;semibold&#39; | &#39;demibold&#39; | &#39;demi&#39; | &#39;bold&#39; | &#39;heavy&#39; |</span>
-<span class="sd">                  &#39;extra bold&#39; | &#39;black&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        weight : {a numeric value in range 0-1000, &#39;ultralight&#39;, &#39;light&#39;, \</span>
+<span class="sd">&#39;normal&#39;, &#39;regular&#39;, &#39;book&#39;, &#39;medium&#39;, &#39;roman&#39;, &#39;semibold&#39;, &#39;demibold&#39;, \</span>
+<span class="sd">&#39;demi&#39;, &#39;bold&#39;, &#39;heavy&#39;, &#39;extra bold&#39;, &#39;black&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.set_weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_fontweight"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontweight">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontweight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_weight&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Text.set_stretch"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_stretch">[docs]</a>    <span class="k">def</span> <span class="nf">set_stretch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stretch</span><span class="p">):</span>
+<div class="viewcode-block" id="Text.set_fontstretch"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontstretch">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontstretch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stretch</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the font stretch (horizontal condensation or expansion).</span>
 
-<span class="sd">        ACCEPTS: [a numeric value in range 0-1000 | &#39;ultra-condensed&#39; |</span>
-<span class="sd">                  &#39;extra-condensed&#39; | &#39;condensed&#39; | &#39;semi-condensed&#39; |</span>
-<span class="sd">                  &#39;normal&#39; | &#39;semi-expanded&#39; | &#39;expanded&#39; | &#39;extra-expanded&#39; |</span>
-<span class="sd">                  &#39;ultra-expanded&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stretch : {a numeric value in range 0-1000, &#39;ultra-condensed&#39;, \</span>
+<span class="sd">&#39;extra-condensed&#39;, &#39;condensed&#39;, &#39;semi-condensed&#39;, &#39;normal&#39;, &#39;semi-expanded&#39;, \</span>
+<span class="sd">&#39;expanded&#39;, &#39;extra-expanded&#39;, &#39;ultra-expanded&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.set_stretch</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span><span class="o">.</span><span class="n">set_stretch</span><span class="p">(</span><span class="n">stretch</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Text.set_fontstretch"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontstretch">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontstretch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stretch</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_stretch&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_stretch</span><span class="p">(</span><span class="n">stretch</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="Text.set_position"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_position">[docs]</a>    <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the (*x*, *y*) position of the text</span>
+<span class="sd">        Set the (*x*, *y*) position of the text.</span>
 
-<span class="sd">        ACCEPTS: (x,y)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xy : (float, float)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_x</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Text.set_x"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_x">[docs]</a>    <span class="k">def</span> <span class="nf">set_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the *x* position of the text</span>
+<span class="sd">        Set the *x* position of the text.</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Text.set_y"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_y">[docs]</a>    <span class="k">def</span> <span class="nf">set_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the *y* position of the text</span>
+<span class="sd">        Set the *y* position of the text.</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Text.set_rotation"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_rotation">[docs]</a>    <span class="k">def</span> <span class="nf">set_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the rotation of the text</span>
+<span class="sd">        Set the rotation of the text.</span>
 
-<span class="sd">        ACCEPTS: [ angle in degrees | &#39;vertical&#39; | &#39;horizontal&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : {angle in degrees, &#39;vertical&#39;, &#39;horizontal&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">=</span> <span class="n">s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
-
-<div class="viewcode-block" id="Text.set_va"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_va">[docs]</a>    <span class="k">def</span> <span class="nf">set_va</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">align</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_verticalalignment&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_verticalalignment</span><span class="p">(</span><span class="n">align</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Text.set_verticalalignment"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_verticalalignment">[docs]</a>    <span class="k">def</span> <span class="nf">set_verticalalignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">align</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the vertical alignment</span>
 
-<span class="sd">        ACCEPTS: [ &#39;center&#39; | &#39;top&#39; | &#39;bottom&#39; | &#39;baseline&#39; ]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        align : {&#39;center&#39;, &#39;top&#39;, &#39;bottom&#39;, &#39;baseline&#39;, &#39;center_baseline&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">legal</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;baseline&#39;</span><span class="p">)</span>
+        <span class="n">legal</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;baseline&#39;</span><span class="p">,</span> <span class="s1">&#39;center_baseline&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">align</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">legal</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Vertical alignment must be one of </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
                              <span class="nb">str</span><span class="p">(</span><span class="n">legal</span><span class="p">))</span>
@@ -1271,14 +1292,19 @@ type="text/css" />
 
 <div class="viewcode-block" id="Text.set_text"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_text">[docs]</a>    <span class="k">def</span> <span class="nf">set_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the text string *s*</span>
+<span class="sd">        Set the text string *s*.</span>
 
 <span class="sd">        It may contain newlines (``\\n``) or math in LaTeX syntax.</span>
 
-<span class="sd">        ACCEPTS: string or anything printable with &#39;%s&#39; conversion.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : string or object castable to string (but ``None`` becomes ``&#39;&#39;``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="p">,)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="p">,)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Text.is_math_text"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.is_math_text">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_math_text</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1305,19 +1331,16 @@ type="text/css" />
 
 <div class="viewcode-block" id="Text.set_fontproperties"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontproperties">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontproperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the font properties that control the text.  *fp* must be a</span>
-<span class="sd">        :class:`matplotlib.font_manager.FontProperties` object.</span>
+<span class="sd">        Set the font properties that control the text.</span>
 
-<span class="sd">        ACCEPTS: a :class:`matplotlib.font_manager.FontProperties` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fp : `.font_manager.FontProperties`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">fp</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fontproperties</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
-
-<div class="viewcode-block" id="Text.set_font_properties"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_font_properties">[docs]</a>    <span class="k">def</span> <span class="nf">set_font_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
-        <span class="s1">&#39;alias for set_fontproperties&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_fontproperties</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Text.set_usetex"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_usetex">[docs]</a>    <span class="k">def</span> <span class="nf">set_usetex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usetex</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1326,8 +1349,6 @@ type="text/css" />
 <span class="sd">        usetex : bool or None</span>
 <span class="sd">            Whether to render using TeX, ``None`` means to use</span>
 <span class="sd">            :rc:`text.usetex`.</span>
-
-<span class="sd">            .. ACCEPTS: bool or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">usetex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_usetex</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.usetex&#39;</span><span class="p">]</span>
@@ -1345,7 +1366,26 @@ type="text/css" />
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usetex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.usetex&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usetex</span></div></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usetex</span></div>
+
+<div class="viewcode-block" id="Text.set_fontname"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Text.set_fontname">[docs]</a>    <span class="k">def</span> <span class="nf">set_fontname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fontname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        alias for `.set_family`</span>
+
+<span class="sd">        One-way alias only: the getter differs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fontname : {FONTNAME, &#39;serif&#39;, &#39;sans-serif&#39;, &#39;cursive&#39;, &#39;fantasy&#39;, \</span>
+<span class="sd">&#39;monospace&#39;}</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .font_manager.FontProperties.set_family</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_family</span><span class="p">(</span><span class="n">fontname</span><span class="p">)</span></div></div>
+
 
 <span class="n">docstring</span><span class="o">.</span><span class="n">interpd</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Text</span><span class="o">=</span><span class="n">artist</span><span class="o">.</span><span class="n">kwdoc</span><span class="p">(</span><span class="n">Text</span><span class="p">))</span>
 <span class="n">docstring</span><span class="o">.</span><span class="n">dedent_interpd</span><span class="p">(</span><span class="n">Text</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
@@ -1408,7 +1448,7 @@ type="text/css" />
     <span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;textwithdash&#39;</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;TextWithDash(</span><span class="si">%g</span><span class="s2">,</span><span class="si">%g</span><span class="s2">,</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;TextWithDash(</span><span class="si">%g</span><span class="s2">, </span><span class="si">%g</span><span class="s2">, </span><span class="si">%r</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -1604,9 +1644,11 @@ type="text/css" />
 
 <div class="viewcode-block" id="TextWithDash.set_dashlength"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.TextWithDash.set_dashlength">[docs]</a>    <span class="k">def</span> <span class="nf">set_dashlength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dl</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the length of the dash.</span>
+<span class="sd">        Set the length of the dash, in canvas units.</span>
 
-<span class="sd">        ACCEPTS: float (canvas units)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dl : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashlength</span> <span class="o">=</span> <span class="n">dl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1619,12 +1661,13 @@ type="text/css" />
 
 <div class="viewcode-block" id="TextWithDash.set_dashdirection"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.TextWithDash.set_dashdirection">[docs]</a>    <span class="k">def</span> <span class="nf">set_dashdirection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the direction of the dash following the text.</span>
-<span class="sd">        1 is before the text and 0 is after. The default</span>
-<span class="sd">        is 0, which is what you&#39;d want for the typical</span>
-<span class="sd">        case of ticks below and on the left of the figure.</span>
+<span class="sd">        Set the direction of the dash following the text.  1 is before the text</span>
+<span class="sd">        and 0 is after. The default is 0, which is what you&#39;d want for the</span>
+<span class="sd">        typical case of ticks below and on the left of the figure.</span>
 
-<span class="sd">        ACCEPTS: int (1 is before, 0 is after)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dd : int (1 is before, 0 is after)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashdirection</span> <span class="o">=</span> <span class="n">dd</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1640,9 +1683,11 @@ type="text/css" />
 
 <div class="viewcode-block" id="TextWithDash.set_dashrotation"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.TextWithDash.set_dashrotation">[docs]</a>    <span class="k">def</span> <span class="nf">set_dashrotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the rotation of the dash, in degrees</span>
+<span class="sd">        Set the rotation of the dash, in degrees.</span>
 
-<span class="sd">        ACCEPTS: float (degrees)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dr : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashrotation</span> <span class="o">=</span> <span class="n">dr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1658,7 +1703,9 @@ type="text/css" />
 <span class="sd">        Set the &quot;pad&quot; of the TextWithDash, which is the extra spacing</span>
 <span class="sd">        between the dash and the text, in canvas units.</span>
 
-<span class="sd">        ACCEPTS: float (canvas units)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dp : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashpad</span> <span class="o">=</span> <span class="n">dp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1672,11 +1719,12 @@ type="text/css" />
 
 <div class="viewcode-block" id="TextWithDash.set_dashpush"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.TextWithDash.set_dashpush">[docs]</a>    <span class="k">def</span> <span class="nf">set_dashpush</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dp</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the &quot;push&quot; of the TextWithDash, which</span>
-<span class="sd">        is the extra spacing between the beginning</span>
-<span class="sd">        of the dash and the specified position.</span>
+<span class="sd">        Set the &quot;push&quot; of the TextWithDash, which is the extra spacing between</span>
+<span class="sd">        the beginning of the dash and the specified position.</span>
 
-<span class="sd">        ACCEPTS: float (canvas units)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dp : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashpush</span> <span class="o">=</span> <span class="n">dp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1685,7 +1733,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the (*x*, *y*) position of the :class:`TextWithDash`.</span>
 
-<span class="sd">        ACCEPTS: (x, y)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xy : (float, float)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_x</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
@@ -1694,7 +1744,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the *x* position of the :class:`TextWithDash`.</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1703,7 +1755,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the *y* position of the :class:`TextWithDash`.</span>
 
-<span class="sd">        ACCEPTS: float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -1713,7 +1767,9 @@ type="text/css" />
 <span class="sd">        Set the :class:`matplotlib.transforms.Transform` instance used</span>
 <span class="sd">        by this artist.</span>
 
-<span class="sd">        ACCEPTS: a :class:`matplotlib.transforms.Transform` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : matplotlib.transforms.Transform</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Text</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dashline</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1725,9 +1781,11 @@ type="text/css" />
 
 <div class="viewcode-block" id="TextWithDash.set_figure"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.TextWithDash.set_figure">[docs]</a>    <span class="k">def</span> <span class="nf">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the figure instance the artist belong to.</span>
+<span class="sd">        Set the figure instance the artist belongs to.</span>
 
-<span class="sd">        ACCEPTS: a :class:`matplotlib.figure.Figure` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fig : matplotlib.figure.Figure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Text</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dashline</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div></div>
@@ -1870,8 +1928,8 @@ type="text/css" />
             <span class="k">return</span> <span class="n">BboxTransformTo</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">s</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;unknown coordinate type : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="p">,))</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;unknown coordinate type : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">s</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">transData</span>
@@ -1934,20 +1992,18 @@ type="text/css" />
 <span class="sd">        return x, y (in display coordinate) that is to be used for a reference</span>
 <span class="sd">        of any offset coordinate</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">is_offset</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;offset&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xycoords</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xycoords</span>
-            <span class="k">if</span> <span class="p">((</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span>
-                 <span class="ow">and</span> <span class="n">s1</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;offset&quot;</span><span class="p">)</span>
-                    <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span>
-                        <span class="ow">and</span> <span class="n">s2</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;offset&quot;</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">is_offset</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_offset</span><span class="p">(</span><span class="n">s2</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xycoords should not be an offset coordinate&quot;</span><span class="p">)</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xy</span>
             <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_xy</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
             <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_xy</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xycoords</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span>
-              <span class="bp">self</span><span class="o">.</span><span class="n">xycoords</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;offset&quot;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">is_offset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xycoords</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xycoords should not be an offset coordinate&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xy</span>
@@ -2037,9 +2093,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="Annotation"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Annotation">[docs]</a><span class="k">class</span> <span class="nc">Annotation</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="n">_AnnotationBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Annotation(</span><span class="si">%g</span><span class="s2">,</span><span class="si">%g</span><span class="s2">,</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                         <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;Annotation(</span><span class="si">%g</span><span class="s2">, </span><span class="si">%g</span><span class="s2">, </span><span class="si">%r</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">)</span>
 
     <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent_interpd</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span>
@@ -2058,10 +2112,10 @@ type="text/css" />
 <span class="sd">        ----------</span>
 
 <span class="sd">        s : str</span>
-<span class="sd">            The text of the annotation</span>
+<span class="sd">            The text of the annotation.</span>
 
 <span class="sd">        xy : iterable</span>
-<span class="sd">            Length 2 sequence specifying the *(x,y)* point to annotate</span>
+<span class="sd">            Length 2 sequence specifying the *(x,y)* point to annotate.</span>
 
 <span class="sd">        xytext : iterable, optional</span>
 <span class="sd">            Length 2 sequence specifying the *(x,y)* to place the text</span>
@@ -2224,8 +2278,6 @@ type="text/css" />
 
         <span class="bp">self</span><span class="o">.</span><span class="n">arrowprops</span> <span class="o">=</span> <span class="n">arrowprops</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span> <span class="o">=</span> <span class="kc">None</span>
-
         <span class="k">if</span> <span class="n">arrowprops</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;arrowstyle&quot;</span> <span class="ow">in</span> <span class="n">arrowprops</span><span class="p">:</span>
                 <span class="n">arrowprops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrowprops</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -2245,9 +2297,6 @@ type="text/css" />
 
 <div class="viewcode-block" id="Annotation.contains"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Annotation.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="n">contains</span><span class="p">,</span> <span class="n">tinfo</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">in_arrow</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-            <span class="n">contains</span> <span class="o">=</span> <span class="n">contains</span> <span class="ow">or</span> <span class="n">in_arrow</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">in_patch</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
             <span class="n">contains</span> <span class="o">=</span> <span class="n">contains</span> <span class="ow">or</span> <span class="n">in_patch</span>
@@ -2271,23 +2320,18 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_textcoords</span> <span class="o">=</span> <span class="n">coords</span>
 
 <div class="viewcode-block" id="Annotation.set_figure"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Annotation.set_figure">[docs]</a>    <span class="k">def</span> <span class="nf">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
         <span class="n">Artist</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Annotation.update_positions"><a class="viewcode-back" href="../../api/text_api.html#matplotlib.text.Annotation.update_positions">[docs]</a>    <span class="k">def</span> <span class="nf">update_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;&quot;Update the pixel positions of the annotated point and the</span>
-<span class="sd">        text.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update the pixel positions of the annotated point and the text.&quot;&quot;&quot;</span>
         <span class="n">xy_pixel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_position_xy</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_position_xytext</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">xy_pixel</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_update_position_xytext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">xy_pixel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Update the pixel positions of the annotation text and the arrow</span>
-<span class="sd">        patch.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the pixel positions of the annotation text and the arrow patch.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># generate transformation,</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_xy_transform</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">anncoords</span><span class="p">))</span>
@@ -2426,22 +2470,23 @@ type="text/css" />
 <span class="sd">        simpler to call the method after saving the figure. The</span>
 <span class="sd">        *dpi* used defaults to self.figure.dpi; the renderer dpi is</span>
 <span class="sd">        irrelevant.</span>
-
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_positions</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_visible</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">Bbox</span><span class="o">.</span><span class="n">unit</span><span class="p">()</span>
-        <span class="n">arrow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span>
-        <span class="n">arrow_patch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span>
 
         <span class="n">text_bbox</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">)</span>
         <span class="n">bboxes</span> <span class="o">=</span> <span class="p">[</span><span class="n">text_bbox</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">bboxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arrow</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">bboxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arrow_patch</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bboxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arrow_patch</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">Bbox</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">bboxes</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">Bbox</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">bboxes</span><span class="p">)</span></div>
+
+    <span class="n">arrow</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">fget</span><span class="o">=</span><span class="n">cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">fset</span><span class="o">=</span><span class="n">cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="kc">None</span><span class="p">))</span></div>
 
 
 <span class="n">docstring</span><span class="o">.</span><span class="n">interpd</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Annotation</span><span class="o">=</span><span class="n">Annotation</span><span class="o">.</span><span class="fm">__init__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
@@ -2456,10 +2501,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

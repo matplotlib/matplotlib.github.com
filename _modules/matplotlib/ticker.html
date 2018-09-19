@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.ticker &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.ticker &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/ticker.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -277,22 +279,18 @@ type="text/css" />
 <span class="sd">module for more information and examples of using date locators and formatters.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">locale</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">rcParams</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">transforms</span> <span class="k">as</span> <span class="n">mtransforms</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">mplDeprecation</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
+<span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;TickHelper&#39;</span><span class="p">,</span> <span class="s1">&#39;Formatter&#39;</span><span class="p">,</span> <span class="s1">&#39;FixedFormatter&#39;</span><span class="p">,</span>
            <span class="s1">&#39;NullFormatter&#39;</span><span class="p">,</span> <span class="s1">&#39;FuncFormatter&#39;</span><span class="p">,</span> <span class="s1">&#39;FormatStrFormatter&#39;</span><span class="p">,</span>
@@ -306,17 +304,13 @@ type="text/css" />
            <span class="s1">&#39;SymmetricalLogLocator&#39;</span><span class="p">,</span> <span class="s1">&#39;LogitLocator&#39;</span><span class="p">)</span>
 
 
-<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-    <span class="n">long</span> <span class="o">=</span> <span class="nb">int</span>
-
-
 <span class="c1"># Work around numpy/numpy#6127.</span>
 <span class="k">def</span> <span class="nf">_divmod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">builtins</span><span class="o">.</span><span class="n">divmod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_mathdefault</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -825,9 +819,13 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">_set_orderOfMagnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">range</span><span class="p">):</span>
         <span class="c1"># if scientific notation is to be used, find the appropriate exponent</span>
         <span class="c1"># if using an numerical offset, find the exponent after applying the</span>
-        <span class="c1"># offset</span>
+        <span class="c1"># offset. When lower power limit = upper &lt;&gt; 0, use provided exponent.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scientific</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">orderOfMagnitude</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_powerlimits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_powerlimits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># fixed scaling when lower power limit = upper &lt;&gt; 0.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">orderOfMagnitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_powerlimits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span>
         <span class="n">locs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">:</span>
@@ -852,7 +850,7 @@ type="text/css" />
         <span class="c1"># set the format string to format all the ticklabels</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="c1"># Temporarily augment the locations with the axis end points.</span>
-            <span class="n">_locs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">]</span>
+            <span class="n">_locs</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_locs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locs</span>
         <span class="n">locs</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">_locs</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">orderOfMagnitude</span>
@@ -1044,7 +1042,7 @@ type="text/css" />
             <span class="c1"># It&#39;s probably a colorbar with</span>
             <span class="c1"># a format kwarg setting a LogFormatter in the manner</span>
             <span class="c1"># that worked with 1.5.x, but that doesn&#39;t work now.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_sublabels</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>  <span class="c1"># label powers of base</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sublabels</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>  <span class="c1"># label powers of base</span>
             <span class="k">return</span>
 
         <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span>
@@ -1211,7 +1209,7 @@ type="text/css" />
         <span class="n">exponent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_x_decade</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span>
         <span class="n">coeff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">b</span> <span class="o">**</span> <span class="n">exponent</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">is_x_decade</span><span class="p">:</span>
-            <span class="n">fx</span> <span class="o">=</span> <span class="n">nearest_long</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span>
+            <span class="n">fx</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelOnlyBase</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_x_decade</span><span class="p">:</span>
             <span class="k">return</span> <span class="s1">&#39;&#39;</span>
@@ -1232,15 +1230,10 @@ type="text/css" />
                     <span class="s1">&#39;</span><span class="si">{0}{1:g}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign_string</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_x_decade</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_non_decade_format</span><span class="p">(</span><span class="n">sign_string</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">usetex</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">usetex</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">r</span><span class="s1">&#39;$</span><span class="si">%s%s</span><span class="s1">^{</span><span class="si">%d</span><span class="s1">}$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sign_string</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">fx</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">usetex</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$</span><span class="si">%s%s</span><span class="s1">^{</span><span class="si">%d</span><span class="s1">}$&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">sign_string</span><span class="p">,</span>
-                                           <span class="n">base</span><span class="p">,</span>
-                                           <span class="n">nearest_long</span><span class="p">(</span><span class="n">fx</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;$</span><span class="si">%s</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">_mathdefault</span><span class="p">(</span>
-                    <span class="s1">&#39;</span><span class="si">%s%s</span><span class="s1">^{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span>
-                    <span class="p">(</span><span class="n">sign_string</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">nearest_long</span><span class="p">(</span><span class="n">fx</span><span class="p">))))</span></div>
+            <span class="k">return</span> <span class="s1">&#39;$</span><span class="si">%s</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">_mathdefault</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s%s</span><span class="s1">^{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sign_string</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">fx</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="LogFormatterSciNotation"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.LogFormatterSciNotation">[docs]</a><span class="k">class</span> <span class="nc">LogFormatterSciNotation</span><span class="p">(</span><span class="n">LogFormatterMathtext</span><span class="p">):</span>
@@ -1254,7 +1247,7 @@ type="text/css" />
         <span class="n">exponent</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span>
         <span class="n">coeff</span> <span class="o">=</span> <span class="n">b</span> <span class="o">**</span> <span class="n">fx</span> <span class="o">/</span> <span class="n">b</span> <span class="o">**</span> <span class="n">exponent</span>
         <span class="k">if</span> <span class="n">is_close_to_int</span><span class="p">(</span><span class="n">coeff</span><span class="p">):</span>
-            <span class="n">coeff</span> <span class="o">=</span> <span class="n">nearest_long</span><span class="p">(</span><span class="n">coeff</span><span class="p">)</span>
+            <span class="n">coeff</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">coeff</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">usetex</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$</span><span class="si">%s%g</span><span class="s1">\times</span><span class="si">%s</span><span class="s1">^{</span><span class="si">%d</span><span class="s1">}$&#39;</span><span class="p">)</span> <span class="o">%</span> \
                                         <span class="p">(</span><span class="n">sign_string</span><span class="p">,</span> <span class="n">coeff</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">exponent</span><span class="p">)</span>
@@ -1349,7 +1342,7 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format_eng</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
         <span class="c1"># Remove the trailing separator when there is neither prefix nor unit</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">s</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="ow">and</span> <span class="n">s</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">)]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_minus</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
@@ -1366,43 +1359,31 @@ type="text/css" />
 <span class="sd">        &#39;1.0 M&#39;</span>
 
 <span class="sd">        &gt;&gt;&gt; format_eng(&quot;-1e-6&quot;) # for self.places = 2</span>
-<span class="sd">        u&#39;-1.00 \N{GREEK SMALL LETTER MU}&#39;</span>
-
-<span class="sd">        `num` may be a numeric value or a string that can be converted</span>
-<span class="sd">        to a numeric value with ``float(num)``.</span>
+<span class="sd">        &#39;-1.00 \N{GREEK SMALL LETTER MU}&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;Passing a string as *num* argument is deprecated since&quot;</span>
-                <span class="s2">&quot;Matplotlib 2.1, and is expected to be removed in 2.3.&quot;</span><span class="p">,</span>
-                <span class="n">mplDeprecation</span><span class="p">)</span>
-
-        <span class="n">dnum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
         <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;g&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">places</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;.</span><span class="si">{:d}</span><span class="s2">f&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">places</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">dnum</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="n">dnum</span> <span class="o">=</span> <span class="o">-</span><span class="n">dnum</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="o">-</span><span class="n">num</span>
 
-        <span class="k">if</span> <span class="n">dnum</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">pow10</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">dnum</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pow10</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pow10</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># Force dnum to zero, to avoid inconsistencies like</span>
+            <span class="c1"># Force num to zero, to avoid inconsistencies like</span>
             <span class="c1"># format_eng(-0) = &quot;0&quot; and format_eng(0.0) = &quot;0&quot;</span>
             <span class="c1"># but format_eng(-0.0) = &quot;-0.0&quot;</span>
-            <span class="n">dnum</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="n">pow10</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">pow10</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENG_PREFIXES</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENG_PREFIXES</span><span class="p">))</span>
 
-        <span class="n">mant</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">dnum</span> <span class="o">/</span> <span class="p">(</span><span class="mf">10.0</span> <span class="o">**</span> <span class="n">pow10</span><span class="p">)</span>
-        <span class="c1"># Taking care of the cases like 999.9..., which</span>
-        <span class="c1"># may be rounded to 1000 instead of 1 k.  Beware</span>
-        <span class="c1"># of the corner case of values that are beyond</span>
+        <span class="n">mant</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">num</span> <span class="o">/</span> <span class="p">(</span><span class="mf">10.0</span> <span class="o">**</span> <span class="n">pow10</span><span class="p">)</span>
+        <span class="c1"># Taking care of the cases like 999.9..., which may be rounded to 1000</span>
+        <span class="c1"># instead of 1 k.  Beware of the corner case of values that are beyond</span>
         <span class="c1"># the range of SI prefixes (i.e. &gt; &#39;Y&#39;).</span>
-        <span class="n">_fmant</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;{mant:</span><span class="si">{fmt}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mant</span><span class="o">=</span><span class="n">mant</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">_fmant</span> <span class="o">&gt;=</span> <span class="mi">1000</span> <span class="ow">and</span> <span class="n">pow10</span> <span class="o">!=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENG_PREFIXES</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="n">mant</span><span class="p">,</span> <span class="n">fmt</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">1000</span> <span class="ow">and</span> <span class="n">pow10</span> <span class="o">&lt;</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENG_PREFIXES</span><span class="p">):</span>
             <span class="n">mant</span> <span class="o">/=</span> <span class="mi">1000</span>
             <span class="n">pow10</span> <span class="o">+=</span> <span class="mi">3</span>
 
@@ -1554,9 +1535,9 @@ type="text/css" />
 <span class="sd">            automatically for the associated :attr:`axis` simply call</span>
 <span class="sd">            the Locator instance::</span>
 
-<span class="sd">                &gt;&gt;&gt; print((type(loc)))</span>
+<span class="sd">                &gt;&gt;&gt; print(type(loc))</span>
 <span class="sd">                &lt;type &#39;Locator&#39;&gt;</span>
-<span class="sd">                &gt;&gt;&gt; print((loc()))</span>
+<span class="sd">                &gt;&gt;&gt; print(loc())</span>
 <span class="sd">                [1, 2, 3, 4]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1671,9 +1652,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locs</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nbins</span> <span class="o">=</span> <span class="n">nbins</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">nbins</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbins</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbins</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">nbins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="FixedLocator.set_params"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.FixedLocator.set_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set parameters within this locator.&quot;&quot;&quot;</span>
@@ -1797,13 +1776,12 @@ type="text/css" />
         <span class="k">return</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">nonsingular</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span></div></div>
 
 
+<span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">closeto</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
 
 
+<span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="s1">&#39;this solution has some hacks to deal with floating point inaccuracies&#39;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
@@ -1847,17 +1825,16 @@ type="text/css" />
 
 <div class="viewcode-block" id="MultipleLocator"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator">[docs]</a><span class="k">class</span> <span class="nc">MultipleLocator</span><span class="p">(</span><span class="n">Locator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set a tick on every integer that is multiple of base in the</span>
-<span class="sd">    view interval</span>
+<span class="sd">    Set a tick on each integer multiple of a base within the view interval.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span> <span class="o">=</span> <span class="n">Base</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_edge</span> <span class="o">=</span> <span class="n">_Edge_integer</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MultipleLocator.set_params"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator.set_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set parameters within this locator.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span> <span class="o">=</span> <span class="n">base</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_edge</span> <span class="o">=</span> <span class="n">_Edge_integer</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s1">&#39;Return the locations of the ticks&#39;</span>
@@ -1867,20 +1844,20 @@ type="text/css" />
 <div class="viewcode-block" id="MultipleLocator.tick_values"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator.tick_values">[docs]</a>    <span class="k">def</span> <span class="nf">tick_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">vmax</span> <span class="o">&lt;</span> <span class="n">vmin</span><span class="p">:</span>
             <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">vmin</span>
-        <span class="n">vmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="n">vmin</span><span class="p">)</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">get_base</span><span class="p">()</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span> <span class="o">+</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">base</span><span class="p">)</span> <span class="o">//</span> <span class="n">base</span>
-        <span class="n">locs</span> <span class="o">=</span> <span class="n">vmin</span> <span class="o">-</span> <span class="n">base</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">base</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edge</span><span class="o">.</span><span class="n">step</span>
+        <span class="n">vmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edge</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="n">vmin</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span> <span class="o">+</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span> <span class="o">//</span> <span class="n">step</span>
+        <span class="n">locs</span> <span class="o">=</span> <span class="n">vmin</span> <span class="o">-</span> <span class="n">step</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_if_exceeds</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MultipleLocator.view_limits"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator.view_limits">[docs]</a>    <span class="k">def</span> <span class="nf">view_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmin</span><span class="p">,</span> <span class="n">dmax</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the view limits to the nearest multiples of base that</span>
-<span class="sd">        contain the data</span>
+<span class="sd">        contain the data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.autolimit_mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;round_numbers&#39;</span><span class="p">:</span>
-            <span class="n">vmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">dmin</span><span class="p">)</span>
-            <span class="n">vmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="n">dmax</span><span class="p">)</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edge</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">dmin</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edge</span><span class="o">.</span><span class="n">step</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="n">dmax</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edge</span><span class="o">.</span><span class="n">step</span>
             <span class="k">if</span> <span class="n">vmin</span> <span class="o">==</span> <span class="n">vmax</span><span class="p">:</span>
                 <span class="n">vmin</span> <span class="o">-=</span> <span class="mi">1</span>
                 <span class="n">vmax</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1900,6 +1877,49 @@ type="text/css" />
         <span class="n">offset</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">meanv</span><span class="p">))</span> <span class="o">//</span> <span class="mi">1</span><span class="p">),</span> <span class="n">meanv</span><span class="p">)</span>
     <span class="n">scale</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">dv</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">scale</span><span class="p">,</span> <span class="n">offset</span>
+
+
+<span class="k">class</span> <span class="nc">_Edge_integer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper for MaxNLocator, MultipleLocator, etc.</span>
+
+<span class="sd">    Take floating point precision limitations into account when calculating</span>
+<span class="sd">    tick locations as integer multiples of a step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *step* is a positive floating-point interval between ticks.</span>
+<span class="sd">        *offset* is the offset subtracted from the data limits</span>
+<span class="sd">        prior to calculating tick locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;step&#39; must be positive&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">closeto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ms</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+        <span class="c1"># Allow more slop when the offset is large compared to the step.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">digits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+            <span class="n">tol</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-10</span><span class="p">,</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">digits</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+            <span class="n">tol</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.4999</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-10</span>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ms</span> <span class="o">-</span> <span class="n">edge</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span>
+
+    <span class="k">def</span> <span class="nf">le</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="s1">&#39;Return the largest n: n*step &lt;= x.&#39;</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">_divmod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeto</span><span class="p">(</span><span class="n">m</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">ge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="s1">&#39;Return the smallest n: n*step &gt;= x.&#39;</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">_divmod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closeto</span><span class="p">(</span><span class="n">m</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MaxNLocator"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.MaxNLocator">[docs]</a><span class="k">class</span> <span class="nc">MaxNLocator</span><span class="p">(</span><span class="n">Locator</span><span class="p">):</span>
@@ -2016,6 +2036,12 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">_integer</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;integer&#39;</span><span class="p">]</span></div>
 
     <span class="k">def</span> <span class="nf">_raw_ticks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a list of tick locations including the range *vmin* to</span>
+<span class="sd">        *vmax*.  In some applications, one or both of the end locations</span>
+<span class="sd">        will not be needed, in which case they are trimmed off</span>
+<span class="sd">        elsewhere.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nbins</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">nbins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="o">.</span><span class="n">get_tick_space</span><span class="p">(),</span>
@@ -2028,7 +2054,7 @@ type="text/css" />
         <span class="n">scale</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">scale_range</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">nbins</span><span class="p">)</span>
         <span class="n">_vmin</span> <span class="o">=</span> <span class="n">vmin</span> <span class="o">-</span> <span class="n">offset</span>
         <span class="n">_vmax</span> <span class="o">=</span> <span class="n">vmax</span> <span class="o">-</span> <span class="n">offset</span>
-        <span class="n">raw_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">nbins</span>
+        <span class="n">raw_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">_vmax</span> <span class="o">-</span> <span class="n">_vmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">nbins</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extended_steps</span> <span class="o">*</span> <span class="n">scale</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integer</span><span class="p">:</span>
             <span class="c1"># For steps &gt; 1, keep only integer values.</span>
@@ -2043,24 +2069,31 @@ type="text/css" />
                 <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">istep</span><span class="p">]</span>
                 <span class="n">best_vmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">_vmin</span> <span class="o">//</span> <span class="n">step</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span>
                 <span class="n">best_vmax</span> <span class="o">=</span> <span class="n">best_vmin</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="n">nbins</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">best_vmax</span> <span class="o">&gt;=</span> <span class="n">_vmax</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">best_vmax</span> <span class="o">&gt;=</span> <span class="n">_vmax</span><span class="p">:</span>
                     <span class="k">break</span>
 
         <span class="c1"># This is an upper limit; move to smaller steps if necessary.</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">istep</span><span class="p">):</span>
-            <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">istep</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">istep</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">istep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">istep</span><span class="p">]</span>
+
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integer</span> <span class="ow">and</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">_vmax</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">_vmin</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_n_ticks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">step</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
             <span class="n">best_vmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">_vmin</span> <span class="o">//</span> <span class="n">step</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span>
 
-            <span class="n">low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">Base</span><span class="p">(</span><span class="n">step</span><span class="p">)</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">_vmin</span> <span class="o">-</span> <span class="n">best_vmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span>
-            <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">Base</span><span class="p">(</span><span class="n">step</span><span class="p">)</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="n">_vmax</span> <span class="o">-</span> <span class="n">best_vmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span>
-            <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span> <span class="o">+</span> <span class="n">best_vmin</span> <span class="o">+</span> <span class="n">offset</span>
-            <span class="n">nticks</span> <span class="o">=</span> <span class="p">((</span><span class="n">ticks</span> <span class="o">&lt;=</span> <span class="n">vmax</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ticks</span> <span class="o">&gt;=</span> <span class="n">vmin</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="c1"># Find tick locations spanning the vmin-vmax range, taking into</span>
+            <span class="c1"># account degradation of precision when there is a large offset.</span>
+            <span class="c1"># The edge ticks beyond vmin and/or vmax are needed for the</span>
+            <span class="c1"># &quot;round_numbers&quot; autolimit mode.</span>
+            <span class="n">edge</span> <span class="o">=</span> <span class="n">_Edge_integer</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+            <span class="n">low</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">_vmin</span> <span class="o">-</span> <span class="n">best_vmin</span><span class="p">)</span>
+            <span class="n">high</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="n">_vmax</span> <span class="o">-</span> <span class="n">best_vmin</span><span class="p">)</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span> <span class="o">+</span> <span class="n">best_vmin</span>
+            <span class="c1"># Count only the ticks that will be displayed.</span>
+            <span class="n">nticks</span> <span class="o">=</span> <span class="p">((</span><span class="n">ticks</span> <span class="o">&lt;=</span> <span class="n">_vmax</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ticks</span> <span class="o">&gt;=</span> <span class="n">_vmin</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">nticks</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_n_ticks</span><span class="p">:</span>
                 <span class="k">break</span>
-        <span class="k">return</span> <span class="n">ticks</span>
+        <span class="k">return</span> <span class="n">ticks</span> <span class="o">+</span> <span class="n">offset</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="o">.</span><span class="n">get_view_interval</span><span class="p">()</span>
@@ -2114,12 +2147,11 @@ type="text/css" />
 
 
 <span class="k">def</span> <span class="nf">nearest_long</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">long</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">long</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">long</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span><span class="s1">&#39;3.0&#39;</span><span class="p">,</span> <span class="n">removal</span><span class="o">=</span><span class="s1">&#39;3.1&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;`nearest_long`&#39;</span><span class="p">,</span>
+                          <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;function&#39;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;`round`&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">is_decade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
@@ -2134,7 +2166,7 @@ type="text/css" />
 <span class="k">def</span> <span class="nf">is_close_to_int</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">nearest_long</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
 
 
 <div class="viewcode-block" id="LogLocator"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.LogLocator">[docs]</a><span class="k">class</span> <span class="nc">LogLocator</span><span class="p">(</span><span class="n">Locator</span><span class="p">):</span>
@@ -2197,7 +2229,7 @@ type="text/css" />
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">subs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># consistency with previous bad API</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_subs</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subs</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">subs</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A subs string must be &#39;all&#39; or &#39;auto&#39;; &quot;</span>
                                  <span class="s2">&quot;found &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="n">subs</span><span class="p">)</span>
@@ -2237,6 +2269,7 @@ type="text/css" />
                     <span class="s2">&quot;Data has no positive values, and therefore can not be &quot;</span>
                     <span class="s2">&quot;log-scaled.&quot;</span><span class="p">)</span>
 
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;vmin </span><span class="si">%s</span><span class="s1"> vmax </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
         <span class="n">vmin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="n">vmax</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 
@@ -2245,7 +2278,7 @@ type="text/css" />
 
         <span class="n">numdec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">vmin</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subs</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">_first</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subs</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span> <span class="k">else</span> <span class="mf">1.0</span>
             <span class="k">if</span> <span class="n">numdec</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subs</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
@@ -2257,8 +2290,8 @@ type="text/css" />
         <span class="k">else</span><span class="p">:</span>
             <span class="n">subs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subs</span>
 
+        <span class="c1"># get decades between major ticks.</span>
         <span class="n">stride</span> <span class="o">=</span> <span class="mi">1</span>
-
         <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;_internal.classic_mode&#39;</span><span class="p">]:</span>
             <span class="c1"># Leave the bug left over from the PY2-PY3 transition.</span>
             <span class="k">while</span> <span class="n">numdec</span> <span class="o">/</span> <span class="n">stride</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">numticks</span><span class="p">:</span>
@@ -2279,6 +2312,8 @@ type="text/css" />
                 <span class="k">if</span> <span class="n">stride</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">ticklocs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">subs</span><span class="p">,</span> <span class="n">ticklocs</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># no ticklocs if we have more than one decade</span>
+                    <span class="c1"># between major ticks.</span>
                     <span class="n">ticklocs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">have_subs</span><span class="p">:</span>
@@ -2289,6 +2324,7 @@ type="text/css" />
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ticklocs</span> <span class="o">=</span> <span class="n">b</span> <span class="o">**</span> <span class="n">decades</span>
 
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;ticklocs </span><span class="si">%r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ticklocs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_if_exceeds</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ticklocs</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="LogLocator.view_limits"><a class="viewcode-back" href="../../api/ticker_api.html#matplotlib.ticker.LogLocator.view_limits">[docs]</a>    <span class="k">def</span> <span class="nf">view_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">):</span>
@@ -2541,28 +2577,28 @@ type="text/css" />
         <span class="c1"># major ticks</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">minor</span><span class="p">:</span>
             <span class="n">ticklocs</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">expo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">decade_min</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">decade_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">expo</span><span class="p">))</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">decade_max</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">expo</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">decade_max</span><span class="p">:</span>
                 <span class="n">ticklocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">decade_max</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">decade_max</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">expo</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">decade_min</span><span class="p">),</span> <span class="n">decade_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">10</span><span class="o">**</span><span class="n">expo</span><span class="p">))</span>
+                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">10</span><span class="o">**</span><span class="n">expo</span><span class="p">)</span>
 
         <span class="c1"># minor ticks</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ticklocs</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span>
                 <span class="n">expo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">decade_min</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">decade_max</span><span class="p">))</span>
                 <span class="n">newticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">10</span><span class="o">**</span><span class="n">expo</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">newticks</span><span class="p">))</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">decade_max</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">newticks</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">decade_min</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">decade_max</span><span class="p">:</span>
                 <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">decade_max</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">decade_max</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">expo</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">decade_min</span><span class="p">),</span> <span class="n">decade_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">newticks</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">10</span><span class="o">**</span><span class="n">expo</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">newticks</span><span class="p">))</span>
+                <span class="n">ticklocs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">newticks</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_if_exceeds</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ticklocs</span><span class="p">))</span></div>
 
@@ -2668,8 +2704,10 @@ type="text/css" />
         <span class="n">tmin</span> <span class="o">=</span> <span class="p">((</span><span class="n">vmin</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">//</span> <span class="n">minorstep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">minorstep</span>
         <span class="n">tmax</span> <span class="o">=</span> <span class="p">((</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">//</span> <span class="n">minorstep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">minorstep</span>
         <span class="n">locs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">tmin</span><span class="p">,</span> <span class="n">tmax</span><span class="p">,</span> <span class="n">minorstep</span><span class="p">)</span> <span class="o">+</span> <span class="n">t0</span>
-        <span class="n">cond</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">locs</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">%</span> <span class="n">majorstep</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">minorstep</span> <span class="o">/</span> <span class="mf">10.0</span>
-        <span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">locs</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">%</span> <span class="n">majorstep</span><span class="p">)</span>
+        <span class="n">cond1</span> <span class="o">=</span> <span class="n">mod</span> <span class="o">&gt;</span> <span class="n">minorstep</span> <span class="o">/</span> <span class="mf">10.0</span>
+        <span class="n">cond2</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">majorstep</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">cond1</span> <span class="o">&amp;</span> <span class="n">cond2</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_if_exceeds</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">locs</span><span class="p">))</span>
 
@@ -2748,10 +2786,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

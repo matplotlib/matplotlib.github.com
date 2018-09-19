@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.tri.triangulation &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.tri.triangulation &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/tri/triangulation.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -111,14 +113,10 @@ type="text/css" />
           <div class="body">
             
   <h1>Source code for matplotlib.tri.triangulation</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib._tri</span> <span class="k">as</span> <span class="nn">_tri</span>
 <span class="kn">import</span> <span class="nn">matplotlib._qhull</span> <span class="k">as</span> <span class="nn">_qhull</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <div class="viewcode-block" id="Triangulation"><a class="viewcode-back" href="../../../api/tri_api.html#matplotlib.tri.Triangulation">[docs]</a><span class="k">class</span> <span class="nc">Triangulation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -129,19 +127,23 @@ type="text/css" />
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    x, y : array_like of shape (npoints)</span>
+<span class="sd">    x, y : array-like of shape (npoints)</span>
 <span class="sd">        Coordinates of grid points.</span>
 <span class="sd">    triangles : integer array_like of shape (ntri, 3), optional</span>
 <span class="sd">        For each triangle, the indices of the three points that make</span>
 <span class="sd">        up the triangle, ordered in an anticlockwise manner.  If not</span>
 <span class="sd">        specified, the Delaunay triangulation is calculated.</span>
-<span class="sd">    mask : boolean array_like of shape (ntri), optional</span>
+<span class="sd">    mask : boolean array-like of shape (ntri), optional</span>
 <span class="sd">        Which triangles are masked out.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    `edges`</span>
-<span class="sd">    `neighbors`</span>
+<span class="sd">    edges : int array of shape (nedges, 2)</span>
+<span class="sd">        See `~.Triangulation.edges`</span>
+<span class="sd">    neighbors : int array of shape (ntri, 3)</span>
+<span class="sd">        See `~.Triangulation.neighbors`</span>
+<span class="sd">    mask : bool array of shape (ntri, 3)</span>
+<span class="sd">        Masked out triangles.</span>
 <span class="sd">    is_delaunay : bool</span>
 <span class="sd">        Whether the Triangulation is a calculated Delaunay</span>
 <span class="sd">        triangulation (where `triangles` was not specified) or not.</span>
@@ -193,29 +195,32 @@ type="text/css" />
 <div class="viewcode-block" id="Triangulation.calculate_plane_coefficients"><a class="viewcode-back" href="../../../api/tri_api.html#matplotlib.tri.Triangulation.calculate_plane_coefficients">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_plane_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate plane equation coefficients for all unmasked triangles from</span>
-<span class="sd">        the point (x,y) coordinates and specified z-array of shape (npoints).</span>
-<span class="sd">        Returned array has shape (npoints,3) and allows z-value at (x,y)</span>
+<span class="sd">        the point (x, y) coordinates and specified z-array of shape (npoints).</span>
+<span class="sd">        The returned array has shape (npoints, 3) and allows z-value at (x, y)</span>
 <span class="sd">        position in triangle tri to be calculated using</span>
-<span class="sd">        z = array[tri,0]*x + array[tri,1]*y + array[tri,2].</span>
+<span class="sd">        ``z = array[tri, 0] * x  + array[tri, 1] * y + array[tri, 2]``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cpp_triangulation</span><span class="p">()</span><span class="o">.</span><span class="n">calculate_plane_coefficients</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return integer array of shape (nedges,2) containing all edges of</span>
+<span class="sd">        Return integer array of shape (nedges, 2) containing all edges of</span>
 <span class="sd">        non-masked triangles.</span>
 
-<span class="sd">        Each edge is the start point index and end point index.  Each</span>
-<span class="sd">        edge (start,end and end,start) appears only once.</span>
+<span class="sd">        Each row defines an edge by it&#39;s start point index and end point</span>
+<span class="sd">        index.  Each edge appears only once, i.e. for an edge between points</span>
+<span class="sd">        *i*  and *j*, there will only be either *(i, j)* or *(j, i)*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edges</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cpp_triangulation</span><span class="p">()</span><span class="o">.</span><span class="n">get_edges</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edges</span>
 
 <div class="viewcode-block" id="Triangulation.get_cpp_triangulation"><a class="viewcode-back" href="../../../api/tri_api.html#matplotlib.tri.Triangulation.get_cpp_triangulation">[docs]</a>    <span class="k">def</span> <span class="nf">get_cpp_triangulation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Return the underlying C++ Triangulation object, creating it</span>
-        <span class="c1"># if necessary.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the underlying C++ Triangulation object, creating it</span>
+<span class="sd">        if necessary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_triangulation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_triangulation</span> <span class="o">=</span> <span class="n">_tri</span><span class="o">.</span><span class="n">Triangulation</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_edges</span><span class="p">,</span>
@@ -254,7 +259,7 @@ type="text/css" />
             <span class="c1"># Check triangles in kwargs then args.</span>
             <span class="n">triangles</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;triangles&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">from_args</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">triangles</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">triangles</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">args</span><span class="p">:</span>
                 <span class="n">triangles</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">from_args</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -292,7 +297,7 @@ type="text/css" />
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return integer array of shape (ntri,3) containing neighbor</span>
+<span class="sd">        Return integer array of shape (ntri, 3) containing neighbor</span>
 <span class="sd">        triangles.</span>
 
 <span class="sd">        For each triangle, the indices of the three triangles that</span>
@@ -340,10 +345,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

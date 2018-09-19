@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.backends.backend_cairo &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.backends.backend_cairo &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/backends/backend_cairo.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -116,15 +118,10 @@ type="text/css" />
 <span class="sd">==============================</span>
 <span class="sd">:Author: Steve Chaplin and others</span>
 
-<span class="sd">This backend depends on `cairo &lt;http://cairographics.org&gt;`_, and either on</span>
-<span class="sd">cairocffi, or (Python 2 only) on pycairo.</span>
+<span class="sd">This backend depends on cairocffi or pycairo.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">gzip</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -142,25 +139,42 @@ type="text/css" />
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;cairo backend requires that cairocffi or pycairo &quot;</span>
                           <span class="s2">&quot;is installed&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">HAS_CAIRO_CFFI</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">HAS_CAIRO_CFFI</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">cairo</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="c1"># Introduced create_for_data for Py3.</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;cairo </span><span class="si">{}</span><span class="s2"> is installed; cairo&gt;=1.11.0 is required&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
 
-<span class="k">if</span> <span class="n">cairo</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;cairo </span><span class="si">{}</span><span class="s2"> is installed; &quot;</span>
-                      <span class="s2">&quot;cairo&gt;=1.4.0 is required&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
 <span class="n">backend_version</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">version</span>
 
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">cbook</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">GraphicsContextBase</span><span class="p">,</span>
     <span class="n">RendererBase</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">ttfFontProperty</span>
 <span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="k">import</span> <span class="n">MathTextParser</span>
 <span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Affine2D</span>
-<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">ttfFontProperty</span>
 
 
-<div class="viewcode-block" id="ArrayWrapper"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.ArrayWrapper">[docs]</a><span class="k">class</span> <span class="nc">ArrayWrapper</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">cairo</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;cairocffi&quot;</span><span class="p">:</span>
+    <span class="c1"># Convert a pycairo context to a cairocffi one.</span>
+    <span class="k">def</span> <span class="nf">_to_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">):</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="o">.</span><span class="n">_from_pointer</span><span class="p">(</span>
+                <span class="n">cairo</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span>
+                    <span class="s1">&#39;cairo_t **&#39;</span><span class="p">,</span>
+                    <span class="nb">id</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span> <span class="o">+</span> <span class="nb">object</span><span class="o">.</span><span class="n">__basicsize__</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">incref</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctx</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Pass-through a pycairo context.</span>
+    <span class="k">def</span> <span class="nf">_to_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ctx</span>
+
+
+<div class="viewcode-block" id="ArrayWrapper"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.ArrayWrapper">[docs]</a><span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ArrayWrapper</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Thin wrapper around numpy ndarray to expose the interface</span>
 <span class="sd">       expected by cairocffi. Basically replicates the</span>
 <span class="sd">       array.array interface.</span>
@@ -173,6 +187,94 @@ type="text/css" />
 
 <div class="viewcode-block" id="ArrayWrapper.buffer_info"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.ArrayWrapper.buffer_info">[docs]</a>    <span class="k">def</span> <span class="nf">buffer_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__size</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># Mapping from Matplotlib Path codes to cairo path codes.</span>
+<span class="n">_MPL_TO_CAIRO_PATH_TYPE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># CLOSEPOLY = 79.</span>
+<span class="n">_MPL_TO_CAIRO_PATH_TYPE</span><span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">MOVETO</span><span class="p">]</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">PATH_MOVE_TO</span>
+<span class="n">_MPL_TO_CAIRO_PATH_TYPE</span><span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">]</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">PATH_LINE_TO</span>
+<span class="n">_MPL_TO_CAIRO_PATH_TYPE</span><span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">]</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">PATH_CURVE_TO</span>
+<span class="n">_MPL_TO_CAIRO_PATH_TYPE</span><span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">CLOSEPOLY</span><span class="p">]</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">PATH_CLOSE_PATH</span>
+<span class="c1"># Sizes in cairo_path_data_t of each cairo path element.</span>
+<span class="n">_CAIRO_PATH_TYPE_SIZES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">_CAIRO_PATH_TYPE_SIZES</span><span class="p">[</span><span class="n">cairo</span><span class="o">.</span><span class="n">PATH_MOVE_TO</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">_CAIRO_PATH_TYPE_SIZES</span><span class="p">[</span><span class="n">cairo</span><span class="o">.</span><span class="n">PATH_LINE_TO</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">_CAIRO_PATH_TYPE_SIZES</span><span class="p">[</span><span class="n">cairo</span><span class="o">.</span><span class="n">PATH_CURVE_TO</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">_CAIRO_PATH_TYPE_SIZES</span><span class="p">[</span><span class="n">cairo</span><span class="o">.</span><span class="n">PATH_CLOSE_PATH</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">_append_paths_slow</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">transforms</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">points</span><span class="p">,</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iter_segments</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="n">clip</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">MOVETO</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">CLOSEPOLY</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">close_path</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">line_to</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">CURVE3</span><span class="p">:</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_current_point</span><span class="p">()</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">curve_to</span><span class="p">(</span>
+                    <span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">cur</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">points</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span>
+                                     <span class="n">points</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">/</span> <span class="mi">3</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">curve_to</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_append_paths_fast</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># We directly convert to the internal representation used by cairo, for</span>
+    <span class="c1"># which ABI compatibility is guaranteed.  The layout for each item is</span>
+    <span class="c1"># --CODE(4)--  -LENGTH(4)-  ---------PAD(8)---------</span>
+    <span class="c1"># ----------X(8)----------  ----------Y(8)----------</span>
+    <span class="c1"># with the size in bytes in parentheses, and (X, Y) repeated as many times</span>
+    <span class="c1"># as there are points for the current code.</span>
+    <span class="n">ffi</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ffi</span>
+
+    <span class="c1"># Convert curves to segment, so that 1. we don&#39;t have to handle</span>
+    <span class="c1"># variable-sized CURVE-n codes, and 2. we don&#39;t have to implement degree</span>
+    <span class="c1"># elevation for quadratic Beziers.</span>
+    <span class="n">cleaneds</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="o">.</span><span class="n">cleaned</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="n">clip</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">transforms</span><span class="p">)]</span>
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">cleaned</span><span class="o">.</span><span class="n">vertices</span> <span class="k">for</span> <span class="n">cleaned</span> <span class="ow">in</span> <span class="n">cleaneds</span><span class="p">])</span>
+    <span class="n">codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">cleaned</span><span class="o">.</span><span class="n">codes</span> <span class="k">for</span> <span class="n">cleaned</span> <span class="ow">in</span> <span class="n">cleaneds</span><span class="p">])</span>
+
+    <span class="c1"># Remove unused vertices and convert to cairo codes.  Note that unlike</span>
+    <span class="c1"># cairo_close_path, we do not explicitly insert an extraneous MOVE_TO after</span>
+    <span class="c1"># CLOSE_PATH, so our resulting buffer may be smaller.</span>
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[(</span><span class="n">codes</span> <span class="o">!=</span> <span class="n">Path</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">codes</span> <span class="o">!=</span> <span class="n">Path</span><span class="o">.</span><span class="n">CLOSEPOLY</span><span class="p">)]</span>
+    <span class="n">codes</span> <span class="o">=</span> <span class="n">codes</span><span class="p">[</span><span class="n">codes</span> <span class="o">!=</span> <span class="n">Path</span><span class="o">.</span><span class="n">STOP</span><span class="p">]</span>
+    <span class="n">codes</span> <span class="o">=</span> <span class="n">_MPL_TO_CAIRO_PATH_TYPE</span><span class="p">[</span><span class="n">codes</span><span class="p">]</span>
+
+    <span class="c1"># Where are the headers of each cairo portions?</span>
+    <span class="n">cairo_type_sizes</span> <span class="o">=</span> <span class="n">_CAIRO_PATH_TYPE_SIZES</span><span class="p">[</span><span class="n">codes</span><span class="p">]</span>
+    <span class="n">cairo_type_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">cairo_type_sizes</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">cairo_num_data</span> <span class="o">=</span> <span class="n">cairo_type_positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">cairo_type_positions</span> <span class="o">=</span> <span class="n">cairo_type_positions</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Fill the buffer.</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">cairo_num_data</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">as_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">as_int</span><span class="p">[::</span><span class="mi">4</span><span class="p">][</span><span class="n">cairo_type_positions</span><span class="p">]</span> <span class="o">=</span> <span class="n">codes</span>
+    <span class="n">as_int</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">4</span><span class="p">][</span><span class="n">cairo_type_positions</span><span class="p">]</span> <span class="o">=</span> <span class="n">cairo_type_sizes</span>
+    <span class="n">as_float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">as_float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+    <span class="n">mask</span><span class="p">[::</span><span class="mi">2</span><span class="p">][</span><span class="n">cairo_type_positions</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">][</span><span class="n">cairo_type_positions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">as_float</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertices</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="c1"># Construct the cairo_path_t, and pass it to the context.</span>
+    <span class="n">ptr</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;cairo_path_t *&quot;</span><span class="p">)</span>
+    <span class="n">ptr</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span>
+    <span class="n">ptr</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;cairo_path_data_t *&quot;</span><span class="p">,</span> <span class="n">ffi</span><span class="o">.</span><span class="n">from_buffer</span><span class="p">(</span><span class="n">buf</span><span class="p">))</span>
+    <span class="n">ptr</span><span class="o">.</span><span class="n">num_data</span> <span class="o">=</span> <span class="n">cairo_num_data</span>
+    <span class="n">cairo</span><span class="o">.</span><span class="n">cairo</span><span class="o">.</span><span class="n">cairo_append_path</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">_pointer</span><span class="p">,</span> <span class="n">ptr</span><span class="p">)</span>
+
+
+<span class="n">_append_paths</span> <span class="o">=</span> <span class="p">(</span><span class="n">_append_paths_fast</span> <span class="k">if</span> <span class="n">cairo</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;cairocffi&quot;</span>
+                 <span class="k">else</span> <span class="n">_append_paths_slow</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_append_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_append_paths</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="p">[</span><span class="n">path</span><span class="p">],</span> <span class="p">[</span><span class="n">transform</span><span class="p">],</span> <span class="n">clip</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RendererCairo"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.RendererCairo">[docs]</a><span class="k">class</span> <span class="nc">RendererCairo</span><span class="p">(</span><span class="n">RendererBase</span><span class="p">):</span>
@@ -235,37 +337,20 @@ type="text/css" />
         <span class="n">ctx</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
 
 <div class="viewcode-block" id="RendererCairo.convert_path"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.RendererCairo.convert_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">convert_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">points</span><span class="p">,</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iter_segments</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="n">clip</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">MOVETO</span><span class="p">:</span>
-                <span class="n">ctx</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">CLOSEPOLY</span><span class="p">:</span>
-                <span class="n">ctx</span><span class="o">.</span><span class="n">close_path</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">:</span>
-                <span class="n">ctx</span><span class="o">.</span><span class="n">line_to</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">CURVE3</span><span class="p">:</span>
-                <span class="n">ctx</span><span class="o">.</span><span class="n">curve_to</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                             <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                             <span class="n">points</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">:</span>
-                <span class="n">ctx</span><span class="o">.</span><span class="n">curve_to</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span></div>
+        <span class="n">_append_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RendererCairo.draw_path"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.RendererCairo.draw_path">[docs]</a>    <span class="k">def</span> <span class="nf">draw_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">rgbFace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">ctx</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">ctx</span>
-
-        <span class="c1"># We&#39;ll clip the path to the actual rendering extents</span>
-        <span class="c1"># if the path isn&#39;t filled.</span>
-        <span class="k">if</span> <span class="n">rgbFace</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_hatch</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">clip</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">clip_extents</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">clip</span> <span class="o">=</span> <span class="kc">None</span>
-
+        <span class="c1"># Clip the path to the actual rendering extents if it isn&#39;t filled.</span>
+        <span class="n">clip</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">clip_extents</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">rgbFace</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_hatch</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="p">(</span><span class="n">transform</span>
-                     <span class="o">+</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
-
+                     <span class="o">+</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">new_path</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">convert_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span>
-
+        <span class="n">_append_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fill_and_stroke</span><span class="p">(</span>
             <span class="n">ctx</span><span class="p">,</span> <span class="n">rgbFace</span><span class="p">,</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(),</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_forced_alpha</span><span class="p">())</span></div>
 
@@ -275,8 +360,7 @@ type="text/css" />
 
         <span class="n">ctx</span><span class="o">.</span><span class="n">new_path</span><span class="p">()</span>
         <span class="c1"># Create the path for the marker; it needs to be flipped here already!</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">convert_path</span><span class="p">(</span>
-            <span class="n">ctx</span><span class="p">,</span> <span class="n">marker_path</span><span class="p">,</span> <span class="n">marker_trans</span> <span class="o">+</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">_append_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">marker_path</span><span class="p">,</span> <span class="n">marker_trans</span> <span class="o">+</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
         <span class="n">marker_path</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">copy_path_flat</span><span class="p">()</span>
 
         <span class="c1"># Figure out whether the path has a fill</span>
@@ -289,7 +373,7 @@ type="text/css" />
             <span class="n">filled</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">transform</span> <span class="o">=</span> <span class="p">(</span><span class="n">transform</span>
-                     <span class="o">+</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+                     <span class="o">+</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
 
         <span class="n">ctx</span><span class="o">.</span><span class="n">new_path</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">codes</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
@@ -317,36 +401,68 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">_fill_and_stroke</span><span class="p">(</span>
                 <span class="n">ctx</span><span class="p">,</span> <span class="n">rgbFace</span><span class="p">,</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(),</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_forced_alpha</span><span class="p">())</span></div>
 
+<div class="viewcode-block" id="RendererCairo.draw_path_collection"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.RendererCairo.draw_path_collection">[docs]</a>    <span class="k">def</span> <span class="nf">draw_path_collection</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">master_transform</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">all_transforms</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span>
+            <span class="n">offsetTrans</span><span class="p">,</span> <span class="n">facecolors</span><span class="p">,</span> <span class="n">edgecolors</span><span class="p">,</span> <span class="n">linewidths</span><span class="p">,</span> <span class="n">linestyles</span><span class="p">,</span>
+            <span class="n">antialiaseds</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">offset_position</span><span class="p">):</span>
+
+        <span class="n">path_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_collection_raw_paths</span><span class="p">(</span>
+                <span class="n">master_transform</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">all_transforms</span><span class="p">):</span>
+            <span class="n">path_ids</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="p">,</span> <span class="n">Affine2D</span><span class="p">(</span><span class="n">transform</span><span class="p">)))</span>
+
+        <span class="n">reuse_key</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">grouped_draw</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="nf">_draw_paths</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">grouped_draw</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="n">gc_vars</span><span class="p">,</span> <span class="n">rgb_fc</span> <span class="o">=</span> <span class="n">reuse_key</span>
+            <span class="n">gc</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">gc0</span><span class="p">)</span>
+            <span class="c1"># We actually need to call the setters to reset the internal state.</span>
+            <span class="nb">vars</span><span class="p">(</span><span class="n">gc</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">gc_vars</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">gc_vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;_linestyle&quot;</span><span class="p">:</span>  <span class="c1"># Deprecated, no effect.</span>
+                    <span class="k">continue</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">gc</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span> <span class="o">+</span> <span class="n">k</span><span class="p">)(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="n">gc</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">new_path</span><span class="p">()</span>
+            <span class="n">paths</span><span class="p">,</span> <span class="n">transforms</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">grouped_draw</span><span class="p">)</span>
+            <span class="n">grouped_draw</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">_append_paths</span><span class="p">(</span><span class="n">gc</span><span class="o">.</span><span class="n">ctx</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">transforms</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fill_and_stroke</span><span class="p">(</span>
+                <span class="n">gc</span><span class="o">.</span><span class="n">ctx</span><span class="p">,</span> <span class="n">rgb_fc</span><span class="p">,</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(),</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_forced_alpha</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">xo</span><span class="p">,</span> <span class="n">yo</span><span class="p">,</span> <span class="n">path_id</span><span class="p">,</span> <span class="n">gc0</span><span class="p">,</span> <span class="n">rgb_fc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_collection</span><span class="p">(</span>
+                <span class="n">gc</span><span class="p">,</span> <span class="n">master_transform</span><span class="p">,</span> <span class="n">all_transforms</span><span class="p">,</span> <span class="n">path_ids</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span>
+                <span class="n">offsetTrans</span><span class="p">,</span> <span class="n">facecolors</span><span class="p">,</span> <span class="n">edgecolors</span><span class="p">,</span> <span class="n">linewidths</span><span class="p">,</span> <span class="n">linestyles</span><span class="p">,</span>
+                <span class="n">antialiaseds</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">offset_position</span><span class="p">):</span>
+            <span class="n">path</span><span class="p">,</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">path_id</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="p">(</span><span class="n">Affine2D</span><span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">())</span>
+                         <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">xo</span><span class="p">,</span> <span class="n">yo</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="c1"># rgb_fc could be a ndarray, for which equality is elementwise.</span>
+            <span class="n">new_key</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">gc0</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">rgb_fc</span><span class="p">)</span> <span class="k">if</span> <span class="n">rgb_fc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">new_key</span> <span class="o">==</span> <span class="n">reuse_key</span><span class="p">:</span>
+                <span class="n">grouped_draw</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_draw_paths</span><span class="p">()</span>
+                <span class="n">grouped_draw</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">))</span>
+                <span class="n">reuse_key</span> <span class="o">=</span> <span class="n">new_key</span>
+        <span class="n">_draw_paths</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="RendererCairo.draw_image"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.RendererCairo.draw_image">[docs]</a>    <span class="k">def</span> <span class="nf">draw_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">im</span><span class="p">):</span>
-        <span class="c1"># bbox - not currently used</span>
-        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">byteorder</span> <span class="o">==</span> <span class="s1">&#39;little&#39;</span><span class="p">:</span>
-            <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
-        <span class="k">if</span> <span class="n">HAS_CAIRO_CFFI</span><span class="p">:</span>
-            <span class="c1"># cairocffi tries to use the buffer_info from array.array</span>
-            <span class="c1"># that we replicate in ArrayWrapper and alternatively falls back</span>
-            <span class="c1"># on ctypes to get a pointer to the numpy array. This works</span>
-            <span class="c1"># correctly on a numpy array in python3 but not 2.7. We replicate</span>
-            <span class="c1"># the array.array functionality here to get cross version support.</span>
-            <span class="n">imbuffer</span> <span class="o">=</span> <span class="n">ArrayWrapper</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># pycairo uses PyObject_AsWriteBuffer to get a pointer to the</span>
-            <span class="c1"># numpy array; this works correctly on a regular numpy array but</span>
-            <span class="c1"># not on a py2 memoryview.</span>
-            <span class="n">imbuffer</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_unmultiplied_rgba8888_to_premultiplied_argb32</span><span class="p">(</span><span class="n">im</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="o">.</span><span class="n">create_for_data</span><span class="p">(</span>
-            <span class="n">imbuffer</span><span class="p">,</span> <span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span>
-            <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">im</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span>
+            <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
         <span class="n">ctx</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">ctx</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">y</span> <span class="o">-</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">ctx</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">set_source_surface</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">paint_with_alpha</span><span class="p">(</span><span class="n">gc</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RendererCairo.draw_text"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.RendererCairo.draw_text">[docs]</a>    <span class="k">def</span> <span class="nf">draw_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mtext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -370,13 +486,6 @@ type="text/css" />
                 <span class="n">ctx</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">))</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">set_font_size</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">HAS_CAIRO_CFFI</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
-                    <span class="n">s</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
-                    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-
             <span class="n">ctx</span><span class="o">.</span><span class="n">show_text</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span></div>
 
@@ -395,17 +504,13 @@ type="text/css" />
             <span class="n">ctx</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">)</span>
 
             <span class="n">fontProp</span> <span class="o">=</span> <span class="n">ttfFontProperty</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">select_font_face</span><span class="p">(</span><span class="n">fontProp</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                  <span class="bp">self</span><span class="o">.</span><span class="n">fontangles</span><span class="p">[</span><span class="n">fontProp</span><span class="o">.</span><span class="n">style</span><span class="p">],</span>
                                  <span class="bp">self</span><span class="o">.</span><span class="n">fontweights</span><span class="p">[</span><span class="n">fontProp</span><span class="o">.</span><span class="n">weight</span><span class="p">])</span>
 
             <span class="n">size</span> <span class="o">=</span> <span class="n">fontsize</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">/</span> <span class="mf">72.0</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">set_font_size</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
-                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">show_text</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-            <span class="n">ctx</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">new_path</span><span class="p">()</span>
@@ -511,12 +616,12 @@ type="text/css" />
         <span class="n">ctx</span><span class="o">.</span><span class="n">new_path</span><span class="p">()</span>
         <span class="n">affine</span> <span class="o">=</span> <span class="p">(</span><span class="n">affine</span>
                   <span class="o">+</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
-        <span class="n">RendererCairo</span><span class="o">.</span><span class="n">convert_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">tpath</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
+        <span class="n">_append_path</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">tpath</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">clip</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="GraphicsContextCairo.set_dashes"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.GraphicsContextCairo.set_dashes">[docs]</a>    <span class="k">def</span> <span class="nf">set_dashes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">dashes</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashes</span> <span class="o">=</span> <span class="n">offset</span><span class="p">,</span> <span class="n">dashes</span>
-        <span class="k">if</span> <span class="n">dashes</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dashes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">set_dash</span><span class="p">([],</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># switch dashes off</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">set_dash</span><span class="p">(</span>
@@ -549,15 +654,24 @@ type="text/css" />
     <span class="n">supports_blit</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="FigureCanvasCairo.print_png"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.FigureCanvasCairo.print_png">[docs]</a>    <span class="k">def</span> <span class="nf">print_png</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fobj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width_height</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_printed_image_surface</span><span class="p">()</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">fobj</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="FigureCanvasCairo.print_rgba"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.FigureCanvasCairo.print_rgba">[docs]</a>    <span class="k">def</span> <span class="nf">print_rgba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fobj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width_height</span><span class="p">()</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_printed_image_surface</span><span class="p">()</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+        <span class="n">fobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cbook</span><span class="o">.</span><span class="n">_premultiplied_argb32_to_unmultiplied_rgba8888</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">4</span><span class="p">))))</span></div>
+
+    <span class="n">print_raw</span> <span class="o">=</span> <span class="n">print_rgba</span>
+
+    <span class="k">def</span> <span class="nf">_get_printed_image_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width_height</span><span class="p">()</span>
         <span class="n">renderer</span> <span class="o">=</span> <span class="n">RendererCairo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
         <span class="n">renderer</span><span class="o">.</span><span class="n">set_width_height</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
         <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
         <span class="n">renderer</span><span class="o">.</span><span class="n">set_ctx_from_surface</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
-        <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">fobj</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">surface</span>
 
 <div class="viewcode-block" id="FigureCanvasCairo.print_pdf"><a class="viewcode-back" href="../../../api/backend_cairo_api.html#matplotlib.backends.backend_cairo.FigureCanvasCairo.print_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">print_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fobj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save</span><span class="p">(</span><span class="n">fobj</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -599,13 +713,13 @@ type="text/css" />
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;cairo has not been compiled with SVG &#39;</span>
                                    <span class="s1">&#39;support enabled&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;svgz&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                     <span class="n">fo</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">fo</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">,</span> <span class="n">fileobj</span><span class="o">=</span><span class="n">fo</span><span class="p">)</span>
             <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">SVGSurface</span><span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">width_in_points</span><span class="p">,</span> <span class="n">height_in_points</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;unknown format: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">fmt</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;unknown format: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="c1"># surface.set_dpi() can be used</span>
@@ -642,10 +756,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

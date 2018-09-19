@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Writing documentation &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>Writing documentation &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html"
 />
     <link rel="search" title="Search" href="../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../index.html" />
     <link rel="up" title="The Matplotlib Developers&#39; Guide" href="index.html" />
     <link rel="next" title="Plot directive documentation" href="plot_directive.html" />
     <link rel="prev" title="Developer&#39;s tips for testing" href="testing.html" />
@@ -50,7 +52,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -79,7 +81,7 @@ type="text/css" />
         <li><a href="../index.html">home</a>|&nbsp;</li>
         <li><a href="../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../contents.html">docs</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">The Matplotlib Developers' Guide</a> &raquo;</li> 
       </ul>
@@ -100,7 +102,7 @@ type="text/css" />
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <h3><a href="../contents.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Writing documentation</a><ul>
 <li><a class="reference internal" href="#getting-started">Getting started</a><ul>
@@ -122,16 +124,26 @@ type="text/css" />
 </li>
 <li><a class="reference internal" href="#writing-docstrings">Writing docstrings</a><ul>
 <li><a class="reference internal" href="#example-docstring">Example docstring</a></li>
-<li><a class="reference internal" href="#formatting-conventions">Formatting conventions</a></li>
+<li><a class="reference internal" href="#formatting-conventions">Formatting conventions</a><ul>
+<li><a class="reference internal" href="#id4">Function arguments</a></li>
+<li><a class="reference internal" href="#quotes-for-strings">Quotes for strings</a></li>
+<li><a class="reference internal" href="#parameter-type-descriptions">Parameter type descriptions</a></li>
+<li><a class="reference internal" href="#referencing-types">Referencing types</a></li>
+<li><a class="reference internal" href="#see-also-sections"><code class="docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code> sections</a></li>
+<li><a class="reference internal" href="#wrapping-parameter-lists">Wrapping parameter lists</a></li>
+<li><a class="reference internal" href="#rcparams">rcParams</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#deprecated-formatting-conventions">Deprecated formatting conventions</a></li>
-<li><a class="reference internal" href="#linking-to-other-code">Linking to other code</a></li>
-<li><a class="reference internal" href="#id3">Function arguments</a></li>
 <li><a class="reference internal" href="#setters-and-getters">Setters and getters</a></li>
 <li><a class="reference internal" href="#keyword-arguments">Keyword arguments</a></li>
 <li><a class="reference internal" href="#adding-figures">Adding figures</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#writing-examples-and-tutorials">Writing examples and tutorials</a></li>
+<li><a class="reference internal" href="#writing-examples-and-tutorials">Writing examples and tutorials</a><ul>
+<li><a class="reference internal" href="#order-of-examples-in-the-gallery">Order of examples in the gallery</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#miscellaneous">Miscellaneous</a><ul>
 <li><a class="reference internal" href="#adding-animations">Adding animations</a></li>
 <li><a class="reference internal" href="#generating-inheritance-diagrams">Generating inheritance diagrams</a></li>
@@ -166,10 +178,60 @@ type="text/css" />
             
   <div class="section" id="writing-documentation">
 <span id="documenting-matplotlib"></span><h1>Writing documentation<a class="headerlink" href="#writing-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="contents multicol-toc local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#getting-started" id="id7">Getting started</a><ul>
+<li><a class="reference internal" href="#general-file-structure" id="id8">General file structure</a></li>
+<li><a class="reference internal" href="#installing-dependencies" id="id9">Installing dependencies</a></li>
+<li><a class="reference internal" href="#building-the-docs" id="id10">Building the docs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writing-rest-pages" id="id11">Writing ReST pages</a><ul>
+<li><a class="reference internal" href="#formatting-and-style-conventions" id="id12">Formatting and style conventions</a><ul>
+<li><a class="reference internal" href="#section-name-formatting" id="id13">Section name formatting</a></li>
+<li><a class="reference internal" href="#function-arguments" id="id14">Function arguments</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#referring-to-other-documents-and-sections" id="id15">Referring to other documents and sections</a></li>
+<li><a class="reference internal" href="#referring-to-other-code" id="id16">Referring to other code</a></li>
+<li><a class="reference internal" href="#including-figures-and-files" id="id17">Including figures and files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writing-docstrings" id="id18">Writing docstrings</a><ul>
+<li><a class="reference internal" href="#example-docstring" id="id19">Example docstring</a></li>
+<li><a class="reference internal" href="#formatting-conventions" id="id20">Formatting conventions</a><ul>
+<li><a class="reference internal" href="#id4" id="id21">Function arguments</a></li>
+<li><a class="reference internal" href="#quotes-for-strings" id="id22">Quotes for strings</a></li>
+<li><a class="reference internal" href="#parameter-type-descriptions" id="id23">Parameter type descriptions</a></li>
+<li><a class="reference internal" href="#referencing-types" id="id24">Referencing types</a></li>
+<li><a class="reference internal" href="#see-also-sections" id="id25"><code class="docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code> sections</a></li>
+<li><a class="reference internal" href="#wrapping-parameter-lists" id="id26">Wrapping parameter lists</a></li>
+<li><a class="reference internal" href="#rcparams" id="id27">rcParams</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#deprecated-formatting-conventions" id="id28">Deprecated formatting conventions</a></li>
+<li><a class="reference internal" href="#setters-and-getters" id="id29">Setters and getters</a></li>
+<li><a class="reference internal" href="#keyword-arguments" id="id30">Keyword arguments</a></li>
+<li><a class="reference internal" href="#adding-figures" id="id31">Adding figures</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writing-examples-and-tutorials" id="id32">Writing examples and tutorials</a><ul>
+<li><a class="reference internal" href="#order-of-examples-in-the-gallery" id="id33">Order of examples in the gallery</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#miscellaneous" id="id34">Miscellaneous</a><ul>
+<li><a class="reference internal" href="#adding-animations" id="id35">Adding animations</a></li>
+<li><a class="reference internal" href="#generating-inheritance-diagrams" id="id36">Generating inheritance diagrams</a></li>
+<li><a class="reference internal" href="#emacs-helpers" id="id37">Emacs helpers</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <div class="section" id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">Getting started</a><a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="general-file-structure">
-<h3>General file structure<a class="headerlink" href="#general-file-structure" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#contents">General file structure</a><a class="headerlink" href="#general-file-structure" title="Permalink to this headline">¶</a></h3>
 <p>All documentation is built from the <code class="file docutils literal notranslate"><span class="pre">doc/</span></code> directory.  This directory
 contains both reStructuredText (<a class="reference external" href="http://docutils.sourceforge.net/rst.html">ReST</a>; <code class="docutils literal notranslate"><span class="pre">.rst</span></code>) files that contain pages in
 the documentation and configuration files for <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a>.</p>
@@ -183,27 +245,26 @@ referencing.</p>
 the docstrings of the classes in the Matplotlib library.  Except for
 <code class="file docutils literal notranslate"><span class="pre">doc/api/api_changes/</span></code>, these <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files are created when the
 documentation is built.</p>
-<p>Similarly, the contents of <code class="file docutils literal notranslate"><span class="pre">docs/gallery</span></code> and <code class="file docutils literal notranslate"><span class="pre">docs/tutorials</span></code> are
+<p>Similarly, the contents of <code class="file docutils literal notranslate"><span class="pre">doc/gallery</span></code> and <code class="file docutils literal notranslate"><span class="pre">doc/tutorials</span></code> are
 generated by the <a class="reference external" href="https://sphinx-gallery.readthedocs.io/en/latest/">Sphinx Gallery</a> from the sources in <code class="file docutils literal notranslate"><span class="pre">examples</span></code> and
 <code class="file docutils literal notranslate"><span class="pre">tutorials</span></code>.  These sources consist of python scripts that have <a class="reference external" href="http://docutils.sourceforge.net/rst.html">ReST</a>
 documentation built into their comments.  Don't directly edit the
-<code class="docutils literal notranslate"><span class="pre">.rst</span></code> files in <code class="file docutils literal notranslate"><span class="pre">docs/gallery</span></code> and <code class="file docutils literal notranslate"><span class="pre">docs/tutorials</span></code> as they are
+<code class="docutils literal notranslate"><span class="pre">.rst</span></code> files in <code class="file docutils literal notranslate"><span class="pre">doc/gallery</span></code> and <code class="file docutils literal notranslate"><span class="pre">doc/tutorials</span></code> as they are
 regenerated when the documentation are built.</p>
 </div>
 <div class="section" id="installing-dependencies">
-<h3>Installing dependencies<a class="headerlink" href="#installing-dependencies" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#contents">Installing dependencies</a><a class="headerlink" href="#installing-dependencies" title="Permalink to this headline">¶</a></h3>
 <p>The documentation for Matplotlib is generated from reStructuredText (<a class="reference external" href="http://docutils.sourceforge.net/rst.html">ReST</a>)
 using the <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a> documentation generation tool. There are several extra
 requirements that are needed to build the documentation. They are listed in
 <code class="file docutils literal notranslate"><span class="pre">doc-requirements.txt</span></code> and listed below:</p>
 <ul class="simple">
-<li>Sphinx&gt;=1.3, !=1.5.0, !=1.6.4</li>
+<li>Sphinx&gt;=1.3, !=1.5.0, !=1.6.4, !=1.7.3</li>
 <li>colorspacious</li>
 <li>IPython</li>
-<li>mock</li>
 <li>numpydoc&gt;=0.4</li>
 <li>Pillow</li>
-<li>sphinx-gallery&gt;=0.1.12</li>
+<li>sphinx-gallery&gt;=0.1.13</li>
 <li>graphviz</li>
 </ul>
 <div class="admonition note">
@@ -216,7 +277,7 @@ and needs to be installed separately.</li>
 </div>
 </div>
 <div class="section" id="building-the-docs">
-<h3>Building the docs<a class="headerlink" href="#building-the-docs" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#contents">Building the docs</a><a class="headerlink" href="#building-the-docs" title="Permalink to this headline">¶</a></h3>
 <p>The documentation sources are found in the <code class="file docutils literal notranslate"><span class="pre">doc/</span></code> directory in the trunk.
 The configuration file for Sphinx is <code class="file docutils literal notranslate"><span class="pre">doc/conf.py</span></code>. It controls which
 directories Sphinx parses, how the docs are built, and how the extensions are
@@ -251,24 +312,24 @@ errors.  To unset it, use</p>
 </div>
 </div>
 <div class="section" id="writing-rest-pages">
-<span id="id1"></span><h2>Writing ReST pages<a class="headerlink" href="#writing-rest-pages" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#contents">Writing ReST pages</a><a class="headerlink" href="#writing-rest-pages" title="Permalink to this headline">¶</a></h2>
 <p>Most documentation is either in the docstring of individual
 classes and methods, in explicit <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files, or in examples and tutorials.
 All of these use the <a class="reference external" href="http://docutils.sourceforge.net/rst.html">ReST</a> syntax. Users should look at the <a class="reference external" href="http://docutils.sourceforge.net/rst.html">ReST</a> documentation
 for a full description. But some specific hints and conventions Matplotlib
 uses are useful for creating documentation.</p>
 <div class="section" id="formatting-and-style-conventions">
-<h3>Formatting and style conventions<a class="headerlink" href="#formatting-and-style-conventions" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#contents">Formatting and style conventions</a><a class="headerlink" href="#formatting-and-style-conventions" title="Permalink to this headline">¶</a></h3>
 <p>It is useful to strive for consistency in the Matplotlib documentation.  Here
 are some formatting and style conventions that are used.</p>
 <div class="section" id="section-name-formatting">
-<h4>Section name formatting<a class="headerlink" href="#section-name-formatting" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#contents">Section name formatting</a><a class="headerlink" href="#section-name-formatting" title="Permalink to this headline">¶</a></h4>
 <p>For everything but top-level chapters,  use <code class="docutils literal notranslate"><span class="pre">Upper</span> <span class="pre">lower</span></code> for
 section titles, e.g., <code class="docutils literal notranslate"><span class="pre">Possible</span> <span class="pre">hangups</span></code> rather than <code class="docutils literal notranslate"><span class="pre">Possible</span>
 <span class="pre">Hangups</span></code></p>
 </div>
 <div class="section" id="function-arguments">
-<h4>Function arguments<a class="headerlink" href="#function-arguments" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#contents">Function arguments</a><a class="headerlink" href="#function-arguments" title="Permalink to this headline">¶</a></h4>
 <p>Function arguments and keywords within docstrings should be referred to using
 the <code class="docutils literal notranslate"><span class="pre">*emphasis*</span></code> role. This will keep Matplotlib's documentation consistent
 with Python's documentation:</p>
@@ -288,7 +349,7 @@ link to a class or method in the library.
 </div>
 </div>
 <div class="section" id="referring-to-other-documents-and-sections">
-<span id="internal-section-refs"></span><h3>Referring to other documents and sections<a class="headerlink" href="#referring-to-other-documents-and-sections" title="Permalink to this headline">¶</a></h3>
+<span id="internal-section-refs"></span><h3><a class="toc-backref" href="#contents">Referring to other documents and sections</a><a class="headerlink" href="#referring-to-other-documents-and-sections" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a> allows internal <a class="reference external" href="http://www.sphinx-doc.org/en/stable/markup/inline.html">references</a> between documents.</p>
 <p>Documents can be linked with the <code class="xref py py-obj docutils literal notranslate"><span class="pre">:doc:</span></code> directive:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>See the <span class="na">:doc:</span><span class="nv">`/faq/installing_faq`</span>
@@ -336,27 +397,35 @@ backend?&quot; could later become part of the users guide, so the label:</p>
 hyphens to separate words.</p>
 </div>
 <div class="section" id="referring-to-other-code">
-<h3>Referring to other code<a class="headerlink" href="#referring-to-other-code" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3><a class="toc-backref" href="#contents">Referring to other code</a><a class="headerlink" href="#referring-to-other-code" title="Permalink to this headline">¶</a></h3>
 <p>To link to other methods, classes, or modules in Matplotlib you can use
 back ticks, for example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sb">`~matplotlib.collections.LineCollection`</span>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="nv">`matplotlib.collections.LineCollection`</span>
 </pre></div>
 </div>
-<p>returns a link to the documentation of
-<a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineCollection</span></code></a>.  For the full path of the
-class to be shown, omit the tilde:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sb">`matplotlib.collections.LineCollection`</span>
+<p>generates a link like this: <a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.collections.LineCollection</span></code></a>.</p>
+<p><em>Note:</em> We use the sphinx setting <code class="docutils literal notranslate"><span class="pre">default_role</span> <span class="pre">=</span> <span class="pre">'obj'</span></code> so that you don't
+have to use qualifiers like <code class="docutils literal notranslate"><span class="pre">:class:</span></code>, <code class="docutils literal notranslate"><span class="pre">:func:</span></code>, <code class="docutils literal notranslate"><span class="pre">:meth:</span></code> and the likes.</p>
+<p>Often, you don't want to show the full package and module name. As long as the
+target is unanbigous you can simply leave them out:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="nv">`.LineCollection`</span>
 </pre></div>
 </div>
-<p>to get <a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.collections.LineCollection</span></code></a>.  It is often not
-necessary to fully specify the class hierarchy unless there is a namespace
-collision between two packages:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sb">`~.LineCollection`</span>
+<p>and the link still works: <a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineCollection</span></code></a>.</p>
+<p>If there are multiple code elements with the same name (e.g. <code class="docutils literal notranslate"><span class="pre">plot()</span></code> is a
+method in multiple classes), you'll have to extend the definition:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="nv">`.pyplot.plot`</span> or <span class="nv">`.Axes.plot`</span>
 </pre></div>
 </div>
-<p>links just as well: <a class="reference internal" href="../api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineCollection</span></code></a>.</p>
-<p>Other packages can also be linked via <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="sb">`numpy.mean`</span>
+<p>These will show up as <a class="reference internal" href="../api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyplot.plot</span></code></a> or <a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Axes.plot</span></code></a>. To still show only the
+last segment you can add a tilde as prefix:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="nv">`~.pyplot.plot`</span> or <span class="nv">`~.Axes.plot`</span>
+</pre></div>
+</div>
+<p>will render as <a class="reference internal" href="../api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a> or <a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>.</p>
+<p>Other packages can also be linked via
+<a class="reference external" href="http://www.sphinx-doc.org/en/master/ext/intersphinx.html">intersphinx</a>:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="nv">`numpy.mean`</span>
 </pre></div>
 </div>
 <p>will return this link: <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.mean.html#numpy.mean" title="(in NumPy v1.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.mean</span></code></a>.  This works for Python, Numpy, Scipy,
@@ -369,7 +438,7 @@ a list of all objects that can be referenced (in this case for Numpy):</p>
 </div>
 </div>
 <div class="section" id="including-figures-and-files">
-<span id="rst-figures-and-includes"></span><h3>Including figures and files<a class="headerlink" href="#including-figures-and-files" title="Permalink to this headline">¶</a></h3>
+<span id="rst-figures-and-includes"></span><h3><a class="toc-backref" href="#contents">Including figures and files</a><a class="headerlink" href="#including-figures-and-files" title="Permalink to this headline">¶</a></h3>
 <p>Image files can directly included in pages with the <code class="docutils literal notranslate"><span class="pre">image::</span></code> directive.
 e.g., <code class="file docutils literal notranslate"><span class="pre">users/navigation_toolbar.rst</span></code> displays the toolbar icons
 with a call to a static image:</p>
@@ -388,7 +457,7 @@ Note that this is in a tutorial; see <a class="reference internal" href="#writin
 below.</p>
 <p>The examples directory is also copied to <code class="file docutils literal notranslate"><span class="pre">doc/gallery</span></code> by sphinx-gallery,
 so plots from the examples directory can be included using</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">plot</span><span class="p">::</span> gallery/pylab_examples/simple_plot.py
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">plot</span><span class="p">::</span> gallery/lines_bars_and_markers/simple_plot.py
 </pre></div>
 </div>
 <p>Note that the python script that generates the plot is referred to, rather than
@@ -397,57 +466,9 @@ when the documentation is built.</p>
 </div>
 </div>
 <div class="section" id="writing-docstrings">
-<span id="id2"></span><h2>Writing docstrings<a class="headerlink" href="#writing-docstrings" title="Permalink to this headline">¶</a></h2>
-<p>Much of the documentation lives in &quot;docstrings&quot;. These are comment blocks
-in source code that explain how the code works. All new or edited docstrings
-should conform to the numpydoc guidelines. These split the docstring into a
-number of sections - see the <a class="reference external" href="https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt">numpy documentation howto</a>
-for more details and a guide to how docstrings should be formatted.   Much of
-the <a class="reference external" href="http://docutils.sourceforge.net/rst.html">ReST</a> syntax discussed above (:ref:writing-rest-pages) can be used for
-links and references.  These docstrings eventually populate the
-<code class="file docutils literal notranslate"><span class="pre">doc/api</span></code> directory and form the reference documentation for the
-library.</p>
-<div class="section" id="example-docstring">
-<h3>Example docstring<a class="headerlink" href="#example-docstring" title="Permalink to this headline">¶</a></h3>
-<p>An example docstring looks like:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>
-           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Plot horizontal lines at each *y* from *xmin* to *xmax*.</span>
-
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
-<span class="sd">      y : scalar or sequence of scalar</span>
-<span class="sd">          y-indexes where to plot the lines.</span>
-
-<span class="sd">      xmin, xmax : scalar or 1D array_like</span>
-<span class="sd">          Respective beginning and end of each line. If scalars are</span>
-<span class="sd">          provided, all lines will have same length.</span>
-
-<span class="sd">      colors : array_like of colors, optional, default: &#39;k&#39;</span>
-
-<span class="sd">      linestyles : {&#39;solid&#39;, &#39;dashed&#39;, &#39;dashdot&#39;, &#39;dotted&#39;}, optional</span>
-
-<span class="sd">      label : string, optional, default: &#39;&#39;</span>
-
-<span class="sd">      Returns</span>
-<span class="sd">      -------</span>
-<span class="sd">      lines : `~matplotlib.collections.LineCollection`</span>
-
-<span class="sd">      Other Parameters</span>
-<span class="sd">      ----------------</span>
-<span class="sd">      **kwargs : `~matplotlib.collections.LineCollection` properties.</span>
-
-<span class="sd">      See also</span>
-<span class="sd">      --------</span>
-<span class="sd">      vlines : vertical lines</span>
-<span class="sd">      axhline: horizontal line across the axes</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-</pre></div>
-</div>
-<p>See the <a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.hlines.html#matplotlib.axes.Axes.hlines" title="matplotlib.axes.Axes.hlines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hlines</span></code></a> documentation for how this renders.</p>
-<p>The <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a> website also contains plenty of <a class="reference external" href="http://www.sphinx-doc.org/contents.html">documentation</a> concerning ReST
-markup and working with Sphinx in general.</p>
+<span id="id3"></span><h2><a class="toc-backref" href="#contents">Writing docstrings</a><a class="headerlink" href="#writing-docstrings" title="Permalink to this headline">¶</a></h2>
+<p>Most of the API documentation is written in docstrings. These are comment
+blocks in source code that explain how the code works.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Some parts of the documentation do not yet conform to the current
@@ -455,17 +476,138 @@ documentation style. If in doubt, follow the rules given here and not what
 you may see in the source code. Pull requests updating docstrings to
 the current style are very welcome.</p>
 </div>
+<p>All new or edited docstrings should conform to the <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">numpydoc docstring guide</a>.
+Much of the <a class="reference external" href="http://docutils.sourceforge.net/rst.html">ReST</a> syntax discussed above (<a class="reference internal" href="#writing-rest-pages"><span class="std std-ref">Writing ReST pages</span></a>) can be
+used for links and references.  These docstrings eventually populate the
+<code class="file docutils literal notranslate"><span class="pre">doc/api</span></code> directory and form the reference documentation for the
+library.</p>
+<div class="section" id="example-docstring">
+<h3><a class="toc-backref" href="#contents">Example docstring</a><a class="headerlink" href="#example-docstring" title="Permalink to this headline">¶</a></h3>
+<p>An example docstring looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot horizontal lines at each *y* from *xmin* to *xmax*.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : float or array-like</span>
+<span class="sd">        y-indexes where to plot the lines.</span>
+
+<span class="sd">    xmin, xmax : float or array-like</span>
+<span class="sd">        Respective beginning and end of each line. If scalars are</span>
+<span class="sd">        provided, all lines will have the same length.</span>
+
+<span class="sd">    colors : array-like of colors, optional, default: &#39;k&#39;</span>
+
+<span class="sd">    linestyles : {&#39;solid&#39;, &#39;dashed&#39;, &#39;dashdot&#39;, &#39;dotted&#39;}, optional</span>
+
+<span class="sd">    label : string, optional, default: &#39;&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lines : `~matplotlib.collections.LineCollection`</span>
+
+<span class="sd">    Other Parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    **kwargs : `~matplotlib.collections.LineCollection` properties.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    vlines : vertical lines</span>
+<span class="sd">    axhline: horizontal line across the axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.hlines.html#matplotlib.axes.Axes.hlines" title="matplotlib.axes.Axes.hlines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hlines</span></code></a> documentation for how this renders.</p>
+<p>The <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a> website also contains plenty of <a class="reference external" href="http://www.sphinx-doc.org/contents.html">documentation</a> concerning ReST
+markup and working with Sphinx in general.</p>
 </div>
 <div class="section" id="formatting-conventions">
-<h3>Formatting conventions<a class="headerlink" href="#formatting-conventions" title="Permalink to this headline">¶</a></h3>
-<p>The basic docstring conventions are covered in the <a class="reference external" href="https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt">numpy documentation howto</a>
+<h3><a class="toc-backref" href="#contents">Formatting conventions</a><a class="headerlink" href="#formatting-conventions" title="Permalink to this headline">¶</a></h3>
+<p>The basic docstring conventions are covered in the <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">numpydoc docstring guide</a>
 and the <a class="reference external" href="http://www.sphinx-doc.org">Sphinx</a> documentation.  Some Matplotlib-specific formatting conventions
 to keep in mind:</p>
-<ul>
-<li><p class="first">Matplotlib does not have a convention whether to use single-quotes or
+<div class="section" id="id4">
+<h4><a class="toc-backref" href="#contents">Function arguments</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>Function arguments and keywords within docstrings should be referred to
+using the <code class="docutils literal notranslate"><span class="pre">*emphasis*</span></code> role. This will keep Matplotlib's documentation
+consistent with Python's documentation:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>If <span class="ge">*linestyles*</span> is <span class="ge">*None*</span>, the &#39;solid&#39; is used.
+</pre></div>
+</div>
+<p>Do not use the <code class="docutils literal notranslate"><span class="pre">`default</span> <span class="pre">role`</span></code> or the <code class="docutils literal notranslate"><span class="pre">``literal``</span></code> role:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>Neither <span class="nv">`argument`</span> nor <span class="s">``argument``</span> should be used.
+</pre></div>
+</div>
+</div>
+<div class="section" id="quotes-for-strings">
+<h4><a class="toc-backref" href="#contents">Quotes for strings</a><a class="headerlink" href="#quotes-for-strings" title="Permalink to this headline">¶</a></h4>
+<p>Matplotlib does not have a convention whether to use single-quotes or
 double-quotes.  There is a mixture of both in the current code.</p>
-</li>
-<li><p class="first">Long parameter lists should be wrapped using a <code class="docutils literal notranslate"><span class="pre">\</span></code> for continuation and
+<p>Use simple single or double quotes when giving string values, e.g.:: rst</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>If &#39;tight&#39;, try to figure out the tight bbox of the figure.
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameter-type-descriptions">
+<h4><a class="toc-backref" href="#contents">Parameter type descriptions</a><a class="headerlink" href="#parameter-type-descriptions" title="Permalink to this headline">¶</a></h4>
+<p>The main goal for parameter type descriptions is to be readable and
+understandable by humans. If the possible types are too complex use a
+simplification for the type description and explain the type more
+precisely in the text.</p>
+<p>Generally, the <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">numpydoc docstring guide</a> conventions apply. The following
+rules expand on them where the numpydoc conventions are not specific.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">float</span></code> for a type that can be any number.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">array-like</span></code> for homogeneous numeric sequences, which could
+typically be a numpy.array. Dimensionality may be specified using <code class="docutils literal notranslate"><span class="pre">2D</span></code>,
+<code class="docutils literal notranslate"><span class="pre">3D</span></code>, <code class="docutils literal notranslate"><span class="pre">n-dimensional</span></code>. If you need to have variables denoting the
+sizes of the dimensions, use capital letters in brackets
+(<code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">(M,</span> <span class="pre">N)</span></code>). When refering to them in the text they are easier
+read and no special formatting is needed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">float</span></code> is the implicit default dtype for array-likes. For other dtypes
+use <code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">of</span> <span class="pre">int</span></code>.</p>
+<p>Some possible uses:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span><span class="n">D</span> <span class="n">array</span><span class="o">-</span><span class="n">like</span>
+<span class="n">array</span><span class="o">-</span><span class="n">like</span> <span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">array</span><span class="o">-</span><span class="n">like</span> <span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="n">array</span><span class="o">-</span><span class="n">like</span> <span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">array</span><span class="o">-</span><span class="n">like</span> <span class="n">of</span> <span class="nb">int</span>
+</pre></div>
+</div>
+<p>Non-numeric homogeneous sequences are described as lists, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>list of str
+list of `.Artist`
+</pre></div>
+</div>
+</div>
+<div class="section" id="referencing-types">
+<h4><a class="toc-backref" href="#contents">Referencing types</a><a class="headerlink" href="#referencing-types" title="Permalink to this headline">¶</a></h4>
+<p>Generally, the rules from <a class="reference internal" href="#referring-to-other-code">referring-to-other-code</a> apply. More specifically:</p>
+<p>Use full references <code class="docutils literal notranslate"><span class="pre">`~matplotlib.colors.Normalize`</span></code> with an
+abbreviation tilde in parameter types. While the full name helps the
+reader of plain text docstrings, the HTML does not need to show the full
+name as it links to it. Hence, the <code class="docutils literal notranslate"><span class="pre">~</span></code>-shortening keeps it more readable.</p>
+<p>Use abbreviated links <code class="docutils literal notranslate"><span class="pre">`.Normalize`</span></code> in the text.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>norm : <span class="nv">`~matplotlib.colors.Normalize`</span>, optional
+   A <span class="nv">`.Normalize`</span> instance is used to scale luminance data to 0, 1.
+</pre></div>
+</div>
+</div>
+<div class="section" id="see-also-sections">
+<h4><a class="toc-backref" href="#contents"><code class="docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code> sections</a><a class="headerlink" href="#see-also-sections" title="Permalink to this headline">¶</a></h4>
+<p>Sphinx automatically links code elements in the definition blocks of <code class="docutils literal notranslate"><span class="pre">See</span>
+<span class="pre">also</span></code> sections. No need to use backticks there:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">See</span> <span class="n">also</span>
+<span class="o">--------</span>
+<span class="n">vlines</span> <span class="p">:</span> <span class="n">vertical</span> <span class="n">lines</span>
+<span class="n">axhline</span><span class="p">:</span> <span class="n">horizontal</span> <span class="n">line</span> <span class="n">across</span> <span class="n">the</span> <span class="n">axes</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wrapping-parameter-lists">
+<h4><a class="toc-backref" href="#contents">Wrapping parameter lists</a><a class="headerlink" href="#wrapping-parameter-lists" title="Permalink to this headline">¶</a></h4>
+<p>Long parameter lists should be wrapped using a <code class="docutils literal notranslate"><span class="pre">\</span></code> for continuation and
 starting on the new line without any indent:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -484,69 +626,39 @@ starting on the new line without any indent:</p>
 </div>
 <p>Alternatively, you can describe the valid parameter values in a dedicated
 section of the docstring.</p>
-</li>
-<li><p class="first">Generally, do not add markup to types for <code class="docutils literal notranslate"><span class="pre">Parameters</span></code> and <code class="docutils literal notranslate"><span class="pre">Returns</span></code>.
-This is usually not needed because Sphinx will link them automatically and
-would unnecessarily clutter the docstring. However, it does seem to fail in
-some situations. If you encounter such a case, you are allowed to add markup:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">Returns</span>
-<span class="gh">-------</span>
-lines : <span class="nv">`~matplotlib.collections.LineCollection`</span>
+</div>
+<div class="section" id="rcparams">
+<h4><a class="toc-backref" href="#contents">rcParams</a><a class="headerlink" href="#rcparams" title="Permalink to this headline">¶</a></h4>
+<p>rcParams can be referenced with the custom <code class="docutils literal notranslate"><span class="pre">:rc:</span></code> role:
+<code class="docutils literal notranslate"><span class="pre">:rc:`foo`</span></code> yields <code class="docutils literal notranslate"><span class="pre">rcParams[&quot;foo&quot;]</span></code>. Use <code class="xref py py-obj docutils literal notranslate"><span class="pre">=</span> <span class="pre">[default-val]</span></code>
+to indicate the default value of the parameter. The default value should be
+literal, i.e. enclosed in double backticks. For simplicity these may be
+omitted for string default values.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>If not provided, defaults to <span class="na">:rc:</span><span class="nv">`figure.figsize`</span> = <span class="s">``[6.4, 4.8]``</span>.
+If not provided, defaults to <span class="na">:rc:</span><span class="nv">`figure.facecolor`</span> = &#39;w&#39;.
 </pre></div>
 </div>
-</li>
-<li><p class="first">rcParams can be referenced with the custom <code class="docutils literal notranslate"><span class="pre">:rc:</span></code> role:
-<code class="docutils literal notranslate"><span class="pre">:rc:`foo`</span></code> yields <code class="docutils literal notranslate"><span class="pre">rcParams[&quot;foo&quot;]</span></code>.</p>
-</li>
-</ul>
+</div>
 </div>
 <div class="section" id="deprecated-formatting-conventions">
-<h3>Deprecated formatting conventions<a class="headerlink" href="#deprecated-formatting-conventions" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>Formerly, we have used square brackets for explicit parameter lists
+<h3><a class="toc-backref" href="#contents">Deprecated formatting conventions</a><a class="headerlink" href="#deprecated-formatting-conventions" title="Permalink to this headline">¶</a></h3>
+<p>Formerly, we have used square brackets for explicit parameter lists
 <code class="docutils literal notranslate"><span class="pre">['solid'</span> <span class="pre">|</span> <span class="pre">'dashed'</span> <span class="pre">|</span> <span class="pre">'dotted']</span></code>. With numpydoc we have switched to their
-standard using curly braces <code class="docutils literal notranslate"><span class="pre">{'solid',</span> <span class="pre">'dashed',</span> <span class="pre">'dotted'}</span></code>.</li>
-</ul>
-</div>
-<div class="section" id="linking-to-other-code">
-<h3>Linking to other code<a class="headerlink" href="#linking-to-other-code" title="Permalink to this headline">¶</a></h3>
-<p>To link to other methods, classes, or modules in Matplotlib you can encase
-the name to refer to in back ticks, for example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sb">`~matplotlib.collections.LineCollection`</span>
-</pre></div>
-</div>
-<p>It is also possible to add links to code in Python, Numpy, Scipy, or Pandas.
-Sometimes it is tricky to get external Sphinx linking to work; to check that
-a something exists to link to the following shell command outputs a list of all
-objects that can be referenced (in this case for Numpy):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">intersphinx</span> <span class="s1">&#39;https://docs.scipy.org/doc/numpy/objects.inv&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="id3">
-<h3>Function arguments<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>Function arguments and keywords within docstrings should be referred to using
-the <code class="docutils literal notranslate"><span class="pre">*emphasis*</span></code> role. This will keep Matplotlib's documentation consistent
-with Python's documentation:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>Here is a description of <span class="ge">*argument*</span>
-</pre></div>
-</div>
-<p>Do not use the <code class="docutils literal notranslate"><span class="pre">`default</span> <span class="pre">role`</span></code>:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>Do not describe <span class="nv">`argument`</span> like this.
-</pre></div>
-</div>
-<p>nor the <code class="docutils literal notranslate"><span class="pre">``literal``</span></code> role:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>Do not describe <span class="s">``argument``</span> like this.
-</pre></div>
-</div>
+standard using curly braces <code class="docutils literal notranslate"><span class="pre">{'solid',</span> <span class="pre">'dashed',</span> <span class="pre">'dotted'}</span></code>.</p>
 </div>
 <div class="section" id="setters-and-getters">
-<h3>Setters and getters<a class="headerlink" href="#setters-and-getters" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#contents">Setters and getters</a><a class="headerlink" href="#setters-and-getters" title="Permalink to this headline">¶</a></h3>
 <p>Artist properties are implemented using setter and getter methods (because
 Matplotlib predates the introductions of the <a class="reference external" href="https://docs.python.org/3/library/functions.html#property" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">property</span></code></a> decorator in Python).
 By convention, these setters and getters are named <code class="docutils literal notranslate"><span class="pre">set_PROPERTYNAME</span></code> and
 <code class="docutils literal notranslate"><span class="pre">get_PROPERTYNAME</span></code>; the list of properties thusly defined on an artist and
 their values can be listed by the <a class="reference internal" href="../api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setp</span></code></a> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">getp</span></code> functions.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">ACCEPTS</span></code> blocks have recently become optional. You may now use a
+numpydoc <code class="docutils literal notranslate"><span class="pre">Parameters</span></code> block because the accepted values can now be read
+from the type description of the first parameter.</p>
+</div>
 <p>Property setter methods should indicate the values they accept using a (legacy)
 special block in the docstring, starting with <code class="docutils literal notranslate"><span class="pre">ACCEPTS</span></code>, as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># in lines.py</span>
@@ -576,7 +688,7 @@ Sphinx by making it a ReST comment (i.e. use <code class="docutils literal notra
 </div>
 </div>
 <div class="section" id="keyword-arguments">
-<h3>Keyword arguments<a class="headerlink" href="#keyword-arguments" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#contents">Keyword arguments</a><a class="headerlink" href="#keyword-arguments" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The information in this section is being actively discussed by the
@@ -634,28 +746,28 @@ definition.  There are some some manual hacks in this case, violating the
 calls in <a class="reference internal" href="../api/patches_api.html#module-matplotlib.patches" title="matplotlib.patches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.patches</span></code></a>.</p>
 </div>
 <div class="section" id="adding-figures">
-<span id="docstring-adding-figures"></span><h3>Adding figures<a class="headerlink" href="#adding-figures" title="Permalink to this headline">¶</a></h3>
+<span id="docstring-adding-figures"></span><h3><a class="toc-backref" href="#contents">Adding figures</a><a class="headerlink" href="#adding-figures" title="Permalink to this headline">¶</a></h3>
 <p>As above (see <a class="reference internal" href="#rst-figures-and-includes"><span class="std std-ref">Including figures and files</span></a>), figures in the examples gallery
 can be referenced with a <code class="xref py py-obj docutils literal notranslate"><span class="pre">:plot:</span></code> directive pointing to the python script that
 created the figure.  For instance the <a class="reference internal" href="../api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">legend</span></code></a> docstring references
-the file <code class="file docutils literal notranslate"><span class="pre">examples/api/legend.py</span></code>:</p>
+the file <code class="file docutils literal notranslate"><span class="pre">examples/text_labels_and_annotations/legend.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"> ...</span>
+<span class="sd">...</span>
 
 <span class="sd">Examples</span>
 <span class="sd">--------</span>
 
-<span class="sd">.. plot:: gallery/api/legend.py</span>
+<span class="sd">.. plot:: gallery/text_labels_and_annotations/legend.py</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
-<p>Note that <code class="docutils literal notranslate"><span class="pre">examples/api/legend.py</span></code> has been mapped to
-<code class="docutils literal notranslate"><span class="pre">gallery/api/legend.py</span></code>, a redirection that may be fixed in future
-re-organization of the docs.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">examples/text_labels_and_annotations/legend.py</span></code> has been mapped to
+<code class="docutils literal notranslate"><span class="pre">gallery/text_labels_and_annotations/legend.py</span></code>, a redirection that may be
+fixed in future re-organization of the docs.</p>
 <p>Plots can also be directly placed inside docstrings.  Details are in
 <a class="reference internal" href="plot_directive.html"><span class="doc">Plot directive documentation</span></a>.  A short example is:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"> ...</span>
+<span class="sd">...</span>
 
 <span class="sd">Examples</span>
 <span class="sd">--------</span>
@@ -672,7 +784,7 @@ code will also appear in interactive docstrings.</p>
 </div>
 </div>
 <div class="section" id="writing-examples-and-tutorials">
-<span id="id4"></span><h2>Writing examples and tutorials<a class="headerlink" href="#writing-examples-and-tutorials" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#contents">Writing examples and tutorials</a><a class="headerlink" href="#writing-examples-and-tutorials" title="Permalink to this headline">¶</a></h2>
 <p>Examples and tutorials are python scripts that are run by <a class="reference external" href="https://sphinx-gallery.readthedocs.io/en/latest/">Sphinx Gallery</a>
 to create a gallery of images in the <code class="file docutils literal notranslate"><span class="pre">/doc/gallery</span></code> and
 <code class="file docutils literal notranslate"><span class="pre">/doc/tutorials</span></code> directories respectively.  To exclude an example
@@ -737,11 +849,32 @@ are delimited by a line of <code class="xref py py-obj docutils literal notransl
 </pre></div>
 </div>
 <p>In this way text, code, and figures are output in a &quot;notebook&quot; style.</p>
+<div class="section" id="order-of-examples-in-the-gallery">
+<h3><a class="toc-backref" href="#contents">Order of examples in the gallery</a><a class="headerlink" href="#order-of-examples-in-the-gallery" title="Permalink to this headline">¶</a></h3>
+<p>The order of the sections of the <a class="reference internal" href="../tutorials/index.html#tutorials"><span class="std std-ref">Tutorials</span></a> and the <a class="reference internal" href="../gallery/index.html#gallery"><span class="std std-ref">Gallery</span></a>, as
+well as the order of the examples within each section are determined in a
+two step process from within the <code class="file docutils literal notranslate"><span class="pre">/doc/sphinxext/gallery_order.py</span></code>:</p>
+<ul class="simple">
+<li><em>Explicit order</em>: This file contains a list of folders for the section order
+and a list of examples for the subsection order. The order of the items
+shown in the doc pages is the order those items appear in those lists.</li>
+<li><em>Implicit order</em>: If a folder or example is not in those lists, it will be
+appended after the explicitely ordered items and all of those additional
+items will be ordered by pathname (for the sections) or by filename
+(for the subsections).</li>
+</ul>
+<p>As a consequence, if you want to let your example appear in a certain
+position in the gallery, extend those lists with your example.
+In case no explicit order is desired or necessary, still make sure
+to name your example consistently, i.e. use the main function or subject
+of the example as first word in the filename; e.g. an image example
+should ideally be named similar to <code class="file docutils literal notranslate"><span class="pre">imshow_mynewexample.py</span></code>.</p>
+</div>
 </div>
 <div class="section" id="miscellaneous">
-<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">Miscellaneous</a><a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="adding-animations">
-<h3>Adding animations<a class="headerlink" href="#adding-animations" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#contents">Adding animations</a><a class="headerlink" href="#adding-animations" title="Permalink to this headline">¶</a></h3>
 <p>There is a Matplotlib Google/Gmail account with username <code class="docutils literal notranslate"><span class="pre">mplgithub</span></code>
 which was used to setup the github account but can be used for other
 purposes, like hosting Google docs or Youtube videos.  You can embed a
@@ -769,7 +902,7 @@ embedding string youtube provides like:</p>
 google docs to the mplgithub account.</p>
 </div>
 <div class="section" id="generating-inheritance-diagrams">
-<span id="inheritance-diagrams"></span><h3>Generating inheritance diagrams<a class="headerlink" href="#generating-inheritance-diagrams" title="Permalink to this headline">¶</a></h3>
+<span id="inheritance-diagrams"></span><h3><a class="toc-backref" href="#contents">Generating inheritance diagrams</a><a class="headerlink" href="#generating-inheritance-diagrams" title="Permalink to this headline">¶</a></h3>
 <p>Class inheritance diagrams can be generated with the
 <code class="docutils literal notranslate"><span class="pre">inheritance-diagram</span></code> directive.  To use it, provide the
 directive with a number of class or module names (separated by
@@ -786,7 +919,7 @@ path is shown.</p>
    <span class="nc">:parts:</span> <span class="nf">2</span>
 </pre></div>
 </div>
-<img src="../_images/inheritance-dedcc1c71ae54be773d8e45d7e30897709db8581.png" alt="Inheritance diagram of matplotlib.patches, matplotlib.lines, matplotlib.text" usemap="#inheritance03ab0131b5" class="inheritance"/>
+<div class="graphviz"><img src="../_images/inheritance-3273db71c14d687a9eb16fd50c9388adcfd95170.png" alt="Inheritance diagram of matplotlib.patches, matplotlib.lines, matplotlib.text" usemap="#inheritance03ab0131b5" class="inheritance graphviz" /></div>
 <map id="inheritance03ab0131b5" name="inheritance03ab0131b5">
 <area shape="rect" id="node1" href="../api/artist_api.html#matplotlib.artist.Artist" target="_top" title="Abstract base class for someone who renders into a" alt="" coords="46,282,135,305"/>
 <area shape="rect" id="node2" href="../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" target="_top" title="A line &#45; the line can have both a solid linestyle connecting all" alt="" coords="225,236,321,259"/>
@@ -805,7 +938,7 @@ path is shown.</p>
 <area shape="rect" id="node20" href="../api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle" target="_top" title="Draw a rectangle with lower left at *xy* = (*x*, *y*) with" alt="" coords="391,350,524,374"/>
 <area shape="rect" id="node21" href="../api/_as_gen/matplotlib.patches.Shadow.html#matplotlib.patches.Shadow" target="_top" title="patches.Shadow" alt="" coords="398,396,517,420"/>
 <area shape="rect" id="node22" href="../api/_as_gen/matplotlib.patches.Wedge.html#matplotlib.patches.Wedge" target="_top" title="Wedge shaped patch." alt="" coords="401,443,514,466"/>
-<area shape="rect" id="node23" href="../api/_as_gen/matplotlib.patches.YAArrow.html#matplotlib.patches.YAArrow" target="_top" title="Yet another arrow class." alt="" coords="396,489,519,512"/>
+<area shape="rect" id="node23" href="../api/_as_gen/matplotlib.patches.YAArrow.html#matplotlib.patches.YAArrow" target="_top" title=".. deprecated:: 3.0" alt="" coords="396,489,519,512"/>
 <area shape="rect" id="node8" href="../api/_as_gen/matplotlib.patches.ArrowStyle.html#matplotlib.patches.ArrowStyle" target="_top" title=":class:`ArrowStyle` is a container class which defines several" alt="" coords="21,190,160,213"/>
 <area shape="rect" id="node9" href="../api/_as_gen/matplotlib.patches.BoxStyle.html#matplotlib.patches.BoxStyle" target="_top" title=":class:`BoxStyle` is a container class which defines several" alt="" coords="27,143,153,167"/>
 <area shape="rect" id="node11" href="../api/_as_gen/matplotlib.patches.CirclePolygon.html#matplotlib.patches.CirclePolygon" target="_top" title="A polygon&#45;approximation of a circle patch." alt="" coords="598,120,754,143"/>
@@ -817,7 +950,7 @@ path is shown.</p>
 <area shape="rect" id="node26" href="../api/text_api.html#matplotlib.text.OffsetFrom" target="_top" title="Callable helper class for working with `Annotation`" alt="" coords="33,51,148,75"/>
 </map></div>
 <div class="section" id="emacs-helpers">
-<span id="id5"></span><h3>Emacs helpers<a class="headerlink" href="#emacs-helpers" title="Permalink to this headline">¶</a></h3>
+<span id="id6"></span><h3><a class="toc-backref" href="#contents">Emacs helpers</a><a class="headerlink" href="#emacs-helpers" title="Permalink to this headline">¶</a></h3>
 <p>There is an emacs mode <a class="reference external" href="http://docutils.sourceforge.net/tools/editors/emacs/rst.el">rst.el</a> which
 automates many important ReST tasks like building and updating
 table-of-contents, and promoting or demoting section headings.  Here
@@ -861,10 +994,10 @@ is the basic <code class="docutils literal notranslate"><span class="pre">.emacs
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

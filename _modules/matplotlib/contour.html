@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.contour &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.contour &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/contour.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -114,21 +116,19 @@ type="text/css" />
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">These are classes to support contour plotting and labelling for the Axes class.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
-
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Integral</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">ma</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">matplotlib._contour</span> <span class="k">as</span> <span class="nn">_contour</span>
 <span class="kn">import</span> <span class="nn">matplotlib.path</span> <span class="k">as</span> <span class="nn">mpath</span>
 <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
 <span class="kn">import</span> <span class="nn">matplotlib.collections</span> <span class="k">as</span> <span class="nn">mcoll</span>
 <span class="kn">import</span> <span class="nn">matplotlib.font_manager</span> <span class="k">as</span> <span class="nn">font_manager</span>
 <span class="kn">import</span> <span class="nn">matplotlib.text</span> <span class="k">as</span> <span class="nn">text</span>
@@ -167,42 +167,46 @@ type="text/css" />
 <div class="viewcode-block" id="ContourLabeler"><a class="viewcode-back" href="../../api/contour_api.html#matplotlib.contour.ContourLabeler">[docs]</a><span class="k">class</span> <span class="nc">ContourLabeler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mixin to provide labelling capability to `.ContourSet`.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ContourLabeler.clabel"><a class="viewcode-back" href="../../api/contour_api.html#matplotlib.contour.ContourLabeler.clabel">[docs]</a>    <span class="k">def</span> <span class="nf">clabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ContourLabeler.clabel"><a class="viewcode-back" href="../../api/contour_api.html#matplotlib.contour.ContourLabeler.clabel">[docs]</a>    <span class="k">def</span> <span class="nf">clabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+               <span class="n">fontsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inline_spacing</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.3f</span><span class="s1">&#39;</span><span class="p">,</span>
+               <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_clabeltext</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">manual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">rightside_up</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Label a contour plot.</span>
 
 <span class="sd">        Call signature::</span>
 
-<span class="sd">          clabel(cs, **kwargs)</span>
+<span class="sd">          clabel(cs, [levels,] **kwargs)</span>
 
 <span class="sd">        Adds labels to line contours in *cs*, where *cs* is a</span>
 <span class="sd">        :class:`~matplotlib.contour.ContourSet` object returned by</span>
-<span class="sd">        contour.</span>
-
-<span class="sd">        ::</span>
-
-<span class="sd">          clabel(cs, v, **kwargs)</span>
-
-<span class="sd">        only labels contours listed in *v*.</span>
+<span class="sd">        ``contour()``.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        cs : `.ContourSet`</span>
+<span class="sd">            The ContourSet to label.</span>
+
+<span class="sd">        levels : array-like, optional</span>
+<span class="sd">            A list of level values, that should be labeled. The list must be</span>
+<span class="sd">            a subset of ``cs.levels``. If not given, all levels are labeled.</span>
+
 <span class="sd">        fontsize : string or float, optional</span>
 <span class="sd">            Size in points or relative size e.g., &#39;smaller&#39;, &#39;x-large&#39;.</span>
-<span class="sd">            See `Text.set_size` for accepted string values.</span>
+<span class="sd">            See `.Text.set_size` for accepted string values.</span>
 
-<span class="sd">        colors :</span>
-<span class="sd">            Color of each label</span>
+<span class="sd">        colors : color-spec, optional</span>
+<span class="sd">            The label colors:</span>
 
-<span class="sd">            - if *None*, the color of each label matches the color of</span>
-<span class="sd">              the corresponding contour</span>
+<span class="sd">            - If *None*, the color of each label matches the color of</span>
+<span class="sd">              the corresponding contour.</span>
 
-<span class="sd">            - if one string color, e.g., *colors* = &#39;r&#39; or *colors* =</span>
-<span class="sd">              &#39;red&#39;, all labels will be plotted in this color</span>
+<span class="sd">            - If one string color, e.g., *colors* = &#39;r&#39; or *colors* =</span>
+<span class="sd">              &#39;red&#39;, all labels will be plotted in this color.</span>
 
-<span class="sd">            - if a tuple of matplotlib color args (string, float, rgb, etc),</span>
+<span class="sd">            - If a tuple of matplotlib color args (string, float, rgb, etc),</span>
 <span class="sd">              different labels will be plotted in different colors in the order</span>
-<span class="sd">              specified</span>
+<span class="sd">              specified.</span>
 
 <span class="sd">        inline : bool, optional</span>
 <span class="sd">            If ``True`` the underlying contour is removed where the label is</span>
@@ -244,10 +248,15 @@ type="text/css" />
 <span class="sd">            or minus 90 degrees from level. Default is ``True``.</span>
 
 <span class="sd">        use_clabeltext : bool, optional</span>
-<span class="sd">            If ``True``, `ClabelText` class (instead of `Text`) is used to</span>
+<span class="sd">            If ``True``, `.ClabelText` class (instead of `.Text`) is used to</span>
 <span class="sd">            create labels. `ClabelText` recalculates rotation angles</span>
 <span class="sd">            of texts during the drawing time, therefore this can be used if</span>
 <span class="sd">            aspect of the axes changes. Default is ``False``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        labels</span>
+<span class="sd">            A list of `.Text` instances for the labels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
@@ -263,21 +272,15 @@ type="text/css" />
 <span class="sd">        `BlockingContourLabeler` (case of manual label placement).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">fontsize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fontsize&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">inline</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;inline&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">inline_spacing</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;inline_spacing&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">labelFmt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fmt&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%1.3f</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">_colors</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;colors&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labelFmt</span> <span class="o">=</span> <span class="n">fmt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use_clabeltext</span> <span class="o">=</span> <span class="n">use_clabeltext</span>
+        <span class="c1"># Detect if manual selection is desired and remove from argument list.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labelManual</span> <span class="o">=</span> <span class="n">manual</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rightside_up</span> <span class="o">=</span> <span class="n">rightside_up</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_use_clabeltext</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_clabeltext&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-
-        <span class="c1"># Detect if manual selection is desired and remove from argument list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">labelManual</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;manual&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">rightside_up</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rightside_up&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span>
-            <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cvalues</span><span class="p">)))</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cvalues</span><span class="p">)))</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">levlabs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">indices</span><span class="p">,</span> <span class="n">levels</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -298,14 +301,14 @@ type="text/css" />
         <span class="n">font_size_pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelFontProps</span><span class="o">.</span><span class="n">get_size_in_points</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labelFontSizeList</span> <span class="o">=</span> <span class="p">[</span><span class="n">font_size_pts</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">_colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">labelMappable</span> <span class="o">=</span> <span class="bp">self</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">labelCValueList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cvalues</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelIndiceList</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">_colors</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labelLevelList</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">labelCValueList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labelLevelList</span><span class="p">)))</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labelLevelList</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelCValueList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labelLevelList</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">labelMappable</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-                                                   <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">())</span>
+                                                   <span class="n">norm</span><span class="o">=</span><span class="n">mcolors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">())</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">labelXYs</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -325,15 +328,15 @@ type="text/css" />
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">inline</span><span class="p">,</span> <span class="n">inline_spacing</span><span class="p">)</span>
 
-        <span class="c1"># Hold on to some old attribute names.  These are deprecated and will</span>
-        <span class="c1"># be removed in the near future (sometime after 2008-08-01), but</span>
-        <span class="c1"># keeping for now for backwards compatibility</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelTexts</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cl_xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelXYs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cl_cvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelCValues</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">labelTextsList</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">silent_list</span><span class="p">(</span><span class="s1">&#39;text.Text&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelTexts</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelTextsList</span></div>
+
+    <span class="n">cl</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;labelTexts&quot;</span><span class="p">)(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelTexts</span><span class="p">))</span>
+    <span class="n">cl_xy</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;labelXYs&quot;</span><span class="p">)(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelXYs</span><span class="p">))</span>
+    <span class="n">cl_cvalues</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;labelCValues&quot;</span><span class="p">)(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelCValues</span><span class="p">))</span>
 
 <div class="viewcode-block" id="ContourLabeler.print_label"><a class="viewcode-back" href="../../api/contour_api.html#matplotlib.contour.ContourLabeler.print_label">[docs]</a>    <span class="k">def</span> <span class="nf">print_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">linecontour</span><span class="p">,</span> <span class="n">labelwidth</span><span class="p">):</span>
         <span class="s2">&quot;Return *False* if contours are too short for a label.&quot;</span>
@@ -376,7 +379,7 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the width of the label in points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">lev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
 
         <span class="n">lev</span><span class="p">,</span> <span class="n">ismath</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">is_math_text</span><span class="p">(</span><span class="n">lev</span><span class="p">)</span>
@@ -433,7 +436,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="ContourLabeler.get_text"><a class="viewcode-back" href="../../api/contour_api.html#matplotlib.contour.ContourLabeler.get_text">[docs]</a>    <span class="k">def</span> <span class="nf">get_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lev</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the text of the label.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">lev</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -904,7 +907,12 @@ type="text/css" />
 <span class="sd">        levels for filled contours.  See :meth:`_process_colors`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                 <span class="n">levels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;neither&#39;</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw contour lines or filled regions, depending on</span>
 <span class="sd">        whether keyword arg *filled* is ``False`` (default) or ``True``.</span>
@@ -950,23 +958,17 @@ type="text/css" />
 <span class="sd">            `~axes.Axes.contour`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;levels&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">filled</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;filled&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">linewidths</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linewidths&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">linestyles</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linestyles&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">levels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filled</span> <span class="o">=</span> <span class="n">filled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linewidths</span> <span class="o">=</span> <span class="n">linewidths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linestyles</span> <span class="o">=</span> <span class="n">linestyles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hatches</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;hatches&#39;</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">])</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extent&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;cmap&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;colors&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">vmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;vmin&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">vmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;vmax&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;extend&#39;</span><span class="p">,</span> <span class="s1">&#39;neither&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">antialiased</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;antialiased&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="n">extent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">=</span> <span class="n">extend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">antialiased</span> <span class="o">=</span> <span class="n">antialiased</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">antialiased</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">filled</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">antialiased</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># eliminate artifacts; we are not</span>
                                       <span class="c1"># stroking the boundaries.</span>
@@ -976,14 +978,11 @@ type="text/css" />
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nchunk</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;nchunk&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;locator&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">)</span>
                 <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locator</span><span class="p">,</span> <span class="n">ticker</span><span class="o">.</span><span class="n">LogLocator</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logscale</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">norm</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;neither&#39;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;extend kwarg does not work yet with log &#39;</span>
-                                 <span class="s1">&#39; scale&#39;</span><span class="p">)</span>
+                <span class="n">norm</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logscale</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -1019,13 +1018,12 @@ type="text/css" />
             <span class="c1"># extend_max case we don&#39;t need to worry about passing more colors</span>
             <span class="c1"># than ncolors as ListedColormap will clip.</span>
             <span class="n">total_levels</span> <span class="o">=</span> <span class="n">ncolors</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">extend_min</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">extend_max</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span> <span class="o">==</span> <span class="n">total_levels</span> <span class="ow">and</span>
-                    <span class="nb">any</span><span class="p">([</span><span class="n">extend_min</span><span class="p">,</span> <span class="n">extend_max</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span> <span class="o">==</span> <span class="n">total_levels</span> <span class="ow">and</span> <span class="p">(</span><span class="n">extend_min</span> <span class="ow">or</span> <span class="n">extend_max</span><span class="p">):</span>
                 <span class="n">use_set_under_over</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">if</span> <span class="n">extend_min</span><span class="p">:</span>
                     <span class="n">i0</span> <span class="o">=</span> <span class="mi">1</span>
 
-            <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">i0</span><span class="p">:</span><span class="kc">None</span><span class="p">],</span> <span class="n">N</span><span class="o">=</span><span class="n">ncolors</span><span class="p">)</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">i0</span><span class="p">:</span><span class="kc">None</span><span class="p">],</span> <span class="n">N</span><span class="o">=</span><span class="n">ncolors</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">use_set_under_over</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">extend_min</span><span class="p">:</span>
@@ -1291,6 +1289,9 @@ type="text/css" />
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Select contour levels to span the data.</span>
 
+<span class="sd">        The target number of levels, *N*, is used only when the</span>
+<span class="sd">        scale is not log and default locator is used.</span>
+
 <span class="sd">        We need two more levels for filled contours than for</span>
 <span class="sd">        line contours, because for the latter we need to specify</span>
 <span class="sd">        the lower and upper boundary of each range. For example,</span>
@@ -1298,6 +1299,7 @@ type="text/css" />
 <span class="sd">        one contour line, but two filled regions, and therefore</span>
 <span class="sd">        three levels to provide boundaries for both regions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_auto</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">locator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logscale</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">ticker</span><span class="o">.</span><span class="n">LogLocator</span><span class="p">()</span>
@@ -1305,8 +1307,27 @@ type="text/css" />
                 <span class="bp">self</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_n_ticks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">lev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locator</span><span class="o">.</span><span class="n">tick_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmax</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_auto</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="n">lev</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">locator</span><span class="o">.</span><span class="n">_symmetric</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">lev</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Trim excess levels the locator may have supplied.</span>
+        <span class="n">under</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">lev</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmin</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">i0</span> <span class="o">=</span> <span class="n">under</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">under</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">over</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">lev</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmax</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">i1</span> <span class="o">=</span> <span class="n">over</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">over</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">lev</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">):</span>
+            <span class="n">i0</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">):</span>
+            <span class="n">i1</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">i1</span> <span class="o">-</span> <span class="n">i0</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">i0</span><span class="p">,</span> <span class="n">i1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lev</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lev</span><span class="p">[</span><span class="n">i0</span><span class="p">:</span><span class="n">i1</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_contour_level_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1319,26 +1340,20 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_auto</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">lev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autolev</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+                <span class="n">levels_arg</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># Default, hard-wired.</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">level_arg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">level_arg</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
-                        <span class="n">lev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autolev</span><span class="p">(</span><span class="n">level_arg</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">lev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">level_arg</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-                <span class="k">except</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="s2">&quot;Last </span><span class="si">{0}</span><span class="s2"> arg must give levels; see help(</span><span class="si">{0}</span><span class="s2">)&quot;</span>
-                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">lev</span>
+                <span class="n">levels_arg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">levels_arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">levels_arg</span><span class="p">,</span> <span class="n">Integral</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_autolev</span><span class="p">(</span><span class="n">levels_arg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">levels_arg</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">filled</span><span class="p">:</span>
             <span class="n">inside</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmax</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">levels_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels_in</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zmin</span><span class="p">]</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No contour levels were found&quot;</span>
                               <span class="s2">&quot; within the data range.&quot;</span><span class="p">)</span>
@@ -1363,24 +1378,28 @@ type="text/css" />
         <span class="c1"># (Colorbar needs this even for line contours.)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logscale</span><span class="p">:</span>
+            <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="mf">1e-250</span><span class="p">,</span> <span class="mf">1e250</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e250</span><span class="p">,</span> <span class="mf">1e250</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmin</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lower</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmax</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">filled</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span>
             <span class="k">return</span>
 
-        <span class="c1"># layer values are mid-way between levels</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-        <span class="c1"># ...except that extended layers must be outside the</span>
-        <span class="c1"># normed range:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e150</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e150</span>
+        <span class="c1"># Layer values are mid-way between levels in screen space.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logscale</span><span class="p">:</span>
+            <span class="c1"># Avoid overflow by taking sqrt before multiplying.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                           <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
     <span class="k">def</span> <span class="nf">_process_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1417,7 +1436,7 @@ type="text/css" />
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">):</span>
                     <span class="n">i1</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cvalues</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">i1</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_norm</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_norm</span><span class="p">(</span><span class="n">mcolors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span>
@@ -1457,7 +1476,7 @@ type="text/css" />
                     <span class="k">if</span> <span class="n">lev</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
                         <span class="n">tlinestyles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">neg_ls</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">linestyles</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">linestyles</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">tlinestyles</span> <span class="o">=</span> <span class="p">[</span><span class="n">linestyles</span><span class="p">]</span> <span class="o">*</span> <span class="n">Nlev</span>
             <span class="k">elif</span> <span class="n">cbook</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">linestyles</span><span class="p">):</span>
                 <span class="n">tlinestyles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">linestyles</span><span class="p">)</span>
@@ -1513,7 +1532,7 @@ type="text/css" />
         <span class="c1"># Nonetheless, improvements could probably be made.</span>
 
         <span class="k">if</span> <span class="n">indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)))</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)))</span>
 
         <span class="n">dmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="n">conmin</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1794,7 +1813,7 @@ type="text/css" />
 
 <span class="s2">        Returns</span>
 <span class="s2">        -------</span>
-<span class="s2">        :class:`~matplotlib.contour.QuadContourSet`</span>
+<span class="s2">        c : `~.contour.QuadContourSet`</span>
 
 <span class="s2">        Other Parameters</span>
 <span class="s2">        ----------------</span>
@@ -1958,10 +1977,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.rcsetup &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.rcsetup &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/rcsetup.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -126,19 +128,15 @@ type="text/css" />
 <span class="sd">parameter set listed here should also be visited to the</span>
 <span class="sd">:file:`matplotlibrc.template` in matplotlib&#39;s root source directory.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
 <span class="kn">import</span> <span class="nn">operator</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">testing</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">mplDeprecation</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="n">ls_mapper</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">ls_mapper</span>
 <span class="kn">from</span> <span class="nn">matplotlib.fontconfig_pattern</span> <span class="k">import</span> <span class="n">parse_fontconfig_pattern</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">is_color_like</span>
 
@@ -148,17 +146,14 @@ type="text/css" />
 
 <span class="c1"># The capitalized forms are needed for ipython at present; this may</span>
 <span class="c1"># change for later versions.</span>
-<span class="n">interactive_bk</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GTK&#39;</span><span class="p">,</span> <span class="s1">&#39;GTKAgg&#39;</span><span class="p">,</span> <span class="s1">&#39;GTKCairo&#39;</span><span class="p">,</span> <span class="s1">&#39;MacOSX&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;Qt4Agg&#39;</span><span class="p">,</span> <span class="s1">&#39;Qt5Agg&#39;</span><span class="p">,</span> <span class="s1">&#39;TkAgg&#39;</span><span class="p">,</span> <span class="s1">&#39;WX&#39;</span><span class="p">,</span> <span class="s1">&#39;WXAgg&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;GTK3Cairo&#39;</span><span class="p">,</span> <span class="s1">&#39;GTK3Agg&#39;</span><span class="p">,</span> <span class="s1">&#39;WebAgg&#39;</span><span class="p">,</span> <span class="s1">&#39;nbAgg&#39;</span><span class="p">]</span>
-<span class="n">interactive_bk</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GTK&#39;</span><span class="p">,</span> <span class="s1">&#39;GTKAgg&#39;</span><span class="p">,</span> <span class="s1">&#39;GTKCairo&#39;</span><span class="p">,</span> <span class="s1">&#39;GTK3Agg&#39;</span><span class="p">,</span> <span class="s1">&#39;GTK3Cairo&#39;</span><span class="p">,</span>
+<span class="n">interactive_bk</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GTK3Agg&#39;</span><span class="p">,</span> <span class="s1">&#39;GTK3Cairo&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;MacOSX&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;nbAgg&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;Qt4Agg&#39;</span><span class="p">,</span> <span class="s1">&#39;Qt4Cairo&#39;</span><span class="p">,</span> <span class="s1">&#39;Qt5Agg&#39;</span><span class="p">,</span> <span class="s1">&#39;Qt5Cairo&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;TkAgg&#39;</span><span class="p">,</span> <span class="s1">&#39;TkCairo&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;WebAgg&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;WX&#39;</span><span class="p">,</span> <span class="s1">&#39;WXAgg&#39;</span><span class="p">,</span> <span class="s1">&#39;WXCairo&#39;</span><span class="p">]</span>
-<span class="n">non_interactive_bk</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;agg&#39;</span><span class="p">,</span> <span class="s1">&#39;cairo&#39;</span><span class="p">,</span> <span class="s1">&#39;gdk&#39;</span><span class="p">,</span>
+<span class="n">non_interactive_bk</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;agg&#39;</span><span class="p">,</span> <span class="s1">&#39;cairo&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;pgf&#39;</span><span class="p">,</span> <span class="s1">&#39;ps&#39;</span><span class="p">,</span> <span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;template&#39;</span><span class="p">]</span>
 <span class="n">all_backends</span> <span class="o">=</span> <span class="n">interactive_bk</span> <span class="o">+</span> <span class="n">non_interactive_bk</span>
 
@@ -181,13 +176,13 @@ type="text/css" />
             <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized </span><span class="si">%s</span><span class="s1"> string &quot;</span><span class="si">%s</span><span class="s1">&quot;: valid strings are </span><span class="si">%s</span><span class="s1">&#39;</span>
-                         <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valid</span><span class="p">))))</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized </span><span class="si">%s</span><span class="s1"> string </span><span class="si">%r</span><span class="s1">: valid strings are </span><span class="si">%s</span><span class="s1">&#39;</span>
+                         <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span></div>
 
 
 <span class="k">def</span> <span class="nf">_listify_validator</span><span class="p">(</span><span class="n">scalar_validator</span><span class="p">,</span> <span class="n">allow_stringlist</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">scalar_validator</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
@@ -208,7 +203,7 @@ type="text/css" />
             <span class="c1"># from the original validate_stringlist()), while allowing</span>
             <span class="c1"># any non-string/text scalar values such as numbers and arrays.</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">scalar_validator</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">or</span> <span class="n">v</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">v</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{!r}</span><span class="s2"> must be of type: string or non-dictionary &quot;</span>
                              <span class="s2">&quot;iterable&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
@@ -237,7 +232,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="validate_bool"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_bool">[docs]</a><span class="k">def</span> <span class="nf">validate_bool</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert b to a boolean or raise&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">b</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
@@ -249,7 +244,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="validate_bool_maybe_none"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_bool_maybe_none">[docs]</a><span class="k">def</span> <span class="nf">validate_bool_maybe_none</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
     <span class="s1">&#39;Convert b to a boolean or raise&#39;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">b</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -259,15 +254,6 @@ type="text/css" />
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Could not convert &quot;</span><span class="si">%s</span><span class="s1">&quot; to boolean&#39;</span> <span class="o">%</span> <span class="n">b</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="deprecate_axes_hold"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.deprecate_axes_hold">[docs]</a><span class="k">def</span> <span class="nf">deprecate_axes_hold</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># converted to True where accessed in figure.py,</span>
-                     <span class="c1"># axes/_base.py</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;axes.hold is deprecated, will be removed in 3.0&quot;</span><span class="p">,</span>
-                  <span class="n">mplDeprecation</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">validate_bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="validate_float"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_float">[docs]</a><span class="k">def</span> <span class="nf">validate_float</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -308,7 +294,7 @@ type="text/css" />
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">validate_bool</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">):</span>
                 <span class="k">return</span> <span class="s1">&#39;line&#39;</span>
@@ -363,22 +349,23 @@ type="text/css" />
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Supported Postscript/PDF font types are </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">list</span><span class="p">(</span><span class="n">fonttypes</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">fonttype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="n">fonttypes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fonttype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fonttypes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Supported Postscript/PDF font types are </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
-                <span class="nb">list</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="n">fonttypes</span><span class="p">)))</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">fonttypes</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
         <span class="k">return</span> <span class="n">fonttype</span></div>
 
 
 <span class="n">_validate_standard_backends</span> <span class="o">=</span> <span class="n">ValidateInStrings</span><span class="p">(</span>
     <span class="s1">&#39;backend&#39;</span><span class="p">,</span> <span class="n">all_backends</span><span class="p">,</span> <span class="n">ignorecase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">_auto_backend_sentinel</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="validate_backend"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_backend">[docs]</a><span class="k">def</span> <span class="nf">validate_backend</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;module://&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">s</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_validate_standard_backends</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+    <span class="n">backend</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">s</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">_auto_backend_sentinel</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;module://&quot;</span><span class="p">)</span>
+        <span class="k">else</span> <span class="n">_validate_standard_backends</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">backend</span></div>
 
 
 <div class="viewcode-block" id="validate_qt4"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_qt4">[docs]</a><span class="k">def</span> <span class="nf">validate_qt4</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -415,7 +402,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;return a seq of n floats or raise&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
             <span class="n">err_msg</span> <span class="o">=</span> <span class="n">_str_err_msg</span>
         <span class="k">else</span><span class="p">:</span>
@@ -439,7 +426,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;return a seq of n ints or raise&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
             <span class="n">err_msg</span> <span class="o">=</span> <span class="n">_str_err_msg</span>
         <span class="k">else</span><span class="p">:</span>
@@ -475,7 +462,7 @@ type="text/css" />
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can not put cycle reference (</span><span class="si">{cn!r}</span><span class="s1">) in &#39;</span>
                              <span class="s1">&#39;prop_cycler&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cn</span><span class="o">=</span><span class="n">s</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;^C[0-9]$&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can not put cycle reference (</span><span class="si">{cn!r}</span><span class="s1">) in &#39;</span>
@@ -491,7 +478,7 @@ type="text/css" />
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="k">pass</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
             <span class="n">stmp</span> <span class="o">=</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">s</span>
             <span class="k">if</span> <span class="n">is_color_like</span><span class="p">(</span><span class="n">stmp</span><span class="p">):</span>
@@ -525,7 +512,7 @@ type="text/css" />
 <span class="n">validate_colorlist</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s1">&#39;return a list of colorspecs&#39;</span>
 
 <div class="viewcode-block" id="validate_string"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_string">[docs]</a><span class="k">def</span> <span class="nf">validate_string</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
         <span class="c1"># Always leave str as str and unicode as unicode</span>
         <span class="k">return</span> <span class="n">s</span>
     <span class="k">else</span><span class="p">:</span>
@@ -547,10 +534,17 @@ type="text/css" />
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;not a valid aspect specification&#39;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="validate_fontsize_None"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_fontsize_None">[docs]</a><span class="k">def</span> <span class="nf">validate_fontsize_None</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validate_fontsize</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="validate_fontsize"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_fontsize">[docs]</a><span class="k">def</span> <span class="nf">validate_fontsize</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="n">fontsizes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xx-small&#39;</span><span class="p">,</span> <span class="s1">&#39;x-small&#39;</span><span class="p">,</span> <span class="s1">&#39;small&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="s1">&#39;large&#39;</span><span class="p">,</span>
                  <span class="s1">&#39;x-large&#39;</span><span class="p">,</span> <span class="s1">&#39;xx-large&#39;</span><span class="p">,</span> <span class="s1">&#39;smaller&#39;</span><span class="p">,</span> <span class="s1">&#39;larger&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">fontsizes</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">s</span>
@@ -620,7 +614,7 @@ type="text/css" />
 
 
 <div class="viewcode-block" id="validate_ps_distiller"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_ps_distiller">[docs]</a><span class="k">def</span> <span class="nf">validate_ps_distiller</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -650,27 +644,54 @@ type="text/css" />
 <span class="n">_validate_negative_linestyle</span> <span class="o">=</span> <span class="n">ValidateInStrings</span><span class="p">(</span><span class="s1">&#39;negative_linestyle&#39;</span><span class="p">,</span>
                                                  <span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
                                                  <span class="n">ignorecase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="validate_markevery"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_markevery">[docs]</a><span class="k">def</span> <span class="nf">validate_markevery</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate the markevery property of a Line2D object.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    s : None, int, float, slice, length-2 tuple of ints,</span>
+<span class="sd">        length-2 tuple of floats, list of ints</span>
 
-<div class="viewcode-block" id="validate_negative_linestyle"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_negative_linestyle">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;2.1&#39;</span><span class="p">,</span>
-            <span class="n">addendum</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot; See &#39;validate_negative_linestyle_legacy&#39; &quot;</span> <span class="o">+</span>
-                      <span class="s2">&quot;deprecation warning for more information.&quot;</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">validate_negative_linestyle</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">_validate_negative_linestyle</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    s : None, int, float, slice, length-2 tuple of ints,</span>
+<span class="sd">        length-2 tuple of floats, list of ints</span>
 
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate s against type slice</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">s</span>
+    <span class="c1"># Validate s against type tuple</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">tupMaxLength</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">tupType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="n">tupMaxLength</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;markevery&#39; tuple must have a length of &quot;</span>
+                            <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tupMaxLength</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">tupType</span> <span class="ow">is</span> <span class="nb">int</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">s</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;markevery&#39; tuple with first element of &quot;</span>
+                            <span class="s2">&quot;type int must have all elements of type &quot;</span>
+                            <span class="s2">&quot;int&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tupType</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">s</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;markevery&#39; tuple with first element of &quot;</span>
+                            <span class="s2">&quot;type float must have all elements of type &quot;</span>
+                            <span class="s2">&quot;float&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tupType</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">float</span> <span class="ow">and</span> <span class="n">tupType</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;markevery&#39; tuple contains an invalid type&quot;</span><span class="p">)</span>
+    <span class="c1"># Validate s against type list</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">s</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;markevery&#39; list must have all elements of &quot;</span>
+                            <span class="s2">&quot;type int&quot;</span><span class="p">)</span>
+    <span class="c1"># Validate s against type float int and None</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;markevery&#39; is of an invalid type&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="validate_negative_linestyle_legacy"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_negative_linestyle_legacy">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;2.1&#39;</span><span class="p">,</span>
-            <span class="n">addendum</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot; The &#39;contour.negative_linestyle&#39; rcParam now &quot;</span> <span class="o">+</span>
-                      <span class="s2">&quot;follows the same validation as the other rcParams &quot;</span> <span class="o">+</span>
-                      <span class="s2">&quot;that are related to line style.&quot;</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">validate_negative_linestyle_legacy</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">validate_negative_linestyle</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">res</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="n">dashes</span> <span class="o">=</span> <span class="n">validate_nseq_float</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dashes</span><span class="p">)</span>  <span class="c1"># (offset, (solid, blank))</span></div>
+    <span class="k">return</span> <span class="n">s</span></div>
 
+<span class="n">validate_markeverylist</span> <span class="o">=</span> <span class="n">_listify_validator</span><span class="p">(</span><span class="n">validate_markevery</span><span class="p">)</span>
 
 <span class="n">validate_legend_loc</span> <span class="o">=</span> <span class="n">ValidateInStrings</span><span class="p">(</span>
     <span class="s1">&#39;legend_loc&#39;</span><span class="p">,</span>
@@ -723,7 +744,7 @@ type="text/css" />
     <span class="p">[</span><span class="s1">&#39;html5&#39;</span><span class="p">,</span> <span class="s1">&#39;jshtml&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">])</span>
 
 <div class="viewcode-block" id="validate_bbox"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_bbox">[docs]</a><span class="k">def</span> <span class="nf">validate_bbox</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;tight&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">s</span>
@@ -736,11 +757,11 @@ type="text/css" />
     <span class="k">return</span> <span class="n">s</span></div>
 
 <div class="viewcode-block" id="validate_sketch"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_sketch">[docs]</a><span class="k">def</span> <span class="nf">validate_sketch</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span> <span class="ow">or</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)])</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span>
@@ -789,7 +810,7 @@ type="text/css" />
 <span class="sd">    characters: ``\\ / | - + * . x o O``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Hatch pattern must be a string&quot;</span><span class="p">)</span>
     <span class="n">unknown</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
@@ -812,6 +833,7 @@ type="text/css" />
         <span class="s1">&#39;markersize&#39;</span><span class="p">:</span> <span class="n">validate_floatlist</span><span class="p">,</span>
         <span class="s1">&#39;markeredgewidth&#39;</span><span class="p">:</span> <span class="n">validate_floatlist</span><span class="p">,</span>
         <span class="s1">&#39;markeredgecolor&#39;</span><span class="p">:</span> <span class="n">validate_colorlist</span><span class="p">,</span>
+        <span class="s1">&#39;markevery&#39;</span><span class="p">:</span> <span class="n">validate_markeverylist</span><span class="p">,</span>
         <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">validate_floatlist</span><span class="p">,</span>
         <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="n">validate_stringlist</span><span class="p">,</span>
         <span class="s1">&#39;hatch&#39;</span><span class="p">:</span> <span class="n">validate_hatchlist</span><span class="p">,</span>
@@ -899,7 +921,7 @@ type="text/css" />
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;No more than 2 positional arguments allowed&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">pairs</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 
     <span class="n">validated</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">prop</span><span class="p">,</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
@@ -917,7 +939,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="validate_cycler"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_cycler">[docs]</a><span class="k">def</span> <span class="nf">validate_cycler</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="s1">&#39;return a Cycler object from a string repr or the object itself&#39;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># TODO: We might want to rethink this...</span>
             <span class="c1"># While I think I have it quite locked down,</span>
@@ -981,7 +1003,7 @@ type="text/css" />
 
 
 <div class="viewcode-block" id="validate_hist_bins"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_hist_bins">[docs]</a><span class="k">def</span> <span class="nf">validate_hist_bins</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_str_equal</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">s</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -1000,7 +1022,7 @@ type="text/css" />
     <span class="c1"># Make sure it&#39;s a string and then figure out if the animations</span>
     <span class="c1"># are already loaded and reset the writers (which will validate</span>
     <span class="c1"># the path on next call)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;path must be a (unicode) string&quot;</span><span class="p">)</span>
     <span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">modules</span>
     <span class="c1"># set dirty, so that the next call to the registry will re-evaluate</span>
@@ -1023,11 +1045,10 @@ type="text/css" />
 
 <span class="c1"># A validator dedicated to the named line styles, based on the items in</span>
 <span class="c1"># ls_mapper, and a list of possible strings read from Line2D.set_linestyle</span>
-<span class="n">_validate_named_linestyle</span> <span class="o">=</span> <span class="n">ValidateInStrings</span><span class="p">(</span><span class="s1">&#39;linestyle&#39;</span><span class="p">,</span>
-                                              <span class="nb">list</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">(</span><span class="n">ls_mapper</span><span class="p">))</span> <span class="o">+</span>
-                                              <span class="nb">list</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="n">ls_mapper</span><span class="p">))</span> <span class="o">+</span>
-                                              <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
-                                              <span class="n">ignorecase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">_validate_named_linestyle</span> <span class="o">=</span> <span class="n">ValidateInStrings</span><span class="p">(</span>
+    <span class="s1">&#39;linestyle&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="o">*</span><span class="n">ls_mapper</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="o">*</span><span class="n">ls_mapper</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+    <span class="n">ignorecase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_validate_linestyle</span><span class="p">(</span><span class="n">ls</span><span class="p">):</span>
@@ -1035,25 +1056,13 @@ type="text/css" />
 <span class="sd">    A validator for all possible line styles, the named ones *and*</span>
 <span class="sd">    the on-off ink sequences.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Look first for a valid named line style, like &#39;--&#39; or &#39;solid&#39;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_validate_named_linestyle</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
-        <span class="k">except</span> <span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
-            <span class="c1"># On Python 2, string-like *ls*, like for example</span>
-            <span class="c1"># &#39;solid&#39;.encode(&#39;utf-16&#39;), may raise a unicode error.</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the linestyle string </span><span class="si">{!r}</span><span class="s2"> is not a valid &quot;</span>
-                             <span class="s2">&quot;string.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ls</span><span class="p">))</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
-        <span class="c1"># On Python 2, a string-like *ls* should already have lead to a</span>
-        <span class="c1"># successful return or to raising an exception. On Python 3, we have</span>
-        <span class="c1"># to manually raise an exception in the case of a byte-like *ls*.</span>
-        <span class="c1"># Otherwise, if *ls* is of even-length, it will be passed to the</span>
-        <span class="c1"># instance of validate_nseq_float, which will return an absurd on-off</span>
-        <span class="c1"># ink sequence...</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;linestyle </span><span class="si">{!r}</span><span class="s2"> neither looks like an on-off ink &quot;</span>
-                         <span class="s2">&quot;sequence nor a valid string.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ls</span><span class="p">))</span>
+    <span class="c1"># Look first for a valid named line style, like &#39;--&#39; or &#39;solid&#39; Also</span>
+    <span class="c1"># includes bytes(-arrays) here (they all fail _validate_named_linestyle);</span>
+    <span class="c1"># otherwise, if *ls* is of even-length, it will be passed to the instance</span>
+    <span class="c1"># of validate_nseq_float, which will return an absurd on-off ink</span>
+    <span class="c1"># sequence...</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">_validate_named_linestyle</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
 
     <span class="c1"># Look for an on-off ink sequence (in points) *of even length*.</span>
     <span class="c1"># Offset is set to None.</span>
@@ -1073,9 +1082,8 @@ type="text/css" />
 
 <span class="c1"># a map from key -&gt; value, converter</span>
 <span class="n">defaultParams</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;backend&#39;</span><span class="p">:</span>           <span class="p">[</span><span class="s1">&#39;Agg&#39;</span><span class="p">,</span> <span class="n">validate_backend</span><span class="p">],</span>  <span class="c1"># agg is certainly</span>
-                                                      <span class="c1"># present</span>
-    <span class="s1">&#39;backend_fallback&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>  <span class="c1"># agg is certainly present</span>
+    <span class="s1">&#39;backend&#39;</span><span class="p">:</span>           <span class="p">[</span><span class="n">_auto_backend_sentinel</span><span class="p">,</span> <span class="n">validate_backend</span><span class="p">],</span>
+    <span class="s1">&#39;backend_fallback&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;backend.qt4&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate_qt4</span><span class="p">],</span>
     <span class="s1">&#39;backend.qt5&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate_qt5</span><span class="p">],</span>
     <span class="s1">&#39;webagg.port&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="mi">8988</span><span class="p">,</span> <span class="n">validate_int</span><span class="p">],</span>
@@ -1098,6 +1106,8 @@ type="text/css" />
     <span class="s1">&#39;lines.linestyle&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">_validate_linestyle</span><span class="p">],</span>  <span class="c1"># solid line</span>
     <span class="s1">&#39;lines.color&#39;</span><span class="p">:</span>           <span class="p">[</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># first color in color cycle</span>
     <span class="s1">&#39;lines.marker&#39;</span><span class="p">:</span>          <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">validate_string</span><span class="p">],</span>  <span class="c1"># marker name</span>
+    <span class="s1">&#39;lines.markerfacecolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">validate_color_or_auto</span><span class="p">],</span>  <span class="c1"># default color</span>
+    <span class="s1">&#39;lines.markeredgecolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">validate_color_or_auto</span><span class="p">],</span>  <span class="c1"># default color</span>
     <span class="s1">&#39;lines.markeredgewidth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
     <span class="s1">&#39;lines.markersize&#39;</span><span class="p">:</span>      <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>    <span class="c1"># markersize, in points</span>
     <span class="s1">&#39;lines.antialiased&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>  <span class="c1"># antialiased (no jaggies)</span>
@@ -1116,13 +1126,13 @@ type="text/css" />
 
     <span class="c1">## patch props</span>
     <span class="s1">&#39;patch.linewidth&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>     <span class="c1"># line width in points</span>
-    <span class="s1">&#39;patch.edgecolor&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;patch.edgecolor&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;patch.force_edgecolor&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;patch.facecolor&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>    <span class="c1"># first color in cycle</span>
     <span class="s1">&#39;patch.antialiased&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>     <span class="c1"># antialiased (no jaggies)</span>
 
     <span class="c1">## hatch props</span>
-    <span class="s1">&#39;hatch.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;hatch.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;hatch.linewidth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
 
     <span class="c1">## Histogram properties</span>
@@ -1140,23 +1150,23 @@ type="text/css" />
     <span class="s1">&#39;boxplot.showfliers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.meanline&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
 
-    <span class="s1">&#39;boxplot.flierprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;boxplot.flierprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.flierprops.marker&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">validate_string</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.flierprops.markerfacecolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">validate_color_or_auto</span><span class="p">],</span>
-    <span class="s1">&#39;boxplot.flierprops.markeredgecolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;boxplot.flierprops.markeredgecolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.flierprops.markersize&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.flierprops.linestyle&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">_validate_linestyle</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.flierprops.linewidth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
 
-    <span class="s1">&#39;boxplot.boxprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;boxplot.boxprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.boxprops.linewidth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.boxprops.linestyle&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">_validate_linestyle</span><span class="p">],</span>
 
-    <span class="s1">&#39;boxplot.whiskerprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;boxplot.whiskerprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.whiskerprops.linewidth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.whiskerprops.linestyle&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">_validate_linestyle</span><span class="p">],</span>
 
-    <span class="s1">&#39;boxplot.capprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;boxplot.capprops.color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.capprops.linewidth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
     <span class="s1">&#39;boxplot.capprops.linestyle&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">_validate_linestyle</span><span class="p">],</span>
 
@@ -1194,7 +1204,7 @@ type="text/css" />
     <span class="s1">&#39;font.cursive&#39;</span><span class="p">:</span>    <span class="p">[[</span><span class="s1">&#39;Apple Chancery&#39;</span><span class="p">,</span> <span class="s1">&#39;Textile&#39;</span><span class="p">,</span> <span class="s1">&#39;Zapf Chancery&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;Sand&#39;</span><span class="p">,</span> <span class="s1">&#39;Script MT&#39;</span><span class="p">,</span> <span class="s1">&#39;Felipa&#39;</span><span class="p">,</span> <span class="s1">&#39;cursive&#39;</span><span class="p">],</span>
                         <span class="n">validate_stringlist</span><span class="p">],</span>
-    <span class="s1">&#39;font.fantasy&#39;</span><span class="p">:</span>    <span class="p">[[</span><span class="s1">&#39;Comic Sans MS&#39;</span><span class="p">,</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;Charcoal&#39;</span><span class="p">,</span> <span class="s1">&#39;Impact&#39;</span>
+    <span class="s1">&#39;font.fantasy&#39;</span><span class="p">:</span>    <span class="p">[[</span><span class="s1">&#39;Comic Sans MS&#39;</span><span class="p">,</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;Charcoal&#39;</span><span class="p">,</span> <span class="s1">&#39;Impact&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;Western&#39;</span><span class="p">,</span> <span class="s1">&#39;Humor Sans&#39;</span><span class="p">,</span> <span class="s1">&#39;xkcd&#39;</span><span class="p">,</span> <span class="s1">&#39;fantasy&#39;</span><span class="p">],</span>
                         <span class="n">validate_stringlist</span><span class="p">],</span>
     <span class="s1">&#39;font.monospace&#39;</span><span class="p">:</span>  <span class="p">[[</span><span class="s1">&#39;DejaVu Sans Mono&#39;</span><span class="p">,</span> <span class="s1">&#39;Bitstream Vera Sans Mono&#39;</span><span class="p">,</span>
@@ -1204,9 +1214,9 @@ type="text/css" />
                         <span class="n">validate_stringlist</span><span class="p">],</span>
 
     <span class="c1"># text props</span>
-    <span class="s1">&#39;text.color&#39;</span><span class="p">:</span>          <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>     <span class="c1"># black</span>
+    <span class="s1">&#39;text.color&#39;</span><span class="p">:</span>          <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;text.usetex&#39;</span><span class="p">:</span>         <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
-    <span class="s1">&#39;text.latex.unicode&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
+    <span class="s1">&#39;text.latex.unicode&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;text.latex.preamble&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;&#39;</span><span class="p">],</span> <span class="n">validate_stringlist</span><span class="p">],</span>
     <span class="s1">&#39;text.latex.preview&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;text.dvipnghack&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate_bool_maybe_none</span><span class="p">],</span>
@@ -1243,9 +1253,8 @@ type="text/css" />
 
     <span class="c1"># axes props</span>
     <span class="s1">&#39;axes.axisbelow&#39;</span><span class="p">:</span>        <span class="p">[</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="n">validate_axisbelow</span><span class="p">],</span>
-    <span class="s1">&#39;axes.hold&#39;</span><span class="p">:</span>             <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">deprecate_axes_hold</span><span class="p">],</span>
-    <span class="s1">&#39;axes.facecolor&#39;</span><span class="p">:</span>        <span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># background color; white</span>
-    <span class="s1">&#39;axes.edgecolor&#39;</span><span class="p">:</span>        <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># edge color; black</span>
+    <span class="s1">&#39;axes.facecolor&#39;</span><span class="p">:</span>        <span class="p">[</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># background color</span>
+    <span class="s1">&#39;axes.edgecolor&#39;</span><span class="p">:</span>        <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># edge color</span>
     <span class="s1">&#39;axes.linewidth&#39;</span><span class="p">:</span>        <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>  <span class="c1"># edge linewidth</span>
 
     <span class="s1">&#39;axes.spines.left&#39;</span><span class="p">:</span>      <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>  <span class="c1"># Set visibility of axes</span>
@@ -1268,7 +1277,7 @@ type="text/css" />
                                                              <span class="c1"># x any y labels</span>
     <span class="s1">&#39;axes.labelpad&#39;</span><span class="p">:</span>         <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span> <span class="c1"># space between label and axis</span>
     <span class="s1">&#39;axes.labelweight&#39;</span><span class="p">:</span>      <span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="n">validate_string</span><span class="p">],</span>  <span class="c1"># fontsize of the x any y labels</span>
-    <span class="s1">&#39;axes.labelcolor&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>    <span class="c1"># color of axis label</span>
+    <span class="s1">&#39;axes.labelcolor&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>    <span class="c1"># color of axis label</span>
     <span class="s1">&#39;axes.formatter.limits&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="n">validate_nseq_int</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span>
                                <span class="c1"># use scientific notation if log10</span>
                                <span class="c1"># of the axis range is smaller than the</span>
@@ -1325,6 +1334,7 @@ type="text/css" />
     <span class="c1"># the number of points in the legend line for scatter</span>
     <span class="s1">&#39;legend.scatterpoints&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">validate_int</span><span class="p">],</span>
     <span class="s1">&#39;legend.fontsize&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="n">validate_fontsize</span><span class="p">],</span>
+    <span class="s1">&#39;legend.title_fontsize&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate_fontsize_None</span><span class="p">],</span>
      <span class="c1"># the relative size of legend markers vs. original</span>
     <span class="s1">&#39;legend.markerscale&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>
     <span class="s1">&#39;legend.shadow&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
@@ -1361,7 +1371,7 @@ type="text/css" />
     <span class="s1">&#39;xtick.minor.width&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>  <span class="c1"># minor xtick width in points</span>
     <span class="s1">&#39;xtick.major.pad&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>    <span class="c1"># distance to label in points</span>
     <span class="s1">&#39;xtick.minor.pad&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="mf">3.4</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>    <span class="c1"># distance to label in points</span>
-    <span class="s1">&#39;xtick.color&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># color of the xtick labels</span>
+    <span class="s1">&#39;xtick.color&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># color of the xtick labels</span>
     <span class="s1">&#39;xtick.minor.visible&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>    <span class="c1"># visibility of the x axis minor ticks</span>
     <span class="s1">&#39;xtick.minor.top&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>  <span class="c1"># draw x axis top minor ticks</span>
     <span class="s1">&#39;xtick.minor.bottom&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>    <span class="c1"># draw x axis bottom minor ticks</span>
@@ -1383,7 +1393,7 @@ type="text/css" />
     <span class="s1">&#39;ytick.minor.width&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>   <span class="c1"># minor ytick width in points</span>
     <span class="s1">&#39;ytick.major.pad&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>     <span class="c1"># distance to label in points</span>
     <span class="s1">&#39;ytick.minor.pad&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="mf">3.4</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>     <span class="c1"># distance to label in points</span>
-    <span class="s1">&#39;ytick.color&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>   <span class="c1"># color of the ytick labels</span>
+    <span class="s1">&#39;ytick.color&#39;</span><span class="p">:</span>       <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>   <span class="c1"># color of the ytick labels</span>
     <span class="s1">&#39;ytick.minor.visible&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>    <span class="c1"># visibility of the y axis minor ticks</span>
     <span class="s1">&#39;ytick.minor.left&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>  <span class="c1"># draw y axis left minor ticks</span>
     <span class="s1">&#39;ytick.minor.right&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>    <span class="c1"># draw y axis right minor ticks</span>
@@ -1410,8 +1420,8 @@ type="text/css" />
     <span class="c1"># figure size in inches: width by height</span>
     <span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span>    <span class="p">[[</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">],</span> <span class="n">validate_nseq_float</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span>
     <span class="s1">&#39;figure.dpi&#39;</span><span class="p">:</span>        <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="n">validate_float</span><span class="p">],</span>  <span class="c1"># DPI</span>
-    <span class="s1">&#39;figure.facecolor&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># facecolor; white</span>
-    <span class="s1">&#39;figure.edgecolor&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># edgecolor; white</span>
+    <span class="s1">&#39;figure.facecolor&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;figure.edgecolor&#39;</span><span class="p">:</span>  <span class="p">[</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;figure.frameon&#39;</span><span class="p">:</span>    <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;figure.autolayout&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;figure.max_open_warning&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="n">validate_int</span><span class="p">],</span>
@@ -1444,8 +1454,8 @@ type="text/css" />
 
     <span class="c1">## Saving figure&#39;s properties</span>
     <span class="s1">&#39;savefig.dpi&#39;</span><span class="p">:</span>         <span class="p">[</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span> <span class="n">validate_dpi</span><span class="p">],</span>  <span class="c1"># DPI</span>
-    <span class="s1">&#39;savefig.facecolor&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># facecolor; white</span>
-    <span class="s1">&#39;savefig.edgecolor&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>  <span class="c1"># edgecolor; white</span>
+    <span class="s1">&#39;savefig.facecolor&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
+    <span class="s1">&#39;savefig.edgecolor&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">validate_color</span><span class="p">],</span>
     <span class="s1">&#39;savefig.frameon&#39;</span><span class="p">:</span>     <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_bool</span><span class="p">],</span>
     <span class="s1">&#39;savefig.orientation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;portrait&#39;</span><span class="p">,</span> <span class="n">validate_orientation</span><span class="p">],</span>  <span class="c1"># edgecolor;</span>
                                                                  <span class="c1">#white</span>
@@ -1518,6 +1528,8 @@ type="text/css" />
     <span class="s1">&#39;keymap.yscale&#39;</span><span class="p">:</span>       <span class="p">[[</span><span class="s1">&#39;l&#39;</span><span class="p">],</span> <span class="n">validate_stringlist</span><span class="p">],</span>
     <span class="s1">&#39;keymap.xscale&#39;</span><span class="p">:</span>       <span class="p">[[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">],</span> <span class="n">validate_stringlist</span><span class="p">],</span>
     <span class="s1">&#39;keymap.all_axes&#39;</span><span class="p">:</span>     <span class="p">[[</span><span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="n">validate_stringlist</span><span class="p">],</span>
+    <span class="s1">&#39;keymap.help&#39;</span><span class="p">:</span>         <span class="p">[[</span><span class="s1">&#39;f1&#39;</span><span class="p">],</span> <span class="n">validate_stringlist</span><span class="p">],</span>
+    <span class="s1">&#39;keymap.copy&#39;</span><span class="p">:</span>         <span class="p">[[</span><span class="s1">&#39;ctrl+c&#39;</span><span class="p">,</span> <span class="s1">&#39;cmd+c&#39;</span><span class="p">],</span> <span class="n">validate_stringlist</span><span class="p">],</span>
 
     <span class="c1"># sample data</span>
     <span class="s1">&#39;examples.directory&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">validate_string</span><span class="p">],</span>
@@ -1572,10 +1584,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

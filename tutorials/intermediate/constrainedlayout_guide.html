@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Constrained Layout Guide &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>Constrained Layout Guide &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,18 +28,19 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="Tutorials" href="../index.html" />
-    <link rel="next" title="Path effects guide" href="../advanced/patheffects_guide.html" />
-    <link rel="prev" title="origin and extent in imshow" href="imshow_extent.html" />
+    <link rel="next" title="Tight Layout guide" href="tight_layout_guide.html" />
+    <link rel="prev" title="Customizing Figure Layouts Using GridSpec and Other Functions" href="gridspec.html" />
   <link rel="canonical" href="https://matplotlib.org/tutorials/intermediate/constrainedlayout_guide.html" />
 
 
@@ -50,7 +52,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -70,16 +72,16 @@ type="text/css" />
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../advanced/patheffects_guide.html" title="Path effects guide"
+          <a href="tight_layout_guide.html" title="Tight Layout guide"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="imshow_extent.html" title="origin and extent in imshow"
+          <a href="gridspec.html" title="Customizing Figure Layouts Using GridSpec and Other Functions"
              accesskey="P">previous</a> |</li>
 
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../users/index.html" >User's Guide</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Tutorials</a> &raquo;</li> 
@@ -101,7 +103,7 @@ type="text/css" />
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-  <h3><a href="../../contents.html">Table Of Contents</a></h3>
+  <h3><a href="../../contents.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Constrained Layout Guide</a><ul>
 <li><a class="reference internal" href="#simple-example">Simple Example</a></li>
@@ -110,9 +112,9 @@ type="text/css" />
 <li><a class="reference internal" href="#legends">Legends</a></li>
 <li><a class="reference internal" href="#padding-and-spacing">Padding and Spacing</a><ul>
 <li><a class="reference internal" href="#spacing-with-colorbars">Spacing with colorbars</a></li>
-<li><a class="reference internal" href="#rcparams">rcParams</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#rcparams">rcParams</a></li>
 <li><a class="reference internal" href="#use-with-gridspec">Use with GridSpec</a></li>
 <li><a class="reference internal" href="#manually-setting-axes-positions">Manually setting axes positions</a></li>
 <li><a class="reference internal" href="#limitations">Limitations</a><ul>
@@ -141,8 +143,8 @@ type="text/css" />
   <li><a href="../../contents.html">Documentation overview</a><ul>
   <li><a href="../../users/index.html">User's Guide</a><ul>
   <li><a href="../index.html">Tutorials</a><ul>
-      <li>Previous: <a href="imshow_extent.html" title="previous chapter"><em>origin</em> and <em>extent</em> in <code class="docutils literal notranslate"><span class="pre">imshow</span></code></a></li>
-      <li>Next: <a href="../advanced/patheffects_guide.html" title="next chapter">Path effects guide</a></li>
+      <li>Previous: <a href="gridspec.html" title="previous chapter">Customizing Figure Layouts Using GridSpec and Other Functions</a></li>
+      <li>Next: <a href="tight_layout_guide.html" title="next chapter">Tight Layout guide</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -170,8 +172,26 @@ type="text/css" />
 <p><em>constrained_layout</em> automatically adjusts subplots and decorations like
 legends and colorbars so that they fit in the figure window while still
 preserving, as best they can, the logical layout requested by the user.</p>
-<p><em>constrained_layout</em> is similar to <em>tight_layout</em>, but uses a constraint
-solver to determine the size of axes that allows them to fit.</p>
+<p><em>constrained_layout</em> is similar to
+<a class="reference internal" href="tight_layout_guide.html"><span class="doc">tight_layout</span></a>,
+but uses a constraint solver to determine the size of axes that allows
+them to fit.</p>
+<p><em>constrained_layout</em> needs to be activated before any axes are added to
+a figure. Two ways of doing so are</p>
+<ul>
+<li><p class="first">using the respective argument to <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> or
+<a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><code class="xref py py-func docutils literal notranslate"><span class="pre">figure()</span></code></a>, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">contrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">activate it via <a class="reference internal" href="../introductory/customizing.html#matplotlib-rcparams"><span class="std std-ref">rcParams</span></a>, like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../api/matplotlib_configuration_api.html#matplotlib.rcParams" title="View documentation for matplotlib.pyplot.rcParams"><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span></a><span class="p">[</span><span class="s1">&#39;figure.constrained_layout.use&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Those are described in detail throughout the following sections.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">As of Matplotlib 2.2, Constrained Layout is <strong>experimental</strong>.  The
@@ -218,7 +238,7 @@ clipped.</p>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -240,7 +260,7 @@ axes overlapping each other.</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_constrainedlayout_guide_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_003.png" />
-<p>Specifying <code class="xref py py-obj docutils literal notranslate"><span class="pre">constrained_layout=True</span></code> in the call to <code class="xref py py-obj docutils literal notranslate"><span class="pre">plt.subplots</span></code>
+<p>Specifying <code class="docutils literal notranslate"><span class="pre">constrained_layout=True</span></code> in the call to <code class="docutils literal notranslate"><span class="pre">plt.subplots</span></code>
 causes the layout to be properly constrained.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
@@ -258,15 +278,15 @@ ignored because this option is made for improving the layout via
 <code class="docutils literal notranslate"><span class="pre">tight_layout</span></code>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">For the <code class="xref py py-obj docutils literal notranslate"><span class="pre">pcolormesh</span></code> kwargs (<code class="docutils literal notranslate"><span class="pre">pc_kwargs</span></code>) we use a dictionary.
+<p class="last">For the <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.pcolormesh.html#matplotlib.axes.Axes.pcolormesh" title="matplotlib.axes.Axes.pcolormesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcolormesh</span></code></a> kwargs (<code class="docutils literal notranslate"><span class="pre">pc_kwargs</span></code>) we use a dictionary.
 Below we will assign one colorbar to a number of axes each containing
-a <code class="xref py py-obj docutils literal notranslate"><span class="pre">ScalarMappable</span></code>; specifying the norm and colormap ensures
+a <a class="reference internal" href="../../api/cm_api.html#matplotlib.cm.ScalarMappable" title="matplotlib.cm.ScalarMappable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScalarMappable</span></code></a>; specifying the norm and colormap ensures
 the colorbar is accurate for all the axes.</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">norm</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.colors.Normalize.html#matplotlib.colors.Normalize" title="View documentation for matplotlib.colors.Normalize"><span class="n">mcolors</span><span class="o">.</span><span class="n">Normalize</span></a><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>
 <span class="c1"># see note above: this makes all pcolormesh calls consistent:</span>
-<span class="n">pc_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rasterized&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span> <span class="s1">&#39;cmap&#39;</span><span class="p">:</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span><span class="n">norm</span><span class="p">}</span>
+<span class="n">pc_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rasterized&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s1">&#39;cmap&#39;</span><span class="p">:</span> <span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">norm</span><span class="p">}</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="o">**</span><span class="n">pc_kwargs</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
@@ -274,7 +294,8 @@ the colorbar is accurate for all the axes.</p>
 </div>
 <img alt="../../_images/sphx_glr_constrainedlayout_guide_005.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_005.png" />
 <p>If you specify a list of axes (or other iterable container) to the
-<code class="docutils literal notranslate"><span class="pre">ax</span></code> argument of <code class="docutils literal notranslate"><span class="pre">colorbar</span></code>, constrained_layout will take space from all # axes that share the same gridspec.</p>
+<code class="docutils literal notranslate"><span class="pre">ax</span></code> argument of <code class="docutils literal notranslate"><span class="pre">colorbar</span></code>, constrained_layout will take space from all
+axes that share the same gridspec.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="o">**</span><span class="n">pc_kwargs</span><span class="p">)</span>
@@ -310,7 +331,7 @@ it as a list (or other iterable container), as below:</p>
 </div>
 <div class="section" id="suptitle">
 <h2>Suptitle<a class="headerlink" href="#suptitle" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">constrained_layout</span></code> can also make room for <code class="docutils literal notranslate"><span class="pre">suptitle</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">constrained_layout</span></code> can also make room for <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.suptitle" title="matplotlib.figure.Figure.suptitle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">suptitle</span></code></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="o">**</span><span class="n">pc_kwargs</span><span class="p">)</span>
@@ -322,13 +343,13 @@ it as a list (or other iterable container), as below:</p>
 </div>
 <div class="section" id="legends">
 <h2>Legends<a class="headerlink" href="#legends" title="Permalink to this headline">¶</a></h2>
-<p>Legends can be placed outside
-of their parent axis.  Constrained-layout is designed to handle this.
+<p>Legends can be placed outside of their parent axis.
+Constrained-layout is designed to handle this for <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Axes.legend()</span></code></a>.
 However, constrained-layout does <em>not</em> handle legends being created via
-<code class="docutils literal notranslate"><span class="pre">fig.legend()</span></code> (yet).</p>
+<a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.legend" title="matplotlib.figure.Figure.legend"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Figure.legend()</span></code></a> (yet).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;This is a plot&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_constrainedlayout_guide_010.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_010.png" />
@@ -337,18 +358,51 @@ However, constrained-layout does <em>not</em> handle legends being created via
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;This is a plot&#39;</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_constrainedlayout_guide_011.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_011.png" />
+<p>In order for a legend or other artist to <em>not</em> steal space
+from the subplot layout, we can <code class="docutils literal notranslate"><span class="pre">leg.set_in_layout(False)</span></code>.
+Of course this can mean the legend ends up
+cropped, but can be useful if the plot is subsequently called
+with <code class="docutils literal notranslate"><span class="pre">fig.savefig('outname.png',</span> <span class="pre">bbox_inches='tight')</span></code>.  Note,
+however, that the legend's <code class="docutils literal notranslate"><span class="pre">get_in_layout</span></code> status will have to be
+toggled again to make the saved file work:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;This is a plot&#39;</span><span class="p">)</span>
+<span class="n">leg</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">leg</span><span class="o">.</span><span class="n">set_in_layout</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">wanttoprint</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="k">if</span> <span class="n">wanttoprint</span><span class="p">:</span>
+    <span class="n">leg</span><span class="o">.</span><span class="n">set_in_layout</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">do_constrained_layout</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;outname.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_012.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_012.png" />
+<p>A better way to get around this awkwardness is to simply
+use a legend for the figure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;This is a plot&#39;</span><span class="p">)</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+<span class="n">leg</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span>
+                 <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">bbox_transform</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_013.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_013.png" />
 </div>
 <div class="section" id="padding-and-spacing">
 <h2>Padding and Spacing<a class="headerlink" href="#padding-and-spacing" title="Permalink to this headline">¶</a></h2>
 <p>For constrained_layout, we have implemented a padding around the edge of
 each axes.  This padding sets the distance from the edge of the plot,
 and the minimum distance between adjacent plots.  It is specified in
-inches by the keyword arguments <code class="xref py py-obj docutils literal notranslate"><span class="pre">w_pad</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">h_pad</span></code> to the function
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">fig.set_constrained_layout_pads</span></code>:</p>
+inches by the keyword arguments <code class="docutils literal notranslate"><span class="pre">w_pad</span></code> and <code class="docutils literal notranslate"><span class="pre">h_pad</span></code> to the function
+<a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.set_constrained_layout_pads" title="matplotlib.figure.Figure.set_constrained_layout_pads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_constrained_layout_pads</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
     <span class="n">example_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">nodec</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -367,12 +421,12 @@ inches by the keyword arguments <code class="xref py py-obj docutils literal not
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
-<li><img alt="../../_images/sphx_glr_constrainedlayout_guide_012.png" class="sphx-glr-multi-img first" src="../../_images/sphx_glr_constrainedlayout_guide_012.png" />
+<li><img alt="../../_images/sphx_glr_constrainedlayout_guide_014.png" class="sphx-glr-multi-img first" src="../../_images/sphx_glr_constrainedlayout_guide_014.png" />
 </li>
-<li><img alt="../../_images/sphx_glr_constrainedlayout_guide_013.png" class="sphx-glr-multi-img first" src="../../_images/sphx_glr_constrainedlayout_guide_013.png" />
+<li><img alt="../../_images/sphx_glr_constrainedlayout_guide_015.png" class="sphx-glr-multi-img first" src="../../_images/sphx_glr_constrainedlayout_guide_015.png" />
 </li>
 </ul>
-<p>Spacing between subplots is set by <code class="xref py py-obj docutils literal notranslate"><span class="pre">wspace</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">hspace</span></code>.  There are
+<p>Spacing between subplots is set by <code class="docutils literal notranslate"><span class="pre">wspace</span></code> and <code class="docutils literal notranslate"><span class="pre">hspace</span></code>. There are
 specified as a fraction of the size of the subplot group as a whole.
 If the size of the figure is changed, then these spaces change in
 proportion.  Note in the blow how the space at the edges doesn't change from
@@ -386,13 +440,13 @@ the above, but the space between subplots does.</p>
         <span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_014.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_014.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_016.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_016.png" />
 <div class="section" id="spacing-with-colorbars">
 <h3>Spacing with colorbars<a class="headerlink" href="#spacing-with-colorbars" title="Permalink to this headline">¶</a></h3>
-<p>Colorbars still respect the <code class="xref py py-obj docutils literal notranslate"><span class="pre">w_pad</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">h_pad</span></code> values.  However they will
-be <code class="xref py py-obj docutils literal notranslate"><span class="pre">wspace</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">hsapce</span></code> apart from other subplots.  Note the use of a <code class="xref py py-obj docutils literal notranslate"><span class="pre">pad</span></code>
-kwarg here in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">colorbar</span></code> call.  It defaults to 0.02 of the size of the
-axis it is attached to.</p>
+<p>Colorbars still respect the <code class="docutils literal notranslate"><span class="pre">w_pad</span></code> and <code class="docutils literal notranslate"><span class="pre">h_pad</span></code> values. However they will
+be <code class="docutils literal notranslate"><span class="pre">wspace</span></code> and <code class="docutils literal notranslate"><span class="pre">hsapce</span></code> apart from other subplots.  Note the use of a
+<code class="docutils literal notranslate"><span class="pre">pad</span></code> kwarg here in the <code class="docutils literal notranslate"><span class="pre">colorbar</span></code> call.  It defaults to 0.02 of the size
+of the axis it is attached to.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
     <span class="n">pc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="o">**</span><span class="n">pc_kwargs</span><span class="p">)</span>
@@ -403,10 +457,10 @@ axis it is attached to.</p>
         <span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_015.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_015.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_017.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_017.png" />
 <p>In the above example, the colorbar will not ever be closer than 2 pts to
 the plot, but if we want it a bit further away, we can specify its value
-for <code class="xref py py-obj docutils literal notranslate"><span class="pre">pad</span></code> to be non-zero.</p>
+for <code class="docutils literal notranslate"><span class="pre">pad</span></code> to be non-zero.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
     <span class="n">pc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="o">**</span><span class="n">pc_kwargs</span><span class="p">)</span>
@@ -417,22 +471,23 @@ for <code class="xref py py-obj docutils literal notranslate"><span class="pre">
         <span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_016.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_016.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_018.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_018.png" />
+</div>
 </div>
 <div class="section" id="rcparams">
-<h3>rcParams<a class="headerlink" href="#rcparams" title="Permalink to this headline">¶</a></h3>
-<p>There are five <code class="xref py py-obj docutils literal notranslate"><span class="pre">rcParams</span></code> that can be set, either in a script
-or in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlibrc</span></code> file.  They all have the prefix
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">figure.constrained_layout</span></code>:</p>
+<h2>rcParams<a class="headerlink" href="#rcparams" title="Permalink to this headline">¶</a></h2>
+<p>There are five <a class="reference internal" href="../introductory/customizing.html#matplotlib-rcparams"><span class="std std-ref">rcParams</span></a> that can be set,
+either in a script or in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlibrc</span></code> file.
+They all have the prefix <code class="docutils literal notranslate"><span class="pre">figure.constrained_layout</span></code>:</p>
 <ul class="simple">
-<li><code class="xref py py-obj docutils literal notranslate"><span class="pre">use</span></code>: Whether to use constrained_layout. Default is False</li>
+<li><code class="docutils literal notranslate"><span class="pre">use</span></code>: Whether to use constrained_layout. Default is False</li>
 <li><dl class="first docutils">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">w_pad</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">h_pad</span></code>    Padding around axes objects.</dt>
+<dt><code class="docutils literal notranslate"><span class="pre">w_pad</span></code>, <code class="docutils literal notranslate"><span class="pre">h_pad</span></code>:    Padding around axes objects.</dt>
 <dd>Float representing inches.  Default is 3./72. inches (3 pts)</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">wspace</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">hspace</span></code>  Space between subplot groups.</dt>
+<dt><code class="docutils literal notranslate"><span class="pre">wspace</span></code>, <code class="docutils literal notranslate"><span class="pre">hspace</span></code>:  Space between subplot groups.</dt>
 <dd>Float representing a fraction of the subplot widths being separated.
 Default is 0.02.</dd>
 </dl>
@@ -444,8 +499,7 @@ Default is 0.02.</dd>
     <span class="n">example_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_017.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_017.png" />
-</div>
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_019.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_019.png" />
 </div>
 <div class="section" id="use-with-gridspec">
 <h2>Use with GridSpec<a class="headerlink" href="#use-with-gridspec" title="Permalink to this headline">¶</a></h2>
@@ -453,7 +507,8 @@ Default is 0.02.</dd>
 with <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.subplots" title="matplotlib.figure.Figure.subplots"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplots()</span></code></a> or
 <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="matplotlib.gridspec.GridSpec"><code class="xref py py-func docutils literal notranslate"><span class="pre">GridSpec()</span></code></a> and
 <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_subplot()</span></code></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<p>Note that in what follows <code class="docutils literal notranslate"><span class="pre">constrained_layout=True</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
 <span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -463,20 +518,21 @@ with <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Fig
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax2</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_018.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_018.png" />
-<p>More complicated gridspec layouts are possible...</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_020.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_020.png" />
+<p>More complicated gridspec layouts are possible.  Note here we use the
+convenenience functions <code class="docutils literal notranslate"><span class="pre">add_gridspec</span></code> and <code class="docutils literal notranslate"><span class="pre">subgridspec</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
-<span class="n">gs0</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">gs0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">gs1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">gs1</span> <span class="o">=</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subgridspec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax2</span><span class="p">)</span>
 
-<span class="n">gs2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">gs2</span> <span class="o">=</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">subgridspec</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ss</span> <span class="ow">in</span> <span class="n">gs2</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
@@ -487,13 +543,13 @@ with <a class="reference internal" href="../../api/_as_gen/matplotlib.figure.Fig
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x-label&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_019.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_019.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_021.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_021.png" />
 <p>Note that in the above the left and columns don't have the same vertical
 extent.  If we want the top and bottom of the two grids to line up then
 they need to be in the same gridspec:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
-<span class="n">gs0</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">gs0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs0</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs0</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
@@ -509,16 +565,16 @@ they need to be in the same gridspec:</p>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_020.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_020.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_022.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_022.png" />
 <p>This example uses two gridspecs to have the colorbar only pertain to
 one set of pcolors.  Note how the left column is wider than the
 two right-hand columns because of this.  Of course, if you wanted the
 subplots to be the same size you only needed one gridspec.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">docomplicated</span><span class="p">(</span><span class="n">suptitle</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">gs0</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">])</span>
-    <span class="n">gsl</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">gsr</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="View documentation for matplotlib.gridspec.GridSpecFromSubplotSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpecFromSubplotSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+    <span class="n">gs0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">])</span>
+    <span class="n">gsl</span> <span class="o">=</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subgridspec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">gsr</span> <span class="o">=</span> <span class="n">gs0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">subgridspec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">gs</span> <span class="ow">in</span> <span class="n">gsl</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
@@ -539,29 +595,29 @@ subplots to be the same size you only needed one gridspec.</p>
 <span class="n">docomplicated</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_021.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_021.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_023.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_023.png" />
 </div>
 <div class="section" id="manually-setting-axes-positions">
 <h2>Manually setting axes positions<a class="headerlink" href="#manually-setting-axes-positions" title="Permalink to this headline">¶</a></h2>
 <p>There can be good reasons to manually set an axes position.  A manual call
-to <code class="xref py py-obj docutils literal notranslate"><span class="pre">ax.set_position()</span></code> will set the axes so constrained_layout has no
-effect on it anymore.  (Note that constrained_layout still leaves the space
-for the axes that is moved).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+to <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.set_position.html#matplotlib.axes.Axes.set_position" title="matplotlib.axes.Axes.set_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_position</span></code></a> will set the axes so constrained_layout has
+no effect on it anymore. (Note that constrained_layout still leaves the
+space for the axes that is moved).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_position</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_022.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_022.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_024.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_024.png" />
 <p>If you want an inset axes in data-space, you need to manually execute the
-layout using <code class="xref py py-obj docutils literal notranslate"><span class="pre">fig.execute_constrained_layout()</span></code> call.  The inset figure
+layout using <code class="docutils literal notranslate"><span class="pre">fig.execute_constrained_layout()</span></code> call.  The inset figure
 will then be properly positioned.  However, it will not be properly
 positioned if the size of the figure is subsequently changed.  Similarly,
 if the figure is printed to another backend, there may be slight changes
 of location due to small differences in how the backends render fonts.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <a href="../../api/transformations.html#matplotlib.transforms.Bbox" title="View documentation for matplotlib.transforms.Bbox"><span class="n">Bbox</span></a>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">execute_constrained_layout</span><span class="p">()</span>
 <span class="c1"># put into data-space:</span>
@@ -572,7 +628,7 @@ of location due to small differences in how the backends render fonts.</p>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">bb_ax2</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_023.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_023.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_025.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_025.png" />
 </div>
 <div class="section" id="limitations">
 <h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
@@ -580,10 +636,10 @@ of location due to small differences in how the backends render fonts.</p>
 <h3>Incompatible functions<a class="headerlink" href="#incompatible-functions" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">constrained_layout</span></code> will not work on subplots
 created via the <code class="xref py py-obj docutils literal notranslate"><span class="pre">subplot</span></code> command.  The reason is that each of these
-commands creates a separate <code class="xref py py-obj docutils literal notranslate"><span class="pre">GridSpec</span></code> instance and <code class="xref py py-obj docutils literal notranslate"><span class="pre">constrained_layout</span></code>
+commands creates a separate <code class="xref py py-obj docutils literal notranslate"><span class="pre">GridSpec</span></code> instance and <code class="docutils literal notranslate"><span class="pre">constrained_layout</span></code>
 uses (nested) gridspecs to carry out the layout.  So the following fails
 to yield a nice layout:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
 <span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="View documentation for matplotlib.pyplot.subplot"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
@@ -594,10 +650,10 @@ to yield a nice layout:</p>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_024.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_024.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_026.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_026.png" />
 <p>Of course that layout is possible using a gridspec:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">gs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -608,11 +664,11 @@ to yield a nice layout:</p>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_025.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_025.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_027.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_027.png" />
 <p>Similarly,
 <a class="reference internal" href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="matplotlib.pyplot.subplot2grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">subplot2grid()</span></code></a> doesn't work for the same reason:
 each call creates a different parent gridspec.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 <span class="n">ax2</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplot2grid.html#matplotlib.pyplot.subplot2grid" title="View documentation for matplotlib.pyplot.subplot2grid"><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">colspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -625,11 +681,11 @@ each call creates a different parent gridspec.</p>
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax4</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_026.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_026.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_028.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_028.png" />
 <p>The way to make this plot compatible with <code class="docutils literal notranslate"><span class="pre">constrained_layout</span></code> is again
 to use <code class="docutils literal notranslate"><span class="pre">gridspec</span></code> directly</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">gs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:])</span>
@@ -642,7 +698,7 @@ to use <code class="docutils literal notranslate"><span class="pre">gridspec</sp
 <span class="n">example_plot</span><span class="p">(</span><span class="n">ax4</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_027.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_027.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_029.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_029.png" />
 </div>
 <div class="section" id="other-caveats">
 <h3>Other Caveats<a class="headerlink" href="#other-caveats" title="Permalink to this headline">¶</a></h3>
@@ -680,34 +736,34 @@ has some complexity due to the complex ways we can layout a figure.</p>
 <h3>Figure layout<a class="headerlink" href="#figure-layout" title="Permalink to this headline">¶</a></h3>
 <p>Figures are laid out in a hierarchy:</p>
 <ol class="arabic simple">
-<li>Figure: <code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span> <span class="pre">=</span> <span class="pre">plt.figure()</span></code></li>
+<li>Figure: <code class="docutils literal notranslate"><span class="pre">fig</span> <span class="pre">=</span> <span class="pre">plt.figure()</span></code></li>
 </ol>
 <blockquote>
 <div><ol class="loweralpha">
-<li><p class="first">Gridspec <code class="xref py py-obj docutils literal notranslate"><span class="pre">gs0</span> <span class="pre">=</span> <span class="pre">gridspec.GridSpec(1,</span> <span class="pre">2,</span> <span class="pre">figure=fig)</span></code></p>
+<li><p class="first">Gridspec <code class="docutils literal notranslate"><span class="pre">gs0</span> <span class="pre">=</span> <span class="pre">gridspec.GridSpec(1,</span> <span class="pre">2,</span> <span class="pre">figure=fig)</span></code></p>
 <blockquote>
 <div><ol class="lowerroman simple">
-<li>Subplotspec: <code class="xref py py-obj docutils literal notranslate"><span class="pre">ss</span> <span class="pre">=</span> <span class="pre">gs[0,</span> <span class="pre">0]</span></code><ol class="arabic">
-<li>Axes: <code class="xref py py-obj docutils literal notranslate"><span class="pre">ax0</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(ss)</span></code></li>
+<li>Subplotspec: <code class="docutils literal notranslate"><span class="pre">ss</span> <span class="pre">=</span> <span class="pre">gs[0,</span> <span class="pre">0]</span></code><ol class="arabic">
+<li>Axes: <code class="docutils literal notranslate"><span class="pre">ax0</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(ss)</span></code></li>
 </ol>
 </li>
-<li>Subplotspec: <code class="xref py py-obj docutils literal notranslate"><span class="pre">ss</span> <span class="pre">=</span> <span class="pre">gs[0,</span> <span class="pre">1]</span></code></li>
+<li>Subplotspec: <code class="docutils literal notranslate"><span class="pre">ss</span> <span class="pre">=</span> <span class="pre">gs[0,</span> <span class="pre">1]</span></code></li>
 </ol>
 <blockquote>
 <div><ol class="arabic">
-<li><p class="first">Gridspec: <code class="xref py py-obj docutils literal notranslate"><span class="pre">gsR</span> <span class="pre">=</span> <span class="pre">gridspec.GridSpecFromSubplotSpec(2,</span> <span class="pre">1,</span> <span class="pre">ss)</span></code></p>
+<li><p class="first">Gridspec: <code class="docutils literal notranslate"><span class="pre">gsR</span> <span class="pre">=</span> <span class="pre">gridspec.GridSpecFromSubplotSpec(2,</span> <span class="pre">1,</span> <span class="pre">ss)</span></code></p>
 <ul>
-<li><p class="first">Subplotspec: ss = gsR[0, 0]</p>
+<li><p class="first">Subplotspec: <code class="docutils literal notranslate"><span class="pre">ss</span> <span class="pre">=</span> <span class="pre">gsR[0,</span> <span class="pre">0]</span></code></p>
 <blockquote>
 <div><ul class="simple">
-<li>Axes: <code class="xref py py-obj docutils literal notranslate"><span class="pre">axR0</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(ss)</span></code></li>
+<li>Axes: <code class="docutils literal notranslate"><span class="pre">axR0</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(ss)</span></code></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">Subplotspec: ss = gsR[1, 0]</p>
+<li><p class="first">Subplotspec: <code class="docutils literal notranslate"><span class="pre">ss</span> <span class="pre">=</span> <span class="pre">gsR[1,</span> <span class="pre">0]</span></code></p>
 <blockquote>
 <div><ul class="simple">
-<li>Axes: <code class="xref py py-obj docutils literal notranslate"><span class="pre">axR1</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(ss)</span></code></li>
+<li>Axes: <code class="docutils literal notranslate"><span class="pre">axR1</span> <span class="pre">=</span> <span class="pre">fig.add_subplot(ss)</span></code></li>
 </ul>
 </div></blockquote>
 </li>
@@ -721,10 +777,10 @@ has some complexity due to the complex ways we can layout a figure.</p>
 </div></blockquote>
 <p>Each item has a layoutbox associated with it. The nesting of gridspecs
 created with <a class="reference internal" href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec" title="matplotlib.gridspec.GridSpecFromSubplotSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridSpecFromSubplotSpec</span></code></a> can be arbitrarily deep.</p>
-<p>Each <code class="docutils literal notranslate"><span class="pre">~matplotlib.axes.Axes`</span> <span class="pre">has</span> <span class="pre">*two*</span> <span class="pre">layoutboxes.</span>&#160; <span class="pre">The</span> <span class="pre">first</span> <span class="pre">one,</span>
-<span class="pre">``ax._layoutbox</span></code> represents the outside of the Axes and all its
+<p>Each <a class="reference internal" href="../../api/axes_api.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Axes</span></code></a> has <em>two</em> layoutboxes.  The first one,
+<code class="docutils literal notranslate"><span class="pre">ax._layoutbox</span></code> represents the outside of the Axes and all its
 decorations (i.e. ticklabels,axis labels, etc.).
-The second layoutbox corresponds to the Axes' <code class="xref py py-obj docutils literal notranslate"><span class="pre">ax.position</span></code>, which sets
+The second layoutbox corresponds to the Axes' <code class="docutils literal notranslate"><span class="pre">ax.position</span></code>, which sets
 where in the figure the spines are placed.</p>
 <p>Why so many stacked containers?  Ideally, all that would be needed are the
 Axes layout boxes. For the Gridspec case, a container is
@@ -742,8 +798,8 @@ outer Gridspec layoutboxes coincide.  The Subplotspec and Axes
 boxes also coincide because the Axes has no colorbar.  Note
 the difference between the red <code class="docutils literal notranslate"><span class="pre">pos</span></code> box and the green <code class="docutils literal notranslate"><span class="pre">ax</span></code> box
 is set by the size of the decorations around the Axes.</p>
-<p>In the code, this is accomplished by the entries in <code class="xref py py-obj docutils literal notranslate"><span class="pre">do_constrained_layout</span></code>
-like:</p>
+<p>In the code, this is accomplished by the entries in
+<code class="docutils literal notranslate"><span class="pre">do_constrained_layout()</span></code> like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="o">.</span><span class="n">_poslayoutbox</span><span class="o">.</span><span class="n">edit_left_margin_min</span><span class="p">(</span><span class="o">-</span><span class="n">bbox</span><span class="o">.</span><span class="n">x0</span> <span class="o">+</span> <span class="n">pos</span><span class="o">.</span><span class="n">x0</span> <span class="o">+</span> <span class="n">w_padt</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -754,7 +810,7 @@ like:</p>
 <span class="n">plot_children</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fig</span><span class="o">.</span><span class="n">_layoutbox</span><span class="p">,</span> <span class="n">printit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_028.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_028.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_030.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_030.png" />
 </div>
 <div class="section" id="simple-case-two-axes">
 <h3>Simple case: two Axes<a class="headerlink" href="#simple-case-two-axes" title="Permalink to this headline">¶</a></h3>
@@ -762,7 +818,7 @@ like:</p>
 co-incide.  However, because the decorations in the right-hand plot are so
 much smaller than the left-hand, so the right-hand layoutboxes are smaller.</p>
 <p>The Subplotspec boxes are laid out in the code in the subroutine
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">arange_subplotspecs</span></code>, which simply checks the subplotspecs in the code
+<code class="docutils literal notranslate"><span class="pre">arange_subplotspecs()</span></code>, which simply checks the subplotspecs in the code
 against one another and stacks them appropriately.</p>
 <p>The two <code class="docutils literal notranslate"><span class="pre">pos</span></code> axes are lined up.  Because they have the same
 minimum row, they are lined up at the top. Because
@@ -783,7 +839,7 @@ space for the larger labels on the left-hand plot.</p>
 <span class="n">plot_children</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fig</span><span class="o">.</span><span class="n">_layoutbox</span><span class="p">,</span> <span class="n">printit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_029.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_029.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_031.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_031.png" />
 </div>
 <div class="section" id="two-axes-and-colorbar">
 <h3>Two Axes and colorbar<a class="headerlink" href="#two-axes-and-colorbar" title="Permalink to this headline">¶</a></h3>
@@ -795,10 +851,10 @@ that there are two green <code class="docutils literal notranslate"><span class=
 constraint on their widths because their subplotspecs occupy the same
 number of columns (one in this example).</p>
 <p>The colorbar layout logic is contained in <a class="reference internal" href="../../api/colorbar_api.html#matplotlib.colorbar.make_axes" title="matplotlib.colorbar.make_axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_axes</span></code></a>
-which calls <code class="xref py py-obj docutils literal notranslate"><span class="pre">_constrained_layout.layoutcolorbarsingle</span></code>
+which calls <code class="docutils literal notranslate"><span class="pre">_constrained_layout.layoutcolorbarsingle()</span></code>
 for cbars attached to a single axes, and
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">_constrained_layout.layoutcolorbargridspec</span></code> if the colorbar is associated
-with a gridspec.</p>
+<code class="docutils literal notranslate"><span class="pre">_constrained_layout.layoutcolorbargridspec()</span></code> if the colorbar is
+associated with a gridspec.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="o">**</span><span class="n">pc_kwargs</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
@@ -806,13 +862,13 @@ with a gridspec.</p>
 <span class="n">plot_children</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fig</span><span class="o">.</span><span class="n">_layoutbox</span><span class="p">,</span> <span class="n">printit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_030.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_030.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_032.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_032.png" />
 </div>
 <div class="section" id="colorbar-associated-with-a-gridspec">
 <h3>Colorbar associated with a Gridspec<a class="headerlink" href="#colorbar-associated-with-a-gridspec" title="Permalink to this headline">¶</a></h3>
 <p>This example shows the Subplotspec layoutboxes being made smaller by
 a colorbar layoutbox.  The size of the colorbar layoutbox is
-set to be <em>shrink</em> smaller than the vertical extent of the <code class="docutils literal notranslate"><span class="pre">pos</span></code>
+set to be <code class="docutils literal notranslate"><span class="pre">shrink</span></code> smaller than the vertical extent of the <code class="docutils literal notranslate"><span class="pre">pos</span></code>
 layoutboxes in the gridspec, and it is made to be centered between
 those two points.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -822,7 +878,7 @@ those two points.</p>
 <span class="n">plot_children</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fig</span><span class="o">.</span><span class="n">_layoutbox</span><span class="p">,</span> <span class="n">printit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_031.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_031.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_033.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_033.png" />
 </div>
 <div class="section" id="uneven-sized-axes">
 <h3>Uneven sized Axes<a class="headerlink" href="#uneven-sized-axes" title="Permalink to this headline">¶</a></h3>
@@ -850,7 +906,7 @@ axes are very large, so there is an unaccounted-for edge case.</p>
 <span class="n">plot_children</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fig</span><span class="o">.</span><span class="n">_layoutbox</span><span class="p">,</span> <span class="n">printit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_032.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_032.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_034.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_034.png" />
 <p>Height and width ratios are accommodated with the same part of
 the code with the smaller axes always constrained to be less in size
 than the larger.</p>
@@ -869,7 +925,7 @@ than the larger.</p>
 <span class="n">plot_children</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fig</span><span class="o">.</span><span class="n">_layoutbox</span><span class="p">,</span> <span class="n">printit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_033.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_033.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_035.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_035.png" />
 </div>
 <div class="section" id="empty-gridspec-slots">
 <h3>Empty gridspec slots<a class="headerlink" href="#empty-gridspec-slots" title="Permalink to this headline">¶</a></h3>
@@ -878,7 +934,7 @@ there is an empty gridspec opening.  In that case a fake invisible axes is
 added and we proceed as before.  The empty gridspec has no decorations, but
 the axes position in made the same size as the occupied Axes positions.</p>
 <p>This is done at the start of
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">do_constrained_layout</span></code> (<code class="docutils literal notranslate"><span class="pre">hassubplotspec</span></code>).</p>
+<code class="docutils literal notranslate"><span class="pre">_constrained_layout.do_constrained_layout()</span></code> (<code class="docutils literal notranslate"><span class="pre">hassubplotspec</span></code>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">gs</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec" title="View documentation for matplotlib.gridspec.GridSpec"><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -889,7 +945,7 @@ the axes position in made the same size as the occupied Axes positions.</p>
 <a href="../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_constrainedlayout_guide_034.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_034.png" />
+<img alt="../../_images/sphx_glr_constrainedlayout_guide_036.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_constrainedlayout_guide_036.png" />
 </div>
 <div class="section" id="other-notes">
 <h3>Other notes<a class="headerlink" href="#other-notes" title="Permalink to this headline">¶</a></h3>
@@ -898,12 +954,12 @@ pretty close (which it should be in most cases).  However, if the layout
 changes a lot from the default layout then the decorators can change size.
 In particular the x and ytick labels can change.  If this happens, then
 we should probably call the whole routine twice.</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  1.924 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  2.334 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-intermediate-constrainedlayout-guide-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/constrainedlayout_guide.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">constrainedlayout_guide.py</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/6cfb39a0348117de43ea11c9ef9f1dae/constrainedlayout_guide.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">constrainedlayout_guide.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/constrainedlayout_guide.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">constrainedlayout_guide.ipynb</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/13b55ad178a55308f85ec7132ce8ba71/constrainedlayout_guide.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">constrainedlayout_guide.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature">Keywords: matplotlib code example, codex, python plot, pyplot
 <a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -921,10 +977,10 @@ we should probably call the whole routine twice.</p>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

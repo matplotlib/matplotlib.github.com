@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.afm &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.afm &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/afm.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -145,26 +147,24 @@ type="text/css" />
 <span class="sd">    &gt;&gt;&gt; afm.get_bbox_char(&#39;!&#39;)</span>
 <span class="sd">    [130, -9, 238, 676]</span>
 
+<span class="sd">As in the Adobe Font Metrics File Format Specification, all dimensions</span>
+<span class="sd">are given in units of 1/1000 of the scale factor (point size) of the font</span>
+<span class="sd">being used.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">map</span>
-
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">._mathtext_data</span> <span class="k">import</span> <span class="n">uni2type1</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="c1"># Convert string the a python type</span>
+<span class="kn">from</span> <span class="nn">._mathtext_data</span> <span class="k">import</span> <span class="n">uni2type1</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">deprecated</span>
+
 
 <span class="c1"># some afm files have floats where we are expecting ints -- there is</span>
 <span class="c1"># probably a better way to handle this (support floats, round rather</span>
 <span class="c1"># than truncate).  But I don&#39;t know what the best approach is now and</span>
 <span class="c1"># this change to _to_int should at least prevent mpl from crashing on</span>
 <span class="c1"># these JDH (2009-11-06)</span>
-
 
 <span class="k">def</span> <span class="nf">_to_int</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -275,8 +275,8 @@ type="text/css" />
         <span class="k">try</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">headerConverters</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">val</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Value error parsing header in AFM:&#39;</span><span class="p">,</span>
-                  <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Value error parsing header in AFM:&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span>
+                  <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
             <span class="k">continue</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Found an unknown keyword in AFM header (was </span><span class="si">%r</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">key</span><span class="p">,</span>
@@ -287,16 +287,42 @@ type="text/css" />
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Bad parse&#39;</span><span class="p">)</span>
 
 
+<span class="n">CharMetrics</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;CharMetrics&#39;</span><span class="p">,</span> <span class="s1">&#39;width, name, bbox&#39;</span><span class="p">)</span>
+<span class="n">CharMetrics</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Represents the character metrics of a single character.</span>
+
+<span class="s2">    Notes</span>
+<span class="s2">    -----</span>
+<span class="s2">    The fields do currently only describe a subset of character metrics</span>
+<span class="s2">    information defined in the AFM standard.</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+<span class="n">CharMetrics</span><span class="o">.</span><span class="n">width</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;The character width (WX).&quot;&quot;&quot;</span>
+<span class="n">CharMetrics</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;The character name (N).&quot;&quot;&quot;</span>
+<span class="n">CharMetrics</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    The bbox of the character (B) as a tuple (*llx*, *lly*, *urx*, *ury*).&quot;&quot;&quot;</span>
+
+
 <span class="k">def</span> <span class="nf">_parse_char_metrics</span><span class="p">(</span><span class="n">fh</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return a character metric dictionary.  Keys are the ASCII num of</span>
-<span class="sd">    the character, values are a (*wx*, *name*, *bbox*) tuple, where</span>
-<span class="sd">    *wx* is the character width, *name* is the postscript language</span>
-<span class="sd">    name, and *bbox* is a (*llx*, *lly*, *urx*, *ury*) tuple.</span>
+<span class="sd">    Parse the given filehandle for character metrics information and return</span>
+<span class="sd">    the information as dicts.</span>
 
+<span class="sd">    It is assumed that the file cursor is on the line behind</span>
+<span class="sd">    &#39;StartCharMetrics&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ascii_d : dict</span>
+<span class="sd">         A mapping &quot;ASCII num of the character&quot; to `.CharMetrics`.</span>
+<span class="sd">    name_d : dict</span>
+<span class="sd">         A mapping &quot;character name&quot; to `.CharMetrics`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    This function is incomplete per the standard, but thus far parses</span>
 <span class="sd">    all the sample afm files tried.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">required_keys</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;WX&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">}</span>
 
     <span class="n">ascii_d</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">name_d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -309,21 +335,22 @@ type="text/css" />
         <span class="c1"># Split the metric line into a dictionary, keyed by metric identifiers</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="p">)</span>
         <span class="c1"># There may be other metrics present, but only these are needed</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;WX&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">vals</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">required_keys</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">vals</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Bad char metrics line: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">line</span><span class="p">)</span>
         <span class="n">num</span> <span class="o">=</span> <span class="n">_to_int</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">])</span>
         <span class="n">wx</span> <span class="o">=</span> <span class="n">_to_float</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="s1">&#39;WX&#39;</span><span class="p">])</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span>
         <span class="n">bbox</span> <span class="o">=</span> <span class="n">_to_list_of_floats</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">])</span>
         <span class="n">bbox</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">bbox</span><span class="p">))</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">CharMetrics</span><span class="p">(</span><span class="n">wx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
         <span class="c1"># Workaround: If the character name is &#39;Euro&#39;, give it the</span>
         <span class="c1"># corresponding character code, according to WinAnsiEncoding (see PDF</span>
         <span class="c1"># Reference).</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Euro&#39;</span><span class="p">:</span>
             <span class="n">num</span> <span class="o">=</span> <span class="mi">128</span>
         <span class="k">if</span> <span class="n">num</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">ascii_d</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">wx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
-        <span class="n">name_d</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">wx</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
+            <span class="n">ascii_d</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span>
+        <span class="n">name_d</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Bad parse&#39;</span><span class="p">)</span>
 
 
@@ -359,55 +386,80 @@ type="text/css" />
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Bad kern pairs parse&#39;</span><span class="p">)</span>
 
 
+<span class="n">CompositePart</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;CompositePart&#39;</span><span class="p">,</span> <span class="s1">&#39;name, dx, dy&#39;</span><span class="p">)</span>
+<span class="n">CompositePart</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Represents the information on a composite element of a composite char.&quot;&quot;&quot;</span>
+<span class="n">CompositePart</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Name of the part, e.g. &#39;acute&#39;.&quot;&quot;&quot;</span>
+<span class="n">CompositePart</span><span class="o">.</span><span class="n">dx</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;x-displacement of the part from the origin.&quot;&quot;&quot;</span>
+<span class="n">CompositePart</span><span class="o">.</span><span class="n">dy</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;y-displacement of the part from the origin.&quot;&quot;&quot;</span>
+
+
 <span class="k">def</span> <span class="nf">_parse_composites</span><span class="p">(</span><span class="n">fh</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return a composites dictionary.  Keys are the names of the</span>
-<span class="sd">    composites.  Values are a num parts list of composite information,</span>
-<span class="sd">    with each element being a (*name*, *dx*, *dy*) tuple.  Thus a</span>
-<span class="sd">    composites line reading:</span>
+<span class="sd">    Parse the given filehandle for composites information return them as a</span>
+<span class="sd">    dict.</span>
+
+<span class="sd">    It is assumed that the file cursor is on the line behind &#39;StartComposites&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    composites : dict</span>
+<span class="sd">        A dict mapping composite character names to a parts list. The parts</span>
+<span class="sd">        list is a list of `.CompositePart` entries describing the parts of</span>
+<span class="sd">        the composite.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    A composite definition line::</span>
 
 <span class="sd">      CC Aacute 2 ; PCC A 0 0 ; PCC acute 160 170 ;</span>
 
 <span class="sd">    will be represented as::</span>
 
-<span class="sd">      d[&#39;Aacute&#39;] = [ (&#39;A&#39;, 0, 0), (&#39;acute&#39;, 160, 170) ]</span>
+<span class="sd">      composites[&#39;Aacute&#39;] = [CompositePart(name=&#39;A&#39;, dx=0, dy=0),</span>
+<span class="sd">                              CompositePart(name=&#39;acute&#39;, dx=160, dy=170)]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">composites</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fh</span><span class="p">:</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;EndComposites&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">d</span>
+            <span class="k">return</span> <span class="n">composites</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
         <span class="n">cc</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">numParts</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">_to_int</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">pccParts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">pcc</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">pcc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">_to_float</span><span class="p">(</span><span class="n">pcc</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">_to_float</span><span class="p">(</span><span class="n">pcc</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-            <span class="n">pccParts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">))</span>
-        <span class="n">d</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pccParts</span>
+            <span class="n">part</span> <span class="o">=</span> <span class="n">CompositePart</span><span class="p">(</span><span class="n">pcc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">_to_float</span><span class="p">(</span><span class="n">pcc</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">_to_float</span><span class="p">(</span><span class="n">pcc</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+            <span class="n">pccParts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+        <span class="n">composites</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pccParts</span>
 
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Bad composites parse&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_parse_optional</span><span class="p">(</span><span class="n">fh</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parse the optional fields for kern pair data and composites</span>
+<span class="sd">    Parse the optional fields for kern pair data and composites.</span>
 
-<span class="sd">    return value is a (*kernDict*, *compositeDict*) which are the</span>
-<span class="sd">    return values from :func:`_parse_kern_pairs`, and</span>
-<span class="sd">    :func:`_parse_composites` if the data exists, or empty dicts</span>
-<span class="sd">    otherwise</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    kern_data : dict</span>
+<span class="sd">        A dict containing kerning information. May be empty.</span>
+<span class="sd">        See `._parse_kern_pairs`.</span>
+<span class="sd">    composites : dict</span>
+<span class="sd">        A dict containing composite information. May be empty.</span>
+<span class="sd">        See `._parse_composites`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">optional</span> <span class="o">=</span> <span class="p">{</span>
         <span class="sa">b</span><span class="s1">&#39;StartKernData&#39;</span><span class="p">:</span> <span class="n">_parse_kern_pairs</span><span class="p">,</span>
         <span class="sa">b</span><span class="s1">&#39;StartComposites&#39;</span><span class="p">:</span>  <span class="n">_parse_composites</span><span class="p">,</span>
         <span class="p">}</span>
 
-    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="sa">b</span><span class="s1">&#39;StartKernData&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="sa">b</span><span class="s1">&#39;StartComposites&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="sa">b</span><span class="s1">&#39;StartKernData&#39;</span><span class="p">:</span> <span class="p">{},</span>
+         <span class="sa">b</span><span class="s1">&#39;StartComposites&#39;</span><span class="p">:</span> <span class="p">{}}</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fh</span><span class="p">:</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
@@ -417,47 +469,53 @@ type="text/css" />
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">optional</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">optional</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">fh</span><span class="p">)</span>
 
-    <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;StartKernData&#39;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;StartComposites&#39;</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">l</span>
+    <span class="k">return</span> <span class="n">d</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;StartKernData&#39;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;StartComposites&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="parse_afm"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.parse_afm">[docs]</a><span class="k">def</span> <span class="nf">parse_afm</span><span class="p">(</span><span class="n">fh</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_afm"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.parse_afm">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">,</span> <span class="s2">&quot;Use the class AFM instead.&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">parse_afm</span><span class="p">(</span><span class="n">fh</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_parse_afm</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_parse_afm</span><span class="p">(</span><span class="n">fh</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parse the Adobe Font Metics file in file handle *fh*. Return value</span>
-<span class="sd">    is a (*dhead*, *dcmetrics_ascii*, *dmetrics_name*, *dkernpairs*,</span>
-<span class="sd">    *dcomposite*) tuple where</span>
-<span class="sd">    *dhead* is a :func:`_parse_header` dict,</span>
-<span class="sd">    *dcmetrics_ascii* and *dcmetrics_name* are the two resulting dicts</span>
-<span class="sd">    from :func:`_parse_char_metrics`,</span>
-<span class="sd">    *dkernpairs* is a :func:`_parse_kern_pairs` dict (possibly {}) and</span>
-<span class="sd">    *dcomposite* is a :func:`_parse_composites` dict (possibly {})</span>
+<span class="sd">    Parse the Adobe Font Metrics file in file handle *fh*.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    header : dict</span>
+<span class="sd">        A header dict. See :func:`_parse_header`.</span>
+<span class="sd">    cmetrics_by_ascii : dict</span>
+<span class="sd">        From :func:`_parse_char_metrics`.</span>
+<span class="sd">    cmetrics_by_name : dict</span>
+<span class="sd">        From :func:`_parse_char_metrics`.</span>
+<span class="sd">    kernpairs : dict</span>
+<span class="sd">        From :func:`_parse_kern_pairs`.</span>
+<span class="sd">    composites : dict</span>
+<span class="sd">        From :func:`_parse_composites`</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_sanity_check</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
-    <span class="n">dhead</span> <span class="o">=</span> <span class="n">_parse_header</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
-    <span class="n">dcmetrics_ascii</span><span class="p">,</span> <span class="n">dcmetrics_name</span> <span class="o">=</span> <span class="n">_parse_char_metrics</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
-    <span class="n">doptional</span> <span class="o">=</span> <span class="n">_parse_optional</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">dhead</span><span class="p">,</span> <span class="n">dcmetrics_ascii</span><span class="p">,</span> <span class="n">dcmetrics_name</span><span class="p">,</span> <span class="n">doptional</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">doptional</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">_parse_header</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="n">cmetrics_by_ascii</span><span class="p">,</span> <span class="n">cmetrics_by_name</span> <span class="o">=</span> <span class="n">_parse_char_metrics</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="n">kernpairs</span><span class="p">,</span> <span class="n">composites</span> <span class="o">=</span> <span class="n">_parse_optional</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="n">cmetrics_by_ascii</span><span class="p">,</span> <span class="n">cmetrics_by_name</span><span class="p">,</span> <span class="n">kernpairs</span><span class="p">,</span> <span class="n">composites</span>
 
 
 <div class="viewcode-block" id="AFM"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM">[docs]</a><span class="k">class</span> <span class="nc">AFM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fh</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parse the AFM file in file object *fh*</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="p">(</span><span class="n">dhead</span><span class="p">,</span> <span class="n">dcmetrics_ascii</span><span class="p">,</span> <span class="n">dcmetrics_name</span><span class="p">,</span> <span class="n">dkernpairs</span><span class="p">,</span> <span class="n">dcomposite</span><span class="p">)</span> <span class="o">=</span> \
-            <span class="n">parse_afm</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_header</span> <span class="o">=</span> <span class="n">dhead</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kern</span> <span class="o">=</span> <span class="n">dkernpairs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span> <span class="o">=</span> <span class="n">dcmetrics_ascii</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span> <span class="o">=</span> <span class="n">dcmetrics_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_composite</span> <span class="o">=</span> <span class="n">dcomposite</span>
+        <span class="sd">&quot;&quot;&quot;Parse the AFM file in file object *fh*.&quot;&quot;&quot;</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">,</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">,</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span><span class="p">,</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">_kern</span><span class="p">,</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">_composite</span><span class="p">)</span> <span class="o">=</span> <span class="n">_parse_afm</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AFM.get_bbox_char"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_bbox_char">[docs]</a>    <span class="k">def</span> <span class="nf">get_bbox_char</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">isord</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">isord</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">wx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">bbox</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">bbox</span></div>
 
 <div class="viewcode-block" id="AFM.string_width_height"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.string_width_height">[docs]</a>    <span class="k">def</span> <span class="nf">string_width_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -466,7 +524,7 @@ type="text/css" />
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
             <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-        <span class="n">totalw</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_width</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">namelast</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">miny</span> <span class="o">=</span> <span class="mf">1e9</span>
         <span class="n">maxy</span> <span class="o">=</span> <span class="mi">0</span>
@@ -474,119 +532,77 @@ type="text/css" />
             <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">wx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span>
+
+            <span class="n">total_width</span> <span class="o">+=</span> <span class="n">wx</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kern</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">namelast</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">bbox</span>
+            <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">b</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span>
 
-            <span class="c1"># find the width with kerning</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">kp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kern</span><span class="p">[(</span><span class="n">namelast</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">kp</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">totalw</span> <span class="o">+=</span> <span class="n">wx</span> <span class="o">+</span> <span class="n">kp</span>
-
-            <span class="c1"># find the max y</span>
-            <span class="n">thismax</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">h</span>
-            <span class="k">if</span> <span class="n">thismax</span> <span class="o">&gt;</span> <span class="n">maxy</span><span class="p">:</span>
-                <span class="n">maxy</span> <span class="o">=</span> <span class="n">thismax</span>
-
-            <span class="c1"># find the min y</span>
-            <span class="n">thismin</span> <span class="o">=</span> <span class="n">b</span>
-            <span class="k">if</span> <span class="n">thismin</span> <span class="o">&lt;</span> <span class="n">miny</span><span class="p">:</span>
-                <span class="n">miny</span> <span class="o">=</span> <span class="n">thismin</span>
             <span class="n">namelast</span> <span class="o">=</span> <span class="n">name</span>
 
-        <span class="k">return</span> <span class="n">totalw</span><span class="p">,</span> <span class="n">maxy</span> <span class="o">-</span> <span class="n">miny</span></div>
+        <span class="k">return</span> <span class="n">total_width</span><span class="p">,</span> <span class="n">maxy</span> <span class="o">-</span> <span class="n">miny</span></div>
 
 <div class="viewcode-block" id="AFM.get_str_bbox_and_descent"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_str_bbox_and_descent">[docs]</a>    <span class="k">def</span> <span class="nf">get_str_bbox_and_descent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the string bounding box</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the string bounding box and the maximal descent.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-        <span class="n">totalw</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="n">total_width</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">namelast</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">miny</span> <span class="o">=</span> <span class="mf">1e9</span>
         <span class="n">maxy</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">_to_str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">uni2type1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="s1">&#39;question&#39;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">wx</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="n">wx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;question&#39;</span>
-                <span class="n">wx</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="n">wx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">total_width</span> <span class="o">+=</span> <span class="n">wx</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kern</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">namelast</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">bbox</span>
-            <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">left</span><span class="p">:</span>
-                <span class="n">left</span> <span class="o">=</span> <span class="n">l</span>
-            <span class="c1"># find the width with kerning</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">kp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kern</span><span class="p">[(</span><span class="n">namelast</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">kp</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">totalw</span> <span class="o">+=</span> <span class="n">wx</span> <span class="o">+</span> <span class="n">kp</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+            <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">b</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span>
 
-            <span class="c1"># find the max y</span>
-            <span class="n">thismax</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">h</span>
-            <span class="k">if</span> <span class="n">thismax</span> <span class="o">&gt;</span> <span class="n">maxy</span><span class="p">:</span>
-                <span class="n">maxy</span> <span class="o">=</span> <span class="n">thismax</span>
-
-            <span class="c1"># find the min y</span>
-            <span class="n">thismin</span> <span class="o">=</span> <span class="n">b</span>
-            <span class="k">if</span> <span class="n">thismin</span> <span class="o">&lt;</span> <span class="n">miny</span><span class="p">:</span>
-                <span class="n">miny</span> <span class="o">=</span> <span class="n">thismin</span>
             <span class="n">namelast</span> <span class="o">=</span> <span class="n">name</span>
 
-        <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">totalw</span><span class="p">,</span> <span class="n">maxy</span> <span class="o">-</span> <span class="n">miny</span><span class="p">,</span> <span class="o">-</span><span class="n">miny</span></div>
+        <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">total_width</span><span class="p">,</span> <span class="n">maxy</span> <span class="o">-</span> <span class="n">miny</span><span class="p">,</span> <span class="o">-</span><span class="n">miny</span></div>
 
 <div class="viewcode-block" id="AFM.get_str_bbox"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_str_bbox">[docs]</a>    <span class="k">def</span> <span class="nf">get_str_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the string bounding box</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the string bounding box.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_str_bbox_and_descent</span><span class="p">(</span><span class="n">s</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_name_char"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_name_char">[docs]</a>    <span class="k">def</span> <span class="nf">get_name_char</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">isord</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the name of the character, i.e., &#39;;&#39; is &#39;semicolon&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the name of the character, i.e., &#39;;&#39; is &#39;semicolon&#39;.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">isord</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">wx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">name</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">name</span></div>
 
 <div class="viewcode-block" id="AFM.get_width_char"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_width_char">[docs]</a>    <span class="k">def</span> <span class="nf">get_width_char</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">isord</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the width of the character from the character metric WX</span>
-<span class="sd">        field</span>
+<span class="sd">        Get the width of the character from the character metric WX field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">isord</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">wx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">wx</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">width</span></div>
 
 <div class="viewcode-block" id="AFM.get_width_from_char_name"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_width_from_char_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_width_from_char_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the width of the character from a type1 character name</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">wx</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">wx</span></div>
+        <span class="sd">&quot;&quot;&quot;Get the width of the character from a type1 character name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">width</span></div>
 
 <div class="viewcode-block" id="AFM.get_height_char"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_height_char">[docs]</a>    <span class="k">def</span> <span class="nf">get_height_char</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">isord</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the height of character *c* from the bounding box.  This</span>
-<span class="sd">        is the ink height (space is 0)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the bounding box (ink) height of character *c* (space is 0).&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">isord</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">wx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">bbox</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">bbox</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_kern_dist"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_kern_dist">[docs]</a>    <span class="k">def</span> <span class="nf">get_kern_dist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the kerning pair distance (possibly 0) for chars *c1*</span>
-<span class="sd">        and *c2*</span>
+<span class="sd">        Return the kerning pair distance (possibly 0) for chars *c1* and *c2*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name1</span><span class="p">,</span> <span class="n">name2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name_char</span><span class="p">(</span><span class="n">c1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name_char</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kern_dist_from_name</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">)</span></div>
@@ -594,23 +610,23 @@ type="text/css" />
 <div class="viewcode-block" id="AFM.get_kern_dist_from_name"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_kern_dist_from_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_kern_dist_from_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the kerning pair distance (possibly 0) for chars</span>
-<span class="sd">        *name1* and *name2*</span>
+<span class="sd">        *name1* and *name2*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kern</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AFM.get_fontname"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_fontname">[docs]</a>    <span class="k">def</span> <span class="nf">get_fontname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font name, e.g., &#39;Times-Roman&#39;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the font name, e.g., &#39;Times-Roman&#39;.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;FontName&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_fullname"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_fullname">[docs]</a>    <span class="k">def</span> <span class="nf">get_fullname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font full name, e.g., &#39;Times-Roman&#39;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the font full name, e.g., &#39;Times-Roman&#39;.&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;FullName&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># use FontName as a substitute</span>
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;FontName&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">name</span></div>
 
 <div class="viewcode-block" id="AFM.get_familyname"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_familyname">[docs]</a>    <span class="k">def</span> <span class="nf">get_familyname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font family name, e.g., &#39;Times&#39;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the font family name, e.g., &#39;Times&#39;.&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;FamilyName&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">name</span>
@@ -623,26 +639,27 @@ type="text/css" />
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">family_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The font family name, e.g., &#39;Times&#39;.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_familyname</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AFM.get_weight"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_weight">[docs]</a>    <span class="k">def</span> <span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the font weight, e.g., &#39;Bold&#39; or &#39;Roman&#39;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the font weight, e.g., &#39;Bold&#39; or &#39;Roman&#39;.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;Weight&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_angle"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_angle">[docs]</a>    <span class="k">def</span> <span class="nf">get_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the fontangle as float&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the fontangle as float.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;ItalicAngle&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_capheight"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_capheight">[docs]</a>    <span class="k">def</span> <span class="nf">get_capheight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the cap height as float&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the cap height as float.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;CapHeight&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_xheight"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_xheight">[docs]</a>    <span class="k">def</span> <span class="nf">get_xheight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the xheight as float&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the xheight as float.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;XHeight&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_underline_thickness"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_underline_thickness">[docs]</a>    <span class="k">def</span> <span class="nf">get_underline_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return the underline thickness as float&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the underline thickness as float.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;UnderlineThickness&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AFM.get_horizontal_stem_width"><a class="viewcode-back" href="../../api/afm_api.html#matplotlib.afm.AFM.get_horizontal_stem_width">[docs]</a>    <span class="k">def</span> <span class="nf">get_horizontal_stem_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -669,10 +686,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

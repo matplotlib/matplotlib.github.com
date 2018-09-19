@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.dviread &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.dviread &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/dviread.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../contents.html">docs</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li>
           <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -122,42 +124,33 @@ type="text/css" />
 <span class="sd">      # iterate over pages:</span>
 <span class="sd">      for page in dvi:</span>
 <span class="sd">          w, h, d = page.width, page.height, page.descent</span>
-<span class="sd">          for x,y,font,glyph,width in page.text:</span>
+<span class="sd">          for x, y, font, glyph, width in page.text:</span>
 <span class="sd">              fontname = font.texname</span>
 <span class="sd">              pointsize = font.size</span>
 <span class="sd">              ...</span>
-<span class="sd">          for x,y,height,width in page.boxes:</span>
+<span class="sd">          for x, y, height, width in page.boxes:</span>
 <span class="sd">              ...</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">xrange</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">struct</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">textwrap</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib.compat</span> <span class="k">import</span> <span class="n">subprocess</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># Py2</span>
-    <span class="kn">from</span> <span class="nn">backports.functools_lru_cache</span> <span class="k">import</span> <span class="n">lru_cache</span>
-
-<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-<div class="viewcode-block" id="ord"><a class="viewcode-back" href="../../api/dviread.html#matplotlib.dviread.ord">[docs]</a>    <span class="k">def</span> <span class="nf">ord</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">x</span></div>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Many dvi related files are looked for by external processes, require</span>
+<span class="c1"># additional parsing, and are used many times per rendering, which is why they</span>
+<span class="c1"># are cached using lru_cache().</span>
 
 <span class="c1"># Dvi is a bytecode format documented in</span>
 <span class="c1"># http://mirrors.ctan.org/systems/knuth/dist/texware/dvitype.web</span>
@@ -175,7 +168,7 @@ type="text/css" />
 <span class="c1">#              just stops reading)</span>
 <span class="c1">#   finale:    the finale (unimplemented in our current implementation)</span>
 
-<span class="n">_dvistate</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Bunch</span><span class="p">(</span><span class="n">pre</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">outer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inpage</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">post_post</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">finale</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">_dvistate</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;DviState&#39;</span><span class="p">,</span> <span class="s1">&#39;pre outer inpage post_post finale&#39;</span><span class="p">)</span>
 
 <span class="c1"># The marks on a page consist of text and boxes. A page also has dimensions.</span>
 <span class="n">Page</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Page&#39;</span><span class="p">,</span> <span class="s1">&#39;text boxes height width descent&#39;</span><span class="p">)</span>
@@ -285,7 +278,7 @@ type="text/css" />
         <span class="k">if</span> <span class="nb">max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">table</span><span class="p">[</span><span class="nb">min</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrapper</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
                 <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
                 <span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrapper</span>
         <span class="k">return</span> <span class="n">wrapper</span>
@@ -302,12 +295,12 @@ type="text/css" />
 <span class="sd">    file upon exit. Pages can be read via iteration. Here is an overly</span>
 <span class="sd">    simple way to extract text without trying to detect whitespace::</span>
 
-<span class="sd">    &gt;&gt;&gt; with matplotlib.dviread.Dvi(&#39;input.dvi&#39;, 72) as dvi:</span>
-<span class="sd">    &gt;&gt;&gt;     for page in dvi:</span>
-<span class="sd">    &gt;&gt;&gt;         print(&#39;&#39;.join(unichr(t.glyph) for t in page.text))</span>
+<span class="sd">        &gt;&gt;&gt; with matplotlib.dviread.Dvi(&#39;input.dvi&#39;, 72) as dvi:</span>
+<span class="sd">        ...     for page in dvi:</span>
+<span class="sd">        ...         print(&#39;&#39;.join(chr(t.glyph) for t in page.text))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># dispatch table</span>
-    <span class="n">_dtable</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">256</span><span class="p">)]</span>
+    <span class="n">_dtable</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">256</span>
     <span class="n">_dispatch</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_dispatch</span><span class="p">,</span> <span class="n">_dtable</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="p">):</span>
@@ -363,12 +356,8 @@ type="text/css" />
 <span class="sd">            precision is not lost and coordinate values are not clipped to</span>
 <span class="sd">            integers.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">have_page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">have_page</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">break</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Dvi.close"><a class="viewcode-back" href="../../api/dviread.html#matplotlib.dviread.Dvi.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -424,11 +413,11 @@ type="text/css" />
 <span class="sd">        False if there were no more pages.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">byte</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">byte</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_dtable</span><span class="p">[</span><span class="n">byte</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">byte</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">byte</span> <span class="o">==</span> <span class="mi">140</span><span class="p">:</span>                         <span class="c1"># end of page</span>
                 <span class="k">return</span> <span class="kc">True</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">_dvistate</span><span class="o">.</span><span class="n">post_post</span><span class="p">:</span>   <span class="c1"># end of file</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="n">_dvistate</span><span class="o">.</span><span class="n">post_post</span><span class="p">:</span>   <span class="c1"># end of file</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
@@ -438,11 +427,11 @@ type="text/css" />
 <span class="sd">        Signedness is determined by the *signed* keyword.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="nb">str</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">signed</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mh">0x80</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">-</span> <span class="mh">0x100</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="mh">0x100</span><span class="o">*</span><span class="n">value</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="nb">str</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="mh">0x100</span><span class="o">*</span><span class="n">value</span> <span class="o">+</span> <span class="nb">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">value</span>
 
     <span class="nd">@_dispatch</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">127</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">_dvistate</span><span class="o">.</span><span class="n">inpage</span><span class="p">)</span>
@@ -558,14 +547,9 @@ type="text/css" />
     <span class="nd">@_dispatch</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">239</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">242</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;ulen1&#39;</span><span class="p">,))</span>
     <span class="k">def</span> <span class="nf">_xxx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalen</span><span class="p">):</span>
         <span class="n">special</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">datalen</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-            <span class="n">chr_</span> <span class="o">=</span> <span class="nb">chr</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">chr_</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">x</span>
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="s1">&#39;Dvi._xxx: encountered special: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">chr_</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="k">if</span> <span class="mi">32</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="s1">&#39;&lt;</span><span class="si">%02x</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="k">if</span> <span class="mi">32</span> <span class="o">&lt;=</span> <span class="n">ch</span> <span class="o">&lt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="s1">&#39;&lt;</span><span class="si">%02x</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="n">ch</span>
                      <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">special</span><span class="p">]))</span>
 
     <span class="nd">@_dispatch</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">243</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">246</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;olen1&#39;</span><span class="p">,</span> <span class="s1">&#39;u4&#39;</span><span class="p">,</span> <span class="s1">&#39;u4&#39;</span><span class="p">,</span> <span class="s1">&#39;u4&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">))</span>
@@ -577,11 +561,7 @@ type="text/css" />
         <span class="n">fontname</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="o">-</span><span class="n">l</span><span class="p">:]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
         <span class="n">tfm</span> <span class="o">=</span> <span class="n">_tfmfile</span><span class="p">(</span><span class="n">fontname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tfm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-                <span class="n">error_class</span> <span class="o">=</span> <span class="ne">OSError</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">error_class</span> <span class="o">=</span> <span class="ne">FileNotFoundError</span>
-            <span class="k">raise</span> <span class="n">error_class</span><span class="p">(</span><span class="s2">&quot;missing font metrics file: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">fontname</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;missing font metrics file: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">fontname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tfm</span><span class="o">.</span><span class="n">checksum</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">tfm</span><span class="o">.</span><span class="n">checksum</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;tfm checksum mismatch: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
 
@@ -674,7 +654,7 @@ type="text/css" />
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">nchars</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">widths</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1000</span><span class="o">*</span><span class="n">tfm</span><span class="o">.</span><span class="n">width</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="mi">20</span>
-                       <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">nchars</span><span class="p">)]</span>
+                       <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nchars</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">and</span> \
@@ -756,9 +736,9 @@ type="text/css" />
         <span class="n">packet_char</span><span class="p">,</span> <span class="n">packet_ends</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
         <span class="n">packet_len</span><span class="p">,</span> <span class="n">packet_width</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">byte</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">byte</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="c1"># If we are in a packet, execute the dvi instructions</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">_dvistate</span><span class="o">.</span><span class="n">inpage</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="n">_dvistate</span><span class="o">.</span><span class="n">inpage</span><span class="p">:</span>
                 <span class="n">byte_at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span>
                 <span class="k">if</span> <span class="n">byte_at</span> <span class="o">==</span> <span class="n">packet_ends</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_packet</span><span class="p">(</span><span class="n">packet_char</span><span class="p">,</span> <span class="n">packet_width</span><span class="p">)</span>
@@ -814,7 +794,7 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">_dvistate</span><span class="o">.</span><span class="n">outer</span>
 
     <span class="k">def</span> <span class="nf">_pre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">_dvistate</span><span class="o">.</span><span class="n">pre</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_dvistate</span><span class="o">.</span><span class="n">pre</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pre command in middle of vf file&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">202</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown vf format </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
@@ -887,9 +867,9 @@ type="text/css" />
         <span class="n">widths</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">depths</span> <span class="o">=</span> \
             <span class="p">[</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;!</span><span class="si">%d</span><span class="s1">I&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mi">4</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
              <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">widths</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">depths</span><span class="p">)]</span>
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="n">bc</span><span class="p">,</span> <span class="n">ec</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
-            <span class="n">byte0</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">char_info</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">idx</span><span class="p">])</span>
-            <span class="n">byte1</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">char_info</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">bc</span><span class="p">,</span> <span class="n">ec</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+            <span class="n">byte0</span> <span class="o">=</span> <span class="n">char_info</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">byte1</span> <span class="o">=</span> <span class="n">char_info</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">_fix2comp</span><span class="p">(</span><span class="n">widths</span><span class="p">[</span><span class="n">byte0</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">_fix2comp</span><span class="p">(</span><span class="n">heights</span><span class="p">[</span><span class="n">byte1</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">_fix2comp</span><span class="p">(</span><span class="n">depths</span><span class="p">[</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mh">0xf</span><span class="p">])</span></div>
@@ -946,14 +926,17 @@ type="text/css" />
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_font&#39;</span><span class="p">,</span> <span class="s1">&#39;_filename&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="c1"># Create a filename -&gt; PsfontsMap cache, so that calling</span>
+    <span class="c1"># `PsfontsMap(filename)` with the same filename a second time immediately</span>
+    <span class="c1"># returns the same object.</span>
+    <span class="nd">@lru_cache</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_font</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="n">filename</span>
-        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
-            <span class="n">encoding</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">getfilesystemencoding</span><span class="p">()</span> <span class="ow">or</span> <span class="s1">&#39;utf-8&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fsdecode</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texname</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">texname</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
@@ -1092,10 +1075,10 @@ type="text/css" />
             <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Result: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">name</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span>
 
-    <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">)</span>
@@ -1114,7 +1097,8 @@ type="text/css" />
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">br</span><span class="s1">&#39;/([^][</span><span class="si">{}</span><span class="s1">&lt;&gt;\s]+)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_tex_file"><a class="viewcode-back" href="../../api/dviread.html#matplotlib.dviread.find_tex_file">[docs]</a><span class="k">def</span> <span class="nf">find_tex_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="find_tex_file"><a class="viewcode-back" href="../../api/dviread.html#matplotlib.dviread.find_tex_file">[docs]</a><span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">find_tex_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Find a file in the texmf tree.</span>
 
@@ -1137,33 +1121,23 @@ type="text/css" />
 <span class="sd">        The library that :program:`kpsewhich` is part of.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-        <span class="c1"># we expect these to always be ascii encoded, but use utf-8</span>
-        <span class="c1"># out of caution</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
-            <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+    <span class="c1"># we expect these to always be ascii encoded, but use utf-8</span>
+    <span class="c1"># out of caution</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
 
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;kpsewhich&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;--format=&#39;</span> <span class="o">+</span> <span class="nb">format</span><span class="p">]</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="n">filename</span><span class="p">]</span>
     <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;find_tex_file(</span><span class="si">%s</span><span class="s1">): </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
-    <span class="c1"># stderr is unused, but reading it avoids a subprocess optimization</span>
-    <span class="c1"># that breaks EINTR handling in some Python versions:</span>
-    <span class="c1"># http://bugs.python.org/issue12493</span>
-    <span class="c1"># https://github.com/matplotlib/matplotlib/issues/633</span>
-    <span class="n">pipe</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
-                            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">pipe</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
     <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;find_tex_file result: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span></div>
 
-
-<span class="c1"># With multiple text objects per figure (e.g., tick labels) we may end</span>
-<span class="c1"># up reading the same tfm and vf files many times, so we implement a</span>
-<span class="c1"># simple cache. TODO: is this worth making persistent?</span>
 
 <span class="nd">@lru_cache</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">_fontfile</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">texname</span><span class="p">):</span>
@@ -1205,10 +1179,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>

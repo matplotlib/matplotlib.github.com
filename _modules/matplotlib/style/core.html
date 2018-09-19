@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.style.core &mdash; Matplotlib 2.2.3 documentation</title>
+    <title>matplotlib.style.core &mdash; Matplotlib 3.0.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '2.2.3',
+        VERSION:     '3.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,15 +28,16 @@ type="text/css" />
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 2.2.3 documentation"
+          title="Search within Matplotlib 3.0.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 2.2.3 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/style/core.html" />
 
@@ -48,7 +50,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.3</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -71,7 +73,7 @@ type="text/css" />
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
         <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
-        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../api/api_overview.html">API</a>|&nbsp;</li>
         <li><a href="../../../contents.html">docs</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
           <li><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
@@ -111,11 +113,7 @@ type="text/css" />
           <div class="body">
             
   <h1>Source code for matplotlib.style.core</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Core functions and attributes for the matplotlib style library:</span>
 
 <span class="sd">``use``</span>
@@ -127,13 +125,15 @@ type="text/css" />
 <span class="sd">``library``</span>
 <span class="sd">    A dictionary of style names and matplotlib settings.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">rc_params_from_file</span><span class="p">,</span> <span class="n">rcParamsDefault</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">MatplotlibDeprecationWarning</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;use&#39;</span><span class="p">,</span> <span class="s1">&#39;context&#39;</span><span class="p">,</span> <span class="s1">&#39;available&#39;</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="s1">&#39;reload_library&#39;</span><span class="p">]</span>
@@ -141,7 +141,7 @@ type="text/css" />
 
 <span class="n">BASE_LIBRARY_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">get_data_path</span><span class="p">(),</span> <span class="s1">&#39;stylelib&#39;</span><span class="p">)</span>
 <span class="c1"># Users may want multiple library paths, so store a list of paths.</span>
-<span class="n">USER_LIBRARY_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">_get_configdir</span><span class="p">(),</span> <span class="s1">&#39;stylelib&#39;</span><span class="p">)]</span>
+<span class="n">USER_LIBRARY_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">get_configdir</span><span class="p">(),</span> <span class="s1">&#39;stylelib&#39;</span><span class="p">)]</span>
 <span class="n">STYLE_EXTENSION</span> <span class="o">=</span> <span class="s1">&#39;mplstyle&#39;</span>
 <span class="n">STYLE_FILE_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([\S]+).</span><span class="si">%s</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">STYLE_EXTENSION</span><span class="p">)</span>
 
@@ -161,7 +161,7 @@ type="text/css" />
             <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                     <span class="s2">&quot;Style includes a parameter, &#39;</span><span class="si">{0}</span><span class="s2">&#39;, that is not related &quot;</span>
-                    <span class="s2">&quot;to style.  Ignoring&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                    <span class="s2">&quot;to style.  Ignoring&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">o</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
     <span class="k">return</span> <span class="n">o</span>
@@ -202,21 +202,23 @@ type="text/css" />
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">style_alias</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mpl20&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;mpl15&#39;</span><span class="p">:</span> <span class="s1">&#39;classic&#39;</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;keys&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;keys&#39;</span><span class="p">):</span>
         <span class="c1"># If name is a single str or dict, make it a single element list.</span>
         <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="n">style</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">styles</span> <span class="o">=</span> <span class="n">style</span>
 
-    <span class="n">styles</span> <span class="o">=</span> <span class="p">(</span><span class="n">style_alias</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-              <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span>
-              <span class="k">else</span> <span class="n">s</span>
+    <span class="n">styles</span> <span class="o">=</span> <span class="p">(</span><span class="n">style_alias</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">s</span>
               <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">styles</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">style</span> <span class="ow">in</span> <span class="n">styles</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">_apply_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
-            <span class="n">_apply_style</span><span class="p">(</span><span class="n">rcParamsDefault</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="c1"># Deprecation warnings were already handled when creating</span>
+            <span class="c1"># rcParamsDefault, no need to reemit them here.</span>
+            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">MatplotlibDeprecationWarning</span><span class="p">)</span>
+                <span class="n">_apply_style</span><span class="p">(</span><span class="n">rcParamsDefault</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">style</span> <span class="ow">in</span> <span class="n">library</span><span class="p">:</span>
             <span class="n">_apply_style</span><span class="p">(</span><span class="n">library</span><span class="p">[</span><span class="n">style</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -254,25 +256,16 @@ type="text/css" />
 <span class="sd">        If True, apply style after resetting settings to their defaults;</span>
 <span class="sd">        otherwise, apply style on top of the current settings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">initial_settings</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">after_reset</span><span class="p">:</span>
-        <span class="n">mpl</span><span class="o">.</span><span class="n">rcdefaults</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rc_context</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">after_reset</span><span class="p">:</span>
+            <span class="n">mpl</span><span class="o">.</span><span class="n">rcdefaults</span><span class="p">()</span>
         <span class="n">use</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="c1"># Restore original settings before raising errors during the update.</span>
-        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initial_settings</span><span class="p">)</span>
-        <span class="k">raise</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">yield</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initial_settings</span><span class="p">)</span></div>
+        <span class="k">yield</span></div>
 
 
 <span class="k">def</span> <span class="nf">load_base_library</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Load style library defined in this package.&quot;&quot;&quot;</span>
-    <span class="n">library</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">library</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">read_style_directory</span><span class="p">(</span><span class="n">BASE_LIBRARY_PATH</span><span class="p">))</span>
+    <span class="n">library</span> <span class="o">=</span> <span class="n">read_style_directory</span><span class="p">(</span><span class="n">BASE_LIBRARY_PATH</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">library</span>
 
 
@@ -311,7 +304,7 @@ type="text/css" />
 
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">warns</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;In </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">styles</span>
 
@@ -324,11 +317,8 @@ type="text/css" />
 <span class="sd">    already exists. Instead you should update the sub-dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># update named styles specified by user</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rc_dict</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">new_dict</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">main_dict</span><span class="p">:</span>
-            <span class="n">main_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rc_dict</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">main_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rc_dict</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rc_dict</span> <span class="ow">in</span> <span class="n">new_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">main_dict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rc_dict</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">main_dict</span>
 
 
@@ -356,10 +346,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Aug 11, 2018.
+      Last updated on Sep 18, 2018.
 	Created using
-	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
-	Doc version v2.2.3-1-gd47e15e7a.
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.0.
+	Doc version v3.0.0-3-gb8617635e-dirty.
     </div>
 
 <script>
