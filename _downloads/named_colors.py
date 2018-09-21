@@ -11,7 +11,6 @@ For more information on colors in matplotlib see
 * the `matplotlib.colors` API;
 * the :doc:`/gallery/color/color_demo`.
 """
-from __future__ import division
 
 import matplotlib.pyplot as plt
 from matplotlib import colors as mcolors

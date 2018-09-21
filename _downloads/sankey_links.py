@@ -6,8 +6,6 @@ Long chain of connections using Sankey
 Demonstrate/test the Sankey class by producing a long chain of connections.
 """
 
-from itertools import cycle
-
 import matplotlib.pyplot as plt
 from matplotlib.sankey import Sankey
 
@@ -56,3 +54,20 @@ sankey.finish()
 #    accordingly.
 
 plt.show()
+
+
+#############################################################################
+#
+# ------------
+#
+# References
+# """"""""""
+#
+# The use of the following functions, methods, classes and modules is shown
+# in this example:
+
+import matplotlib
+matplotlib.sankey
+matplotlib.sankey.Sankey
+matplotlib.sankey.Sankey.add
+matplotlib.sankey.Sankey.finish

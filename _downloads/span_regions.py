@@ -4,7 +4,7 @@ Using span_where
 ================
 
 Illustrate some helper functions for shading regions where a logical
-mask is True
+mask is True.
 
 See :meth:`matplotlib.collections.BrokenBarHCollection.span_where`
 """
@@ -33,3 +33,20 @@ ax.add_collection(collection)
 
 
 plt.show()
+
+
+#############################################################################
+#
+# ------------
+#
+# References
+# """"""""""
+#
+# The use of the following functions, methods, classes and modules is shown
+# in this example:
+
+import matplotlib
+matplotlib.collections.BrokenBarHCollection
+matplotlib.collections.BrokenBarHCollection.span_where
+matplotlib.axes.Axes.add_collection
+matplotlib.axes.Axes.axhline

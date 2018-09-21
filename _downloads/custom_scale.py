@@ -3,12 +3,9 @@
 Custom scale
 ============
 
-Create a custom scale, by implementing the
-scaling use for latitude data in a Mercator Projection.
+Create a custom scale, by implementing the scaling use for latitude data in a
+Mercator Projection.
 """
-
-
-from __future__ import unicode_literals
 
 import numpy as np
 from numpy import ma
@@ -47,7 +44,7 @@ class MercatorLatitudeScale(mscale.ScaleBase):
     # scale.
     name = 'mercator'
 
-    def __init__(self, axis, **kwargs):
+    def __init__(self, axis, *, thresh=np.deg2rad(85), **kwargs):
         """
         Any keyword arguments passed to ``set_xscale`` and
         ``set_yscale`` will be passed along to the scale's
@@ -56,8 +53,7 @@ class MercatorLatitudeScale(mscale.ScaleBase):
         thresh: The degree above which to crop the data.
         """
         mscale.ScaleBase.__init__(self)
-        thresh = kwargs.pop("thresh", np.radians(85))
-        if thresh >= np.pi / 2.0:
+        if thresh >= np.pi / 2:
             raise ValueError("thresh must be less than pi/2")
         self.thresh = thresh
 

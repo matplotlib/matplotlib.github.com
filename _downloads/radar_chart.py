@@ -60,18 +60,17 @@ def radar_factory(num_vars, frame='circle'):
         draw_patch = patch_dict[frame]
 
         def __init__(self, *args, **kwargs):
-            super(RadarAxes, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
             # rotate plot such that the first axis is at the top
             self.set_theta_zero_location('N')
 
-        def fill(self, *args, **kwargs):
+        def fill(self, *args, closed=True, **kwargs):
             """Override fill so that line is closed by default"""
-            closed = kwargs.pop('closed', True)
-            return super(RadarAxes, self).fill(closed=closed, *args, **kwargs)
+            return super().fill(closed=closed, *args, **kwargs)
 
         def plot(self, *args, **kwargs):
             """Override plot so that line is closed by default"""
-            lines = super(RadarAxes, self).plot(*args, **kwargs)
+            lines = super().plot(*args, **kwargs)
             for line in lines:
                 self._close_line(line)
 
@@ -91,7 +90,7 @@ def radar_factory(num_vars, frame='circle'):
 
         def _gen_axes_spines(self):
             if frame == 'circle':
-                return PolarAxes._gen_axes_spines(self)
+                return super()._gen_axes_spines()
             # The following is a hack to get the spines (i.e. the axes frame)
             # to draw correctly for a polygon frame.
 
@@ -122,7 +121,7 @@ def unit_poly_verts(theta):
 
 def example_data():
     # The following data is from the Denver Aerosol Sources and Health study.
-    # See  doi:10.1016/j.atmosenv.2008.12.017
+    # See doi:10.1016/j.atmosenv.2008.12.017
     #
     # The data are pollution source profile estimates for five modeled
     # pollution sources (e.g., cars, wood-burning, etc) that emit 7-9 chemical
@@ -203,3 +202,24 @@ if __name__ == '__main__':
              size='large')
 
     plt.show()
+
+
+#############################################################################
+#
+# ------------
+#
+# References
+# """"""""""
+#
+# The use of the following functions, methods, classes and modules is shown
+# in this example:
+
+import matplotlib
+matplotlib.path
+matplotlib.path.Path
+matplotlib.spines
+matplotlib.spines.Spine
+matplotlib.projections
+matplotlib.projections.polar
+matplotlib.projections.polar.PolarAxes
+matplotlib.projections.register_projection
