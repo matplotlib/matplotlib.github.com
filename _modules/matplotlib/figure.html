@@ -6,36 +6,31 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.figure &mdash; Matplotlib 3.0.0 documentation</title>
+    <title>matplotlib.figure &mdash; Matplotlib 3.0.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '3.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.0.0 documentation"
+          title="Search within Matplotlib 3.0.2 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.2 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/figure.html" />
 
@@ -48,7 +43,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.2</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -131,7 +126,7 @@ type="text/css" />
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">docstring</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">backends</span><span class="p">,</span> <span class="n">docstring</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_mpl_version</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">get_backend</span>
 
@@ -534,12 +529,8 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        warn : bool</span>
-<span class="sd">            If ``True``, issue warning when called on a non-GUI backend</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        For non-GUI backends, this does nothing, in which case a warning will</span>
-<span class="sd">        be issued if *warn* is ``True`` (default).</span>
+<span class="sd">            If ``True`` and we are not running headless (i.e. on Linux with an</span>
+<span class="sd">            unset DISPLAY), issue warning when called on a non-GUI backend.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">,</span> <span class="s1">&#39;manager&#39;</span><span class="p">)</span>
@@ -555,7 +546,8 @@ type="text/css" />
                 <span class="k">return</span>
             <span class="k">except</span> <span class="n">NonGuiException</span><span class="p">:</span>
                 <span class="k">pass</span>
-        <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">backends</span><span class="o">.</span><span class="n">_get_running_interactive_framework</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;headless&quot;</span>
+                <span class="ow">and</span> <span class="n">warn</span><span class="p">):</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Matplotlib is currently using </span><span class="si">%s</span><span class="s1">, which is a &#39;</span>
                           <span class="s1">&#39;non-GUI backend, so cannot show the figure.&#39;</span>
                           <span class="o">%</span> <span class="n">get_backend</span><span class="p">())</span></div>
@@ -807,11 +799,11 @@ type="text/css" />
 <span class="sd">            The y location of the text in figure coordinates.</span>
 
 <span class="sd">        horizontalalignment, ha : {&#39;center&#39;, &#39;left&#39;, right&#39;}, default: &#39;center&#39;</span>
-<span class="sd">            The horizontal alignment of the text.</span>
+<span class="sd">            The horizontal alignment of the text relative to (*x*, *y*).</span>
 
 <span class="sd">        verticalalignment, va : {&#39;top&#39;, &#39;center&#39;, &#39;bottom&#39;, &#39;baseline&#39;}, \</span>
 <span class="sd">default: &#39;top&#39;</span>
-<span class="sd">            The vertical alignment of the text.</span>
+<span class="sd">            The vertical alignment of the text relative to (*x*, *y*).</span>
 
 <span class="sd">        fontsize, size : default: :rc:`figure.titlesize`</span>
 <span class="sd">            The font size of the text. See `.Text.set_size` for possible</span>
@@ -2389,7 +2381,14 @@ type="text/css" />
 
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_visible</span><span class="p">():</span>
-                <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_tightbbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="p">))</span>
+                <span class="c1"># some axes don&#39;t take the bbox_extra_artists kwarg so we</span>
+                <span class="c1"># need this conditional....</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">bbox</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_tightbbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span>
+                            <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="n">bbox_extra_artists</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="n">bbox</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_tightbbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+                <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_inches</span>
@@ -2481,7 +2480,8 @@ type="text/css" />
         <span class="n">kwargs</span> <span class="o">=</span> <span class="n">get_tight_layout_figure</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">subplotspec_list</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span>
             <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="n">h_pad</span><span class="p">,</span> <span class="n">w_pad</span><span class="o">=</span><span class="n">w_pad</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="n">rect</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Figure.align_xlabels"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.align_xlabels">[docs]</a>    <span class="k">def</span> <span class="nf">align_xlabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2780,10 +2780,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Sep 21, 2018.
+      Last updated on Nov 11, 2018.
 	Created using
-	<a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
-	Doc version v3.0.0-12-gea132530f.
+	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+	Doc version v3.0.2-2-g91e2d00a8.
     </div>
 
 <script>

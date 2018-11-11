@@ -6,36 +6,31 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.axes._base &mdash; Matplotlib 3.0.0 documentation</title>
+    <title>matplotlib.axes._base &mdash; Matplotlib 3.0.2 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.0.0 documentation"
+          title="Search within Matplotlib 3.0.2 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.2 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/axes/_base.html" />
 
@@ -48,7 +43,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.2</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -515,6 +510,14 @@ type="text/css" />
     <span class="n">_shared_y_axes</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Grouper</span><span class="p">()</span>
     <span class="n">_twinned_axes</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Grouper</span><span class="p">()</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_hold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@_hold</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">_hold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">pass</span>
+
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">(</span><span class="si">{1[0]:g}</span><span class="s2">,</span><span class="si">{1[1]:g}</span><span class="s2">;</span><span class="si">{1[2]:g}</span><span class="s2">x</span><span class="si">{1[3]:g}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_position</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
@@ -948,7 +951,9 @@ type="text/css" />
         <span class="k">if</span> <span class="n">original</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_originalPosition</span><span class="o">.</span><span class="n">frozen</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">apply_aspect</span><span class="p">()</span>
+            <span class="n">locator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_axes_locator</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">locator</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">apply_aspect</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_position</span><span class="o">.</span><span class="n">frozen</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">):</span>
@@ -970,7 +975,7 @@ type="text/css" />
 <span class="sd">            Determines which position variables to change.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_position</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_position</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="n">which</span><span class="p">)</span>
         <span class="c1"># because this is being called externally to the library we</span>
         <span class="c1"># zero the constrained layout parts.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1221,13 +1226,13 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_facecolor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the Axes facecolor.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the facecolor of the Axes.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">get_facecolor</span><span class="p">()</span>
     <span class="n">get_fc</span> <span class="o">=</span> <span class="n">get_facecolor</span>
 
     <span class="k">def</span> <span class="nf">set_facecolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the Axes facecolor.</span>
+<span class="sd">        Set the facecolor of the Axes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1701,16 +1706,18 @@ type="text/css" />
 <span class="sd">        Call signatures::</span>
 
 <span class="sd">          xmin, xmax, ymin, ymax = axis()</span>
-<span class="sd">          xmin, xmax, ymin, ymax = axis(list_arg)</span>
-<span class="sd">          xmin, xmax, ymin, ymax = axis(string_arg)</span>
+<span class="sd">          xmin, xmax, ymin, ymax = axis(xmin, xmax, ymin, ymax)</span>
+<span class="sd">          xmin, xmax, ymin, ymax = axis(option)</span>
 <span class="sd">          xmin, xmax, ymin, ymax = axis(**kwargs)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        v : List[float] or one of the strings listed below.</span>
-<span class="sd">            Optional positional-only argument</span>
+<span class="sd">        xmin, ymin, xmax, ymax : float, optional</span>
+<span class="sd">            The axis limits to be set. Either none or all of the limits must</span>
+<span class="sd">            be given.</span>
 
-<span class="sd">            If a list, set the axis data limits.  If a string:</span>
+<span class="sd">        option : str</span>
+<span class="sd">            Possible values:</span>
 
 <span class="sd">            ======== ==========================================================</span>
 <span class="sd">            Value    Description</span>
@@ -1729,12 +1736,10 @@ type="text/css" />
 <span class="sd">                     ``xmax-xmin = ymax-ymin``.</span>
 <span class="sd">            ======== ==========================================================</span>
 
-<span class="sd">        emit : bool, optional</span>
-<span class="sd">            Passed to set_{x,y}lim functions, if observers are notified of axis</span>
-<span class="sd">            limit change.</span>
-
-<span class="sd">        xmin, ymin, xmax, ymax : float, optional</span>
-<span class="sd">            The axis limits to be set.</span>
+<span class="sd">        emit : bool, optional, default *True*</span>
+<span class="sd">            Whether observers are notified of the axis limit change.</span>
+<span class="sd">            This option is passed on to `~.Axes.set_xlim` and</span>
+<span class="sd">            `~.Axes.set_ylim`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2173,12 +2178,22 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">update_datalim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xys</span><span class="p">,</span> <span class="n">updatex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">updatey</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the data lim bbox with seq of xy tups or equiv. 2-D array</span>
+<span class="sd">        Extend the `~.Axes.dataLim` BBox to include the given points.</span>
+
+<span class="sd">        If no data is set currently, the BBox will ignore its limits and set</span>
+<span class="sd">        the bound to be the bounds of the xydata (*xys*). Otherwise, it will</span>
+<span class="sd">        compute the bounds of the union of its current data and the data in</span>
+<span class="sd">        *xys*.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xys : 2D array-like</span>
+<span class="sd">            The points to include in the data limits BBox. This can be either</span>
+<span class="sd">            a list of (x, y) tuples or a Nx2 array.</span>
+
+<span class="sd">        updatex, updatey : bool, optional, default *True*</span>
+<span class="sd">            Whether to update the x/y limits.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># if no data is set currently, the bbox will ignore its</span>
-        <span class="c1"># limits and set the bound to be the bounds of the xydata.</span>
-        <span class="c1"># Otherwise, it will compute the bounds of it&#39;s current data</span>
-        <span class="c1"># and the data in xydata</span>
         <span class="n">xys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xys</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">xys</span><span class="p">):</span>
             <span class="k">return</span>
@@ -2188,8 +2203,12 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">update_datalim_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the datalim to include the given</span>
-<span class="sd">        :class:`~matplotlib.transforms.Bbox` *bounds*</span>
+<span class="sd">        Extend the `~.Axes.datalim` BBox to include the given</span>
+<span class="sd">        `~matplotlib.transforms.Bbox`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bounds : `~matplotlib.transforms.Bbox`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dataLim</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">mtransforms</span><span class="o">.</span><span class="n">Bbox</span><span class="o">.</span><span class="n">union</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dataLim</span><span class="p">,</span> <span class="n">bounds</span><span class="p">]))</span>
 
@@ -2765,19 +2784,38 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">get_axisbelow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get whether axis ticks and gridlines are above or below most artists.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        axisbelow : bool or &#39;line&#39;</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_axisbelow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axisbelow</span>
 
     <span class="k">def</span> <span class="nf">set_axisbelow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the zorder for the axes ticks and gridlines.</span>
+<span class="sd">        Set whether axis ticks and gridlines are above or below most artists.</span>
+
+<span class="sd">        This controls the zorder of the ticks and gridlines. For more</span>
+<span class="sd">        information on the zorder see :doc:`/gallery/misc/zorder_demo`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        b : bool or &#39;line&#39;</span>
-<span class="sd">            ``True`` corresponds to a zorder of 0.5, ``False`` to a zorder of</span>
-<span class="sd">            2.5, and ``&quot;line&quot;`` to a zorder of 1.5.</span>
+<span class="sd">            Possible values:</span>
 
+<span class="sd">            - *True* (zorder = 0.5): Ticks and gridlines are below all Artists.</span>
+<span class="sd">            - &#39;line&#39; (zorder = 1.5): Ticks and gridlines are above patches (</span>
+<span class="sd">              e.g. rectangles) but still below lines / markers.</span>
+<span class="sd">            - *False* (zorder = 2.5): Ticks and gridlines are above patches</span>
+<span class="sd">              and lines / markers.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_axisbelow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axisbelow</span> <span class="o">=</span> <span class="n">axisbelow</span> <span class="o">=</span> <span class="n">validate_axisbelow</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">axisbelow</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -2837,7 +2875,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">ticklabel_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">useOffset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useLocale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useMathText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the `~matplotlib.ticker.ScalarFormatter` used by</span>
 <span class="sd">        default for linear axes.</span>
 
@@ -2852,10 +2890,10 @@ type="text/css" />
 <span class="sd">          *scilimits*      (m, n), pair of integers; if *style*</span>
 <span class="sd">                           is &#39;sci&#39;, scientific notation will</span>
 <span class="sd">                           be used for numbers outside the range</span>
-<span class="sd">                           10`m`:sup: to 10`n`:sup:.</span>
+<span class="sd">                           10\ :sup:`m` to 10\ :sup:`n`.</span>
 <span class="sd">                           Use (0,0) to include all numbers.</span>
 <span class="sd">                           Use (m,m) where m &lt;&gt; 0 to fix the order</span>
-<span class="sd">                           of magnitude to 10`m`:sup:.</span>
+<span class="sd">                           of magnitude to 10\ :sup:`m`.</span>
 <span class="sd">          *useOffset*      [ bool | offset ]; if True,</span>
 <span class="sd">                           the offset will be calculated as needed;</span>
 <span class="sd">                           if False, no offset will be used; if a</span>
@@ -3066,28 +3104,62 @@ type="text/css" />
             <span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="o">**</span><span class="n">ykw</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_axis_off</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Turn off the axis.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turn the x- and y-axis off.</span>
+
+<span class="sd">        This affects the axis lines, ticks, ticklabels, grid and axis labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axison</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">set_axis_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Turn on the axis.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turn the x- and y-axis on.</span>
+
+<span class="sd">        This affects the axis lines, ticks, ticklabels, grid and axis labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axison</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1"># data limits, ticks, tick labels, and formatting</span>
 
     <span class="k">def</span> <span class="nf">invert_xaxis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Invert the x-axis.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Invert the x-axis.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        xaxis_inverted</span>
+<span class="sd">        get_xlim, set_xlim</span>
+<span class="sd">        get_xbound, set_xbound</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">auto</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">xaxis_inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return whether the x-axis is inverted.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return whether the x-axis is inverted.</span>
+
+<span class="sd">        The axis is inverted if the left value is larger than the right value.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        invert_xaxis</span>
+<span class="sd">        get_xlim, set_xlim</span>
+<span class="sd">        get_xbound, set_xbound</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">right</span> <span class="o">&lt;</span> <span class="n">left</span>
 
     <span class="k">def</span> <span class="nf">get_xbound</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the lower and upper x-axis bounds, in increasing order.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the lower and upper x-axis bounds, in increasing order.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_xbound</span>
+<span class="sd">        get_xlim, set_xlim</span>
+<span class="sd">        invert_xaxis, xaxis_inverted</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span>
@@ -3099,9 +3171,19 @@ type="text/css" />
 <span class="sd">        Set the lower and upper numerical bounds of the x-axis.</span>
 
 <span class="sd">        This method will honor axes inversion regardless of parameter order.</span>
-<span class="sd">        It will not change the _autoscaleXon attribute.</span>
+<span class="sd">        It will not change the autoscaling setting (``Axes._autoscaleXon``).</span>
 
-<span class="sd">        .. ACCEPTS: (lower: float, upper: float)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lower, upper : float or None</span>
+<span class="sd">            The lower and upper bounds. If *None*, the respective axis bound</span>
+<span class="sd">            is not modified.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_xbound</span>
+<span class="sd">        get_xlim, set_xlim</span>
+<span class="sd">        invert_xaxis, xaxis_inverted</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">upper</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">iterable</span><span class="p">(</span><span class="n">lower</span><span class="p">):</span>
             <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">lower</span>
@@ -3126,18 +3208,23 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">get_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the x-axis range</span>
+<span class="sd">        Return the x-axis view limits.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        xlimits : tuple</span>
-<span class="sd">            Returns the current x-axis limits as the tuple</span>
-<span class="sd">            (`left`, `right`).</span>
+<span class="sd">        left, right : (float, float)</span>
+<span class="sd">            The current x-axis limits in data coordinates.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_xlim</span>
+<span class="sd">        set_xbound, get_xbound</span>
+<span class="sd">        invert_xaxis, xaxis_inverted</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The x-axis may be inverted, in which case the `left` value will</span>
-<span class="sd">        be greater than the `right` value.</span>
+<span class="sd">        The x-axis may be inverted, in which case the *left* value will</span>
+<span class="sd">        be greater than the *right* value.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewLim</span><span class="o">.</span><span class="n">intervalx</span><span class="p">)</span>
@@ -3163,22 +3250,23 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">set_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="o">*</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the data limits for the x-axis</span>
+<span class="sd">        Set the x-axis view limits.</span>
 
 <span class="sd">        .. ACCEPTS: (left: float, right: float)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        left : scalar, optional</span>
-<span class="sd">            The left xlim (default: None, which leaves the left limit</span>
-<span class="sd">            unchanged).</span>
+<span class="sd">            The left xlim in data coordinates. Passing *None* leaves the</span>
+<span class="sd">            limit unchanged.</span>
+
 <span class="sd">            The left and right xlims may be passed as the tuple</span>
 <span class="sd">            (`left`, `right`) as the first positional argument (or as</span>
 <span class="sd">            the `left` keyword argument).</span>
 
 <span class="sd">        right : scalar, optional</span>
-<span class="sd">            The right xlim (default: None, which leaves the right limit</span>
-<span class="sd">            unchanged).</span>
+<span class="sd">            The right xlim in data coordinates. Passing *None* leaves the</span>
+<span class="sd">            limit unchanged.</span>
 
 <span class="sd">        emit : bool, optional</span>
 <span class="sd">            Whether to notify observers of limit change (default: True).</span>
@@ -3190,17 +3278,23 @@ type="text/css" />
 <span class="sd">        xmin, xmax : scalar, optional</span>
 <span class="sd">            These arguments are deprecated and will be removed in a future</span>
 <span class="sd">            version.  They are equivalent to left and right respectively,</span>
-<span class="sd">            and it is an error to pass both `xmin` and `left` or</span>
-<span class="sd">            `xmax` and `right`.</span>
+<span class="sd">            and it is an error to pass both *xmin* and *left* or</span>
+<span class="sd">            *xmax* and *right*.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        xlimits : tuple</span>
-<span class="sd">            Returns the new x-axis limits as (`left`, `right`).</span>
+<span class="sd">        left, right : (float, float)</span>
+<span class="sd">            The new x-axis limits in data coordinates.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_xlim</span>
+<span class="sd">        set_xbound, get_xbound</span>
+<span class="sd">        invert_xaxis, xaxis_inverted</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The `left` value may be greater than the `right` value, in which</span>
+<span class="sd">        The *left* value may be greater than the *right* value, in which</span>
 <span class="sd">        case the x-axis values will decrease from left to right.</span>
 
 <span class="sd">        Examples</span>
@@ -3214,7 +3308,7 @@ type="text/css" />
 <span class="sd">        &gt;&gt;&gt; set_xlim(right=right_lim)</span>
 
 <span class="sd">        Limits may be passed in reverse order to flip the direction of</span>
-<span class="sd">        the x-axis. For example, suppose `x` represents the number of</span>
+<span class="sd">        the x-axis. For example, suppose ``x`` represents the number of</span>
 <span class="sd">        years before present. The x-axis limits might be set like the</span>
 <span class="sd">        following so 5000 years ago is on the left of the plot and the</span>
 <span class="sd">        present is on the right.</span>
@@ -3288,9 +3382,14 @@ type="text/css" />
         <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span>
 
     <span class="k">def</span> <span class="nf">get_xscale</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the x-axis scale as string.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_xscale</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_scale</span><span class="p">()</span>
-    <span class="n">get_xscale</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;Return the xaxis scale string: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span>
-        <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mscale</span><span class="o">.</span><span class="n">get_scale_names</span><span class="p">()))</span>
 
     <span class="k">def</span> <span class="nf">set_xscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3299,22 +3398,24 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        value : {&quot;linear&quot;, &quot;log&quot;, &quot;symlog&quot;, &quot;logit&quot;, ...}</span>
-<span class="sd">            scaling strategy to apply</span>
+<span class="sd">            The axis scale type to apply.</span>
+
+<span class="sd">        **kwargs</span>
+<span class="sd">            Different keyword arguments are accepted, depending on the scale.</span>
+<span class="sd">            See the respective class keyword arguments:</span>
+
+<span class="sd">            - `matplotlib.scale.LinearScale`</span>
+<span class="sd">            - `matplotlib.scale.LogScale`</span>
+<span class="sd">            - `matplotlib.scale.SymmetricalLogScale`</span>
+<span class="sd">            - `matplotlib.scale.LogitScale`</span>
+
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Different kwargs are accepted, depending on the scale. See</span>
-<span class="sd">        the `~matplotlib.scale` module for more information.</span>
-
-<span class="sd">        See also</span>
-<span class="sd">        --------</span>
-<span class="sd">        matplotlib.scale.LinearScale : linear transform</span>
-
-<span class="sd">        matplotlib.scale.LogTransform : log transform</span>
-
-<span class="sd">        matplotlib.scale.SymmetricalLogTransform : symlog transform</span>
-
-<span class="sd">        matplotlib.scale.LogisticTransform : logit transform</span>
+<span class="sd">        By default, Matplotlib supports the above mentioned scales.</span>
+<span class="sd">        Additionally, custom scales may be registered using</span>
+<span class="sd">        `matplotlib.scale.register_scale`. These scales can then also</span>
+<span class="sd">        be used here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_shared_x_axes</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">get_siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -3431,16 +3532,42 @@ type="text/css" />
         <span class="k">return</span> <span class="n">ret</span>
 
     <span class="k">def</span> <span class="nf">invert_yaxis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Invert the y-axis.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Invert the y-axis.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        yaxis_inverted</span>
+<span class="sd">        get_ylim, set_ylim</span>
+<span class="sd">        get_ybound, set_ybound</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">auto</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">yaxis_inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return whether the y-axis is inverted.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return whether the y-axis is inverted.</span>
+
+<span class="sd">        The axis is inverted if the bottom value is larger than the top value.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        invert_yaxis</span>
+<span class="sd">        get_ylim, set_ylim</span>
+<span class="sd">        get_ybound, set_ybound</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">top</span> <span class="o">&lt;</span> <span class="n">bottom</span>
 
     <span class="k">def</span> <span class="nf">get_ybound</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the lower and upper y-axis bounds, in increasing order.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the lower and upper y-axis bounds, in increasing order.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_ybound</span>
+<span class="sd">        get_ylim, set_ylim</span>
+<span class="sd">        invert_yaxis, yaxis_inverted</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">bottom</span> <span class="o">&lt;</span> <span class="n">top</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span>
@@ -3450,10 +3577,21 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">set_ybound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the lower and upper numerical bounds of the y-axis.</span>
-<span class="sd">        This method will honor axes inversion regardless of parameter order.</span>
-<span class="sd">        It will not change the _autoscaleYon attribute.</span>
 
-<span class="sd">        .. ACCEPTS: (lower: float, upper: float)</span>
+<span class="sd">        This method will honor axes inversion regardless of parameter order.</span>
+<span class="sd">        It will not change the autoscaling setting (``Axes._autoscaleYon``).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lower, upper : float or None</span>
+<span class="sd">            The lower and upper bounds. If *None*, the respective axis bound</span>
+<span class="sd">            is not modified.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_ybound</span>
+<span class="sd">        get_ylim, set_ylim</span>
+<span class="sd">        invert_yaxis, yaxis_inverted</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">upper</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">iterable</span><span class="p">(</span><span class="n">lower</span><span class="p">):</span>
             <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">lower</span>
@@ -3478,18 +3616,23 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">get_ylim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the y-axis range</span>
+<span class="sd">        Return the y-axis view limits.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        ylimits : tuple</span>
-<span class="sd">            Returns the current y-axis limits as the tuple</span>
-<span class="sd">            (`bottom`, `top`).</span>
+<span class="sd">        bottom, top : (float, float)</span>
+<span class="sd">            The current y-axis limits in data coordinates.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_ylim</span>
+<span class="sd">        set_ybound, get_ybound</span>
+<span class="sd">        invert_yaxis, yaxis_inverted</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The y-axis may be inverted, in which case the `bottom` value</span>
-<span class="sd">        will be greater than the `top` value.</span>
+<span class="sd">        The y-axis may be inverted, in which case the *bottom* value</span>
+<span class="sd">        will be greater than the *top* value.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewLim</span><span class="o">.</span><span class="n">intervaly</span><span class="p">)</span>
@@ -3497,45 +3640,52 @@ type="text/css" />
     <span class="k">def</span> <span class="nf">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="o">*</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the data limits for the y-axis</span>
+<span class="sd">        Set the y-axis view limits.</span>
 
 <span class="sd">        .. ACCEPTS: (bottom: float, top: float)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        bottom : scalar, optional</span>
-<span class="sd">            The bottom ylim (default: None, which leaves the bottom</span>
-<span class="sd">            limit unchanged).</span>
+<span class="sd">            The bottom ylim in data coordinates. Passing *None* leaves the</span>
+<span class="sd">            limit unchanged.</span>
+
 <span class="sd">            The bottom and top ylims may be passed as the tuple</span>
 <span class="sd">            (`bottom`, `top`) as the first positional argument (or as</span>
 <span class="sd">            the `bottom` keyword argument).</span>
 
 <span class="sd">        top : scalar, optional</span>
-<span class="sd">            The top ylim (default: None, which leaves the top limit</span>
-<span class="sd">            unchanged).</span>
+<span class="sd">            The top ylim in data coordinates. Passing *None* leaves the</span>
+<span class="sd">            limit unchanged.</span>
 
 <span class="sd">        emit : bool, optional</span>
 <span class="sd">            Whether to notify observers of limit change (default: True).</span>
 
 <span class="sd">        auto : bool or None, optional</span>
-<span class="sd">            Whether to turn on autoscaling of the y-axis. True turns on,</span>
-<span class="sd">            False turns off (default action), None leaves unchanged.</span>
+<span class="sd">            Whether to turn on autoscaling of the y-axis. *True* turns on,</span>
+<span class="sd">            *False* turns off (default action), *None* leaves unchanged.</span>
 
 <span class="sd">        ymin, ymax : scalar, optional</span>
 <span class="sd">            These arguments are deprecated and will be removed in a future</span>
 <span class="sd">            version.  They are equivalent to bottom and top respectively,</span>
-<span class="sd">            and it is an error to pass both `xmin` and `bottom` or</span>
-<span class="sd">            `xmax` and `top`.</span>
+<span class="sd">            and it is an error to pass both *ymin* and *bottom* or</span>
+<span class="sd">            *ymax* and *top*.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        ylimits : tuple</span>
-<span class="sd">            Returns the new y-axis limits as (`bottom`, `top`).</span>
+<span class="sd">        bottom, top : (float, float)</span>
+<span class="sd">            The new y-axis limits in data coordinates.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_ylim</span>
+<span class="sd">        set_ybound, get_ybound</span>
+<span class="sd">        invert_yaxis, yaxis_inverted</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The `bottom` value may be greater than the `top` value, in which</span>
-<span class="sd">        case the y-axis values will decrease from bottom to top.</span>
+<span class="sd">        The *bottom* value may be greater than the *top* value, in which</span>
+<span class="sd">        case the y-axis values will decrease from *bottom* to *top*.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -3548,7 +3698,7 @@ type="text/css" />
 <span class="sd">        &gt;&gt;&gt; set_ylim(top=top_lim)</span>
 
 <span class="sd">        Limits may be passed in reverse order to flip the direction of</span>
-<span class="sd">        the y-axis. For example, suppose `y` represents depth of the</span>
+<span class="sd">        the y-axis. For example, suppose ``y`` represents depth of the</span>
 <span class="sd">        ocean in m. The y-axis limits might be set like the following</span>
 <span class="sd">        so 5000 m depth is at the bottom of the plot and the surface,</span>
 <span class="sd">        0 m, is at the top.</span>
@@ -3570,6 +3720,7 @@ type="text/css" />
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot pass both `ymax` and `top`&#39;</span><span class="p">)</span>
             <span class="n">top</span> <span class="o">=</span> <span class="n">ymax</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_unit_info</span><span class="p">(</span><span class="n">ydata</span><span class="o">=</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span>
         <span class="n">bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_converted_limits</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_yunits</span><span class="p">)</span>
         <span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_converted_limits</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_yunits</span><span class="p">)</span>
 
@@ -3621,9 +3772,14 @@ type="text/css" />
         <span class="k">return</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span>
 
     <span class="k">def</span> <span class="nf">get_yscale</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the x-axis scale as string.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_yscale</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_scale</span><span class="p">()</span>
-    <span class="n">get_yscale</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;Return the yaxis scale string: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span>
-        <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mscale</span><span class="o">.</span><span class="n">get_scale_names</span><span class="p">()))</span>
 
     <span class="k">def</span> <span class="nf">set_yscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3632,22 +3788,24 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        value : {&quot;linear&quot;, &quot;log&quot;, &quot;symlog&quot;, &quot;logit&quot;, ...}</span>
-<span class="sd">            scaling strategy to apply</span>
+<span class="sd">            The axis scale type to apply.</span>
+
+<span class="sd">        **kwargs</span>
+<span class="sd">            Different keyword arguments are accepted, depending on the scale.</span>
+<span class="sd">            See the respective class keyword arguments:</span>
+
+<span class="sd">            - `matplotlib.scale.LinearScale`</span>
+<span class="sd">            - `matplotlib.scale.LogScale`</span>
+<span class="sd">            - `matplotlib.scale.SymmetricalLogScale`</span>
+<span class="sd">            - `matplotlib.scale.LogitScale`</span>
+
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Different kwargs are accepted, depending on the scale. See</span>
-<span class="sd">        the `~matplotlib.scale` module for more information.</span>
-
-<span class="sd">        See also</span>
-<span class="sd">        --------</span>
-<span class="sd">        matplotlib.scale.LinearScale : linear transform</span>
-
-<span class="sd">        matplotlib.scale.LogTransform : log transform</span>
-
-<span class="sd">        matplotlib.scale.SymmetricalLogTransform : symlog transform</span>
-
-<span class="sd">        matplotlib.scale.LogisticTransform : logit transform</span>
+<span class="sd">        By default, Matplotlib supports the above mentioned scales.</span>
+<span class="sd">        Additionally, custom scales may be registered using</span>
+<span class="sd">        `matplotlib.scale.register_scale`. These scales can then also</span>
+<span class="sd">        be used here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_shared_y_axes</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">get_siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -4261,7 +4419,18 @@ type="text/css" />
 <span class="sd">        Artists are excluded either by not being visible or</span>
 <span class="sd">        ``artist.set_in_layout(False)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">artist</span> <span class="k">for</span> <span class="n">artist</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+
+        <span class="n">artists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axison</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frameon</span><span class="p">):</span>
+            <span class="c1"># don&#39;t do bbox on spines if frame not on.</span>
+            <span class="k">for</span> <span class="n">spine</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">artists</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">spine</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">axison</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_axis</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_axis_list</span><span class="p">():</span>
+                <span class="n">artists</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">_axis</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">artist</span> <span class="k">for</span> <span class="n">artist</span> <span class="ow">in</span> <span class="n">artists</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">artist</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()</span> <span class="ow">and</span> <span class="n">artist</span><span class="o">.</span><span class="n">get_in_layout</span><span class="p">())]</span>
 
     <span class="k">def</span> <span class="nf">get_tightbbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">call_axes_locator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -4333,7 +4502,9 @@ type="text/css" />
 
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">bbox_artists</span><span class="p">:</span>
             <span class="n">bbox</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">get_tightbbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">bbox</span><span class="o">.</span><span class="n">height</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span><span class="p">)):</span>
                 <span class="n">bb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
 
         <span class="n">_bbox</span> <span class="o">=</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">Bbox</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
@@ -4433,10 +4604,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Sep 21, 2018.
+      Last updated on Nov 11, 2018.
 	Created using
-	<a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
-	Doc version v3.0.0-12-gea132530f.
+	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+	Doc version v3.0.2-2-g91e2d00a8.
     </div>
 
 <script>

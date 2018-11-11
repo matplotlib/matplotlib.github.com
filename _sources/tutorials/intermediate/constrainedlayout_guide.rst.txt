@@ -28,7 +28,7 @@ a figure. Two ways of doing so are
 * using the respective argument to :func:`~.pyplot.subplots` or
   :func:`~.pyplot.figure`, e.g.::
 
-      plt.subplots(contrained_layout=True)
+      plt.subplots(constrained_layout=True)
 
 * activate it via :ref:`rcParams<matplotlib-rcparams>`, like::
 
@@ -177,10 +177,10 @@ ignored because this option is made for improving the layout via
 
 .. note::
 
-  For the `~.axes.Axes.pcolormesh` kwargs (``pc_kwargs``) we use a dictionary.
-  Below we will assign one colorbar to a number of axes each containing
-  a `~.cm.ScalarMappable`; specifying the norm and colormap ensures
-  the colorbar is accurate for all the axes.
+  For the `~.axes.Axes.pcolormesh` kwargs (``pc_kwargs``) we use a
+  dictionary. Below we will assign one colorbar to a number of axes each
+  containing a `~.cm.ScalarMappable`; specifying the norm and colormap
+  ensures the colorbar is accurate for all the axes.
 
 
 
@@ -205,8 +205,8 @@ ignored because this option is made for improving the layout via
 
 
 If you specify a list of axes (or other iterable container) to the
-``ax`` argument of ``colorbar``, constrained_layout will take space from all
-axes that share the same gridspec.
+``ax`` argument of ``colorbar``, constrained_layout will take space from
+the specified axes.
 
 
 
@@ -222,6 +222,30 @@ axes that share the same gridspec.
 
 
 .. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_006.png
+    :class: sphx-glr-single-img
+
+
+
+
+If you specify a list of axes from inside a grid of axes, the colorbar
+will steal space appropriately, and leave a gap, but all subplots will
+still be the same size.
+
+
+
+.. code-block:: python
+
+
+    fig, axs = plt.subplots(3, 3, figsize=(4, 4), constrained_layout=True)
+    for ax in axs.flatten():
+        im = ax.pcolormesh(arr, **pc_kwargs)
+    fig.colorbar(im, ax=axs[1:, ][:, 1], shrink=0.8)
+    fig.colorbar(im, ax=axs[:, -1], shrink=0.6)
+
+
+
+
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_007.png
     :class: sphx-glr-single-img
 
 
@@ -248,7 +272,7 @@ shrinks when the gridspec-level colorbar is added.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_007.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_008.png
     :class: sphx-glr-single-img
 
 
@@ -272,7 +296,7 @@ it as a list (or other iterable container), as below:
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_008.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_009.png
     :class: sphx-glr-single-img
 
 
@@ -297,7 +321,7 @@ Suptitle
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_009.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_010.png
     :class: sphx-glr-single-img
 
 
@@ -323,7 +347,7 @@ However, constrained-layout does *not* handle legends being created via
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_010.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_011.png
     :class: sphx-glr-single-img
 
 
@@ -336,16 +360,15 @@ However, this will steal space from a subplot layout:
 .. code-block:: python
 
 
-    fig, axs = plt.subplots(2, 2, constrained_layout=True)
-    for ax in axs.flatten()[:-1]:
-        ax.plot(np.arange(10))
-    axs[1, 1].plot(np.arange(10), label='This is a plot')
-    axs[1, 1].legend(loc='center left', bbox_to_anchor=(0.8, 0.5))
+    fig, axs = plt.subplots(1, 2, figsize=(4, 2), constrained_layout=True)
+    axs[0].plot(np.arange(10))
+    axs[1].plot(np.arange(10), label='This is a plot')
+    axs[1].legend(loc='center left', bbox_to_anchor=(0.8, 0.5))
 
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_011.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_012.png
     :class: sphx-glr-single-img
 
 
@@ -357,48 +380,29 @@ Of course this can mean the legend ends up
 cropped, but can be useful if the plot is subsequently called
 with ``fig.savefig('outname.png', bbox_inches='tight')``.  Note,
 however, that the legend's ``get_in_layout`` status will have to be
-toggled again to make the saved file work:
+toggled again to make the saved file work, and we must manually
+trigger a draw if we want constrained_layout to adjust the size
+of the axes before printing.
 
 
 
 .. code-block:: python
 
 
-    fig, axs = plt.subplots(2, 2, constrained_layout=True)
-    for ax in axs.flatten()[:-1]:
-        ax.plot(np.arange(10))
-    axs[1, 1].plot(np.arange(10), label='This is a plot')
-    leg = axs[1, 1].legend(loc='center left', bbox_to_anchor=(0.8, 0.5))
+    fig, axs = plt.subplots(1, 2, figsize=(4, 2), constrained_layout=True)
+
+    axs[0].plot(np.arange(10))
+    axs[1].plot(np.arange(10), label='This is a plot')
+    leg = axs[1].legend(loc='center left', bbox_to_anchor=(0.8, 0.5))
     leg.set_in_layout(False)
-    wanttoprint = False
-    if wanttoprint:
-        leg.set_in_layout(True)
-        fig.do_constrained_layout(False)
-        fig.savefig('outname.png', bbox_inches='tight')
-
-
-
-
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_012.png
-    :class: sphx-glr-single-img
-
-
-
-
-A better way to get around this awkwardness is to simply
-use a legend for the figure:
-
-
-
-.. code-block:: python
-
-    fig, axs = plt.subplots(2, 2, constrained_layout=True)
-    for ax in axs.flatten()[:-1]:
-        ax.plot(np.arange(10))
-    lines = axs[1, 1].plot(np.arange(10), label='This is a plot')
-    labels = [l.get_label() for l in lines]
-    leg = fig.legend(lines, labels, loc='center left',
-                     bbox_to_anchor=(0.8, 0.5), bbox_transform=axs[1, 1].transAxes)
+    # trigger a draw so that constrained_layout is executed once
+    # before we turn it off when printing....
+    fig.canvas.draw()
+    # we want the legend included in the bbox_inches='tight' calcs.
+    leg.set_in_layout(True)
+    # we don't want the layout to change at this point.
+    fig.set_constrained_layout(False)
+    fig.savefig('CL01.png', bbox_inches='tight', dpi=100)
 
 
 
@@ -406,6 +410,42 @@ use a legend for the figure:
 .. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_013.png
     :class: sphx-glr-single-img
 
+
+
+
+The saved file looks like:
+
+.. image:: /_static/constrained_layout/CL01.png
+   :align: center
+
+A better way to get around this awkwardness is to simply
+use the legend method provided by `.Figure.legend`:
+
+
+
+.. code-block:: python
+
+    fig, axs = plt.subplots(1, 2, figsize=(4, 2), constrained_layout=True)
+    axs[0].plot(np.arange(10))
+    lines = axs[1].plot(np.arange(10), label='This is a plot')
+    labels = [l.get_label() for l in lines]
+    leg = fig.legend(lines, labels, loc='center left',
+                     bbox_to_anchor=(0.8, 0.5), bbox_transform=axs[1].transAxes)
+    fig.savefig('CL02.png', bbox_inches='tight', dpi=100)
+
+
+
+
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_014.png
+    :class: sphx-glr-single-img
+
+
+
+
+The saved file looks like:
+
+.. image:: /_static/constrained_layout/CL02.png
+   :align: center
 
 
 
@@ -447,12 +487,12 @@ inches by the keyword arguments ``w_pad`` and ``h_pad`` to the function
 
     *
 
-      .. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_014.png
+      .. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_015.png
             :class: sphx-glr-multi-img
 
     *
 
-      .. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_015.png
+      .. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_016.png
             :class: sphx-glr-multi-img
 
 
@@ -481,7 +521,7 @@ the above, but the space between subplots does.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_016.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_017.png
     :class: sphx-glr-single-img
 
 
@@ -490,9 +530,11 @@ the above, but the space between subplots does.
 Spacing with colorbars
 -----------------------
 
-Colorbars still respect the ``w_pad`` and ``h_pad`` values. However they will
-be ``wspace`` and ``hsapce`` apart from other subplots.  Note the use of a
-``pad`` kwarg here in the ``colorbar`` call.  It defaults to 0.02 of the size
+Colorbars will be placed ``wspace`` and ``hsapce`` apart from other
+subplots. The padding between the colorbar and the axis it is
+attached to will never be less than ``w_pad`` (for a vertical colorbar)
+or ``h_pad`` (for a horizontal colorbar). Note the use of the ``pad`` kwarg
+here in the ``colorbar`` call.  It defaults to 0.02 of the size
 of the axis it is attached to.
 
 
@@ -503,7 +545,7 @@ of the axis it is attached to.
     fig, axs = plt.subplots(2, 2, constrained_layout=True)
     for ax in axs.flatten():
         pc = ax.pcolormesh(arr, **pc_kwargs)
-        fig.colorbar(im, ax=ax, shrink=0.6, pad=0)
+        fig.colorbar(pc, ax=ax, shrink=0.6, pad=0)
         ax.set_xticklabels('')
         ax.set_yticklabels('')
     fig.set_constrained_layout_pads(w_pad=2./72., h_pad=2./72.,
@@ -512,7 +554,7 @@ of the axis it is attached to.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_017.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_018.png
     :class: sphx-glr-single-img
 
 
@@ -539,7 +581,7 @@ for ``pad`` to be non-zero.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_018.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_019.png
     :class: sphx-glr-single-img
 
 
@@ -572,7 +614,7 @@ They all have the prefix ``figure.constrained_layout``:
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_019.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_020.png
     :class: sphx-glr-single-img
 
 
@@ -605,7 +647,7 @@ Note that in what follows ``constrained_layout=True``
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_020.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_021.png
     :class: sphx-glr-single-img
 
 
@@ -643,7 +685,7 @@ convenenience functions ``add_gridspec`` and ``subgridspec``
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_021.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_022.png
     :class: sphx-glr-single-img
 
 
@@ -678,7 +720,7 @@ they need to be in the same gridspec:
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_022.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_023.png
     :class: sphx-glr-single-img
 
 
@@ -722,7 +764,7 @@ subplots to be the same size you only needed one gridspec.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_023.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_024.png
     :class: sphx-glr-single-img
 
 
@@ -748,7 +790,7 @@ space for the axes that is moved).
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_024.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_025.png
     :class: sphx-glr-single-img
 
 
@@ -781,10 +823,25 @@ of location due to small differences in how the backends render fonts.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_025.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_026.png
     :class: sphx-glr-single-img
 
 
+
+
+Manually turning off ``constrained_layout``
+===========================================
+
+``constrained_layout`` usually adjusts the axes positions on each draw
+of the figure.  If you want to get the spacing provided by
+``constrained_layout`` but not have it update, then do the initial
+draw and then call ``fig.set_constrained_layout(False)``.
+This is potentially useful for animations where the tick labels may
+change length.
+
+Note that ``constrained_layout`` is turned off for ``ZOOM`` and ``PAN``
+GUI events for the backends that use the toolbar.  This prevents the
+axes from changing position during zooming and panning.
 
 
 Limitations
@@ -818,7 +875,7 @@ to yield a nice layout:
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_026.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_027.png
     :class: sphx-glr-single-img
 
 
@@ -845,7 +902,7 @@ Of course that layout is possible using a gridspec:
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_027.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_028.png
     :class: sphx-glr-single-img
 
 
@@ -875,7 +932,7 @@ each call creates a different parent gridspec.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_028.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_029.png
     :class: sphx-glr-single-img
 
 
@@ -905,7 +962,7 @@ to use ``gridspec`` directly
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_029.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_030.png
     :class: sphx-glr-single-img
 
 
@@ -1022,7 +1079,7 @@ In the code, this is accomplished by the entries in
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_030.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_031.png
     :class: sphx-glr-single-img
 
 
@@ -1067,7 +1124,7 @@ space for the larger labels on the left-hand plot.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_031.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_032.png
     :class: sphx-glr-single-img
 
 
@@ -1105,7 +1162,7 @@ associated with a gridspec.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_032.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_033.png
     :class: sphx-glr-single-img
 
 
@@ -1134,7 +1191,7 @@ those two points.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_033.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_034.png
     :class: sphx-glr-single-img
 
 
@@ -1177,7 +1234,7 @@ height of the 1-row Axes to be less than half the height of the
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_034.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_035.png
     :class: sphx-glr-single-img
 
 
@@ -1209,7 +1266,7 @@ than the larger.
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_035.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_036.png
     :class: sphx-glr-single-img
 
 
@@ -1243,7 +1300,7 @@ This is done at the start of
 
 
 
-.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_036.png
+.. image:: /tutorials/intermediate/images/sphx_glr_constrainedlayout_guide_037.png
     :class: sphx-glr-single-img
 
 
@@ -1259,7 +1316,7 @@ In particular the x and ytick labels can change.  If this happens, then
 we should probably call the whole routine twice.
 
 
-**Total running time of the script:** ( 0 minutes  2.336 seconds)
+**Total running time of the script:** ( 0 minutes  3.780 seconds)
 
 
 .. _sphx_glr_download_tutorials_intermediate_constrainedlayout_guide.py:

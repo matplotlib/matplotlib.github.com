@@ -6,36 +6,31 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.axes._axes &mdash; Matplotlib 3.0.0 documentation</title>
+    <title>matplotlib.axes._axes &mdash; Matplotlib 3.0.2 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.0.0 documentation"
+          title="Search within Matplotlib 3.0.2 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html"
 />
     <link rel="search" title="Search" href="../../../search.html"
 />
-    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.2 documentation" href="../../../index.html" />
     <link rel="up" title="matplotlib" href="../../matplotlib.html" />
   <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/axes/_axes.html" />
 
@@ -48,7 +43,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.2</span></div>
     <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -111,7 +106,8 @@ type="text/css" />
           <div class="body">
             
   <h1>Source code for matplotlib.axes._axes</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span></span><span class="kn">import</span> <span class="nn">collections.abc</span>
+<span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -241,6 +237,14 @@ type="text/css" />
 <span class="sd">    instance.  The events you can connect to are &#39;xlim_changed&#39; and</span>
 <span class="sd">    &#39;ylim_changed&#39; and the callback will be called with func(*ax*)</span>
 <span class="sd">    where *ax* is the :class:`Axes` instance.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataLim : `.BBox`</span>
+<span class="sd">        The bounding box enclosing all data displayed in the Axes.</span>
+<span class="sd">    viewLim : `.BBox`</span>
+<span class="sd">        The view limits in data coordinates.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">### Labelling, legend and texts</span>
 
@@ -696,16 +700,14 @@ type="text/css" />
             <span class="n">bboxins</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">transFigure</span><span class="p">)</span>
             <span class="n">rectbbox</span> <span class="o">=</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">Bbox</span><span class="o">.</span><span class="n">from_bounds</span><span class="p">(</span>
                         <span class="o">*</span><span class="n">bounds</span><span class="p">)</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">rectbbox</span><span class="o">.</span><span class="n">x0</span> <span class="o">&lt;</span> <span class="n">bboxins</span><span class="o">.</span><span class="n">x0</span><span class="p">:</span>
-                <span class="n">sig</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">sig</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="k">if</span> <span class="n">sig</span><span class="o">*</span><span class="n">rectbbox</span><span class="o">.</span><span class="n">y0</span> <span class="o">&lt;</span> <span class="n">sig</span><span class="o">*</span><span class="n">bboxins</span><span class="o">.</span><span class="n">y0</span><span class="p">:</span>
-                <span class="n">connects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">connects</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">connects</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">connects</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">rectbbox</span><span class="o">.</span><span class="n">x0</span> <span class="o">&lt;</span> <span class="n">bboxins</span><span class="o">.</span><span class="n">x0</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">rectbbox</span><span class="o">.</span><span class="n">x1</span> <span class="o">&lt;</span> <span class="n">bboxins</span><span class="o">.</span><span class="n">x1</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="n">rectbbox</span><span class="o">.</span><span class="n">y0</span> <span class="o">&lt;</span> <span class="n">bboxins</span><span class="o">.</span><span class="n">y0</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="n">rectbbox</span><span class="o">.</span><span class="n">y1</span> <span class="o">&lt;</span> <span class="n">bboxins</span><span class="o">.</span><span class="n">y1</span>
+            <span class="n">connects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="n">x0</span> <span class="o">^</span> <span class="n">y0</span><span class="p">)</span>
+            <span class="n">connects</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="n">x0</span> <span class="o">==</span> <span class="n">y1</span><span class="p">)</span>
+            <span class="n">connects</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="n">x1</span> <span class="o">==</span> <span class="n">y0</span><span class="p">)</span>
+            <span class="n">connects</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="n">x1</span> <span class="o">^</span> <span class="n">y1</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">rectpatch</span><span class="p">,</span> <span class="n">connects</span></div>
 
@@ -837,8 +839,8 @@ type="text/css" />
         <span class="k">return</span> <span class="n">t</span></div>
 
 <div class="viewcode-block" id="Axes.annotate"><a class="viewcode-back" href="../../../api/_as_gen/matplotlib.axes.Axes.annotate.html#matplotlib.axes.Axes.annotate">[docs]</a>    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent_interpd</span>
-    <span class="k">def</span> <span class="nf">annotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">mtext</span><span class="o">.</span><span class="n">Annotation</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">annotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">mtext</span><span class="o">.</span><span class="n">Annotation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">a</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="n">mtransforms</span><span class="o">.</span><span class="n">IdentityTransform</span><span class="p">())</span>
         <span class="k">if</span> <span class="s1">&#39;clip_on&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">a</span><span class="o">.</span><span class="n">set_clip_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
@@ -1624,7 +1626,7 @@ type="text/css" />
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        scatter : XY scatter plot with markers of variing size and/or color (</span>
+<span class="sd">        scatter : XY scatter plot with markers of varying size and/or color (</span>
 <span class="sd">            sometimes also called bubble chart).</span>
 
 
@@ -3055,6 +3057,8 @@ type="text/css" />
 <span class="sd">                upper errors.</span>
 <span class="sd">            - *None*: No errorbar.</span>
 
+<span class="sd">            Note that all error arrays should have *positive* values.</span>
+
 <span class="sd">            See :doc:`/gallery/statistics/errorbar_features`</span>
 <span class="sd">            for an example on the usage of ``xerr`` and ``yerr``.</span>
 
@@ -4142,7 +4146,7 @@ type="text/css" />
 <span class="sd">            The marker size in points**2.</span>
 <span class="sd">            Default is ``rcParams[&#39;lines.markersize&#39;] ** 2``.</span>
 
-<span class="sd">        c : color, sequence, or sequence of color, optional, default: &#39;b&#39;</span>
+<span class="sd">        c : color, sequence, or sequence of color, optional</span>
 <span class="sd">            The marker color. Possible values:</span>
 
 <span class="sd">            - A single color format string.</span>
@@ -4158,10 +4162,18 @@ type="text/css" />
 <span class="sd">            matching will have precedence in case of a size matching with *x*</span>
 <span class="sd">            and *y*.</span>
 
-<span class="sd">        marker : `~matplotlib.markers.MarkerStyle`, optional, default: &#39;o&#39;</span>
+<span class="sd">            Defaults to ``None``. In that case the marker color is determined</span>
+<span class="sd">            by the value of ``color``, ``facecolor`` or ``facecolors``. In case</span>
+<span class="sd">            those are not specified or ``None``, the marker color is determined</span>
+<span class="sd">            by the next color of the ``Axes``&#39; current &quot;shape and fill&quot; color</span>
+<span class="sd">            cycle. This cycle defaults to :rc:`axes.prop_cycle`.</span>
+
+<span class="sd">        marker : `~matplotlib.markers.MarkerStyle`, optional</span>
 <span class="sd">            The marker style. *marker* can be either an instance of the class</span>
 <span class="sd">            or the text shorthand for a particular marker.</span>
-<span class="sd">            See `~matplotlib.markers` for more information marker styles.</span>
+<span class="sd">            Defaults to ``None``, in which case it takes the value of</span>
+<span class="sd">            :rc:`scatter.marker` = &#39;o&#39;.</span>
+<span class="sd">            See `~matplotlib.markers` for more information about marker styles.</span>
 
 <span class="sd">        cmap : `~matplotlib.colors.Colormap`, optional, default: None</span>
 <span class="sd">            A `.Colormap` instance or registered colormap name. *cmap* is only</span>
@@ -4294,7 +4306,12 @@ type="text/css" />
         <span class="n">valid_shape</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># will be put to the test!</span>
         <span class="n">n_elem</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># used only for (some) exceptions</span>
 
-        <span class="k">if</span> <span class="n">c_none</span> <span class="ow">or</span> <span class="n">co</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">c_none</span> <span class="ow">or</span>
+                <span class="n">co</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
+                    <span class="nb">isinstance</span><span class="p">(</span><span class="n">cbook</span><span class="o">.</span><span class="n">safe_first_element</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="nb">str</span><span class="p">))):</span>
             <span class="n">c_array</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>  <span class="c1"># First, does &#39;c&#39; look suitable for value-mapping?</span>
@@ -6550,7 +6567,7 @@ type="text/css" />
 <span class="sd">            The values of the histogram bins. See *normed* or *density*</span>
 <span class="sd">            and *weights* for a description of the possible semantics.</span>
 <span class="sd">            If input *x* is an array, then this is an array of length</span>
-<span class="sd">            *nbins*. If input is a sequence arrays</span>
+<span class="sd">            *nbins*. If input is a sequence of arrays</span>
 <span class="sd">            ``[data1, data2,..]``, then this is a list of arrays with</span>
 <span class="sd">            the values of the histograms for each of the arrays in the</span>
 <span class="sd">            same order.</span>
@@ -6652,7 +6669,7 @@ type="text/css" />
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">color</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nx</span><span class="p">:</span>
                 <span class="n">error_message</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="s2">&quot;color kwarg must have one color per data set. </span><span class="si">%d</span><span class="s2"> data &quot;</span>
-                    <span class="s2">&quot;sets and </span><span class="si">%d</span><span class="s2"> colors were provided&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">color</span><span class="p">),</span> <span class="n">nx</span><span class="p">))</span>
+                    <span class="s2">&quot;sets and </span><span class="si">%d</span><span class="s2"> colors were provided&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">color</span><span class="p">)))</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
 
         <span class="c1"># If bins are not specified either explicitly or via range,</span>
@@ -6861,6 +6878,8 @@ type="text/css" />
             <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">)]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">lab</span><span class="p">)</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">label</span><span class="p">]</span>
 
@@ -8210,10 +8229,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Sep 21, 2018.
+      Last updated on Nov 11, 2018.
 	Created using
-	<a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
-	Doc version v3.0.0-12-gea132530f.
+	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+	Doc version v3.0.2-2-g91e2d00a8.
     </div>
 
 <script>

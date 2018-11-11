@@ -6,36 +6,31 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Usage Guide &mdash; Matplotlib 3.0.0 documentation</title>
+    <title>Usage Guide &mdash; Matplotlib 3.0.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/mpl.css"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '3.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.0.0 documentation"
+          title="Search within Matplotlib 3.0.2 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 3.0.0 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.0.2 documentation" href="../../index.html" />
     <link rel="up" title="Tutorials" href="../index.html" />
     <link rel="next" title="Pyplot tutorial" href="pyplot.html" />
     <link rel="prev" title="Tutorials" href="../index.html" />
@@ -50,7 +45,7 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.0</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.0.2</span></div>
     <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -101,7 +96,7 @@ type="text/css" />
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-  <h3><a href="../../contents.html">Table Of Contents</a></h3>
+  <h3><a href="../../contents.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Usage Guide</a><ul>
 <li><a class="reference internal" href="#general-concepts">General Concepts</a></li>
@@ -132,6 +127,7 @@ type="text/css" />
 <li><a class="reference internal" href="#line-segment-simplification">Line segment simplification</a></li>
 <li><a class="reference internal" href="#marker-simplification">Marker simplification</a></li>
 <li><a class="reference internal" href="#splitting-lines-into-smaller-chunks">Splitting lines into smaller chunks</a></li>
+<li><a class="reference internal" href="#legends">Legends</a></li>
 <li><a class="reference internal" href="#using-the-fast-style">Using the <em>fast</em> style</a></li>
 </ul>
 </li>
@@ -283,7 +279,7 @@ input.  Classes that are 'array-like' such as <a class="reference external" href
 and <code class="xref py py-obj docutils literal notranslate"><span class="pre">np.matrix</span></code> may or may not work as intended.  It is best to
 convert these to <code class="xref py py-obj docutils literal notranslate"><span class="pre">np.array</span></code> objects prior to plotting.</p>
 <p>For example, to convert a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.rand.html#numpy.random.rand" title="View documentation for numpy.random.rand"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;abcde&#39;</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;abcde&#39;</span><span class="p">))</span>
 <span class="n">a_asndarray</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">values</span>
 </pre></div>
 </div>
@@ -422,9 +418,9 @@ signature is something like:</p>
 once the graphs get slightly more complex it pays off.</p>
 </div>
 <div class="section" id="backends">
-<h2>Backends<a class="headerlink" href="#backends" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>Backends<a class="headerlink" href="#backends" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="what-is-a-backend">
-<span id="id3"></span><h3>What is a backend?<a class="headerlink" href="#what-is-a-backend" title="Permalink to this headline">¶</a></h3>
+<span id="id4"></span><h3>What is a backend?<a class="headerlink" href="#what-is-a-backend" title="Permalink to this headline">¶</a></h3>
 <p>A lot of documentation on the website and in the mailing lists refers
 to the &quot;backend&quot; and many new users are confused by this term.
 matplotlib targets many different use cases and output formats.  Some
@@ -687,7 +683,7 @@ and turned off via <a class="reference internal" href="../../api/_as_gen/matplot
 <p class="last">Interactive mode works with suitable backends in ipython and in
 the ordinary python shell, but it does <em>not</em> work in the IDLE IDE.
 If the default backend does not support interactivity, an interactive
-backend can be explicitly activated using any of the methods discussed in <a class="reference internal" href="#id3">What is a backend?</a>.</p>
+backend can be explicitly activated using any of the methods discussed in <a class="reference internal" href="#id4">What is a backend?</a>.</p>
 </div>
 <div class="section" id="interactive-example">
 <h3>Interactive example<a class="headerlink" href="#interactive-example" title="Permalink to this headline">¶</a></h3>
@@ -727,7 +723,7 @@ in order to update the plot:</p>
 <p>Start a fresh session as in the previous example, but now
 turn interactive mode off:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<a href="../../api/_as_gen/matplotlib.pyplot.ioff.html#matplotlib.pyplot.ioff" title="View documentation for matplotlib.pyplot.ioff"><span class="n">plt</span><span class="o">.</span><span class="n">ioff</span></a><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
 <a href="../../api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="View documentation for matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">([</span><span class="mf">1.6</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -754,17 +750,17 @@ the plot each time a line in the script adds a new feature.</p>
 more than once in a single script (although sometimes one
 could get away with it); for version 1.0.1 and above, this
 restriction is lifted, so one can write a script like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<a href="../../api/_as_gen/matplotlib.pyplot.ioff.html#matplotlib.pyplot.ioff" title="View documentation for matplotlib.pyplot.ioff"><span class="n">plt</span><span class="o">.</span><span class="n">ioff</span></a><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-    <a href="../../api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="View documentation for matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.rand.html#numpy.random.rand" title="View documentation for numpy.random.rand"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <a href="../../api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="View documentation for matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
     <a href="../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_usage_007.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_usage_007.png" />
-<p>which makes three plots, one at a time.</p>
+<p>which makes three plots, one at a time. I.e. the second plot will show up,
+once the first plot is closed.</p>
 </div>
 <div class="section" id="summary">
 <h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
@@ -782,7 +778,7 @@ to block execution until you have manually destroyed them.</p>
 </div>
 </div>
 <div class="section" id="performance">
-<span id="id4"></span><h2>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h2>
 <p>Whether exploring data in interactive mode or programmatically
 saving lots of plots, rendering performance can be a painful
 bottleneck in your pipeline. Matplotlib provides a couple
@@ -812,7 +808,7 @@ Try interacting with both of them:</p>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 
 <span class="c1"># Setup, and create the data to plot</span>
-<span class="n">y</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.rand.html#numpy.random.rand" title="View documentation for numpy.random.rand"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
 <span class="n">y</span><span class="p">[</span><span class="mi">50000</span><span class="p">:]</span> <span class="o">*=</span> <span class="mi">2</span>
 <span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">50000</span><span class="p">),</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;path.simplify&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -888,7 +884,7 @@ interacting with them:</p>
 <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;path.simplify_threshold&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
 
 <span class="c1"># Setup, and create the data to plot</span>
-<span class="n">y</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.rand.html#numpy.random.rand" title="View documentation for numpy.random.rand"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
 <span class="n">y</span><span class="p">[</span><span class="mi">50000</span><span class="p">:]</span> <span class="o">*=</span> <span class="mi">2</span>
 <span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">50000</span><span class="p">),</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;path.simplify&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -902,6 +898,13 @@ interacting with them:</p>
 <a href="../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="legends">
+<h3>Legends<a class="headerlink" href="#legends" title="Permalink to this headline">¶</a></h3>
+<p>The default legend behavior for axes attempts to find the location
+that covers the fewest data points (<code class="xref py py-obj docutils literal notranslate"><span class="pre">loc='best'</span></code>). This can be a
+very expensive computation if there are lots of data points. In
+this case, you may want to provide a specific location.</p>
 </div>
 <div class="section" id="using-the-fast-style">
 <h3>Using the <em>fast</em> style<a class="headerlink" href="#using-the-fast-style" title="Permalink to this headline">¶</a></h3>
@@ -921,9 +924,9 @@ so that other styles do not overwrite the settings:</p>
 </div>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-introductory-usage-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/usage.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">usage.py</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/44756043dd6d8c4d37f2ae34ec869dde/usage.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">usage.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../../_downloads/usage.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">usage.ipynb</span></code></a></div>
+<a class="reference download internal" download="" href="../../_downloads/60b66634a88a8f759450ae8638e59340/usage.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">usage.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature">Keywords: matplotlib code example, codex, python plot, pyplot
 <a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -941,10 +944,10 @@ so that other styles do not overwrite the settings:</p>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Sep 21, 2018.
+      Last updated on Nov 11, 2018.
 	Created using
-	<a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
-	Doc version v3.0.0-12-gea132530f.
+	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+	Doc version v3.0.2-2-g91e2d00a8.
     </div>
 
 <script>
