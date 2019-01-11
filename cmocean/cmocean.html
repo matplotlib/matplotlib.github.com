@@ -127,6 +127,117 @@ can be input instead, as [mx1] in single quotes with a #.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="cmocean.tools.crop">
+<code class="descclassname">cmocean.tools.</code><code class="descname">crop</code><span class="sig-paren">(</span><em>cmapin</em>, <em>vmin</em>, <em>vmax</em>, <em>pivot</em>, <em>N=None</em>, <em>dmax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#cmocean.tools.crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop end or ends of a diverging colormap by vmin/vmax values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cmap</strong> – A colormap object, like cmocean.cm.matter.</li>
+<li><strong>vmin/vmax</strong> – vmin/vmax for use in plot with colormap.</li>
+<li><strong>pivot</strong> – center point to be used in plot with diverging colormap.</li>
+<li><strong>N=None</strong> – User can specify the number of rows for the outgoing colormap.
+If unspecified, N from incoming colormap will be used and values will
+be interpolated as needed to fill in rows.</li>
+<li><strong>dmax=None</strong> – dmax is the highest number to be included in a plot with
+the colormap; values higher in magnitude than dmax are removed from both
+ends of colormap. It should be less than abs(vmin) and abs(vmax), which
+should be equal for this parameter to be used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Outputs resultant colormap object.</p>
+<dl class="docutils">
+<dt>This function can be used for sequential and other non-diverging colormaps</dt>
+<dd>but it is easier to use that way through crop_by_percent().</dd>
+<dt>This should be useful for plotting bathymetry and topography data with the</dt>
+<dd>topo colormap when max bathymetry value is different from max topography.</dd>
+<dt>Example usage:</dt>
+<dd><p class="first"># example for crop on min end of diverging colormap
+vmin = -2; vmax = 5; pivot = 0
+newcmap = crop(cmocean.cm.curl, vmin, vmax, pivot)
+A = np.random.randint(vmin, vmax, (5,5))
+plt.pcolormesh(A, vmin=vmin, vmax=vmax, cmap=newcmap)
+plt.colorbar()</p>
+<p class="last"># example for crop on max end of diverging colormap
+vmin = -10; vmax = 8; pivot = 0
+newcmap = crop(cmocean.cm.delta, vmin, vmax, pivot)
+A = np.random.randint(vmin, vmax, (5,5))
+plt.pcolormesh(A, vmin=vmin, vmax=vmax, cmap=newcmap)
+plt.colorbar()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="cmocean.tools.crop_by_percent">
+<code class="descclassname">cmocean.tools.</code><code class="descname">crop_by_percent</code><span class="sig-paren">(</span><em>cmap</em>, <em>per</em>, <em>which='both'</em>, <em>N=None</em><span class="sig-paren">)</span><a class="headerlink" href="#cmocean.tools.crop_by_percent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop end or ends of a colormap by per percent.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cmap</strong> – A colormap object, like cmocean.cm.matter.</li>
+<li><strong>per</strong> – Percent of colormap to remove. If which==’both’, take this
+percent off both ends of colormap. If which==’min’ or which==’max’,
+take percent only off the specified end of colormap.</li>
+<li><strong>which='both'</strong> – which end or ends of colormap to cut off. which=’both’
+removes from both ends, which=’min’ from bottom end, and which=’max’
+from top end.</li>
+<li><strong>N=None</strong> – User can specify the number of rows for the outgoing colormap.
+If unspecified, N from incoming colormap will be used and values will
+be interpolated as needed to fill in rows.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Outputs resultant colormap object.</p>
+<dl class="docutils">
+<dt>This is a wrapper around crop() to make it easier to use for cropping</dt>
+<dd>based on percent.</dd>
+<dt>Examples:</dt>
+<dd><p class="first"># example with oxy map: cut off yellow part which is top 20%
+# compare with full colormap
+vmin = 0; vmax = 10; pivot = 5
+A = np.random.randint(vmin, vmax, (5,5))
+fig, axes = plt.subplots(1, 2)
+mappable = axes[0].pcolormesh(A, vmin=vmin, vmax=vmax, cmap=cmocean.cm.oxy)
+fig.colorbar(mappable, ax=axes[0])
+vmin = 0; vmax = 8; pivot = 5
+newcmap = crop_by_percent(cmocean.cm.oxy, 20, which=’max’, N=None)
+plt.figure()
+plt.pcolormesh(A, vmin=vmin, vmax=vmax, cmap=newcmap)
+plt.colorbar()</p>
+<p># example with oxy map: cut off red part which is bottom 20%
+# compare with full colormap
+vmin = 0; vmax = 10; pivot = 5
+A = np.random.randint(vmin, vmax, (5,5))
+fig, axes = plt.subplots(1, 2)
+mappable = axes[0].pcolormesh(A, vmin=vmin, vmax=vmax, cmap=cmocean.cm.oxy)
+fig.colorbar(mappable, ax=axes[0])
+vmin = 2; vmax = 10; pivot = 5
+A = np.random.randint(vmin, vmax, (5,5))
+newcmap = crop_by_percent(cmocean.cm.oxy, 20, which=’min’, N=None)
+plt.figure()
+plt.pcolormesh(A, vmin=vmin, vmax=vmax, cmap=newcmap)
+plt.colorbar()</p>
+<p class="last"># crop both dark ends off colormap to reduce range
+newcmap = crop_by_percent(cmocean.cm.balance, 10, which=’both’, N=None)
+plt.figure()
+A = np.random.randint(-5, 5, (5,5))
+plt.pcolormesh(A, vmin=vmin, vmax=vmax, cmap=newcmap)
+plt.colorbar()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="cmocean.tools.get_dict">
 <code class="descclassname">cmocean.tools.</code><code class="descname">get_dict</code><span class="sig-paren">(</span><em>cmap</em>, <em>N=256</em><span class="sig-paren">)</span><a class="headerlink" href="#cmocean.tools.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change from rgb to dictionary that LinearSegmentedColormap expects.
