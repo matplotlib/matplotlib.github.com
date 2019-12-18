@@ -8,7 +8,7 @@
     
     <title>matplotlib.testing.compare &mdash; Matplotlib 3.1.1 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/mpl.css?v1"
+    <link rel="stylesheet" href="../../../_static/mpl.css?v3.1.1-74-ge6d6175cb"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
@@ -42,6 +42,15 @@ type="text/css" />
 
   </head>
   <body>
+
+<div id="job-posting">
+  <p>Matplotlib is hiring a Research Software Engineering Fellow!
+  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
+  </a>
+
+  Apply by January, 3 2020 </p>
+</div>
+
 
 
 
@@ -129,18 +138,18 @@ type="text/css" />
 <span class="kn">import</span> <span class="nn">atexit</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">tempfile</span> <span class="k">import</span> <span class="n">TemporaryFile</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryFile</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib.testing.exceptions</span> <span class="k">import</span> <span class="n">ImageComparisonFailure</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span>
+<span class="kn">from</span> <span class="nn">matplotlib.testing.exceptions</span> <span class="kn">import</span> <span class="n">ImageComparisonFailure</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cbook</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compare_float&#39;</span><span class="p">,</span> <span class="s1">&#39;compare_images&#39;</span><span class="p">,</span> <span class="s1">&#39;comparable_formats&#39;</span><span class="p">]</span>
 
@@ -263,7 +272,7 @@ type="text/css" />
 
 
 <span class="k">class</span> <span class="nc">_Converter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Explicitly register deletion from an atexit handler because if we</span>
         <span class="c1"># wait until the object is GC&#39;d (which occurs later), then some module</span>
@@ -271,7 +280,7 @@ type="text/css" />
         <span class="c1"># kill() doesn&#39;t work anymore...</span>
         <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__del__</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
@@ -294,7 +303,7 @@ type="text/css" />
 
 
 <span class="k">class</span> <span class="nc">_GSConverter</span><span class="p">(</span><span class="n">_Converter</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orig</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orig</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">_get_executable_info</span><span class="p">(</span><span class="s2">&quot;gs&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
@@ -332,7 +341,7 @@ type="text/css" />
 
 
 <span class="k">class</span> <span class="nc">_SVGConverter</span><span class="p">(</span><span class="n">_Converter</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orig</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orig</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span>  <span class="c1"># First run.</span>
                 <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>  <span class="c1"># Inkscape terminated.</span>
             <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -434,12 +443,12 @@ type="text/css" />
     <span class="n">base</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">extension</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">converter</span><span class="p">:</span>
         <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;Don&#39;t know how to convert </span><span class="si">%s</span><span class="s2"> files to png&quot;</span> <span class="o">%</span> <span class="n">extension</span>
-        <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">is_called_from_pytest</span>
+        <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">is_called_from_pytest</span>
         <span class="k">if</span> <span class="n">is_called_from_pytest</span><span class="p">():</span>
             <span class="kn">import</span> <span class="nn">pytest</span>
             <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">reason</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">nose</span> <span class="k">import</span> <span class="n">SkipTest</span>
+            <span class="kn">from</span> <span class="nn">nose</span> <span class="kn">import</span> <span class="n">SkipTest</span>
             <span class="k">raise</span> <span class="n">SkipTest</span><span class="p">(</span><span class="n">reason</span><span class="p">)</span>
     <span class="n">newname</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">extension</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -540,7 +549,7 @@ type="text/css" />
 <span class="sd">        compare_images(img1, img2, 0.001)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">actual</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Output image </span><span class="si">%s</span><span class="s2"> does not exist.&quot;</span> <span class="o">%</span> <span class="n">actual</span><span class="p">)</span>
@@ -612,7 +621,7 @@ type="text/css" />
 <span class="sd">        File path to save difference image to.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Drop alpha channels, similarly to compare_images.</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
     <span class="n">expected_image</span> <span class="o">=</span> <span class="n">_png</span><span class="o">.</span><span class="n">read_png</span><span class="p">(</span><span class="n">expected</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">actual_image</span> <span class="o">=</span> <span class="n">_png</span><span class="o">.</span><span class="n">read_png</span><span class="p">(</span><span class="n">actual</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">actual_image</span><span class="p">,</span> <span class="n">expected_image</span> <span class="o">=</span> <span class="n">crop_to_same</span><span class="p">(</span>
@@ -652,10 +661,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Oct 28, 2019.
+      Last updated on Dec 17, 2019.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-53-gb0c4777d3.
+	Doc version v3.1.1-74-ge6d6175cb.
     </div>
 
 <script>

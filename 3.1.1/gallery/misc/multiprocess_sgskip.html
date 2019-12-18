@@ -8,7 +8,7 @@
     
     <title>Multiprocess &mdash; Matplotlib 3.1.1 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/mpl.css?v1"
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.1-74-ge6d6175cb"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
@@ -41,6 +41,15 @@ type="text/css" />
 
   </head>
   <body>
+
+<div id="job-posting">
+  <p>Matplotlib is hiring a Research Software Engineering Fellow!
+  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
+  </a>
+
+  Apply by January, 3 2020 </p>
+</div>
+
 
 
 
@@ -147,7 +156,7 @@ plotting in another.</p>
 <h2>Processing Class<a class="headerlink" href="#processing-class" title="Permalink to this headline">¶</a></h2>
 <p>This class plots data it receives from a pipe.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ProcessPlotter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -167,7 +176,7 @@ plotting in another.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipe</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipe</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;starting plotter...&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipe</span>
@@ -190,10 +199,10 @@ class above. When initialized, it creates a pipe and an instance of
 process which is then plotted via the callback function specified in
 <code class="docutils literal notranslate"><span class="pre">ProcessPlotter:__call__</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NBPlot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot_pipe</span><span class="p">,</span> <span class="n">plotter_pipe</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pipe</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_pipe</span><span class="p">,</span> <span class="n">plotter_pipe</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Pipe" title="View documentation for multiprocessing.Pipe"><span class="n">mp</span><span class="o">.</span><span class="n">Pipe</span></a><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plotter</span> <span class="o">=</span> <span class="n">ProcessPlotter</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot_process</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_process</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="View documentation for multiprocessing.Process"><span class="n">mp</span><span class="o">.</span><span class="n">Process</span></a><span class="p">(</span>
             <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plotter</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">plotter_pipe</span><span class="p">,),</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
@@ -210,13 +219,13 @@ process which is then plotted via the callback function specified in
     <span class="n">pl</span> <span class="o">=</span> <span class="n">NBPlot</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
         <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <a href="https://docs.python.org/3/library/time.html#time.sleep" title="View documentation for time.sleep"><span class="n">time</span><span class="o">.</span><span class="n">sleep</span></a><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">finished</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="k">if</span> <a href="../../api/matplotlib_configuration_api.html#matplotlib.get_backend" title="View documentation for matplotlib.pyplot.get_backend"><span class="n">plt</span><span class="o">.</span><span class="n">get_backend</span></a><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;MacOSX&quot;</span><span class="p">:</span>
-        <span class="n">mp</span><span class="o">.</span><span class="n">set_start_method</span><span class="p">(</span><span class="s2">&quot;forkserver&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <a href="../../api/matplotlib_configuration_api.html#matplotlib.get_backend" title="View documentation for matplotlib.get_backend"><span class="n">plt</span><span class="o">.</span><span class="n">get_backend</span></a><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;MacOSX&quot;</span><span class="p">:</span>
+        <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.set_start_method" title="View documentation for multiprocessing.set_start_method"><span class="n">mp</span><span class="o">.</span><span class="n">set_start_method</span></a><span class="p">(</span><span class="s2">&quot;forkserver&quot;</span><span class="p">)</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -241,10 +250,10 @@ process which is then plotted via the callback function specified in
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Oct 28, 2019.
+      Last updated on Dec 17, 2019.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-53-gb0c4777d3.
+	Doc version v3.1.1-74-ge6d6175cb.
     </div>
 
 <script>

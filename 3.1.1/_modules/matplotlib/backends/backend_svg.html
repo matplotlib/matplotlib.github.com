@@ -8,7 +8,7 @@
     
     <title>matplotlib.backends.backend_svg &mdash; Matplotlib 3.1.1 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/mpl.css?v1"
+    <link rel="stylesheet" href="../../../_static/mpl.css?v3.1.1-74-ge6d6175cb"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
@@ -42,6 +42,15 @@ type="text/css" />
 
   </head>
   <body>
+
+<div id="job-posting">
+  <p>Matplotlib is hiring a Research Software Engineering Fellow!
+  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
+  </a>
+
+  Apply by January, 3 2020 </p>
+</div>
+
 
 
 
@@ -118,7 +127,7 @@ type="text/css" />
           <div class="body">
             
   <h1>Source code for matplotlib.backends.backend_svg</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">gzip</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
@@ -129,18 +138,18 @@ type="text/css" />
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="kn">import</span> <span class="p">(</span>
      <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">RendererBase</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="k">import</span> <span class="n">MixedModeRenderer</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">rgb2hex</span>
-<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">get_font</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="k">import</span> <span class="n">LOAD_NO_HINTING</span>
-<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="k">import</span> <span class="n">MathTextParser</span>
-<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_path</span>
-<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Affine2D</span><span class="p">,</span> <span class="n">Affine2DBase</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="kn">import</span> <span class="n">MixedModeRenderer</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">rgb2hex</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">get_font</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="kn">import</span> <span class="n">LOAD_NO_HINTING</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="kn">import</span> <span class="n">MathTextParser</span>
+<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Affine2D</span><span class="p">,</span> <span class="n">Affine2DBase</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -223,7 +232,7 @@ type="text/css" />
 <span class="sd">    file : writable text file-like object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__write</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;flush&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flush</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">flush</span>
@@ -391,7 +400,7 @@ type="text/css" />
 
 
 <div class="viewcode-block" id="RendererSVG"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.RendererSVG">[docs]</a><span class="k">class</span> <span class="nc">RendererSVG</span><span class="p">(</span><span class="n">RendererBase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">svgwriter</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">svgwriter</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">XMLWriter</span><span class="p">(</span><span class="n">svgwriter</span><span class="p">)</span>
@@ -1376,10 +1385,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Oct 28, 2019.
+      Last updated on Dec 17, 2019.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-53-gb0c4777d3.
+	Doc version v3.1.1-74-ge6d6175cb.
     </div>
 
 <script>

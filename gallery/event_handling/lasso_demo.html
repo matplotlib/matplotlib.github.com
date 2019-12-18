@@ -8,7 +8,7 @@
     
     <title>Lasso Demo &mdash; Matplotlib 3.1.1 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/mpl.css?v1"
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.1-74-ge6d6175cb"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
@@ -41,6 +41,15 @@ type="text/css" />
 
   </head>
   <body>
+
+<div id="job-posting">
+  <p>Matplotlib is hiring a Research Software Engineering Fellow!
+  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
+  </a>
+
+  Apply by January, 3 2020 </p>
+</div>
+
 
 
 
@@ -127,10 +136,10 @@ selected points</p>
 <p>This is currently a proof-of-concept implementation (though it is
 usable as is).  There will be some refinement of the API.</p>
 <img alt="../../_images/sphx_glr_lasso_demo_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_lasso_demo_001.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">mcolors</span><span class="p">,</span> <span class="n">path</span>
-<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <a href="../../api/collections_api.html#matplotlib.collections.RegularPolyCollection" title="View documentation for matplotlib.collections.RegularPolyCollection"><span class="n">RegularPolyCollection</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">mcolors</span><span class="p">,</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <a href="../../api/collections_api.html#matplotlib.collections.RegularPolyCollection" title="View documentation for matplotlib.collections.RegularPolyCollection"><span class="n">RegularPolyCollection</span></a>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="k">import</span> <a href="../../api/widgets_api.html#matplotlib.widgets.Lasso" title="View documentation for matplotlib.widgets.Lasso"><span class="n">Lasso</span></a>
+<span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <a href="../../api/widgets_api.html#matplotlib.widgets.Lasso" title="View documentation for matplotlib.widgets.Lasso"><span class="n">Lasso</span></a>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
@@ -138,7 +147,7 @@ usable as is).  There will be some refinement of the API.</p>
     <span class="n">colorin</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.colors.to_rgba.html#matplotlib.colors.to_rgba" title="View documentation for matplotlib.colors.to_rgba"><span class="n">mcolors</span><span class="o">.</span><span class="n">to_rgba</span></a><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
     <span class="n">colorout</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.colors.to_rgba.html#matplotlib.colors.to_rgba" title="View documentation for matplotlib.colors.to_rgba"><span class="n">mcolors</span><span class="o">.</span><span class="n">to_rgba</span></a><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="k">if</span> <span class="n">include</span><span class="p">:</span>
@@ -148,22 +157,22 @@ usable as is).  There will be some refinement of the API.</p>
 
 
 <span class="k">class</span> <span class="nc">LassoManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">ax</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span>
+        <span class="bp">self</span><span class="o">.</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">Nxy</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nxy</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a><span class="p">)</span>
 
-        <span class="n">facecolors</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">color</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xys</span> <span class="o">=</span> <span class="p">[(</span><span class="n">d</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">facecolors</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">color</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xys</span> <span class="o">=</span> <span class="p">[(</span><span class="n">d</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <a href="../../api/collections_api.html#matplotlib.collections.RegularPolyCollection" title="View documentation for matplotlib.collections.RegularPolyCollection"><span class="n">RegularPolyCollection</span></a><span class="p">(</span>
             <span class="mi">6</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,),</span>
             <span class="n">facecolors</span><span class="o">=</span><span class="n">facecolors</span><span class="p">,</span>
             <span class="n">offsets</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xys</span><span class="p">,</span>
-            <span class="n">transOffset</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transData</span><span class="p">)</span>
+            <span class="n">transOffset</span><span class="o">=</span><a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">transData</span><span class="p">)</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">)</span>
+        <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;button_press_event&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">onpress</span><span class="p">)</span>
 
@@ -173,9 +182,9 @@ usable as is).  There will be some refinement of the API.</p>
         <span class="n">ind</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">contains_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xys</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xys</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">ind</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                <span class="n">facecolors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Datum</span><span class="o">.</span><span class="n">colorin</span>
+                <span class="n">facecolors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">Datum</span></a><span class="o">.</span><span class="n">colorin</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">facecolors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Datum</span><span class="o">.</span><span class="n">colorout</span>
+                <span class="n">facecolors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">Datum</span></a><span class="o">.</span><span class="n">colorout</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw_idle</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">widgetlock</span><span class="o">.</span><span class="n">release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lasso</span><span class="p">)</span>
@@ -197,11 +206,11 @@ usable as is).  There will be some refinement of the API.</p>
 
     <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">19680801</span><span class="p">)</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">Datum</span><span class="p">(</span><span class="o">*</span><span class="n">xy</span><span class="p">)</span> <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
-    <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.axes.html#matplotlib.pyplot.axes" title="View documentation for matplotlib.pyplot.axes"><span class="n">plt</span><span class="o">.</span><span class="n">axes</span></a><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">autoscale_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Lasso points using left mouse button&#39;</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a> <span class="o">=</span> <span class="p">[</span><a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">Datum</span></a><span class="p">(</span><span class="o">*</span><span class="n">xy</span><span class="p">)</span> <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.axes.html#matplotlib.pyplot.axes" title="View documentation for matplotlib.pyplot.axes"><span class="n">plt</span><span class="o">.</span><span class="n">axes</span></a><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">autoscale_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Lasso points using left mouse button&#39;</span><span class="p">)</span>
 
-    <span class="n">lman</span> <span class="o">=</span> <span class="n">LassoManager</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/functions.html#object" title="View documentation for builtins.object"><span class="n">lman</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">LassoManager</span></a><span class="p">(</span><a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">data</span></a><span class="p">)</span>
 
     <a href="../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
@@ -226,10 +235,10 @@ usable as is).  There will be some refinement of the API.</p>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Oct 28, 2019.
+      Last updated on Dec 17, 2019.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-53-gb0c4777d3.
+	Doc version v3.1.1-74-ge6d6175cb.
     </div>
 
 <script>

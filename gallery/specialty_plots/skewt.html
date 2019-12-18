@@ -8,7 +8,7 @@
     
     <title>SkewT-logP diagram: using transforms and custom projections &mdash; Matplotlib 3.1.1 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/mpl.css?v1"
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.1-74-ge6d6175cb"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
@@ -41,6 +41,15 @@ type="text/css" />
 
   </head>
   <body>
+
+<div id="job-posting">
+  <p>Matplotlib is hiring a Research Software Engineering Fellow!
+  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
+  </a>
+
+  Apply by January, 3 2020 </p>
+</div>
+
 
 
 
@@ -137,13 +146,13 @@ axes that are not orthogonal. This is handled by including a skew component to
 the basic Axes transforms. Additional complexity comes in handling the fact
 that the upper and lower X-axes have different data ranges, which necessitates
 a bunch of custom classes for ticks, spines, and axis to handle this.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">ExitStack</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack" title="View documentation for contextlib.ExitStack"><span class="n">ExitStack</span></a>
 
-<span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="k">import</span> <a href="../../api/axes_api.html#matplotlib.axes.Axes" title="View documentation for matplotlib.axes.Axes"><span class="n">Axes</span></a>
+<span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <a href="../../api/axes_api.html#matplotlib.axes.Axes" title="View documentation for matplotlib.axes.Axes"><span class="n">Axes</span></a>
 <span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">transforms</span>
 <span class="kn">import</span> <span class="nn">matplotlib.axis</span> <span class="k">as</span> <span class="nn">maxis</span>
 <span class="kn">import</span> <span class="nn">matplotlib.spines</span> <span class="k">as</span> <span class="nn">mspines</span>
-<span class="kn">from</span> <span class="nn">matplotlib.projections</span> <span class="k">import</span> <a href="../../api/projections_api.html#matplotlib.projections.register_projection" title="View documentation for matplotlib.projections.register_projection"><span class="n">register_projection</span></a>
+<span class="kn">from</span> <span class="nn">matplotlib.projections</span> <span class="kn">import</span> <a href="../../api/projections_api.html#matplotlib.projections.register_projection" title="View documentation for matplotlib.projections.register_projection"><span class="n">register_projection</span></a>
 
 
 <span class="c1"># The sole purpose of this class is to look at the upper, lower, or total</span>
@@ -154,7 +163,7 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
         <span class="c1"># visibility state of the artist with `get_visible`; the ExitStack will</span>
         <span class="c1"># restore these states (`set_visible`) at the end of the block (after</span>
         <span class="c1"># the draw).</span>
-        <span class="k">with</span> <span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">stack</span><span class="p">:</span>
+        <span class="k">with</span> <a href="https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack" title="View documentation for contextlib.ExitStack"><span class="n">ExitStack</span></a><span class="p">()</span> <span class="k">as</span> <span class="n">stack</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">artist</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">gridline</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tick1line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tick2line</span><span class="p">,</span>
                            <span class="bp">self</span><span class="o">.</span><span class="n">label1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="p">]:</span>
                 <span class="n">stack</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">artist</span><span class="o">.</span><span class="n">set_visible</span><span class="p">,</span> <span class="n">artist</span><span class="o">.</span><span class="n">get_visible</span><span class="p">())</span>
@@ -170,7 +179,7 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tick2line</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()</span> <span class="ow">and</span> <span class="n">needs_upper</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()</span> <span class="ow">and</span> <span class="n">needs_upper</span><span class="p">)</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">SkewXTick</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">SkewXTick</span></a><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_view_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_view_interval</span><span class="p">()</span>
@@ -180,7 +189,7 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
 <span class="c1"># as well as create instances of the custom tick</span>
 <span class="k">class</span> <span class="nc">SkewXAxis</span><span class="p">(</span><a href="../../api/axis_api.html#matplotlib.axis.XAxis" title="View documentation for matplotlib.axis.XAxis"><span class="n">maxis</span><span class="o">.</span><span class="n">XAxis</span></a><span class="p">):</span>
     <span class="k">def</span> <span class="nf">_get_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">major</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">SkewXTick</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="n">major</span><span class="p">)</span>
+        <span class="k">return</span> <a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">SkewXTick</span></a><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="n">major</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_view_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">upper_xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">lower_xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -209,7 +218,7 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
 
     <span class="k">def</span> <span class="nf">_init_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Taken from Axes and modified to use our modified X-axis</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <span class="n">SkewXAxis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">SkewXAxis</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">register_axis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">register_axis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span> <span class="o">=</span> <a href="../../api/axis_api.html#matplotlib.axis.YAxis" title="View documentation for matplotlib.axis.YAxis"><span class="n">maxis</span><span class="o">.</span><span class="n">YAxis</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -267,18 +276,18 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
 
 
 <span class="c1"># Now register the projection with matplotlib so the user can select it.</span>
-<a href="../../api/projections_api.html#matplotlib.projections.register_projection" title="View documentation for matplotlib.projections.register_projection"><span class="n">register_projection</span></a><span class="p">(</span><span class="n">SkewXAxes</span><span class="p">)</span>
+<a href="../../api/projections_api.html#matplotlib.projections.register_projection" title="View documentation for matplotlib.projections.register_projection"><span class="n">register_projection</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#type" title="View documentation for builtins.type"><span class="n">SkewXAxes</span></a><span class="p">)</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="c1"># Now make a simple example using the custom projection.</span>
-    <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="k">import</span> <span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator" title="View documentation for matplotlib.ticker.MultipleLocator"><span class="n">MultipleLocator</span></a><span class="p">,</span> <a href="../../api/ticker_api.html#matplotlib.ticker.NullFormatter" title="View documentation for matplotlib.ticker.NullFormatter"><span class="n">NullFormatter</span></a><span class="p">,</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/io.html#io.StringIO" title="View documentation for io.StringIO"><span class="n">StringIO</span></a>
+    <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator" title="View documentation for matplotlib.ticker.MultipleLocator"><span class="n">MultipleLocator</span></a><span class="p">,</span> <a href="../../api/ticker_api.html#matplotlib.ticker.NullFormatter" title="View documentation for matplotlib.ticker.NullFormatter"><span class="n">NullFormatter</span></a><span class="p">,</span>
                                    <a href="../../api/ticker_api.html#matplotlib.ticker.ScalarFormatter" title="View documentation for matplotlib.ticker.ScalarFormatter"><span class="n">ScalarFormatter</span></a><span class="p">)</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
     <span class="c1"># Some example data.</span>
-    <span class="n">data_txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="View documentation for builtins.str"><span class="n">data_txt</span></a> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">        978.0    345    7.8    0.8</span>
 <span class="s1">        971.0    404    7.2    0.2</span>
 <span class="s1">        946.7    610    5.2   -1.8</span>
@@ -355,31 +364,31 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
 <span class="s1">    &#39;&#39;&#39;</span>
 
     <span class="c1"># Parse the data</span>
-    <span class="n">sound_data</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">data_txt</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Td</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.loadtxt.html#numpy.loadtxt" title="View documentation for numpy.loadtxt"><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span></a><span class="p">(</span><span class="n">sound_data</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sound_data</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/io.html#io.StringIO" title="View documentation for io.StringIO"><span class="n">StringIO</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="View documentation for builtins.str"><span class="n">data_txt</span></a><span class="p">)</span>
+    <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">p</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">h</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">T</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">Td</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.loadtxt.html#numpy.loadtxt" title="View documentation for numpy.loadtxt"><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span></a><span class="p">(</span><span class="n">sound_data</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Create a new figure. The dimensions here give a good aspect ratio</span>
-    <span class="n">fig</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.5875</span><span class="p">,</span> <span class="mf">6.2125</span><span class="p">))</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;skewx&#39;</span><span class="p">)</span>
+    <a href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="View documentation for matplotlib.figure.Figure"><span class="n">fig</span></a> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.5875</span><span class="p">,</span> <span class="mf">6.2125</span><span class="p">))</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="View documentation for matplotlib.figure.Figure"><span class="n">fig</span></a><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;skewx&#39;</span><span class="p">)</span>
 
     <a href="../../api/_as_gen/matplotlib.pyplot.grid.html#matplotlib.pyplot.grid" title="View documentation for matplotlib.pyplot.grid"><span class="n">plt</span><span class="o">.</span><span class="n">grid</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Plot the data using normal plotting functions, in this case using</span>
     <span class="c1"># log scaling in Y, as dictated by the typical meteorological plot</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">Td</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">T</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">p</span></a><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">Td</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="View documentation for numpy.ndarray"><span class="n">p</span></a><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
 
     <span class="c1"># An example of a slanted line at constant X</span>
-    <span class="n">l</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">)</span>
+    <a href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="View documentation for matplotlib.lines.Line2D"><span class="n">l</span></a> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">)</span>
 
     <span class="c1"># Disables the log-formatting that comes with semilogy</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.ScalarFormatter" title="View documentation for matplotlib.ticker.ScalarFormatter"><span class="n">ScalarFormatter</span></a><span class="p">())</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.NullFormatter" title="View documentation for matplotlib.ticker.NullFormatter"><span class="n">NullFormatter</span></a><span class="p">())</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html#numpy.linspace" title="View documentation for numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1050</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.ScalarFormatter" title="View documentation for matplotlib.ticker.ScalarFormatter"><span class="n">ScalarFormatter</span></a><span class="p">())</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.NullFormatter" title="View documentation for matplotlib.ticker.NullFormatter"><span class="n">NullFormatter</span></a><span class="p">())</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html#numpy.linspace" title="View documentation for numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1050</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator" title="View documentation for matplotlib.ticker.MultipleLocator"><span class="n">MultipleLocator</span></a><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator" title="View documentation for matplotlib.ticker.MultipleLocator"><span class="n">MultipleLocator</span></a><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <a href="../../api/_as_gen/matplotlib.axes.SubplotBase.html#matplotlib.axes.SubplotBase" title="View documentation for matplotlib.axes.SubplotBase"><span class="n">ax</span></a><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 
     <a href="../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
@@ -397,6 +406,10 @@ in this example:</p>
 <a href="../../api/spines_api.html#matplotlib.spines.Spine.register_axis" title="View documentation for matplotlib.spines.Spine.register_axis"><span class="n">matplotlib</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">Spine</span><span class="o">.</span><span class="n">register_axis</span></a>
 <a href="../../api/projections_api.html#module-matplotlib.projections" title="View documentation for matplotlib.projections"><span class="n">matplotlib</span><span class="o">.</span><span class="n">projections</span></a>
 <a href="../../api/projections_api.html#matplotlib.projections.register_projection" title="View documentation for matplotlib.projections.register_projection"><span class="n">matplotlib</span><span class="o">.</span><span class="n">projections</span><span class="o">.</span><span class="n">register_projection</span></a>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;function register_projection at 0x7ffb582889e0&gt;
 </pre></div>
 </div>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-gallery-specialty-plots-skewt-py">
@@ -420,10 +433,10 @@ in this example:</p>
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Oct 28, 2019.
+      Last updated on Dec 17, 2019.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-53-gb0c4777d3.
+	Doc version v3.1.1-74-ge6d6175cb.
     </div>
 
 <script>

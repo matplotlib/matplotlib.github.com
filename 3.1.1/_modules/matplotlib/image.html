@@ -8,7 +8,7 @@
     
     <title>matplotlib.image &mdash; Matplotlib 3.1.1 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/mpl.css?v1"
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.1-74-ge6d6175cb"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
@@ -42,6 +42,15 @@ type="text/css" />
 
   </head>
   <body>
+
+<div id="job-posting">
+  <p>Matplotlib is hiring a Research Software Engineering Fellow!
+  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
+  </a>
+
+  Apply by January, 3 2020 </p>
+</div>
+
 
 
 
@@ -123,18 +132,18 @@ type="text/css" />
 <span class="sd">operations.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">ceil</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
 <span class="kn">import</span> <span class="nn">matplotlib.artist</span> <span class="k">as</span> <span class="nn">martist</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="n">FigureCanvasBase</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="kn">import</span> <span class="n">FigureCanvasBase</span>
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cbook</span> <span class="k">as</span> <span class="nn">cbook</span>
@@ -144,9 +153,9 @@ type="text/css" />
 
 <span class="c1"># For user convenience, the names from _image are also imported into</span>
 <span class="c1"># the image namespace:</span>
-<span class="kn">from</span> <span class="nn">matplotlib._image</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">matplotlib._image</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="p">(</span><span class="n">Affine2D</span><span class="p">,</span> <span class="n">BboxBase</span><span class="p">,</span> <span class="n">Bbox</span><span class="p">,</span> <span class="n">BboxTransform</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Affine2D</span><span class="p">,</span> <span class="n">BboxBase</span><span class="p">,</span> <span class="n">Bbox</span><span class="p">,</span> <span class="n">BboxTransform</span><span class="p">,</span>
                                    <span class="n">IdentityTransform</span><span class="p">,</span> <span class="n">TransformedBbox</span><span class="p">)</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -297,10 +306,10 @@ type="text/css" />
 <span class="k">class</span> <span class="nc">_ImageBase</span><span class="p">(</span><span class="n">martist</span><span class="o">.</span><span class="n">Artist</span><span class="p">,</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">):</span>
     <span class="n">zorder</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;AxesImage(</span><span class="si">%g</span><span class="s2">,</span><span class="si">%g</span><span class="s2">;</span><span class="si">%g</span><span class="s2">x</span><span class="si">%g</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -775,7 +784,7 @@ type="text/css" />
 
     <span class="k">def</span> <span class="nf">write_png</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write the image to png file with fname&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span>
+        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
         <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="s1">&#39;lower&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">,</span>
                           <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
@@ -791,7 +800,7 @@ type="text/css" />
 <span class="sd">        A : array-like or `PIL.Image.Image`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+            <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
@@ -941,10 +950,10 @@ type="text/css" />
 
 
 <div class="viewcode-block" id="AxesImage"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.AxesImage">[docs]</a><span class="k">class</span> <span class="nc">AxesImage</span><span class="p">(</span><span class="n">_ImageBase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;AxesImage(</span><span class="si">%g</span><span class="s2">,</span><span class="si">%g</span><span class="s2">;</span><span class="si">%g</span><span class="s2">x</span><span class="si">%g</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1078,7 +1087,7 @@ type="text/css" />
 
 
 <div class="viewcode-block" id="NonUniformImage"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.NonUniformImage">[docs]</a><span class="k">class</span> <span class="nc">NonUniformImage</span><span class="p">(</span><span class="n">AxesImage</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        kwargs are identical to those for AxesImage, except</span>
 <span class="sd">        that &#39;nearest&#39; and &#39;bilinear&#39; are the only supported &#39;interpolation&#39;</span>
@@ -1203,7 +1212,7 @@ type="text/css" />
 <span class="sd">    This uses a variation of the original irregular image code,</span>
 <span class="sd">    and it is used by pcolorfast for the corresponding grid type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
                  <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">A</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1334,7 +1343,7 @@ type="text/css" />
 
     <span class="n">_interpolation</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">offsetx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -1394,7 +1403,7 @@ type="text/css" />
     <span class="sd">&quot;&quot;&quot;The Image class whose size is determined by the given bbox.&quot;&quot;&quot;</span>
 
     <span class="nd">@cbook</span><span class="o">.</span><span class="n">_delete_parameter</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="s2">&quot;interp_at_native&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1506,7 +1515,7 @@ type="text/css" />
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">read_png</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span>
+        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
         <span class="k">return</span> <span class="n">_png</span><span class="o">.</span><span class="n">read_png</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="n">handlers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="n">read_png</span><span class="p">,</span> <span class="p">}</span>
@@ -1529,7 +1538,7 @@ type="text/css" />
 
     <span class="k">if</span> <span class="n">ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">handlers</span><span class="p">:</span>  <span class="c1"># Try to load the image with PIL.</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+            <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only know how to handle extensions: </span><span class="si">%s</span><span class="s1">; &#39;</span>
                              <span class="s1">&#39;with Pillow installed matplotlib can handle &#39;</span>
@@ -1546,7 +1555,7 @@ type="text/css" />
         <span class="n">parsed</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
         <span class="c1"># If fname is a URL, download the data</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">request</span>
+            <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
             <span class="n">fd</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1591,8 +1600,8 @@ type="text/css" />
 <span class="sd">        The DPI to store in the metadata of the file.  This does not affect the</span>
 <span class="sd">        resolution of the output image.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_png</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">):</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1618,10 +1627,10 @@ type="text/css" />
             <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">rgba</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+                <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
             <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s2">&quot;Saving to </span><span class="si">{format}</span><span class="s2"> requires Pillow&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+                    <span class="sa">f</span><span class="s2">&quot;Saving to </span><span class="si">{format}</span><span class="s2"> requires Pillow&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
             <span class="n">pil_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
                 <span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="n">pil_shape</span><span class="p">,</span> <span class="n">rgba</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -1723,7 +1732,7 @@ type="text/css" />
         <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
         <span class="n">FigureCanvasBase</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 
@@ -1743,10 +1752,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Oct 28, 2019.
+      Last updated on Dec 17, 2019.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-53-gb0c4777d3.
+	Doc version v3.1.1-74-ge6d6175cb.
     </div>
 
 <script>

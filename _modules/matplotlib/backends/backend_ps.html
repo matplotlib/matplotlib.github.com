@@ -8,7 +8,7 @@
     
     <title>matplotlib.backends.backend_ps &mdash; Matplotlib 3.1.1 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/mpl.css?v1"
+    <link rel="stylesheet" href="../../../_static/mpl.css?v3.1.1-74-ge6d6175cb"
 type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css"
 type="text/css" />
@@ -42,6 +42,15 @@ type="text/css" />
 
   </head>
   <body>
+
+<div id="job-posting">
+  <p>Matplotlib is hiring a Research Software Engineering Fellow!
+  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
+  </a>
+
+  Apply by January, 3 2020 </p>
+</div>
+
 
 
 
@@ -124,36 +133,36 @@ type="text/css" />
 
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">TextIOWrapper</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">TextIOWrapper</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">tempfile</span> <span class="k">import</span> <span class="n">TemporaryDirectory</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
 <span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">cbook</span><span class="p">,</span> <span class="n">_path</span><span class="p">,</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">rcParams</span><span class="p">,</span> <span class="n">checkdep_ghostscript</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">GraphicsContextBase</span><span class="p">,</span>
     <span class="n">RendererBase</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="p">(</span><span class="n">get_realpath_and_stat</span><span class="p">,</span> <span class="n">is_writable_file_like</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_realpath_and_stat</span><span class="p">,</span> <span class="n">is_writable_file_like</span><span class="p">,</span>
                               <span class="n">file_requires_unicode</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">is_opentype_cff_font</span><span class="p">,</span> <span class="n">get_font</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="k">import</span> <span class="n">KERNING_DEFAULT</span><span class="p">,</span> <span class="n">LOAD_NO_HINTING</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ttconv</span> <span class="k">import</span> <span class="n">convert_ttf_to_ps</span>
-<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="k">import</span> <span class="n">MathTextParser</span>
-<span class="kn">from</span> <span class="nn">matplotlib._mathtext_data</span> <span class="k">import</span> <span class="n">uni2type1</span>
-<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Affine2D</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="k">import</span> <span class="n">MixedModeRenderer</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_backend_pdf_ps</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">is_opentype_cff_font</span><span class="p">,</span> <span class="n">get_font</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="kn">import</span> <span class="n">KERNING_DEFAULT</span><span class="p">,</span> <span class="n">LOAD_NO_HINTING</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ttconv</span> <span class="kn">import</span> <span class="n">convert_ttf_to_ps</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="kn">import</span> <span class="n">MathTextParser</span>
+<span class="kn">from</span> <span class="nn">matplotlib._mathtext_data</span> <span class="kn">import</span> <span class="n">uni2type1</span>
+<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Affine2D</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="kn">import</span> <span class="n">MixedModeRenderer</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_backend_pdf_ps</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -164,7 +173,7 @@ type="text/css" />
 
 <div class="viewcode-block" id="PsBackendHelper"><a class="viewcode-back" href="../../../api/backend_ps_api.html#matplotlib.backends.backend_ps.PsBackendHelper">[docs]</a><span class="k">class</span> <span class="nc">PsBackendHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cached</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">)</span>
@@ -315,7 +324,7 @@ type="text/css" />
     <span class="n">_afm_font_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;datapath&quot;</span><span class="p">],</span> <span class="s2">&quot;fonts&quot;</span><span class="p">,</span> <span class="s2">&quot;afm&quot;</span><span class="p">)</span>
     <span class="n">_use_afm_rc_name</span> <span class="o">=</span> <span class="s2">&quot;ps.useafm&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">pswriter</span><span class="p">,</span> <span class="n">imagedpi</span><span class="o">=</span><span class="mi">72</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">pswriter</span><span class="p">,</span> <span class="n">imagedpi</span><span class="o">=</span><span class="mi">72</span><span class="p">):</span>
         <span class="c1"># Although postscript itself is dpi independent, we need to inform the</span>
         <span class="c1"># image code about a requested dpi to generate high resolution images</span>
         <span class="c1"># and them scale them before embedding them.</span>
@@ -1734,10 +1743,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Oct 28, 2019.
+      Last updated on Dec 17, 2019.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-53-gb0c4777d3.
+	Doc version v3.1.1-74-ge6d6175cb.
     </div>
 
 <script>
