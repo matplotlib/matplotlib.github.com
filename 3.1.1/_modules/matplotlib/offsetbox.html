@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.offsetbox &mdash; Matplotlib 3.1.1 documentation</title>
+    <title>matplotlib.offsetbox &mdash; Matplotlib 3.1.2 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.1-75-g4a56626f5"
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.1-79-g90d53b526"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
@@ -22,41 +22,33 @@ type="text/css" />
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
         <script type="text/javascript" src="../../_static/copybutton.js"></script>
+        <script type="text/javascript">var copybuttonSkipText = '>>> ';</script>
         <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.1.1 documentation"
+          title="Search within Matplotlib 3.1.2 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 3.1.1 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.1.2 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
-    <link rel="canonical" href="https://matplotlib.org/3.1.1/_modules/matplotlib/offsetbox.html" />
+    <link rel="canonical" href="https://matplotlib.org/3.1.2/_modules/matplotlib/offsetbox.html" />
 
 
 
   </head>
   <body>
 
-<div id="job-posting">
-  <p>Matplotlib is hiring a Research Software Engineering Fellow!
-  <a href="https://discourse.matplotlib.org/t/now-hiring-matplotlib-research-software-engineering-fellow/20701"> See discourse for details.
-  </a>
-
-  Apply by January 3, 2020 </p>
-</div>
-
-
 
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.1.1</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.1.2</span></div>
     <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
@@ -276,9 +268,11 @@ type="text/css" />
 
 <div class="viewcode-block" id="OffsetBox.set_figure"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.set_figure">[docs]</a>    <span class="k">def</span> <span class="nf">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the figure</span>
+<span class="sd">        Set the `.Figure` for the `.OffsetBox` and all its children.</span>
 
-<span class="sd">        accepts a class:`~matplotlib.figure.Figure` instance</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fig : `~matplotlib.figure.Figure`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">martist</span><span class="o">.</span><span class="n">Artist</span><span class="o">.</span><span class="n">set_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
@@ -293,6 +287,29 @@ type="text/css" />
                 <span class="n">c</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">ax</span>
 
 <div class="viewcode-block" id="OffsetBox.contains"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouseevent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delegate the mouse event contains-check to the children.</span>
+
+<span class="sd">        As a container, the `.OffsetBox` does not respond itself to</span>
+<span class="sd">        mouseevents.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mouseevent : `matplotlib.backend_bases.MouseEvent`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        contains : bool</span>
+<span class="sd">            Whether any values are within the radius.</span>
+<span class="sd">        details : dict</span>
+<span class="sd">            An artist-specific dictionary of details of the event context,</span>
+<span class="sd">            such as which points are contained in the pick radius. See the</span>
+<span class="sd">            individual Artist subclasses for details.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        .Artist.contains</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
             <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">mouseevent</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">a</span><span class="p">:</span>
@@ -306,8 +323,10 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        xy : (float, float) or callable</span>
-<span class="sd">            The (x,y) coordinates of the offset in display units.</span>
-<span class="sd">            A callable must have the signature::</span>
+<span class="sd">            The (x, y) coordinates of the offset in display units. These can</span>
+<span class="sd">            either be given explicitly as a tuple (x, y), or by providing a</span>
+<span class="sd">            function that converts the extent into the offset. This function</span>
+<span class="sd">            must have the signature::</span>
 
 <span class="sd">                def offset(width, height, xdescent, ydescent, renderer) \</span>
 <span class="sd">-&gt; (float, float)</span>
@@ -317,9 +336,18 @@ type="text/css" />
 
 <div class="viewcode-block" id="OffsetBox.get_offset"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.get_offset">[docs]</a>    <span class="k">def</span> <span class="nf">get_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">xdescent</span><span class="p">,</span> <span class="n">ydescent</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the offset</span>
+<span class="sd">        Return the offset as a tuple (x, y).</span>
 
-<span class="sd">        accepts extent of the box</span>
+<span class="sd">        The extent parameters have to be provided to handle the case where the</span>
+<span class="sd">        offset is dynamically determined by a callable (see</span>
+<span class="sd">        `~.OffsetBox.set_offset`).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        width, height, xdescent, ydescent</span>
+<span class="sd">            Extent parameters.</span>
+<span class="sd">        renderer : `.RendererBase` subclass</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">xdescent</span><span class="p">,</span> <span class="n">ydescent</span><span class="p">,</span> <span class="n">renderer</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">)</span>
@@ -327,48 +355,60 @@ type="text/css" />
 
 <div class="viewcode-block" id="OffsetBox.set_width"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.set_width">[docs]</a>    <span class="k">def</span> <span class="nf">set_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the width</span>
+<span class="sd">        Set the width of the box.</span>
 
-<span class="sd">        accepts float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        width : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="OffsetBox.set_height"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.set_height">[docs]</a>    <span class="k">def</span> <span class="nf">set_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the height</span>
+<span class="sd">        Set the height of the box.</span>
 
-<span class="sd">        accepts float</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        height : float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="OffsetBox.get_visible_children"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.get_visible_children">[docs]</a>    <span class="k">def</span> <span class="nf">get_visible_children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a list of visible artists it contains.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a list of the visible child `.Artist`\s.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()]</span></div>
 
 <div class="viewcode-block" id="OffsetBox.get_children"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.get_children">[docs]</a>    <span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a list of artists it contains.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a list of the child `.Artist`\s.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span></div>
 
 <div class="viewcode-block" id="OffsetBox.get_extent_offsets"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.get_extent_offsets">[docs]</a>    <span class="k">def</span> <span class="nf">get_extent_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update offset of the children and return the extent of the box.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        renderer : `.RendererBase` subclass</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        width</span>
+<span class="sd">        height</span>
+<span class="sd">        xdescent</span>
+<span class="sd">        ydescent</span>
+<span class="sd">        list of (xoffset, yoffset) pairs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;get_extent_offsets must be overridden in derived classes.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OffsetBox.get_extent"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.get_extent">[docs]</a>    <span class="k">def</span> <span class="nf">get_extent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return with, height, xdescent, ydescent of box</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a tuple ``width, height, xdescent, ydescent`` of the box.&quot;&quot;&quot;</span>
         <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xd</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="n">offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_extent_offsets</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xd</span><span class="p">,</span> <span class="n">yd</span></div>
 
 <div class="viewcode-block" id="OffsetBox.get_window_extent"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.OffsetBox.get_window_extent">[docs]</a>    <span class="k">def</span> <span class="nf">get_window_extent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        get the bounding box in display space.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Return the bounding box (`.Bbox`) in display space.&quot;&quot;&quot;</span>
         <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xd</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="n">offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_extent_offsets</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
         <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_offset</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xd</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="n">renderer</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">mtransforms</span><span class="o">.</span><span class="n">Bbox</span><span class="o">.</span><span class="n">from_bounds</span><span class="p">(</span><span class="n">px</span> <span class="o">-</span> <span class="n">xd</span><span class="p">,</span> <span class="n">py</span> <span class="o">-</span> <span class="n">yd</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span></div>
@@ -378,7 +418,6 @@ type="text/css" />
 <span class="sd">        Update the location of children if necessary and draw them</span>
 <span class="sd">        to the given *renderer*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">xdescent</span><span class="p">,</span> <span class="n">ydescent</span><span class="p">,</span> <span class="n">offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_extent_offsets</span><span class="p">(</span>
                                                         <span class="n">renderer</span><span class="p">)</span>
 
@@ -400,23 +439,29 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        pad : float, optional</span>
-<span class="sd">            Boundary pad.</span>
+<span class="sd">            The boundary padding in points.</span>
 
 <span class="sd">        sep : float, optional</span>
-<span class="sd">            Spacing between items.</span>
+<span class="sd">            The spacing between items in points.</span>
 
-<span class="sd">        width : float, optional</span>
+<span class="sd">        width, height : float, optional</span>
+<span class="sd">            Width and height of the container box in pixels, calculated if</span>
+<span class="sd">            *None*.</span>
 
-<span class="sd">        height : float, optional</span>
-<span class="sd">           Width and height of the container box, calculated if</span>
-<span class="sd">           `None`.</span>
+<span class="sd">        align : {&#39;top&#39;, &#39;bottom&#39;, &#39;left&#39;, &#39;right&#39;, &#39;center&#39;, &#39;baseline&#39;}</span>
+<span class="sd">            Alignment of boxes.</span>
 
-<span class="sd">        align : str, optional</span>
-<span class="sd">            Alignment of boxes. Can be one of ``top``, ``bottom``,</span>
-<span class="sd">            ``left``, ``right``, ``center`` and ``baseline``</span>
+<span class="sd">        mode : {&#39;fixed&#39;, &#39;expand&#39;, &#39;equal&#39;}</span>
+<span class="sd">            The packing mode.</span>
 
-<span class="sd">        mode : str, optional</span>
-<span class="sd">            Packing mode.</span>
+<span class="sd">            - &#39;fixed&#39; packs the given `.Artists` tight with *sep* spacing.</span>
+<span class="sd">            - &#39;expand&#39; uses the maximal available space to distribute the</span>
+<span class="sd">              artists with equal spacing in between.</span>
+<span class="sd">            - &#39;equal&#39;: Each artist an equal fraction of the available space</span>
+<span class="sd">              and is left-aligned (or top-aligned) therein.</span>
+
+<span class="sd">        children : list of `.Artist`</span>
+<span class="sd">            The artists to pack.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -448,23 +493,29 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        pad : float, optional</span>
-<span class="sd">            Boundary pad.</span>
+<span class="sd">            The boundary padding in points.</span>
 
 <span class="sd">        sep : float, optional</span>
-<span class="sd">            Spacing between items.</span>
+<span class="sd">            The spacing between items in points.</span>
 
-<span class="sd">        width : float, optional</span>
+<span class="sd">        width, height : float, optional</span>
+<span class="sd">            Width and height of the container box in pixels, calculated if</span>
+<span class="sd">            *None*.</span>
 
-<span class="sd">        height : float, optional</span>
-
-<span class="sd">            width and height of the container box, calculated if</span>
-<span class="sd">            `None`.</span>
-
-<span class="sd">        align : str, optional</span>
+<span class="sd">        align : {&#39;top&#39;, &#39;bottom&#39;, &#39;left&#39;, &#39;right&#39;, &#39;center&#39;, &#39;baseline&#39;}</span>
 <span class="sd">            Alignment of boxes.</span>
 
-<span class="sd">        mode : str, optional</span>
-<span class="sd">            Packing mode.</span>
+<span class="sd">        mode : {&#39;fixed&#39;, &#39;expand&#39;, &#39;equal&#39;}</span>
+<span class="sd">            The packing mode.</span>
+
+<span class="sd">            - &#39;fixed&#39; packs the given `.Artists` tight with *sep* spacing.</span>
+<span class="sd">            - &#39;expand&#39; uses the maximal available space to distribute the</span>
+<span class="sd">              artists with equal spacing in between.</span>
+<span class="sd">            - &#39;equal&#39;: Each artist an equal fraction of the available space</span>
+<span class="sd">              and is left-aligned (or top-aligned) therein.</span>
+
+<span class="sd">        children : list of `.Artist`</span>
+<span class="sd">            The artists to pack.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -475,10 +526,7 @@ type="text/css" />
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pad</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">align</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
 
 <div class="viewcode-block" id="VPacker.get_extent_offsets"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.VPacker.get_extent_offsets">[docs]</a>    <span class="k">def</span> <span class="nf">get_extent_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        update offset of childrens and return the extents of the box</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
+        <span class="c1"># docstring inherited</span>
         <span class="n">dpicor</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">points_to_pixels</span><span class="p">(</span><span class="mf">1.</span><span class="p">)</span>
         <span class="n">pad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad</span> <span class="o">*</span> <span class="n">dpicor</span>
         <span class="n">sep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">*</span> <span class="n">dpicor</span>
@@ -524,22 +572,29 @@ type="text/css" />
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        pad : float, optional</span>
-<span class="sd">            Boundary pad.</span>
+<span class="sd">            The boundary padding in points.</span>
 
 <span class="sd">        sep : float, optional</span>
-<span class="sd">            Spacing between items.</span>
+<span class="sd">            The spacing between items in points.</span>
 
-<span class="sd">        width : float, optional</span>
+<span class="sd">        width, height : float, optional</span>
+<span class="sd">            Width and height of the container box in pixels, calculated if</span>
+<span class="sd">            *None*.</span>
 
-<span class="sd">        height : float, optional</span>
-<span class="sd">           Width and height of the container box, calculated if</span>
-<span class="sd">           `None`.</span>
+<span class="sd">        align : {&#39;top&#39;, &#39;bottom&#39;, &#39;left&#39;, &#39;right&#39;, &#39;center&#39;, &#39;baseline&#39;}</span>
+<span class="sd">            Alignment of boxes.</span>
 
-<span class="sd">        align : str</span>
-<span class="sd">           Alignment of boxes.</span>
+<span class="sd">        mode : {&#39;fixed&#39;, &#39;expand&#39;, &#39;equal&#39;}</span>
+<span class="sd">            The packing mode.</span>
 
-<span class="sd">        mode : str</span>
-<span class="sd">           Packing mode.</span>
+<span class="sd">            - &#39;fixed&#39; packs the given `.Artists` tight with *sep* spacing.</span>
+<span class="sd">            - &#39;expand&#39; uses the maximal available space to distribute the</span>
+<span class="sd">              artists with equal spacing in between.</span>
+<span class="sd">            - &#39;equal&#39;: Each artist an equal fraction of the available space</span>
+<span class="sd">              and is left-aligned (or top-aligned) therein.</span>
+
+<span class="sd">        children : list of `.Artist`</span>
+<span class="sd">            The artists to pack.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -550,9 +605,7 @@ type="text/css" />
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pad</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">align</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
 
 <div class="viewcode-block" id="HPacker.get_extent_offsets"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.HPacker.get_extent_offsets">[docs]</a>    <span class="k">def</span> <span class="nf">get_extent_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        update offset of children and return the extents of the box</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># docstring inherited</span>
         <span class="n">dpicor</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">points_to_pixels</span><span class="p">(</span><span class="mf">1.</span><span class="p">)</span>
         <span class="n">pad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad</span> <span class="o">*</span> <span class="n">dpicor</span>
         <span class="n">sep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">*</span> <span class="n">dpicor</span>
@@ -587,20 +640,30 @@ type="text/css" />
 
         <span class="k">return</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pad</span><span class="p">,</span> <span class="n">height</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pad</span><span class="p">,</span>
                 <span class="n">xdescent</span> <span class="o">+</span> <span class="n">pad</span><span class="p">,</span> <span class="n">ydescent</span> <span class="o">+</span> <span class="n">pad</span><span class="p">,</span>
-               <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">,</span> <span class="n">yoffsets</span><span class="p">)))</span></div></div>
+                <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">,</span> <span class="n">yoffsets</span><span class="p">)))</span></div></div>
 
 
 <div class="viewcode-block" id="PaddedBox"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.PaddedBox">[docs]</a><span class="k">class</span> <span class="nc">PaddedBox</span><span class="p">(</span><span class="n">OffsetBox</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A container to add a padding around an `.Artist`.</span>
+
+<span class="sd">    The `.PaddedBox` contains a `.FancyBboxPatch` that is used to visualize</span>
+<span class="sd">    it when rendering.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">draw_frame</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">patch_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        *pad* : boundary pad</span>
-
-<span class="sd">        .. note::</span>
-<span class="sd">          *pad* need to given in points and will be</span>
-<span class="sd">          scale with the renderer dpi, while *width* and *height*</span>
-<span class="sd">          need to be in pixels.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        child : `~matplotlib.artist.Artist`</span>
+<span class="sd">            The contained `.Artist`.</span>
+<span class="sd">        pad : float</span>
+<span class="sd">            The padding in points. This will be scaled with the renderer dpi.</span>
+<span class="sd">            In contrast *width* and *hight* are in *pixel* and thus not scaled.</span>
+<span class="sd">        draw_frame : bool</span>
+<span class="sd">            Whether to draw the contained `.FancyBboxPatch`.</span>
+<span class="sd">        patch_attrs : dict or None</span>
+<span class="sd">            Additional parameters passed to the contained `.FancyBboxPatch`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pad</span> <span class="o">=</span> <span class="n">pad</span>
@@ -621,10 +684,7 @@ type="text/css" />
         <span class="bp">self</span><span class="o">.</span><span class="n">_drawFrame</span> <span class="o">=</span> <span class="n">draw_frame</span>
 
 <div class="viewcode-block" id="PaddedBox.get_extent_offsets"><a class="viewcode-back" href="../../api/offsetbox_api.html#matplotlib.offsetbox.PaddedBox.get_extent_offsets">[docs]</a>    <span class="k">def</span> <span class="nf">get_extent_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        update offset of childrens and return the extents of the box</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
+        <span class="c1"># docstring inherited.</span>
         <span class="n">dpicor</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">points_to_pixels</span><span class="p">(</span><span class="mf">1.</span><span class="p">)</span>
         <span class="n">pad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad</span> <span class="o">*</span> <span class="n">dpicor</span>
 
@@ -639,7 +699,6 @@ type="text/css" />
 <span class="sd">        Update the location of children if necessary and draw them</span>
 <span class="sd">        to the given *renderer*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">xdescent</span><span class="p">,</span> <span class="n">ydescent</span><span class="p">,</span> <span class="n">offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_extent_offsets</span><span class="p">(</span>
                                                         <span class="n">renderer</span><span class="p">)</span>
 
@@ -1896,10 +1955,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Dec 17, 2019.
+      Last updated on Jan 05, 2020.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-75-g4a56626f5.
+	Doc version v3.1.1-79-g90d53b526.
     </div>
 
 <script>
