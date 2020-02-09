@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mpl_toolkits.axes_grid1.anchored_artists &mdash; Matplotlib 2.2.5 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.2.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 2.2.5 documentation"
+          href="../../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.2.5 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+  <link rel="canonical" href="https://matplotlib.org/_modules/mpl_toolkits/axes_grid1/anchored_artists.html" />
+
+
+
+  </head>
+  <body>
+
+
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../../../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.5</span></div>
+    <img src="../../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
+
+<!-- The "Fork me on github" ribbon -->
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+        <li><a href="../../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../../gallery/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../../tutorials/index.html">tutorials</a>|&nbsp;</li>
+        <li><a href="../../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../contents.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mpl_toolkits.axes_grid1.anchored_artists</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
+                        <span class="n">unicode_literals</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">docstring</span>
+<span class="kn">from</span> <span class="nn">matplotlib.offsetbox</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AnchoredOffsetbox</span><span class="p">,</span> <span class="n">AuxTransformBox</span><span class="p">,</span>
+                                  <span class="n">DrawingArea</span><span class="p">,</span> <span class="n">TextArea</span><span class="p">,</span> <span class="n">VPacker</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Rectangle</span><span class="p">,</span> <span class="n">Ellipse</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AnchoredDrawingArea&#39;</span><span class="p">,</span> <span class="s1">&#39;AnchoredAuxTransformBox&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;AnchoredEllipse&#39;</span><span class="p">,</span> <span class="s1">&#39;AnchoredSizeBar&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="AnchoredDrawingArea"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.axes_grid1.anchored_artists.AnchoredDrawingArea.html#mpl_toolkits.axes_grid1.anchored_artists.AnchoredDrawingArea">[docs]</a><span class="k">class</span> <span class="nc">AnchoredDrawingArea</span><span class="p">(</span><span class="n">AnchoredOffsetbox</span><span class="p">):</span>
+    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">xdescent</span><span class="p">,</span> <span class="n">ydescent</span><span class="p">,</span>
+                 <span class="n">loc</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An anchored container with a fixed size and fillable DrawingArea.</span>
+
+<span class="sd">        Artists added to the *drawing_area* will have their coordinates</span>
+<span class="sd">        interpreted as pixels. Any transformations set on the artists will be</span>
+<span class="sd">        overridden.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        width, height : int or float</span>
+<span class="sd">            width and height of the container, in pixels.</span>
+
+<span class="sd">        xdescent, ydescent : int or float</span>
+<span class="sd">            descent of the container in the x- and y- direction, in pixels.</span>
+
+<span class="sd">        loc : int</span>
+<span class="sd">            Location of this artist. Valid location codes are::</span>
+
+<span class="sd">                &#39;upper right&#39;  : 1,</span>
+<span class="sd">                &#39;upper left&#39;   : 2,</span>
+<span class="sd">                &#39;lower left&#39;   : 3,</span>
+<span class="sd">                &#39;lower right&#39;  : 4,</span>
+<span class="sd">                &#39;right&#39;        : 5,</span>
+<span class="sd">                &#39;center left&#39;  : 6,</span>
+<span class="sd">                &#39;center right&#39; : 7,</span>
+<span class="sd">                &#39;lower center&#39; : 8,</span>
+<span class="sd">                &#39;upper center&#39; : 9,</span>
+<span class="sd">                &#39;center&#39;       : 10</span>
+
+<span class="sd">        pad : int or float, optional</span>
+<span class="sd">            Padding around the child objects, in fraction of the font</span>
+<span class="sd">            size. Defaults to 0.4.</span>
+
+<span class="sd">        borderpad : int or float, optional</span>
+<span class="sd">            Border padding, in fraction of the font size.</span>
+<span class="sd">            Defaults to 0.5.</span>
+
+<span class="sd">        prop : `matplotlib.font_manager.FontProperties`, optional</span>
+<span class="sd">            Font property used as a reference for paddings.</span>
+
+<span class="sd">        frameon : bool, optional</span>
+<span class="sd">            If True, draw a box around this artists. Defaults to True.</span>
+
+<span class="sd">        **kwargs :</span>
+<span class="sd">            Keyworded arguments to pass to</span>
+<span class="sd">            :class:`matplotlib.offsetbox.AnchoredOffsetbox`.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        drawing_area : `matplotlib.offsetbox.DrawingArea`</span>
+<span class="sd">            A container for artists to display.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        To display blue and red circles of different sizes in the upper right</span>
+<span class="sd">        of an axes *ax*:</span>
+
+<span class="sd">        &gt;&gt;&gt; ada = AnchoredDrawingArea(20, 20, 0, 0, loc=1, frameon=False)</span>
+<span class="sd">        &gt;&gt;&gt; ada.drawing_area.add_artist(Circle((10, 10), 10, fc=&quot;b&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; ada.drawing_area.add_artist(Circle((30, 10), 5, fc=&quot;r&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; ax.add_artist(ada)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">da</span> <span class="o">=</span> <span class="n">DrawingArea</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">xdescent</span><span class="p">,</span> <span class="n">ydescent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drawing_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">da</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">AnchoredDrawingArea</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">loc</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="n">borderpad</span><span class="p">,</span> <span class="n">child</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">da</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnchoredAuxTransformBox"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.axes_grid1.anchored_artists.AnchoredAuxTransformBox.html#mpl_toolkits.axes_grid1.anchored_artists.AnchoredAuxTransformBox">[docs]</a><span class="k">class</span> <span class="nc">AnchoredAuxTransformBox</span><span class="p">(</span><span class="n">AnchoredOffsetbox</span><span class="p">):</span>
+    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span>
+                 <span class="n">pad</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An anchored container with transformed coordinates.</span>
+
+<span class="sd">        Artists added to the *drawing_area* are scaled according to the</span>
+<span class="sd">        coordinates of the transformation used. The dimensions of this artist</span>
+<span class="sd">        will scale to contain the artists added.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : `matplotlib.transforms.Transform`</span>
+<span class="sd">            The transformation object for the coordinate system in use, i.e.,</span>
+<span class="sd">            :attr:`matplotlib.axes.Axes.transData`.</span>
+
+<span class="sd">        loc : int</span>
+<span class="sd">            Location of this artist. Valid location codes are::</span>
+
+<span class="sd">                &#39;upper right&#39;  : 1,</span>
+<span class="sd">                &#39;upper left&#39;   : 2,</span>
+<span class="sd">                &#39;lower left&#39;   : 3,</span>
+<span class="sd">                &#39;lower right&#39;  : 4,</span>
+<span class="sd">                &#39;right&#39;        : 5,</span>
+<span class="sd">                &#39;center left&#39;  : 6,</span>
+<span class="sd">                &#39;center right&#39; : 7,</span>
+<span class="sd">                &#39;lower center&#39; : 8,</span>
+<span class="sd">                &#39;upper center&#39; : 9,</span>
+<span class="sd">                &#39;center&#39;       : 10</span>
+
+<span class="sd">        pad : int or float, optional</span>
+<span class="sd">            Padding around the child objects, in fraction of the font</span>
+<span class="sd">            size. Defaults to 0.4.</span>
+
+<span class="sd">        borderpad : int or float, optional</span>
+<span class="sd">            Border padding, in fraction of the font size.</span>
+<span class="sd">            Defaults to 0.5.</span>
+
+<span class="sd">        prop : `matplotlib.font_manager.FontProperties`, optional</span>
+<span class="sd">            Font property used as a reference for paddings.</span>
+
+<span class="sd">        frameon : bool, optional</span>
+<span class="sd">            If True, draw a box around this artists. Defaults to True.</span>
+
+<span class="sd">        **kwargs :</span>
+<span class="sd">            Keyworded arguments to pass to</span>
+<span class="sd">            :class:`matplotlib.offsetbox.AnchoredOffsetbox`.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        drawing_area : `matplotlib.offsetbox.AuxTransformBox`</span>
+<span class="sd">            A container for artists to display.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        To display an ellipse in the upper left, with a width of 0.1 and</span>
+<span class="sd">        height of 0.4 in data coordinates:</span>
+
+<span class="sd">        &gt;&gt;&gt; box = AnchoredAuxTransformBox(ax.transData, loc=2)</span>
+<span class="sd">        &gt;&gt;&gt; el = Ellipse((0,0), width=0.1, height=0.4, angle=30)</span>
+<span class="sd">        &gt;&gt;&gt; box.drawing_area.add_artist(el)</span>
+<span class="sd">        &gt;&gt;&gt; ax.add_artist(box)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drawing_area</span> <span class="o">=</span> <span class="n">AuxTransformBox</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+
+        <span class="n">AnchoredOffsetbox</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="n">borderpad</span><span class="p">,</span>
+                                   <span class="n">child</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drawing_area</span><span class="p">,</span>
+                                   <span class="n">prop</span><span class="o">=</span><span class="n">prop</span><span class="p">,</span>
+                                   <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span>
+                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnchoredEllipse"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.axes_grid1.anchored_artists.AnchoredEllipse.html#mpl_toolkits.axes_grid1.anchored_artists.AnchoredEllipse">[docs]</a><span class="k">class</span> <span class="nc">AnchoredEllipse</span><span class="p">(</span><span class="n">AnchoredOffsetbox</span><span class="p">):</span>
+    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span>
+                 <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw an anchored ellipse of a given size.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : `matplotlib.transforms.Transform`</span>
+<span class="sd">            The transformation object for the coordinate system in use, i.e.,</span>
+<span class="sd">            :attr:`matplotlib.axes.Axes.transData`.</span>
+
+<span class="sd">        width, height : int or float</span>
+<span class="sd">            Width and height of the ellipse, given in coordinates of</span>
+<span class="sd">            *transform*.</span>
+
+<span class="sd">        angle : int or float</span>
+<span class="sd">            Rotation of the ellipse, in degrees, anti-clockwise.</span>
+
+<span class="sd">        loc : int</span>
+<span class="sd">            Location of this size bar. Valid location codes are::</span>
+
+<span class="sd">                &#39;upper right&#39;  : 1,</span>
+<span class="sd">                &#39;upper left&#39;   : 2,</span>
+<span class="sd">                &#39;lower left&#39;   : 3,</span>
+<span class="sd">                &#39;lower right&#39;  : 4,</span>
+<span class="sd">                &#39;right&#39;        : 5,</span>
+<span class="sd">                &#39;center left&#39;  : 6,</span>
+<span class="sd">                &#39;center right&#39; : 7,</span>
+<span class="sd">                &#39;lower center&#39; : 8,</span>
+<span class="sd">                &#39;upper center&#39; : 9,</span>
+<span class="sd">                &#39;center&#39;       : 10</span>
+
+<span class="sd">        pad : int or float, optional</span>
+<span class="sd">            Padding around the ellipse, in fraction of the font size. Defaults</span>
+<span class="sd">            to 0.1.</span>
+
+<span class="sd">        borderpad : int or float, optional</span>
+<span class="sd">            Border padding, in fraction of the font size. Defaults to 0.1.</span>
+
+<span class="sd">        frameon : bool, optional</span>
+<span class="sd">            If True, draw a box around the ellipse. Defaults to True.</span>
+
+<span class="sd">        prop : `matplotlib.font_manager.FontProperties`, optional</span>
+<span class="sd">            Font property used as a reference for paddings.</span>
+
+<span class="sd">        **kwargs :</span>
+<span class="sd">            Keyworded arguments to pass to</span>
+<span class="sd">            :class:`matplotlib.offsetbox.AnchoredOffsetbox`.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ellipse : `matplotlib.patches.Ellipse`</span>
+<span class="sd">            Ellipse patch drawn.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_box</span> <span class="o">=</span> <span class="n">AuxTransformBox</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ellipse</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_box</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ellipse</span><span class="p">)</span>
+
+        <span class="n">AnchoredOffsetbox</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="n">borderpad</span><span class="p">,</span>
+                                   <span class="n">child</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_box</span><span class="p">,</span>
+                                   <span class="n">prop</span><span class="o">=</span><span class="n">prop</span><span class="p">,</span>
+                                   <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnchoredSizeBar"><a class="viewcode-back" href="../../../api/_as_gen/mpl_toolkits.axes_grid1.anchored_artists.AnchoredSizeBar.html#mpl_toolkits.axes_grid1.anchored_artists.AnchoredSizeBar">[docs]</a><span class="k">class</span> <span class="nc">AnchoredSizeBar</span><span class="p">(</span><span class="n">AnchoredOffsetbox</span><span class="p">):</span>
+    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span>
+                 <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size_vertical</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+                 <span class="n">label_top</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontproperties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fill_bar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a horizontal scale bar with a center-aligned label underneath.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : `matplotlib.transforms.Transform`</span>
+<span class="sd">            The transformation object for the coordinate system in use, i.e.,</span>
+<span class="sd">            :attr:`matplotlib.axes.Axes.transData`.</span>
+
+<span class="sd">        size : int or float</span>
+<span class="sd">            Horizontal length of the size bar, given in coordinates of</span>
+<span class="sd">            *transform*.</span>
+
+<span class="sd">        label : str</span>
+<span class="sd">            Label to display.</span>
+
+<span class="sd">        loc : int</span>
+<span class="sd">            Location of this size bar. Valid location codes are::</span>
+
+<span class="sd">                &#39;upper right&#39;  : 1,</span>
+<span class="sd">                &#39;upper left&#39;   : 2,</span>
+<span class="sd">                &#39;lower left&#39;   : 3,</span>
+<span class="sd">                &#39;lower right&#39;  : 4,</span>
+<span class="sd">                &#39;right&#39;        : 5,</span>
+<span class="sd">                &#39;center left&#39;  : 6,</span>
+<span class="sd">                &#39;center right&#39; : 7,</span>
+<span class="sd">                &#39;lower center&#39; : 8,</span>
+<span class="sd">                &#39;upper center&#39; : 9,</span>
+<span class="sd">                &#39;center&#39;       : 10</span>
+
+<span class="sd">        pad : int or float, optional</span>
+<span class="sd">            Padding around the label and size bar, in fraction of the font</span>
+<span class="sd">            size. Defaults to 0.1.</span>
+
+<span class="sd">        borderpad : int or float, optional</span>
+<span class="sd">            Border padding, in fraction of the font size.</span>
+<span class="sd">            Defaults to 0.1.</span>
+
+<span class="sd">        sep : int or float, optional</span>
+<span class="sd">            Separation between the label and the size bar, in points.</span>
+<span class="sd">            Defaults to 2.</span>
+
+<span class="sd">        frameon : bool, optional</span>
+<span class="sd">            If True, draw a box around the horizontal bar and label.</span>
+<span class="sd">            Defaults to True.</span>
+
+<span class="sd">        size_vertical : int or float, optional</span>
+<span class="sd">            Vertical length of the size bar, given in coordinates of</span>
+<span class="sd">            *transform*. Defaults to 0.</span>
+
+<span class="sd">        color : str, optional</span>
+<span class="sd">            Color for the size bar and label.</span>
+<span class="sd">            Defaults to black.</span>
+
+<span class="sd">        label_top : bool, optional</span>
+<span class="sd">            If True, the label will be over the size bar.</span>
+<span class="sd">            Defaults to False.</span>
+
+<span class="sd">        fontproperties : `matplotlib.font_manager.FontProperties`, optional</span>
+<span class="sd">            Font properties for the label text.</span>
+
+<span class="sd">        fill_bar : bool, optional</span>
+<span class="sd">            If True and if size_vertical is nonzero, the size bar will</span>
+<span class="sd">            be filled in with the color specified by the size bar.</span>
+<span class="sd">            Defaults to True if `size_vertical` is greater than</span>
+<span class="sd">            zero and False otherwise.</span>
+
+<span class="sd">        **kwargs :</span>
+<span class="sd">            Keyworded arguments to pass to</span>
+<span class="sd">            :class:`matplotlib.offsetbox.AnchoredOffsetbox`.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        size_bar : `matplotlib.offsetbox.AuxTransformBox`</span>
+<span class="sd">            Container for the size bar.</span>
+
+<span class="sd">        txt_label : `matplotlib.offsetbox.TextArea`</span>
+<span class="sd">            Container for the label of the size bar.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If *prop* is passed as a keyworded argument, but *fontproperties* is</span>
+<span class="sd">        not, then *prop* is be assumed to be the intended *fontproperties*.</span>
+<span class="sd">        Using both *prop* and *fontproperties* is not supported.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; from mpl_toolkits.axes_grid1.anchored_artists import \</span>
+<span class="sd">AnchoredSizeBar</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plt.subplots()</span>
+<span class="sd">        &gt;&gt;&gt; ax.imshow(np.random.random((10,10)))</span>
+<span class="sd">        &gt;&gt;&gt; bar = AnchoredSizeBar(ax.transData, 3, &#39;3 data units&#39;, 4)</span>
+<span class="sd">        &gt;&gt;&gt; ax.add_artist(bar)</span>
+<span class="sd">        &gt;&gt;&gt; fig.show()</span>
+
+<span class="sd">        Using all the optional parameters</span>
+
+<span class="sd">        &gt;&gt;&gt; import matplotlib.font_manager as fm</span>
+<span class="sd">        &gt;&gt;&gt; fontprops = fm.FontProperties(size=14, family=&#39;monospace&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; bar = AnchoredSizeBar(ax.transData, 3, &#39;3 units&#39;, 4, pad=0.5, \</span>
+<span class="sd">sep=5, borderpad=0.5, frameon=False, \</span>
+<span class="sd">size_vertical=0.5, color=&#39;white&#39;, \</span>
+<span class="sd">fontproperties=fontprops)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fill_bar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fill_bar</span> <span class="o">=</span> <span class="n">size_vertical</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">size_bar</span> <span class="o">=</span> <span class="n">AuxTransformBox</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size_bar</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">size</span><span class="p">,</span> <span class="n">size_vertical</span><span class="p">,</span>
+                                           <span class="n">fill</span><span class="o">=</span><span class="n">fill_bar</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                                           <span class="n">edgecolor</span><span class="o">=</span><span class="n">color</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">fontproperties</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;prop&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">fontproperties</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;prop&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fontproperties</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">textprops</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">textprops</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span> <span class="s1">&#39;fontproperties&#39;</span><span class="p">:</span> <span class="n">fontproperties</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">txt_label</span> <span class="o">=</span> <span class="n">TextArea</span><span class="p">(</span>
+            <span class="n">label</span><span class="p">,</span>
+            <span class="n">minimumdescent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">textprops</span><span class="o">=</span><span class="n">textprops</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">label_top</span><span class="p">:</span>
+            <span class="n">_box_children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">txt_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_bar</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_box_children</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">size_bar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">txt_label</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_box</span> <span class="o">=</span> <span class="n">VPacker</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="n">_box_children</span><span class="p">,</span>
+                            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                            <span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">)</span>
+
+        <span class="n">AnchoredOffsetbox</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="n">borderpad</span><span class="p">,</span>
+                                   <span class="n">child</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_box</span><span class="p">,</span>
+                                   <span class="n">prop</span><span class="o">=</span><span class="n">fontproperties</span><span class="p">,</span>
+                                   <span class="n">frameon</span><span class="o">=</span><span class="n">frameon</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+        <br />
+      Last updated on Feb 09, 2020.
+	Created using
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+	Doc version v2.2.5-2-ga847ffac5.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>

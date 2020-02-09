@@ -1,0 +1,560 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Developer&#39;s tips for testing &mdash; Matplotlib 2.2.5 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css"
+type="text/css" />
+    <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.2.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 2.2.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html"
+/>
+    <link rel="search" title="Search" href="../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.2.5 documentation" href="../index.html" />
+    <link rel="up" title="The Matplotlib Developers&#39; Guide" href="index.html" />
+    <link rel="next" title="Writing documentation" href="documenting_mpl.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" />
+  <link rel="canonical" href="https://matplotlib.org/devel/testing.html" />
+
+
+
+  </head>
+  <body>
+
+
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.5</span></div>
+    <img src="../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
+
+<!-- The "Fork me on github" ribbon -->
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="documenting_mpl.html" title="Writing documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="contributing.html" title="Contributing"
+             accesskey="P">previous</a> |</li>
+
+        <li><a href="../index.html">home</a>|&nbsp;</li>
+        <li><a href="../gallery/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../tutorials/index.html">tutorials</a>|&nbsp;</li>
+        <li><a href="../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../contents.html">docs</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">The Matplotlib Developers' Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../contents.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Developer's tips for testing</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#running-the-tests">Running the tests</a></li>
+<li><a class="reference internal" href="#writing-a-simple-test">Writing a simple test</a></li>
+<li><a class="reference internal" href="#random-data-in-tests">Random data in tests</a></li>
+<li><a class="reference internal" href="#writing-an-image-comparison-test">Writing an image comparison test</a></li>
+<li><a class="reference internal" href="#known-failing-tests">Known failing tests</a></li>
+<li><a class="reference internal" href="#creating-a-new-module-in-matplotlib-tests">Creating a new module in matplotlib.tests</a></li>
+<li><a class="reference internal" href="#using-travis-ci">Using Travis CI</a></li>
+<li><a class="reference internal" href="#using-tox">Using tox</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../contents.html">Documentation overview</a><ul>
+  <li><a href="index.html">The Matplotlib Developers' Guide</a><ul>
+      <li>Previous: <a href="contributing.html" title="previous chapter">Contributing</a></li>
+      <li>Next: <a href="documenting_mpl.html" title="next chapter">Writing documentation</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div id="sidebar-pagesource" role="note" aria-label="source link"
+    style="margin-top: 1.5em; padding-top: 0.1em; border-top: 1px solid #86989b">
+  <a href="../_sources/devel/testing.rst.txt"
+     style="color: #c0c0c0" rel="nofollow">Show Page Source</a>
+  </div>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="developer-s-tips-for-testing">
+<span id="testing"></span><h1>Developer's tips for testing<a class="headerlink" href="#developer-s-tips-for-testing" title="Permalink to this headline">¶</a></h1>
+<p>Matplotlib's testing infrastructure depends on <a class="reference external" href="http://doc.pytest.org/en/latest/">pytest</a>. The tests are in
+<code class="file docutils literal notranslate"><span class="pre">lib/matplotlib/tests</span></code>, and customizations to the pytest testing
+infrastructure are in <code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.testing</span></code>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Install the latest version of Matplotlib as documented in
+<a class="reference internal" href="contributing.html#installing-for-devs"><span class="std std-ref">Retrieving and installing the latest version of the code</span></a> In particular, follow the instructions to use a
+local FreeType build.</p>
+<p>The following software is required to run the tests:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://doc.pytest.org/en/latest/">pytest</a> (&gt;=3.6)</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/unittest.mock.html">mock</a>, when running Python 2</li>
+<li><a class="reference external" href="https://www.ghostscript.com/">Ghostscript</a> (to render PDF files)</li>
+<li><a class="reference external" href="https://inkscape.org">Inkscape</a> (to render SVG files)</li>
+</ul>
+</div></blockquote>
+<p>Optionally you can install:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="https://pytest-cov.readthedocs.io/en/latest/">pytest-cov</a> (&gt;=2.3.1) to collect coverage information</li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/pytest-pep8">pytest-pep8</a> to test coding standards</li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/pytest-timeout">pytest-timeout</a> to limit runtime in case of stuck tests</li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/pytest-xdist">pytest-xdist</a> to run tests in parallel</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="running-the-tests">
+<h2>Running the tests<a class="headerlink" href="#running-the-tests" title="Permalink to this headline">¶</a></h2>
+<p>Running the tests is simple. Make sure you have pytest installed and run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">test</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tests</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>in the root directory of the distribution. The script takes a set of
+commands, such as:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--pep8</span></code></td>
+<td>Perform pep8 checks (requires <a class="reference external" href="https://pypi.python.org/pypi/pytest-pep8">pytest-pep8</a>)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">&quot;not</span> <span class="pre">network&quot;</span></code></td>
+<td>Disable tests that require network access</td>
+</tr>
+</tbody>
+</table>
+<p>Additional arguments are passed on to pytest. See the pytest documentation for
+<a class="reference external" href="http://doc.pytest.org/en/latest/usage.html">supported arguments</a>. Some of the more important ones are given here:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="57%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--verbose</span></code></td>
+<td>Be more verbose</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--n</span> <span class="pre">NUM</span></code></td>
+<td>Run tests in parallel over NUM
+processes (requires <a class="reference external" href="https://pypi.python.org/pypi/pytest-xdist">pytest-xdist</a>)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--timeout=SECONDS</span></code></td>
+<td>Set timeout for results from each test
+process (requires <a class="reference external" href="https://pypi.python.org/pypi/pytest-timeout">pytest-timeout</a>)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--capture=no</span></code> or <code class="docutils literal notranslate"><span class="pre">-s</span></code></td>
+<td>Do not capture stdout</td>
+</tr>
+</tbody>
+</table>
+<p>To run a single test from the command line, you can provide a file path,
+optionally followed by the function separated by two colons, e.g., (tests do
+not need to be installed, but Matplotlib should be):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">test</span> <span class="n">lib</span><span class="o">/</span><span class="n">matplotlib</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">test_simplification</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">test_clipping</span>
+</pre></div>
+</div>
+<p>or, if tests are installed, a dot-separated path to the module, optionally
+followed by the function separated by two colons, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">test</span> <span class="o">--</span><span class="n">pyargs</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_simplification</span><span class="p">::</span><span class="n">test_clipping</span>
+</pre></div>
+</div>
+<p>If you want to run the full test suite, but want to save wall time try
+running the tests in parallel:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">test</span> <span class="o">--</span><span class="n">verbose</span> <span class="o">-</span><span class="n">n</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>Depending on your version of Python and pytest-xdist, you may need to set
+<code class="docutils literal notranslate"><span class="pre">PYTHONHASHSEED</span></code> to a fixed value when running in parallel:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PYTHONHASHSEED</span><span class="o">=</span><span class="mi">0</span> <span class="n">py</span><span class="o">.</span><span class="n">test</span> <span class="o">--</span><span class="n">verbose</span> <span class="o">-</span><span class="n">n</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>An alternative implementation that does not look at command line arguments
+and works from within Python is to run the tests from the Matplotlib library
+function <code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.test()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writing-a-simple-test">
+<h2>Writing a simple test<a class="headerlink" href="#writing-a-simple-test" title="Permalink to this headline">¶</a></h2>
+<p>Many elements of Matplotlib can be tested using standard tests. For
+example, here is a test from <code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.tests.test_basic</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_simple</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    very simple example test</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>Pytest determines which functions are tests by searching for files whose names
+begin with <code class="docutils literal notranslate"><span class="pre">&quot;test_&quot;</span></code> and then within those files for functions beginning with
+<code class="docutils literal notranslate"><span class="pre">&quot;test&quot;</span></code> or classes beginning with <code class="docutils literal notranslate"><span class="pre">&quot;Test&quot;</span></code>.</p>
+<p>Some tests have internal side effects that need to be cleaned up after their
+execution (such as created figures or modified rc params). The pytest fixture
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mpl_test_settings()</span></code> will automatically clean
+these up; there is no need to do anything further.</p>
+</div>
+<div class="section" id="random-data-in-tests">
+<h2>Random data in tests<a class="headerlink" href="#random-data-in-tests" title="Permalink to this headline">¶</a></h2>
+<p>Random data can is a very convenient way to generate data for examples,
+however the randomness is problematic for testing (as the tests
+must be deterministic!).  To work around this set the seed in each test.
+For numpy use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">19680801</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and Python's random number generator:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">19680801</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The seed is John Hunter's birthday.</p>
+</div>
+<div class="section" id="writing-an-image-comparison-test">
+<h2>Writing an image comparison test<a class="headerlink" href="#writing-an-image-comparison-test" title="Permalink to this headline">¶</a></h2>
+<p>Writing an image based test is only slightly more difficult than a
+simple test. The main consideration is that you must specify the
+&quot;baseline&quot;, or expected, images in the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">image_comparison()</span></code> decorator. For
+example, this test generates a single image and automatically tests it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib.testing.decorators</span> <span class="kn">import</span> <span class="n">image_comparison</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="nd">@image_comparison</span><span class="p">(</span><span class="n">baseline_images</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;spines_axes_positions&#39;</span><span class="p">],</span>
+                  <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;png&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_spines_axes_positions</span><span class="p">():</span>
+    <span class="c1"># SF bug 2852168</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;centered spines&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span><span class="mf">0.1</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first time this test is run, there will be no baseline image to
+compare against, so the test will fail.  Copy the output images (in
+this case <code class="xref py py-obj docutils literal notranslate"><span class="pre">result_images/test_category/spines_axes_positions.png</span></code>) to
+the correct subdirectory of <code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_images</span></code> tree in the source
+directory (in this case
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">lib/matplotlib/tests/baseline_images/test_category</span></code>).  Put this new
+file under source code revision control (with <code class="xref py py-obj docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code>).  When
+rerunning the tests, they should now pass.</p>
+<p>The <code class="xref py py-func docutils literal notranslate"><span class="pre">image_comparison()</span></code> decorator
+defaults to generating <code class="docutils literal notranslate"><span class="pre">png</span></code>, <code class="docutils literal notranslate"><span class="pre">pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">svg</span></code> output, but in
+interest of keeping the size of the library from ballooning we should only
+include the <code class="docutils literal notranslate"><span class="pre">svg</span></code> or <code class="docutils literal notranslate"><span class="pre">pdf</span></code> outputs if the test is explicitly exercising
+a feature dependent on that backend.</p>
+<p>There are two optional keyword arguments to the <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_comparison</span></code>
+decorator:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="xref py py-obj docutils literal notranslate"><span class="pre">extensions</span></code>: If you only wish to test additional image formats
+(rather than just <code class="xref py py-obj docutils literal notranslate"><span class="pre">png</span></code>), pass any additional file types in the
+list of the extensions to test.  When copying the new
+baseline files be sure to only copy the output files, not their
+conversions to <code class="docutils literal notranslate"><span class="pre">png</span></code>.  For example only copy the files
+ending in <code class="docutils literal notranslate"><span class="pre">pdf</span></code>, not in <code class="docutils literal notranslate"><span class="pre">_pdf.png</span></code>.</li>
+<li><code class="xref py py-obj docutils literal notranslate"><span class="pre">tol</span></code>: This is the image matching tolerance, the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">1e-3</span></code>.
+If some variation is expected in the image between runs, this
+value may be adjusted.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="known-failing-tests">
+<h2>Known failing tests<a class="headerlink" href="#known-failing-tests" title="Permalink to this headline">¶</a></h2>
+<p>If you're writing a test, you may mark it as a known failing test with the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">pytest.mark.xfail()</span></code> decorator. This allows the test to be added to the
+test suite and run on the buildbots without causing undue alarm. For example,
+although the following test will fail, it is an expected failure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">xfail</span>
+<span class="k">def</span> <span class="nf">test_simple_fail</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;very simple example test that should fail&#39;&#39;&#39;</span>
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>Note that the first argument to the <code class="xref py py-func docutils literal notranslate"><span class="pre">xfail()</span></code> decorator is a
+fail condition, which can be a value such as True, False, or may be a
+dynamically evaluated expression. If a condition is supplied, then a reason
+must also be supplied with the <code class="docutils literal notranslate"><span class="pre">reason='message'</span></code> keyword argument.</p>
+</div>
+<div class="section" id="creating-a-new-module-in-matplotlib-tests">
+<h2>Creating a new module in matplotlib.tests<a class="headerlink" href="#creating-a-new-module-in-matplotlib-tests" title="Permalink to this headline">¶</a></h2>
+<p>We try to keep the tests categorized by the primary module they are
+testing.  For example, the tests related to the <code class="docutils literal notranslate"><span class="pre">mathtext.py</span></code> module
+are in <code class="docutils literal notranslate"><span class="pre">test_mathtext.py</span></code>.</p>
+</div>
+<div class="section" id="using-travis-ci">
+<h2>Using Travis CI<a class="headerlink" href="#using-travis-ci" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://travis-ci.org/">Travis CI</a> is a hosted CI system &quot;in the
+cloud&quot;.</p>
+<p>Travis is configured to receive notifications of new commits to GitHub
+repos (via GitHub &quot;service hooks&quot;) and to run builds or tests when it
+sees these new commits. It looks for a YAML file called
+<code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code> in the root of the repository to see how to test the
+project.</p>
+<p>Travis CI is already enabled for the <a class="reference external" href="https://github.com/matplotlib/matplotlib/">main matplotlib GitHub
+repository</a> -- for
+example, see <a class="reference external" href="https://travis-ci.org/matplotlib/matplotlib">its Travis page</a>.</p>
+<p>If you want to enable Travis CI for your personal Matplotlib GitHub
+repo, simply enable the repo to use Travis CI in either the Travis CI
+UI or the GitHub UI (Admin | Service Hooks). For details, see <a class="reference external" href="https://docs.travis-ci.com/user/getting-started/">the
+Travis CI Getting Started page</a>.  This
+generally isn't necessary, since any pull request submitted against
+the main Matplotlib repository will be tested.</p>
+<p>Once this is configured, you can see the Travis CI results at
+<a class="reference external" href="https://travis-ci.org/your_GitHub_user_name/matplotlib">https://travis-ci.org/your_GitHub_user_name/matplotlib</a> -- here's <a class="reference external" href="https://travis-ci.org/msabramo/matplotlib">an
+example</a>.</p>
+</div>
+<div class="section" id="using-tox">
+<h2>Using tox<a class="headerlink" href="#using-tox" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://tox.readthedocs.io/en/latest/">Tox</a> is a tool for running
+tests against
+multiple Python environments, including multiple versions of Python
+(e.g., 2.7, 3.5, 3.6) and even different Python implementations
+altogether (e.g., CPython, PyPy, Jython, etc.)</p>
+<p>Testing all versions of Python (2.7, 3.6, 3.7, ...) requires
+having multiple versions of Python installed on your system and on the
+PATH. Depending on your operating system, you may want to use your
+package manager (such as apt-get, yum or MacPorts) to do this.</p>
+<p>tox makes it easy to determine if your working copy introduced any
+regressions before submitting a pull request. Here's how to use it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install tox
+$ tox
+</pre></div>
+</div>
+<p>You can also run tox on a subset of environments:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tox -e py27,py36,py37
+</pre></div>
+</div>
+<p>Tox processes everything serially so it can take a long time to test
+several environments. To speed it up, you might try using a new,
+parallelized version of tox called <code class="docutils literal notranslate"><span class="pre">detox</span></code>. Give this a try:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install -U -i http://pypi.testrun.org detox
+$ detox
+</pre></div>
+</div>
+<p>Tox is configured using a file called <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>. You may need to
+edit this file if you want to add new environments to test (e.g.,
+<code class="docutils literal notranslate"><span class="pre">py33</span></code>) or if you want to tweak the dependencies or the way the
+tests are run. For more info on the <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> file, see the <a class="reference external" href="https://tox.readthedocs.io/en/latest/config.html">Tox
+Configuration Specification</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+        <br />
+      Last updated on Feb 09, 2020.
+	Created using
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+	Doc version v2.2.5-2-ga847ffac5.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>

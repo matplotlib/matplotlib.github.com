@@ -1,0 +1,855 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>matplotlib.scale &mdash; Matplotlib 2.2.5 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.2.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 2.2.5 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.2.5 documentation" href="../../index.html" />
+    <link rel="up" title="matplotlib" href="../matplotlib.html" />
+  <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/scale.html" />
+
+
+
+  </head>
+  <body>
+
+
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.5</span></div>
+    <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
+
+<!-- The "Fork me on github" ribbon -->
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
+        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../contents.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../matplotlib.html">matplotlib</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for matplotlib.scale</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
+                        <span class="n">unicode_literals</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ma</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NullFormatter</span><span class="p">,</span> <span class="n">ScalarFormatter</span><span class="p">,</span> <span class="n">LogFormatterSciNotation</span><span class="p">,</span> <span class="n">LogitFormatter</span><span class="p">,</span>
+    <span class="n">NullLocator</span><span class="p">,</span> <span class="n">LogLocator</span><span class="p">,</span> <span class="n">AutoLocator</span><span class="p">,</span> <span class="n">AutoMinorLocator</span><span class="p">,</span>
+    <span class="n">SymmetricalLogLocator</span><span class="p">,</span> <span class="n">LogitLocator</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Transform</span><span class="p">,</span> <span class="n">IdentityTransform</span>
+
+
+<div class="viewcode-block" id="ScaleBase"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.ScaleBase">[docs]</a><span class="k">class</span> <span class="nc">ScaleBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The base class for all scales.</span>
+
+<span class="sd">    Scales are separable transformations, working on a single dimension.</span>
+
+<span class="sd">    Any subclasses will want to override:</span>
+
+<span class="sd">      - :attr:`name`</span>
+<span class="sd">      - :meth:`get_transform`</span>
+<span class="sd">      - :meth:`set_default_locators_and_formatters`</span>
+
+<span class="sd">    And optionally:</span>
+<span class="sd">      - :meth:`limit_range_for_scale`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ScaleBase.get_transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.ScaleBase.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the :class:`~matplotlib.transforms.Transform` object</span>
+<span class="sd">        associated with this scale.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ScaleBase.set_default_locators_and_formatters"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.ScaleBase.set_default_locators_and_formatters">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the :class:`~matplotlib.ticker.Locator` and</span>
+<span class="sd">        :class:`~matplotlib.ticker.Formatter` objects on the given</span>
+<span class="sd">        axis to match this scale.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ScaleBase.limit_range_for_scale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.ScaleBase.limit_range_for_scale">[docs]</a>    <span class="k">def</span> <span class="nf">limit_range_for_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">minpos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the range *vmin*, *vmax*, possibly limited to the</span>
+<span class="sd">        domain supported by this scale.</span>
+
+<span class="sd">        *minpos* should be the minimum positive value in the data.</span>
+<span class="sd">         This is used by log scales to determine a minimum value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span></div></div>
+
+
+<div class="viewcode-block" id="LinearScale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LinearScale">[docs]</a><span class="k">class</span> <span class="nc">LinearScale</span><span class="p">(</span><span class="n">ScaleBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default linear scale.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="LinearScale.set_default_locators_and_formatters"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LinearScale.set_default_locators_and_formatters">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the locators and formatters to reasonable defaults for</span>
+<span class="sd">        linear scaling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">AutoLocator</span><span class="p">())</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">NullFormatter</span><span class="p">())</span>
+        <span class="c1"># update the minor locator for x and y axis based on rcParams</span>
+        <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.minor.visible&#39;</span><span class="p">]:</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">AutoMinorLocator</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">NullLocator</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="LinearScale.get_transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LinearScale.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The transform for linear scaling is just the</span>
+<span class="sd">        :class:`~matplotlib.transforms.IdentityTransform`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">IdentityTransform</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="LogTransformBase"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogTransformBase">[docs]</a><span class="k">class</span> <span class="nc">LogTransformBase</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nonpos</span><span class="o">=</span><span class="s1">&#39;clip&#39;</span><span class="p">):</span>
+        <span class="n">Transform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clip</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clip&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}[</span><span class="n">nonpos</span><span class="p">]</span>
+
+<div class="viewcode-block" id="LogTransformBase.transform_non_affine"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogTransformBase.transform_non_affine">[docs]</a>    <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="c1"># Ignore invalid values due to nans being passed to the transform</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clip</span><span class="p">:</span>
+                <span class="c1"># SVG spec says that conforming viewers must support values up</span>
+                <span class="c1"># to 3.4e38 (C float); however experiments suggest that</span>
+                <span class="c1"># Inkscape (which uses cairo for rendering) runs into cairo&#39;s</span>
+                <span class="c1"># 24-bit limit (which is apparently shared by Agg).</span>
+                <span class="c1"># Ghostscript (used for pdf rendering appears to overflow even</span>
+                <span class="c1"># earlier, with the max value around 2 ** 15 for the tests to</span>
+                <span class="c1"># pass. On the other hand, in practice, we want to clip beyond</span>
+                <span class="c1">#     np.log10(np.nextafter(0, 1)) ~ -323</span>
+                <span class="c1"># so 1000 seems safe.</span>
+                    <span class="n">out</span><span class="p">[</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;clip&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clip</span> <span class="k">else</span> <span class="s2">&quot;mask&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InvertedLogTransformBase"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLogTransformBase">[docs]</a><span class="k">class</span> <span class="nc">InvertedLogTransformBase</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="InvertedLogTransformBase.transform_non_affine"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLogTransformBase.transform_non_affine">[docs]</a>    <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ma</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">()&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Log10Transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.Log10Transform">[docs]</a><span class="k">class</span> <span class="nc">Log10Transform</span><span class="p">(</span><span class="n">LogTransformBase</span><span class="p">):</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="mf">10.0</span>
+
+<div class="viewcode-block" id="Log10Transform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.Log10Transform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">InvertedLog10Transform</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="InvertedLog10Transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLog10Transform">[docs]</a><span class="k">class</span> <span class="nc">InvertedLog10Transform</span><span class="p">(</span><span class="n">InvertedLogTransformBase</span><span class="p">):</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="mf">10.0</span>
+
+<div class="viewcode-block" id="InvertedLog10Transform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLog10Transform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Log10Transform</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="Log2Transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.Log2Transform">[docs]</a><span class="k">class</span> <span class="nc">Log2Transform</span><span class="p">(</span><span class="n">LogTransformBase</span><span class="p">):</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="mf">2.0</span>
+
+<div class="viewcode-block" id="Log2Transform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.Log2Transform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">InvertedLog2Transform</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="InvertedLog2Transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLog2Transform">[docs]</a><span class="k">class</span> <span class="nc">InvertedLog2Transform</span><span class="p">(</span><span class="n">InvertedLogTransformBase</span><span class="p">):</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="mf">2.0</span>
+
+<div class="viewcode-block" id="InvertedLog2Transform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLog2Transform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Log2Transform</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="NaturalLogTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.NaturalLogTransform">[docs]</a><span class="k">class</span> <span class="nc">NaturalLogTransform</span><span class="p">(</span><span class="n">LogTransformBase</span><span class="p">):</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span>
+
+<div class="viewcode-block" id="NaturalLogTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.NaturalLogTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">InvertedNaturalLogTransform</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="InvertedNaturalLogTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedNaturalLogTransform">[docs]</a><span class="k">class</span> <span class="nc">InvertedNaturalLogTransform</span><span class="p">(</span><span class="n">InvertedLogTransformBase</span><span class="p">):</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span>
+
+<div class="viewcode-block" id="InvertedNaturalLogTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedNaturalLogTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">NaturalLogTransform</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="LogTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogTransform">[docs]</a><span class="k">class</span> <span class="nc">LogTransform</span><span class="p">(</span><span class="n">LogTransformBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">nonpos</span><span class="o">=</span><span class="s1">&#39;clip&#39;</span><span class="p">):</span>
+        <span class="n">LogTransformBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nonpos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+
+<div class="viewcode-block" id="LogTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">InvertedLogTransform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="InvertedLogTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLogTransform">[docs]</a><span class="k">class</span> <span class="nc">InvertedLogTransform</span><span class="p">(</span><span class="n">InvertedLogTransformBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="n">InvertedLogTransformBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+
+<div class="viewcode-block" id="InvertedLogTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedLogTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">LogTransform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LogScale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogScale">[docs]</a><span class="k">class</span> <span class="nc">LogScale</span><span class="p">(</span><span class="n">ScaleBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A standard logarithmic scale.  Care is taken so non-positive</span>
+<span class="sd">    values are not plotted.</span>
+
+<span class="sd">    For computational efficiency (to push as much as possible to Numpy</span>
+<span class="sd">    C code in the common cases), this scale provides different</span>
+<span class="sd">    transforms depending on the base of the logarithm:</span>
+
+<span class="sd">       - base 10 (:class:`Log10Transform`)</span>
+<span class="sd">       - base 2 (:class:`Log2Transform`)</span>
+<span class="sd">       - base e (:class:`NaturalLogTransform`)</span>
+<span class="sd">       - arbitrary base (:class:`LogTransform`)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;log&#39;</span>
+
+    <span class="c1"># compatibility shim</span>
+    <span class="n">LogTransformBase</span> <span class="o">=</span> <span class="n">LogTransformBase</span>
+    <span class="n">Log10Transform</span> <span class="o">=</span> <span class="n">Log10Transform</span>
+    <span class="n">InvertedLog10Transform</span> <span class="o">=</span> <span class="n">InvertedLog10Transform</span>
+    <span class="n">Log2Transform</span> <span class="o">=</span> <span class="n">Log2Transform</span>
+    <span class="n">InvertedLog2Transform</span> <span class="o">=</span> <span class="n">InvertedLog2Transform</span>
+    <span class="n">NaturalLogTransform</span> <span class="o">=</span> <span class="n">NaturalLogTransform</span>
+    <span class="n">InvertedNaturalLogTransform</span> <span class="o">=</span> <span class="n">InvertedNaturalLogTransform</span>
+    <span class="n">LogTransform</span> <span class="o">=</span> <span class="n">LogTransform</span>
+    <span class="n">InvertedLogTransform</span> <span class="o">=</span> <span class="n">InvertedLogTransform</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *basex*/*basey*:</span>
+<span class="sd">           The base of the logarithm</span>
+
+<span class="sd">        *nonposx*/*nonposy*: [&#39;mask&#39; | &#39;clip&#39; ]</span>
+<span class="sd">          non-positive values in *x* or *y* can be masked as</span>
+<span class="sd">          invalid, or clipped to a very small positive number</span>
+
+<span class="sd">        *subsx*/*subsy*:</span>
+<span class="sd">           Where to place the subticks between each major tick.</span>
+<span class="sd">           Should be a sequence of integers.  For example, in a log10</span>
+<span class="sd">           scale: ``[2, 3, 4, 5, 6, 7, 8, 9]``</span>
+
+<span class="sd">           will place 8 logarithmically spaced minor ticks between</span>
+<span class="sd">           each major tick.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">axis</span><span class="o">.</span><span class="n">axis_name</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;basex&#39;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">subs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;subsx&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">nonpos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;nonposx&#39;</span><span class="p">,</span> <span class="s1">&#39;clip&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;basey&#39;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">subs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;subsy&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">nonpos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;nonposy&#39;</span><span class="p">,</span> <span class="s1">&#39;clip&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s2">&quot;provided too many kwargs, can only pass &quot;</span>
+                              <span class="s2">&quot;{&#39;basex&#39;, &#39;subsx&#39;, nonposx&#39;} or &quot;</span>
+                              <span class="s2">&quot;{&#39;basey&#39;, &#39;subsy&#39;, nonposy&#39;}.  You passed &quot;</span><span class="p">)</span> <span class="o">+</span>
+                             <span class="s2">&quot;</span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">nonpos</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">,</span> <span class="s1">&#39;clip&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;nonposx, nonposy kwarg must be &#39;mask&#39; or &#39;clip&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">base</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">base</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The log base cannot be &lt;= 0 or == 1&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">base</span> <span class="o">==</span> <span class="mf">10.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Log10Transform</span><span class="p">(</span><span class="n">nonpos</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">base</span> <span class="o">==</span> <span class="mf">2.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Log2Transform</span><span class="p">(</span><span class="n">nonpos</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">base</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NaturalLogTransform</span><span class="p">(</span><span class="n">nonpos</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogTransform</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">nonpos</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subs</span> <span class="o">=</span> <span class="n">subs</span>
+
+<div class="viewcode-block" id="LogScale.set_default_locators_and_formatters"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogScale.set_default_locators_and_formatters">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the locators and formatters to specialized versions for</span>
+<span class="sd">        log scaling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LogLocator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">))</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">LogFormatterSciNotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">))</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">LogLocator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subs</span><span class="p">))</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span>
+            <span class="n">LogFormatterSciNotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span>
+                                    <span class="n">labelOnlyBase</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="LogScale.get_transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogScale.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a :class:`~matplotlib.transforms.Transform` instance</span>
+<span class="sd">        appropriate for the given logarithm base.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span></div>
+
+<div class="viewcode-block" id="LogScale.limit_range_for_scale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogScale.limit_range_for_scale">[docs]</a>    <span class="k">def</span> <span class="nf">limit_range_for_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">minpos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Limit the domain to positive values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">minpos</span><span class="p">):</span>
+            <span class="n">minpos</span> <span class="o">=</span> <span class="mf">1e-300</span>  <span class="c1"># This value should rarely if ever</span>
+                             <span class="c1"># end up with a visible effect.</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">minpos</span> <span class="k">if</span> <span class="n">vmin</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">vmin</span><span class="p">,</span>
+                <span class="n">minpos</span> <span class="k">if</span> <span class="n">vmax</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">vmax</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SymmetricalLogTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.SymmetricalLogTransform">[docs]</a><span class="k">class</span> <span class="nc">SymmetricalLogTransform</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">linthresh</span><span class="p">,</span> <span class="n">linscale</span><span class="p">):</span>
+        <span class="n">Transform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span> <span class="o">=</span> <span class="n">linthresh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linscale</span> <span class="o">=</span> <span class="n">linscale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_linscale_adj</span> <span class="o">=</span> <span class="p">(</span><span class="n">linscale</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">**</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymmetricalLogTransform.transform_non_affine"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.SymmetricalLogTransform.transform_non_affine">[docs]</a>    <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">masked</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_inside</span><span class="p">(</span><span class="n">a</span><span class="p">,</span>
+                                  <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span><span class="p">,</span>
+                                  <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_linscale_adj</span> <span class="o">+</span>
+            <span class="n">ma</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">masked</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_base</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">masked</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">ma</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">masked</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linscale_adj</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">log</span></div>
+
+<div class="viewcode-block" id="SymmetricalLogTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.SymmetricalLogTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">InvertedSymmetricalLogTransform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span><span class="p">,</span>
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">linscale</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="InvertedSymmetricalLogTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedSymmetricalLogTransform">[docs]</a><span class="k">class</span> <span class="nc">InvertedSymmetricalLogTransform</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">linthresh</span><span class="p">,</span> <span class="n">linscale</span><span class="p">):</span>
+        <span class="n">Transform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">symlog</span> <span class="o">=</span> <span class="n">SymmetricalLogTransform</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">linthresh</span><span class="p">,</span> <span class="n">linscale</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span> <span class="o">=</span> <span class="n">linthresh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invlinthresh</span> <span class="o">=</span> <span class="n">symlog</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">linthresh</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linscale</span> <span class="o">=</span> <span class="n">linscale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_linscale_adj</span> <span class="o">=</span> <span class="p">(</span><span class="n">linscale</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">**</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+<div class="viewcode-block" id="InvertedSymmetricalLogTransform.transform_non_affine"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedSymmetricalLogTransform.transform_non_affine">[docs]</a>    <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">masked</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_inside</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">invlinthresh</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">invlinthresh</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">ma</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="p">(</span><span class="n">sign</span> <span class="o">*</span> <span class="p">(</span><span class="n">masked</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span><span class="p">))</span>
+            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linscale_adj</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">masked</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">ma</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">masked</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">a</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linscale_adj</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">exp</span></div>
+
+<div class="viewcode-block" id="InvertedSymmetricalLogTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.InvertedSymmetricalLogTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SymmetricalLogTransform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">linscale</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SymmetricalLogScale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.SymmetricalLogScale">[docs]</a><span class="k">class</span> <span class="nc">SymmetricalLogScale</span><span class="p">(</span><span class="n">ScaleBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The symmetrical logarithmic scale is logarithmic in both the</span>
+<span class="sd">    positive and negative directions from the origin.</span>
+
+<span class="sd">    Since the values close to zero tend toward infinity, there is a</span>
+<span class="sd">    need to have a range around zero that is linear.  The parameter</span>
+<span class="sd">    *linthresh* allows the user to specify the size of this range</span>
+<span class="sd">    (-*linthresh*, *linthresh*).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;symlog&#39;</span>
+    <span class="c1"># compatibility shim</span>
+    <span class="n">SymmetricalLogTransform</span> <span class="o">=</span> <span class="n">SymmetricalLogTransform</span>
+    <span class="n">InvertedSymmetricalLogTransform</span> <span class="o">=</span> <span class="n">InvertedSymmetricalLogTransform</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *basex*/*basey*:</span>
+<span class="sd">           The base of the logarithm</span>
+
+<span class="sd">        *linthreshx*/*linthreshy*:</span>
+<span class="sd">          A single float which defines the range (-*x*, *x*), within</span>
+<span class="sd">          which the plot is linear. This avoids having the plot go to</span>
+<span class="sd">          infinity around zero.</span>
+
+<span class="sd">        *subsx*/*subsy*:</span>
+<span class="sd">           Where to place the subticks between each major tick.</span>
+<span class="sd">           Should be a sequence of integers.  For example, in a log10</span>
+<span class="sd">           scale: ``[2, 3, 4, 5, 6, 7, 8, 9]``</span>
+
+<span class="sd">           will place 8 logarithmically spaced minor ticks between</span>
+<span class="sd">           each major tick.</span>
+
+<span class="sd">        *linscalex*/*linscaley*:</span>
+<span class="sd">           This allows the linear range (-*linthresh* to *linthresh*)</span>
+<span class="sd">           to be stretched relative to the logarithmic range.  Its</span>
+<span class="sd">           value is the number of decades to use for each half of the</span>
+<span class="sd">           linear range.  For example, when *linscale* == 1.0 (the</span>
+<span class="sd">           default), the space used for the positive and negative</span>
+<span class="sd">           halves of the linear range will be equal to one decade in</span>
+<span class="sd">           the logarithmic range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">axis</span><span class="o">.</span><span class="n">axis_name</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;basex&#39;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">linthresh</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linthreshx&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+            <span class="n">subs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;subsx&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">linscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linscalex&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;basey&#39;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">linthresh</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linthreshy&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+            <span class="n">subs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;subsy&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">linscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linscaley&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">base</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;basex/basey&#39; must be larger than 1&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">linthresh</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;linthreshx/linthreshy&#39; must be positive&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">linscale</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;linscalex/linthreshy&#39; must be positive&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SymmetricalLogTransform</span><span class="p">(</span><span class="n">base</span><span class="p">,</span>
+                                                       <span class="n">linthresh</span><span class="p">,</span>
+                                                       <span class="n">linscale</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linthresh</span> <span class="o">=</span> <span class="n">linthresh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linscale</span> <span class="o">=</span> <span class="n">linscale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subs</span> <span class="o">=</span> <span class="n">subs</span>
+
+<div class="viewcode-block" id="SymmetricalLogScale.set_default_locators_and_formatters"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.SymmetricalLogScale.set_default_locators_and_formatters">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the locators and formatters to specialized versions for</span>
+<span class="sd">        symmetrical log scaling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">SymmetricalLogLocator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()))</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">LogFormatterSciNotation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">))</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">SymmetricalLogLocator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(),</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">subs</span><span class="p">))</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">NullFormatter</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="SymmetricalLogScale.get_transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.SymmetricalLogScale.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a :class:`SymmetricalLogTransform` instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span></div></div>
+
+
+<div class="viewcode-block" id="LogitTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogitTransform">[docs]</a><span class="k">class</span> <span class="nc">LogitTransform</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nonpos</span><span class="o">=</span><span class="s1">&#39;mask&#39;</span><span class="p">):</span>
+        <span class="n">Transform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nonpos</span> <span class="o">=</span> <span class="n">nonpos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clip</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clip&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}[</span><span class="n">nonpos</span><span class="p">]</span>
+
+<div class="viewcode-block" id="LogitTransform.transform_non_affine"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogitTransform.transform_non_affine">[docs]</a>    <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;logit transform (base 10), masked or clipped&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clip</span><span class="p">:</span>  <span class="c1"># See LogTransform for choice of clip value.</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span>
+            <span class="n">out</span><span class="p">[</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+<div class="viewcode-block" id="LogitTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogitTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">LogisticTransform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nonpos</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;clip&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clip</span> <span class="k">else</span> <span class="s2">&quot;mask&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LogisticTransform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogisticTransform">[docs]</a><span class="k">class</span> <span class="nc">LogisticTransform</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nonpos</span><span class="o">=</span><span class="s1">&#39;mask&#39;</span><span class="p">):</span>
+        <span class="n">Transform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nonpos</span> <span class="o">=</span> <span class="n">nonpos</span>
+
+<div class="viewcode-block" id="LogisticTransform.transform_non_affine"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogisticTransform.transform_non_affine">[docs]</a>    <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;logistic transform (base 10)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LogisticTransform.inverted"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogisticTransform.inverted">[docs]</a>    <span class="k">def</span> <span class="nf">inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">LogitTransform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nonpos</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nonpos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LogitScale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogitScale">[docs]</a><span class="k">class</span> <span class="nc">LogitScale</span><span class="p">(</span><span class="n">ScaleBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Logit scale for data between zero and one, both excluded.</span>
+
+<span class="sd">    This scale is similar to a log scale close to zero and to one, and almost</span>
+<span class="sd">    linear around 0.5. It maps the interval ]0, 1[ onto ]-infty, +infty[.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;logit&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">nonpos</span><span class="o">=</span><span class="s1">&#39;mask&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *nonpos*: [&#39;mask&#39; | &#39;clip&#39; ]</span>
+<span class="sd">          values beyond ]0, 1[ can be masked as invalid, or clipped to a number</span>
+<span class="sd">          very close to 0 or 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">nonpos</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">,</span> <span class="s1">&#39;clip&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;nonposx, nonposy kwarg must be &#39;mask&#39; or &#39;clip&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="n">LogitTransform</span><span class="p">(</span><span class="n">nonpos</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LogitScale.get_transform"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogitScale.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a :class:`LogitTransform` instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span></div>
+
+<div class="viewcode-block" id="LogitScale.set_default_locators_and_formatters"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogitScale.set_default_locators_and_formatters">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+        <span class="c1"># ..., 0.01, 0.1, 0.5, 0.9, 0.99, ...</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">LogitLocator</span><span class="p">())</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">LogitFormatter</span><span class="p">())</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">LogitLocator</span><span class="p">(</span><span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">LogitFormatter</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="LogitScale.limit_range_for_scale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.LogitScale.limit_range_for_scale">[docs]</a>    <span class="k">def</span> <span class="nf">limit_range_for_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">minpos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Limit the domain to values between 0 and 1 (excluded).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">minpos</span><span class="p">):</span>
+            <span class="n">minpos</span> <span class="o">=</span> <span class="mf">1e-7</span>    <span class="c1"># This value should rarely if ever</span>
+                             <span class="c1"># end up with a visible effect.</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">minpos</span> <span class="k">if</span> <span class="n">vmin</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">vmin</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">-</span> <span class="n">minpos</span> <span class="k">if</span> <span class="n">vmax</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">vmax</span><span class="p">)</span></div></div>
+
+
+<span class="n">_scale_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;linear&#39;</span><span class="p">:</span> <span class="n">LinearScale</span><span class="p">,</span>
+    <span class="s1">&#39;log&#39;</span><span class="p">:</span>    <span class="n">LogScale</span><span class="p">,</span>
+    <span class="s1">&#39;symlog&#39;</span><span class="p">:</span> <span class="n">SymmetricalLogScale</span><span class="p">,</span>
+    <span class="s1">&#39;logit&#39;</span><span class="p">:</span>  <span class="n">LogitScale</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_scale_names"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.get_scale_names">[docs]</a><span class="k">def</span> <span class="nf">get_scale_names</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_scale_mapping</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="scale_factory"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.scale_factory">[docs]</a><span class="k">def</span> <span class="nf">scale_factory</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a scale class by name.</span>
+
+<span class="sd">    ACCEPTS: [ %(names)s ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span>
+
+    <span class="k">if</span> <span class="n">scale</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_scale_mapping</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown scale type &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">scale</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_scale_mapping</span><span class="p">[</span><span class="n">scale</span><span class="p">](</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<span class="n">scale_factory</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">scale_factory</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span> <span class="o">%</span> \
+    <span class="p">{</span><span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_scale_names</span><span class="p">())}</span>
+
+
+<div class="viewcode-block" id="register_scale"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.register_scale">[docs]</a><span class="k">def</span> <span class="nf">register_scale</span><span class="p">(</span><span class="n">scale_class</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Register a new kind of scale.</span>
+
+<span class="sd">    *scale_class* must be a subclass of :class:`ScaleBase`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_scale_mapping</span><span class="p">[</span><span class="n">scale_class</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_class</span></div>
+
+
+<div class="viewcode-block" id="get_scale_docs"><a class="viewcode-back" href="../../api/scale_api.html#matplotlib.scale.get_scale_docs">[docs]</a><span class="k">def</span> <span class="nf">get_scale_docs</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function for generating docstrings related to scales.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">docs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">get_scale_names</span><span class="p">():</span>
+        <span class="n">scale_class</span> <span class="o">=</span> <span class="n">_scale_mapping</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;    &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">class_docs</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">scale_class</span><span class="o">.</span><span class="fm">__init__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">class_docs</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;        </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span>
+                              <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">class_docs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)])</span>
+        <span class="n">docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">class_docs</span><span class="p">)</span>
+        <span class="n">docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span></div>
+
+
+<span class="n">docstring</span><span class="o">.</span><span class="n">interpd</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+    <span class="n">scale</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">get_scale_names</span><span class="p">()]),</span>
+    <span class="n">scale_docs</span><span class="o">=</span><span class="n">get_scale_docs</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(),</span>
+    <span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+        <br />
+      Last updated on Feb 09, 2020.
+	Created using
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+	Doc version v2.2.5-2-ga847ffac5.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>

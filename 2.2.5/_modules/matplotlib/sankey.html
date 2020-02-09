@@ -1,0 +1,1081 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>matplotlib.sankey &mdash; Matplotlib 2.2.5 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.2.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 2.2.5 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.2.5 documentation" href="../../index.html" />
+    <link rel="up" title="matplotlib" href="../matplotlib.html" />
+  <link rel="canonical" href="https://matplotlib.org/_modules/matplotlib/sankey.html" />
+
+
+
+  </head>
+  <body>
+
+
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 2.2.5</span></div>
+    <img src="../../_static/logo2.png" height="125px" border="0" alt="matplotlib"/></a>
+
+<!-- The "Fork me on github" ribbon -->
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../gallery/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../tutorials/index.html">tutorials</a>|&nbsp;</li>
+        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../contents.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../matplotlib.html">matplotlib</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for matplotlib.sankey</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for creating Sankey diagrams using matplotlib</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
+                        <span class="n">unicode_literals</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="nb">zip</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">Bunch</span>
+<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">PathPatch</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Affine2D</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">docstring</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
+
+<span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kevin L. Davies&quot;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Yannick Copin&quot;</span><span class="p">]</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;BSD&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;2011/09/16&quot;</span>
+
+<span class="c1"># Angles [deg/90]</span>
+<span class="n">RIGHT</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">UP</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># LEFT = 2</span>
+<span class="n">DOWN</span> <span class="o">=</span> <span class="mi">3</span>
+
+
+<div class="viewcode-block" id="Sankey"><a class="viewcode-back" href="../../api/sankey_api.html#matplotlib.sankey.Sankey">[docs]</a><span class="k">class</span> <span class="nc">Sankey</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sankey diagram in matplotlib</span>
+
+<span class="sd">      Sankey diagrams are a specific type of flow diagram, in which</span>
+<span class="sd">      the width of the arrows is shown proportionally to the flow</span>
+<span class="sd">      quantity.  They are typically used to visualize energy or</span>
+<span class="sd">      material or cost transfers between processes.</span>
+<span class="sd">      `Wikipedia (6/1/2011) &lt;https://en.wikipedia.org/wiki/Sankey_diagram&gt;`_</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%G</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+                 <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">shoulder</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">head_angle</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">margin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new Sankey instance.</span>
+
+<span class="sd">        Optional keyword arguments:</span>
+
+<span class="sd">          ===============   ===================================================</span>
+<span class="sd">          Field             Description</span>
+<span class="sd">          ===============   ===================================================</span>
+<span class="sd">          *ax*              axes onto which the data should be plotted</span>
+<span class="sd">                            If *ax* isn&#39;t provided, new axes will be created.</span>
+<span class="sd">          *scale*           scaling factor for the flows</span>
+<span class="sd">                            *scale* sizes the width of the paths in order to</span>
+<span class="sd">                            maintain proper layout.  The same scale is applied</span>
+<span class="sd">                            to all subdiagrams.  The value should be chosen</span>
+<span class="sd">                            such that the product of the scale and the sum of</span>
+<span class="sd">                            the inputs is approximately 1.0 (and the product of</span>
+<span class="sd">                            the scale and the sum of the outputs is</span>
+<span class="sd">                            approximately -1.0).</span>
+<span class="sd">          *unit*            string representing the physical unit associated</span>
+<span class="sd">                            with the flow quantities</span>
+<span class="sd">                            If *unit* is None, then none of the quantities are</span>
+<span class="sd">                            labeled.</span>
+<span class="sd">          *format*          a Python number formatting string to be used in</span>
+<span class="sd">                            labeling the flow as a quantity (i.e., a number</span>
+<span class="sd">                            times a unit, where the unit is given)</span>
+<span class="sd">          *gap*             space between paths that break in/break away</span>
+<span class="sd">                            to/from the top or bottom</span>
+<span class="sd">          *radius*          inner radius of the vertical paths</span>
+<span class="sd">          *shoulder*        size of the shoulders of output arrowS</span>
+<span class="sd">          *offset*          text offset (from the dip or tip of the arrow)</span>
+<span class="sd">          *head_angle*      angle of the arrow heads (and negative of the angle</span>
+<span class="sd">                            of the tails) [deg]</span>
+<span class="sd">          *margin*          minimum space between Sankey outlines and the edge</span>
+<span class="sd">                            of the plot area</span>
+<span class="sd">          *tolerance*       acceptable maximum of the magnitude of the sum of</span>
+<span class="sd">                            flows</span>
+<span class="sd">                            The magnitude of the sum of connected flows cannot</span>
+<span class="sd">                            be greater than *tolerance*.</span>
+<span class="sd">          ===============   ===================================================</span>
+
+<span class="sd">        The optional arguments listed above are applied to all subdiagrams so</span>
+<span class="sd">        that there is consistent alignment and formatting.</span>
+
+<span class="sd">        If :class:`Sankey` is instantiated with any keyword arguments other</span>
+<span class="sd">        than those explicitly listed above (``**kwargs``), they will be passed</span>
+<span class="sd">        to :meth:`add`, which will create the first subdiagram.</span>
+
+<span class="sd">        In order to draw a complex Sankey diagram, create an instance of</span>
+<span class="sd">        :class:`Sankey` by calling it without any kwargs::</span>
+
+<span class="sd">            sankey = Sankey()</span>
+
+<span class="sd">        Then add simple Sankey sub-diagrams::</span>
+
+<span class="sd">            sankey.add() # 1</span>
+<span class="sd">            sankey.add() # 2</span>
+<span class="sd">            #...</span>
+<span class="sd">            sankey.add() # n</span>
+
+<span class="sd">        Finally, create the full diagram::</span>
+
+<span class="sd">            sankey.finish()</span>
+
+<span class="sd">        Or, instead, simply daisy-chain those calls::</span>
+
+<span class="sd">            Sankey().add().add...  .add().finish()</span>
+
+<span class="sd">        .. seealso::</span>
+
+<span class="sd">            :meth:`add`</span>
+<span class="sd">            :meth:`finish`</span>
+
+
+<span class="sd">        **Examples:**</span>
+
+<span class="sd">            .. plot:: gallery/api/sankey_basics.py</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check the arguments.</span>
+        <span class="k">if</span> <span class="n">gap</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The gap is negative.</span><span class="se">\n</span><span class="s2">This isn&#39;t allowed because it &quot;</span>
+            <span class="s2">&quot;would cause the paths to overlap.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">radius</span> <span class="o">&gt;</span> <span class="n">gap</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The inner radius is greater than the path spacing.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;This isn&#39;t allowed because it would cause the paths to overlap.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">head_angle</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The angle is negative.</span><span class="se">\n</span><span class="s2">This isn&#39;t allowed &quot;</span>
+            <span class="s2">&quot;because it would cause inputs to look like &quot;</span>
+            <span class="s2">&quot;outputs and vice versa.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tolerance</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The tolerance is negative.</span><span class="se">\n</span><span class="s2">It must be a magnitude.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create axes if necessary.</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">xticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">yticks</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Store the inputs.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shoulder</span> <span class="o">=</span> <span class="n">shoulder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="n">margin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">head_angle</span> <span class="o">/</span> <span class="mf">180.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span> <span class="o">=</span> <span class="n">tolerance</span>
+
+        <span class="c1"># Initialize the vertices of tight box around the diagram(s).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span>
+
+        <span class="c1"># If there are any kwargs, create the first subdiagram.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_arc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quadrant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the codes and vertices for a rotated, scaled, and translated</span>
+<span class="sd">        90 degree arc.</span>
+
+<span class="sd">        Optional keyword arguments:</span>
+
+<span class="sd">          ===============   ==========================================</span>
+<span class="sd">          Keyword           Description</span>
+<span class="sd">          ===============   ==========================================</span>
+<span class="sd">          *quadrant*        uses 0-based indexing (0, 1, 2, or 3)</span>
+<span class="sd">          *cw*              if True, clockwise</span>
+<span class="sd">          *center*          (x, y) tuple of the arc&#39;s center</span>
+<span class="sd">          ===============   ==========================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Note:  It would be possible to use matplotlib&#39;s transforms to rotate,</span>
+        <span class="c1"># scale, and translate the arc, but since the angles are discrete,</span>
+        <span class="c1"># it&#39;s just as easy and maybe more efficient to do it here.</span>
+        <span class="n">ARC_CODES</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span>
+                     <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span>
+                     <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span>
+                     <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span>
+                     <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span>
+                     <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span>
+                     <span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">]</span>
+        <span class="c1"># Vertices of a cubic Bezier curve approximating a 90 deg arc</span>
+        <span class="c1"># These can be determined by Path.arc(0,90).</span>
+        <span class="n">ARC_VERTICES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.00000000e+00</span><span class="p">,</span> <span class="mf">0.00000000e+00</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">1.00000000e+00</span><span class="p">,</span> <span class="mf">2.65114773e-01</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">8.94571235e-01</span><span class="p">,</span> <span class="mf">5.19642327e-01</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">7.07106781e-01</span><span class="p">,</span> <span class="mf">7.07106781e-01</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">5.19642327e-01</span><span class="p">,</span> <span class="mf">8.94571235e-01</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">2.65114773e-01</span><span class="p">,</span> <span class="mf">1.00000000e+00</span><span class="p">],</span>
+                                 <span class="c1"># Insignificant</span>
+                                 <span class="c1"># [6.12303177e-17, 1.00000000e+00]])</span>
+                                 <span class="p">[</span><span class="mf">0.00000000e+00</span><span class="p">,</span> <span class="mf">1.00000000e+00</span><span class="p">]])</span>
+        <span class="k">if</span> <span class="n">quadrant</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">quadrant</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cw</span><span class="p">:</span>
+                <span class="n">vertices</span> <span class="o">=</span> <span class="n">ARC_VERTICES</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vertices</span> <span class="o">=</span> <span class="n">ARC_VERTICES</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Swap x and y.</span>
+        <span class="k">elif</span> <span class="n">quadrant</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">quadrant</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># Negate x.</span>
+            <span class="k">if</span> <span class="n">cw</span><span class="p">:</span>
+                <span class="c1"># Swap x and y.</span>
+                <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="o">-</span><span class="n">ARC_VERTICES</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                                             <span class="n">ARC_VERTICES</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="o">-</span><span class="n">ARC_VERTICES</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                             <span class="n">ARC_VERTICES</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">quadrant</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="o">-</span><span class="n">radius</span>  <span class="c1"># Rotate 180 deg.</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ARC_CODES</span><span class="p">,</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">vertices</span> <span class="o">+</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="p">(</span><span class="n">ARC_VERTICES</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))))</span>
+
+    <span class="k">def</span> <span class="nf">_add_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">flow</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an input to a path and return its tip and label locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Use the last point as a reference.</span>
+            <span class="n">dipdepth</span> <span class="o">=</span> <span class="p">(</span><span class="n">flow</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span>
+            <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">-=</span> <span class="n">length</span>
+                <span class="n">dip</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">dipdepth</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">flow</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="n">dip</span><span class="p">),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">flow</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">flow</span><span class="p">])])</span>
+                <span class="n">label_location</span> <span class="o">=</span> <span class="p">[</span><span class="n">dip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">dip</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Vertical</span>
+                <span class="n">x</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span><span class="p">:</span>
+                    <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+                <span class="n">dip</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">flow</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="n">dipdepth</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">DOWN</span><span class="p">:</span>
+                    <span class="n">quadrant</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">quadrant</span> <span class="o">=</span> <span class="mi">1</span>
+
+                <span class="c1"># Inner arc isn&#39;t needed if inner radius is zero</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">:</span>
+                    <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arc</span><span class="p">(</span><span class="n">quadrant</span><span class="o">=</span><span class="n">quadrant</span><span class="p">,</span>
+                                          <span class="n">cw</span><span class="o">=</span><span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span><span class="p">,</span>
+                                          <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                                          <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                                                  <span class="n">y</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]))</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">length</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="n">dip</span><span class="p">),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">flow</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">length</span><span class="p">])])</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arc</span><span class="p">(</span><span class="n">quadrant</span><span class="o">=</span><span class="n">quadrant</span><span class="p">,</span>
+                                      <span class="n">cw</span><span class="o">=</span><span class="n">angle</span> <span class="o">==</span> <span class="n">DOWN</span><span class="p">,</span>
+                                      <span class="n">radius</span><span class="o">=</span><span class="n">flow</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                                      <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                                              <span class="n">y</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)))</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">flow</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">flow</span><span class="p">]))</span>
+                <span class="n">label_location</span> <span class="o">=</span> <span class="p">[</span><span class="n">dip</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dip</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">dip</span><span class="p">,</span> <span class="n">label_location</span>
+
+    <span class="k">def</span> <span class="nf">_add_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">flow</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Append an output to a path and return its tip and label locations.</span>
+
+<span class="sd">        .. note:: *flow* is negative for an output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Use the last point as a reference.</span>
+            <span class="n">tipheight</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shoulder</span> <span class="o">-</span> <span class="n">flow</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span>
+            <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">+=</span> <span class="n">length</span>
+                <span class="n">tip</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">tipheight</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">flow</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">shoulder</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="n">tip</span><span class="p">),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">shoulder</span> <span class="o">+</span> <span class="n">flow</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">flow</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">flow</span><span class="p">])])</span>
+                <span class="n">label_location</span> <span class="o">=</span> <span class="p">[</span><span class="n">tip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">tip</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Vertical</span>
+                <span class="n">x</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span><span class="p">:</span>
+                    <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+                <span class="n">tip</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">flow</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="n">tipheight</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span><span class="p">:</span>
+                    <span class="n">quadrant</span> <span class="o">=</span> <span class="mi">3</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">quadrant</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="c1"># Inner arc isn&#39;t needed if inner radius is zero</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">:</span>
+                    <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arc</span><span class="p">(</span><span class="n">quadrant</span><span class="o">=</span><span class="n">quadrant</span><span class="p">,</span>
+                                          <span class="n">cw</span><span class="o">=</span><span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span><span class="p">,</span>
+                                          <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                                          <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                                                  <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]))</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">length</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">shoulder</span><span class="p">,</span>
+                                            <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">length</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="n">tip</span><span class="p">),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">shoulder</span> <span class="o">-</span> <span class="n">flow</span><span class="p">,</span>
+                                            <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">length</span><span class="p">]),</span>
+                             <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">flow</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">length</span><span class="p">])])</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arc</span><span class="p">(</span><span class="n">quadrant</span><span class="o">=</span><span class="n">quadrant</span><span class="p">,</span>
+                                      <span class="n">cw</span><span class="o">=</span><span class="n">angle</span> <span class="o">==</span> <span class="n">DOWN</span><span class="p">,</span>
+                                      <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">-</span> <span class="n">flow</span><span class="p">,</span>
+                                      <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                                              <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)))</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">flow</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">flow</span><span class="p">]))</span>
+                <span class="n">label_location</span> <span class="o">=</span> <span class="p">[</span><span class="n">tip</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tip</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">tip</span><span class="p">,</span> <span class="n">label_location</span>
+
+    <span class="k">def</span> <span class="nf">_revert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">first_action</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A path is not simply revertable by path[::-1] since the code</span>
+<span class="sd">        specifies an action to take from the **previous** point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">reverse_path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">next_code</span> <span class="o">=</span> <span class="n">first_action</span>
+        <span class="k">for</span> <span class="n">code</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">path</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">reverse_path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">next_code</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span>
+            <span class="n">next_code</span> <span class="o">=</span> <span class="n">code</span>
+        <span class="k">return</span> <span class="n">reverse_path</span>
+        <span class="c1"># This might be more efficient, but it fails because &#39;tuple&#39; object</span>
+        <span class="c1"># doesn&#39;t support item assignment:</span>
+        <span class="c1"># path[1] = path[1][-1:0:-1]</span>
+        <span class="c1"># path[1][0] = first_action</span>
+        <span class="c1"># path[2] = path[2][::-1]</span>
+        <span class="c1"># return path</span>
+
+<div class="viewcode-block" id="Sankey.add"><a class="viewcode-back" href="../../api/sankey_api.html#matplotlib.sankey.Sankey.add">[docs]</a>    <span class="nd">@docstring</span><span class="o">.</span><span class="n">dedent_interpd</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">patchlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">flows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orientations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">trunklength</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">pathlengths</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connect</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a simple Sankey diagram with flows at the same hierarchical level.</span>
+
+<span class="sd">        Return value is the instance of :class:`Sankey`.</span>
+
+<span class="sd">        Optional keyword arguments:</span>
+
+<span class="sd">          ===============   ===================================================</span>
+<span class="sd">          Keyword           Description</span>
+<span class="sd">          ===============   ===================================================</span>
+<span class="sd">          *patchlabel*      label to be placed at the center of the diagram</span>
+<span class="sd">                            Note: *label* (not *patchlabel*) will be passed to</span>
+<span class="sd">                            the patch through ``**kwargs`` and can be used to</span>
+<span class="sd">                            create an entry in the legend.</span>
+<span class="sd">          *flows*           array of flow values</span>
+<span class="sd">                            By convention, inputs are positive and outputs are</span>
+<span class="sd">                            negative.</span>
+<span class="sd">          *orientations*    list of orientations of the paths</span>
+<span class="sd">                            Valid values are 1 (from/to the top), 0 (from/to</span>
+<span class="sd">                            the left or right), or -1 (from/to the bottom).  If</span>
+<span class="sd">                            *orientations* == 0, inputs will break in from the</span>
+<span class="sd">                            left and outputs will break away to the right.</span>
+<span class="sd">          *labels*          list of specifications of the labels for the flows</span>
+<span class="sd">                            Each value may be *None* (no labels), &#39;&#39; (just</span>
+<span class="sd">                            label the quantities), or a labeling string.  If a</span>
+<span class="sd">                            single value is provided, it will be applied to all</span>
+<span class="sd">                            flows.  If an entry is a non-empty string, then the</span>
+<span class="sd">                            quantity for the corresponding flow will be shown</span>
+<span class="sd">                            below the string.  However, if the *unit* of the</span>
+<span class="sd">                            main diagram is None, then quantities are never</span>
+<span class="sd">                            shown, regardless of the value of this argument.</span>
+<span class="sd">          *trunklength*     length between the bases of the input and output</span>
+<span class="sd">                            groups</span>
+<span class="sd">          *pathlengths*     list of lengths of the arrows before break-in or</span>
+<span class="sd">                            after break-away</span>
+<span class="sd">                            If a single value is given, then it will be applied</span>
+<span class="sd">                            to the first (inside) paths on the top and bottom,</span>
+<span class="sd">                            and the length of all other arrows will be</span>
+<span class="sd">                            justified accordingly.  The *pathlengths* are not</span>
+<span class="sd">                            applied to the horizontal inputs and outputs.</span>
+<span class="sd">          *prior*           index of the prior diagram to which this diagram</span>
+<span class="sd">                            should be connected</span>
+<span class="sd">          *connect*         a (prior, this) tuple indexing the flow of the</span>
+<span class="sd">                            prior diagram and the flow of this diagram which</span>
+<span class="sd">                            should be connected</span>
+<span class="sd">                            If this is the first diagram or *prior* is *None*,</span>
+<span class="sd">                            *connect* will be ignored.</span>
+<span class="sd">          *rotation*        angle of rotation of the diagram [deg]</span>
+<span class="sd">                            *rotation* is ignored if this diagram is connected</span>
+<span class="sd">                            to an existing one (using *prior* and *connect*).</span>
+<span class="sd">                            The interpretation of the *orientations* argument</span>
+<span class="sd">                            will be rotated accordingly (e.g., if *rotation*</span>
+<span class="sd">                            == 90, an *orientations* entry of 1 means to/from</span>
+<span class="sd">                            the left).</span>
+<span class="sd">          ===============   ===================================================</span>
+
+<span class="sd">        Valid kwargs are :meth:`matplotlib.patches.PathPatch` arguments:</span>
+
+<span class="sd">        %(Patch)s</span>
+
+<span class="sd">        As examples, ``fill=False`` and ``label=&#39;A legend entry&#39;``.</span>
+<span class="sd">        By default, ``facecolor=&#39;#bfd1d4&#39;`` (light blue) and</span>
+<span class="sd">        ``linewidth=0.5``.</span>
+
+<span class="sd">        The indexing parameters (*prior* and *connect*) are zero-based.</span>
+
+<span class="sd">        The flows are placed along the top of the diagram from the inside out</span>
+<span class="sd">        in order of their index within the *flows* list or array.  They are</span>
+<span class="sd">        placed along the sides of the diagram from the top down and along the</span>
+<span class="sd">        bottom from the outside in.</span>
+
+<span class="sd">        If the sum of the inputs and outputs is nonzero, the discrepancy</span>
+<span class="sd">        will appear as a cubic Bezier curve along the top and bottom edges of</span>
+<span class="sd">        the trunk.</span>
+
+<span class="sd">        .. seealso::</span>
+
+<span class="sd">            :meth:`finish`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check and preprocess the arguments.</span>
+        <span class="k">if</span> <span class="n">flows</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flows</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">flows</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Number of flows</span>
+        <span class="k">if</span> <span class="n">rotation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rotation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># In the code below, angles are expressed in deg/90.</span>
+            <span class="n">rotation</span> <span class="o">/=</span> <span class="mf">90.0</span>
+        <span class="k">if</span> <span class="n">orientations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">orientations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">orientations</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;orientations and flows must have the same length.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;orientations has length </span><span class="si">%d</span><span class="s2">, but flows has length </span><span class="si">%d</span><span class="s2">.&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">orientations</span><span class="p">),</span> <span class="n">n</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="c1"># iterable() isn&#39;t used because it would give True if labels is a</span>
+            <span class="c1"># string</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;If labels is a list, then labels and flows must have the &quot;</span>
+                <span class="s2">&quot;same length.</span><span class="se">\n</span><span class="s2">labels has length </span><span class="si">%d</span><span class="s2">, but flows has length </span><span class="si">%d</span><span class="s2">.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">n</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+        <span class="k">if</span> <span class="n">trunklength</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;trunklength is negative.</span><span class="se">\n</span><span class="s2">This isn&#39;t allowed, because it would &quot;</span>
+            <span class="s2">&quot;cause poor layout.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flows</span><span class="p">))</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The sum of the flows is nonzero (</span><span class="si">%f</span><span class="s2">).</span><span class="se">\n</span><span class="s2">Is the &quot;</span>
+                     <span class="s2">&quot;system not at steady state?&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flows</span><span class="p">))</span>
+        <span class="n">scaled_flows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">flows</span>
+        <span class="n">gain</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">flow</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">flow</span> <span class="ow">in</span> <span class="n">scaled_flows</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">flow</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">flow</span> <span class="ow">in</span> <span class="n">scaled_flows</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">&lt;=</span> <span class="n">gain</span> <span class="o">&lt;=</span> <span class="mf">2.0</span><span class="p">):</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;The scaled sum of the inputs is </span><span class="si">%f</span><span class="s2">.</span><span class="se">\n</span><span class="s2">This may &quot;</span>
+                <span class="s2">&quot;cause poor layout.</span><span class="se">\n</span><span class="s2">Consider changing the scale so&quot;</span>
+                <span class="s2">&quot; that the scaled sum is approximately 1.0.&quot;</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">&lt;=</span> <span class="n">loss</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">):</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;The scaled sum of the outputs is </span><span class="si">%f</span><span class="s2">.</span><span class="se">\n</span><span class="s2">This may &quot;</span>
+                <span class="s2">&quot;cause poor layout.</span><span class="se">\n</span><span class="s2">Consider changing the scale so&quot;</span>
+                <span class="s2">&quot; that the scaled sum is approximately 1.0.&quot;</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prior</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prior</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The index of the prior diagram is negative.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">connect</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;At least one of the connection indices is negative.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">prior</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The index of the prior diagram is </span><span class="si">%d</span><span class="s2">, but there are &quot;</span>
+                <span class="s2">&quot;only </span><span class="si">%d</span><span class="s2"> other diagrams.</span><span class="se">\n</span><span class="s2">The index is zero-based.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">connect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">[</span><span class="n">prior</span><span class="p">]</span><span class="o">.</span><span class="n">flows</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The connection index to the source diagram is </span><span class="si">%d</span><span class="s2">, but &quot;</span>
+                <span class="s2">&quot;that diagram has only </span><span class="si">%d</span><span class="s2"> flows.</span><span class="se">\n</span><span class="s2">The index is zero-based.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">connect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">[</span><span class="n">prior</span><span class="p">]</span><span class="o">.</span><span class="n">flows</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">connect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The connection index to this diagram is </span><span class="si">%d</span><span class="s2">, but this diagram&quot;</span>
+                <span class="s2">&quot;has only </span><span class="si">%d</span><span class="s2"> flows.</span><span class="se">\n</span><span class="s2"> The index is zero-based.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">connect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">[</span><span class="n">prior</span><span class="p">]</span><span class="o">.</span><span class="n">angles</span><span class="p">[</span><span class="n">connect</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The connection cannot be made.  Check that the magnitude &quot;</span>
+                <span class="s2">&quot;of flow </span><span class="si">%d</span><span class="s2"> of diagram </span><span class="si">%d</span><span class="s2"> is greater than or equal to the &quot;</span>
+                <span class="s2">&quot;specified tolerance.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">connect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">prior</span><span class="p">))</span>
+            <span class="n">flow_error</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">[</span><span class="n">prior</span><span class="p">]</span><span class="o">.</span><span class="n">flows</span><span class="p">[</span><span class="n">connect</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span>
+                          <span class="n">flows</span><span class="p">[</span><span class="n">connect</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">flow_error</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The scaled sum of the connected flows is </span><span class="si">%f</span><span class="s2">, which is not &quot;</span>
+                <span class="s2">&quot;within the tolerance (</span><span class="si">%f</span><span class="s2">).&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">flow_error</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">))</span>
+
+        <span class="c1"># Determine if the flows are inputs.</span>
+        <span class="n">are_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">flow</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">flows</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">flow</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">:</span>
+                <span class="n">are_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">flow</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">:</span>
+                <span class="n">are_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;The magnitude of flow </span><span class="si">%d</span><span class="s2"> (</span><span class="si">%f</span><span class="s2">) is below the &quot;</span>
+                    <span class="s2">&quot;tolerance (</span><span class="si">%f</span><span class="s2">).</span><span class="se">\n</span><span class="s2">It will not be shown, and it &quot;</span>
+                    <span class="s2">&quot;cannot be used in a connection.&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">flow</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">))</span>
+
+        <span class="c1"># Determine the angles of the arrows (before rotation).</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">orient</span><span class="p">,</span> <span class="n">is_input</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">orientations</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">orient</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">DOWN</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="c1"># Be specific since is_input can be None.</span>
+                    <span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UP</span>
+            <span class="k">elif</span> <span class="n">orient</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">RIGHT</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">orient</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The value of orientations[</span><span class="si">%d</span><span class="s2">] is </span><span class="si">%d</span><span class="s2">, &quot;</span>
+                    <span class="s2">&quot;but it must be [ -1 | 0 | 1 ].&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">orient</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UP</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">DOWN</span>
+
+        <span class="c1"># Justify the lengths of the paths.</span>
+        <span class="k">if</span> <span class="n">iterable</span><span class="p">(</span><span class="n">pathlengths</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pathlengths</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;If pathlengths is a list, then pathlengths and flows must &quot;</span>
+                <span class="s2">&quot;have the same length.</span><span class="se">\n</span><span class="s2">pathlengths has length </span><span class="si">%d</span><span class="s2">, but flows &quot;</span>
+                <span class="s2">&quot;has length </span><span class="si">%d</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pathlengths</span><span class="p">),</span> <span class="n">n</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Make pathlengths into a list.</span>
+            <span class="n">urlength</span> <span class="o">=</span> <span class="n">pathlengths</span>
+            <span class="n">ullength</span> <span class="o">=</span> <span class="n">pathlengths</span>
+            <span class="n">lrlength</span> <span class="o">=</span> <span class="n">pathlengths</span>
+            <span class="n">lllength</span> <span class="o">=</span> <span class="n">pathlengths</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">=</span><span class="n">pathlengths</span><span class="p">)</span>
+            <span class="n">pathlengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">]</span>
+            <span class="c1"># Determine the lengths of the top-side arrows</span>
+            <span class="c1"># from the middle outwards.</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">flow</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span>
+                                                            <span class="n">scaled_flows</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">DOWN</span> <span class="ow">and</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="n">pathlengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ullength</span>
+                    <span class="n">ullength</span> <span class="o">+=</span> <span class="n">flow</span>
+                <span class="k">elif</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="n">pathlengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">urlength</span>
+                    <span class="n">urlength</span> <span class="o">-=</span> <span class="n">flow</span>  <span class="c1"># Flow is negative for outputs.</span>
+            <span class="c1"># Determine the lengths of the bottom-side arrows</span>
+            <span class="c1"># from the middle outwards.</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">flow</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+                  <span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span> <span class="n">scaled_flows</span><span class="p">)))):</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span> <span class="ow">and</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="n">pathlengths</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lllength</span>
+                    <span class="n">lllength</span> <span class="o">+=</span> <span class="n">flow</span>
+                <span class="k">elif</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">DOWN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                    <span class="n">pathlengths</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lrlength</span>
+                    <span class="n">lrlength</span> <span class="o">-=</span> <span class="n">flow</span>
+            <span class="c1"># Determine the lengths of the left-side arrows</span>
+            <span class="c1"># from the bottom upwards.</span>
+            <span class="n">has_left_input</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+                  <span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">scaled_flows</span><span class="p">,</span> <span class="n">pathlengths</span><span class="p">))))):</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">is_input</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">has_left_input</span><span class="p">:</span>
+                            <span class="n">pathlengths</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">has_left_input</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># Determine the lengths of the right-side arrows</span>
+            <span class="c1"># from the top downwards.</span>
+            <span class="n">has_right_output</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+                  <span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">scaled_flows</span><span class="p">,</span> <span class="n">pathlengths</span><span class="p">)))):</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">has_right_output</span><span class="p">:</span>
+                            <span class="n">pathlengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">has_right_output</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Begin the subpaths, and smooth the transition if the sum of the flows</span>
+        <span class="c1"># is nonzero.</span>
+        <span class="n">urpath</span> <span class="o">=</span> <span class="p">[(</span><span class="n">Path</span><span class="o">.</span><span class="n">MOVETO</span><span class="p">,</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">-</span> <span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>  <span class="c1"># Upper right</span>
+                                 <span class="n">gain</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">-</span> <span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                                 <span class="n">gain</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">-</span> <span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">8.0</span><span class="p">,</span>
+                                 <span class="n">gain</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span> <span class="p">[(</span><span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="mf">8.0</span><span class="p">,</span>
+                                 <span class="o">-</span><span class="n">loss</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                                 <span class="o">-</span><span class="n">loss</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">),</span>
+                                 <span class="o">-</span><span class="n">loss</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">])]</span>
+        <span class="n">llpath</span> <span class="o">=</span> <span class="p">[(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">),</span>  <span class="c1"># Lower left</span>
+                                 <span class="n">loss</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                                 <span class="n">loss</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span> <span class="p">[(</span><span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="mf">8.0</span><span class="p">,</span>
+                                 <span class="n">loss</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">CURVE4</span><span class="p">,</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">-</span> <span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">8.0</span><span class="p">,</span>
+                                 <span class="o">-</span><span class="n">gain</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">-</span> <span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                                 <span class="o">-</span><span class="n">gain</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">-</span> <span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>
+                                 <span class="o">-</span><span class="n">gain</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">])]</span>
+        <span class="n">lrpath</span> <span class="o">=</span> <span class="p">[(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[(</span><span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">),</span>  <span class="c1"># Lower right</span>
+                                 <span class="n">loss</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">])]</span>
+        <span class="n">ulpath</span> <span class="o">=</span> <span class="p">[(</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">-</span> <span class="n">trunklength</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>  <span class="c1"># Upper left</span>
+                                 <span class="n">gain</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">])]</span>
+
+        <span class="c1"># Add the subpaths and assign the locations of the tips and labels.</span>
+        <span class="n">tips</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">label_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="c1"># Add the top-side inputs and outputs from the middle outwards.</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+              <span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">scaled_flows</span><span class="p">,</span> <span class="n">pathlengths</span><span class="p">)))):</span>
+            <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">DOWN</span> <span class="ow">and</span> <span class="n">is_input</span><span class="p">:</span>
+                <span class="n">tips</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label_locations</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_input</span><span class="p">(</span>
+                    <span class="n">ulpath</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="o">*</span><span class="n">spec</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                <span class="n">tips</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label_locations</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_output</span><span class="p">(</span>
+                    <span class="n">urpath</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="o">*</span><span class="n">spec</span><span class="p">)</span>
+        <span class="c1"># Add the bottom-side inputs and outputs from the middle outwards.</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+              <span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">scaled_flows</span><span class="p">,</span> <span class="n">pathlengths</span><span class="p">)))))):</span>
+            <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">UP</span> <span class="ow">and</span> <span class="n">is_input</span><span class="p">:</span>
+                <span class="n">tip</span><span class="p">,</span> <span class="n">label_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_input</span><span class="p">(</span><span class="n">llpath</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="o">*</span><span class="n">spec</span><span class="p">)</span>
+                <span class="n">tips</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tip</span>
+                <span class="n">label_locations</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">label_location</span>
+            <span class="k">elif</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">DOWN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                <span class="n">tip</span><span class="p">,</span> <span class="n">label_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_output</span><span class="p">(</span><span class="n">lrpath</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="o">*</span><span class="n">spec</span><span class="p">)</span>
+                <span class="n">tips</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tip</span>
+                <span class="n">label_locations</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">label_location</span>
+        <span class="c1"># Add the left-side inputs from the bottom upwards.</span>
+        <span class="n">has_left_input</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+              <span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">scaled_flows</span><span class="p">,</span> <span class="n">pathlengths</span><span class="p">)))))):</span>
+            <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">RIGHT</span> <span class="ow">and</span> <span class="n">is_input</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">has_left_input</span><span class="p">:</span>
+                    <span class="c1"># Make sure the lower path extends</span>
+                    <span class="c1"># at least as far as the upper one.</span>
+                    <span class="k">if</span> <span class="n">llpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">ulpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">llpath</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">ulpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                                     <span class="n">llpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]]))</span>
+                    <span class="n">has_left_input</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">tip</span><span class="p">,</span> <span class="n">label_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_input</span><span class="p">(</span><span class="n">llpath</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="o">*</span><span class="n">spec</span><span class="p">)</span>
+                <span class="n">tips</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tip</span>
+                <span class="n">label_locations</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">label_location</span>
+        <span class="c1"># Add the right-side outputs from the top downwards.</span>
+        <span class="n">has_right_output</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">is_input</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+              <span class="n">angles</span><span class="p">,</span> <span class="n">are_inputs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">scaled_flows</span><span class="p">,</span> <span class="n">pathlengths</span><span class="p">)))):</span>
+            <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="n">RIGHT</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_input</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">has_right_output</span><span class="p">:</span>
+                    <span class="c1"># Make sure the upper path extends</span>
+                    <span class="c1"># at least as far as the lower one.</span>
+                    <span class="k">if</span> <span class="n">urpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lrpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">urpath</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Path</span><span class="o">.</span><span class="n">LINETO</span><span class="p">,</span> <span class="p">[</span><span class="n">lrpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                                     <span class="n">urpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]]))</span>
+                    <span class="n">has_right_output</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">tips</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label_locations</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_output</span><span class="p">(</span>
+                    <span class="n">urpath</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="o">*</span><span class="n">spec</span><span class="p">)</span>
+        <span class="c1"># Trim any hanging vertices.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_left_input</span><span class="p">:</span>
+            <span class="n">ulpath</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">llpath</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_right_output</span><span class="p">:</span>
+            <span class="n">lrpath</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">urpath</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+        <span class="c1"># Concatenate the subpaths in the correct order (clockwise from top).</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="p">(</span><span class="n">urpath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_revert</span><span class="p">(</span><span class="n">lrpath</span><span class="p">)</span> <span class="o">+</span> <span class="n">llpath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_revert</span><span class="p">(</span><span class="n">ulpath</span><span class="p">)</span> <span class="o">+</span>
+                <span class="p">[(</span><span class="n">Path</span><span class="o">.</span><span class="n">CLOSEPOLY</span><span class="p">,</span> <span class="n">urpath</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])])</span>
+
+        <span class="c1"># Create a patch with the Sankey outline.</span>
+        <span class="n">codes</span><span class="p">,</span> <span class="n">vertices</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_get_angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">r</span>
+
+        <span class="k">if</span> <span class="n">prior</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rotation</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># By default, none of this is needed.</span>
+                <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">_get_angle</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span> <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">]</span>
+                <span class="n">rotate</span> <span class="o">=</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">rotate_deg</span><span class="p">(</span><span class="n">rotation</span> <span class="o">*</span> <span class="mi">90</span><span class="p">)</span><span class="o">.</span><span class="n">transform_affine</span>
+                <span class="n">tips</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">tips</span><span class="p">)</span>
+                <span class="n">label_locations</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">label_locations</span><span class="p">)</span>
+                <span class="n">vertices</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">patchlabel</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rotation</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">[</span><span class="n">prior</span><span class="p">]</span><span class="o">.</span><span class="n">angles</span><span class="p">[</span><span class="n">connect</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span>
+                        <span class="n">angles</span><span class="p">[</span><span class="n">connect</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">_get_angle</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span> <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">]</span>
+            <span class="n">rotate</span> <span class="o">=</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">rotate_deg</span><span class="p">(</span><span class="n">rotation</span> <span class="o">*</span> <span class="mi">90</span><span class="p">)</span><span class="o">.</span><span class="n">transform_affine</span>
+            <span class="n">tips</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">tips</span><span class="p">)</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="p">[</span><span class="n">prior</span><span class="p">]</span><span class="o">.</span><span class="n">tips</span><span class="p">[</span><span class="n">connect</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="n">tips</span><span class="p">[</span><span class="n">connect</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">translate</span> <span class="o">=</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">*</span><span class="n">offset</span><span class="p">)</span><span class="o">.</span><span class="n">transform_affine</span>
+            <span class="n">tips</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">tips</span><span class="p">)</span>
+            <span class="n">label_locations</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">rotate</span><span class="p">(</span><span class="n">label_locations</span><span class="p">))</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">rotate</span><span class="p">(</span><span class="n">vertices</span><span class="p">))</span>
+            <span class="n">kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">patchlabel</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">*</span><span class="n">offset</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;_internal.classic_mode&#39;</span><span class="p">]:</span>
+            <span class="n">fc</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fc&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;facecolor&#39;</span><span class="p">,</span> <span class="s1">&#39;#bfd1d4&#39;</span><span class="p">))</span>
+            <span class="n">lw</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fc</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fc&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;facecolor&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="n">lw</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">fc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fc</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">_get_patches_for_fill</span><span class="o">.</span><span class="n">prop_cycler</span><span class="p">)[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">PathPatch</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">codes</span><span class="p">),</span> <span class="n">fc</span><span class="o">=</span><span class="n">fc</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+
+        <span class="c1"># Add the path labels.</span>
+        <span class="n">texts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">number</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">location</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">flows</span><span class="p">,</span> <span class="n">angles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span>
+                                                  <span class="n">label_locations</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">quantity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">%</span> <span class="nb">abs</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span>
+                <span class="k">if</span> <span class="n">label</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">label</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">label</span> <span class="o">+=</span> <span class="n">quantity</span>
+            <span class="n">texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                      <span class="n">s</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+                                      <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">))</span>
+        <span class="c1"># Text objects are placed even they are empty (as long as the magnitude</span>
+        <span class="c1"># of the corresponding flow is larger than the tolerance) in case the</span>
+        <span class="c1"># user wants to provide labels later.</span>
+
+        <span class="c1"># Expand the size of the diagram if necessary.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">label_locations</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                       <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">label_locations</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                       <span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">label_locations</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                       <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">label_locations</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="c1"># Include both vertices _and_ label locations in the extents; there are</span>
+        <span class="c1"># where either could determine the margins (e.g., arrow shoulders).</span>
+
+        <span class="c1"># Add this diagram as a subdiagram.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bunch</span><span class="p">(</span><span class="n">patch</span><span class="o">=</span><span class="n">patch</span><span class="p">,</span> <span class="n">flows</span><span class="o">=</span><span class="n">flows</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="n">angles</span><span class="p">,</span>
+                                   <span class="n">tips</span><span class="o">=</span><span class="n">tips</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">texts</span><span class="o">=</span><span class="n">texts</span><span class="p">))</span>
+
+        <span class="c1"># Allow a daisy-chained call structure (see docstring for the class).</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Sankey.finish"><a class="viewcode-back" href="../../api/sankey_api.html#matplotlib.sankey.Sankey.finish">[docs]</a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adjust the axes and return a list of information about the Sankey</span>
+<span class="sd">        subdiagram(s).</span>
+
+<span class="sd">        Return value is a list of subdiagrams represented with the following</span>
+<span class="sd">        fields:</span>
+
+<span class="sd">          ===============   ===================================================</span>
+<span class="sd">          Field             Description</span>
+<span class="sd">          ===============   ===================================================</span>
+<span class="sd">          *patch*           Sankey outline (an instance of</span>
+<span class="sd">                            :class:`~maplotlib.patches.PathPatch`)</span>
+<span class="sd">          *flows*           values of the flows (positive for input, negative</span>
+<span class="sd">                            for output)</span>
+<span class="sd">          *angles*          list of angles of the arrows [deg/90]</span>
+<span class="sd">                            For example, if the diagram has not been rotated,</span>
+<span class="sd">                            an input to the top side will have an angle of 3</span>
+<span class="sd">                            (DOWN), and an output from the top side will have</span>
+<span class="sd">                            an angle of 1 (UP).  If a flow has been skipped</span>
+<span class="sd">                            (because its magnitude is less than *tolerance*),</span>
+<span class="sd">                            then its angle will be *None*.</span>
+<span class="sd">          *tips*            array in which each row is an [x, y] pair</span>
+<span class="sd">                            indicating the positions of the tips (or &quot;dips&quot;) of</span>
+<span class="sd">                            the flow paths</span>
+<span class="sd">                            If the magnitude of a flow is less the *tolerance*</span>
+<span class="sd">                            for the instance of :class:`Sankey`, the flow is</span>
+<span class="sd">                            skipped and its tip will be at the center of the</span>
+<span class="sd">                            diagram.</span>
+<span class="sd">          *text*            :class:`~matplotlib.text.Text` instance for the</span>
+<span class="sd">                            label of the diagram</span>
+<span class="sd">          *texts*           list of :class:`~matplotlib.text.Text` instances</span>
+<span class="sd">                            for the labels of flows</span>
+<span class="sd">          ===============   ===================================================</span>
+
+<span class="sd">        .. seealso::</span>
+
+<span class="sd">            :meth:`add`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">margin</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;datalim&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagrams</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+        <br />
+      Last updated on Feb 09, 2020.
+	Created using
+	<ahref="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+	Doc version v2.2.5-2-ga847ffac5.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>
