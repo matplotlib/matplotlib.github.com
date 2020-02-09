@@ -1,0 +1,715 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>matplotlib.gridspec &mdash; Matplotlib 3.1.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.3-2-g782f6ef56"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
+        <script type="text/javascript" src="../../_static/copybutton.js"></script>
+        <script type="text/javascript">var copybuttonSkipText = '>>> ';</script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.1.3 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../search.html"
+/>
+    <link rel="top" title="Matplotlib 3.1.3 documentation" href="../../index.html" />
+    <link rel="up" title="matplotlib" href="../matplotlib.html" />
+    <link rel="canonical" href="https://matplotlib.org/3.1.3/_modules/matplotlib/gridspec.html" />
+
+
+
+  </head>
+  <body>
+
+
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+<a href="../../index.html">
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.1.3</span></div>
+    <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
+
+<!-- The "Fork me on github" ribbon -->
+<div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+</div>
+    <nav class="main-nav">
+        <ul>
+            <li><a href="../../users/installing.html">Installation</a></li>
+            <li><a href="../../contents.html">Documentation</a></li>
+            <li><a href="../../gallery/index.html">Examples</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../../devel/index.html">Contributing</a></li>
+            <li class="nav-right">
+                <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" aria-labelledby="searchlabel" placeholder="Search"/>
+                </form>
+            </li>
+        </ul>
+     </nav>
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../contents.html">contents</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../matplotlib.html" accesskey="U">matplotlib</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../contents.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../matplotlib.html">matplotlib</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for matplotlib.gridspec</h1><div class="highlight"><pre>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:mod:`~matplotlib.gridspec` contains classes that help to layout multiple</span>
+<span class="sd">`~axes.Axes` in a grid-like pattern within a figure.</span>
+
+<span class="sd">The `GridSpec` specifies the overall grid structure. Individual cells within</span>
+<span class="sd">the grid are referenced by `SubplotSpec`\s.</span>
+
+<span class="sd">See the tutorial :ref:`sphx_glr_tutorials_intermediate_gridspec.py` for a</span>
+<span class="sd">comprehensive usage guide.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_pylab_helpers</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">tight_layout</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Bbox</span>
+<span class="kn">import</span> <span class="nn">matplotlib._layoutbox</span> <span class="k">as</span> <span class="nn">layoutbox</span>
+
+<span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GridSpecBase"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase">[docs]</a><span class="k">class</span> <span class="nc">GridSpecBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class of GridSpec that specifies the geometry of the grid</span>
+<span class="sd">    that a subplot will be placed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">height_ratios</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The number of rows and number of columns of the grid need to</span>
+<span class="sd">        be set. Optionally, the ratio of heights and widths of rows and</span>
+<span class="sd">        columns can be specified.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nrows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncols</span> <span class="o">=</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_height_ratios</span><span class="p">(</span><span class="n">height_ratios</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_width_ratios</span><span class="p">(</span><span class="n">width_ratios</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">height_arg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;, height_ratios=</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span>
+                      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">width_arg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;, width_ratios=</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span>
+                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{clsname}</span><span class="s1">(</span><span class="si">{nrows}</span><span class="s1">, </span><span class="si">{ncols}{optionals}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">clsname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">nrows</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nrows</span><span class="p">,</span>
+            <span class="n">ncols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ncols</span><span class="p">,</span>
+            <span class="n">optionals</span><span class="o">=</span><span class="n">height_arg</span> <span class="o">+</span> <span class="n">width_arg</span><span class="p">,</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="GridSpecBase.get_geometry"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.get_geometry">[docs]</a>    <span class="k">def</span> <span class="nf">get_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a tuple containing the number of rows and columns in the grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nrows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncols</span></div>
+
+<div class="viewcode-block" id="GridSpecBase.get_subplot_params"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.get_subplot_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_subplot_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="GridSpecBase.new_subplotspec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.new_subplotspec">[docs]</a>    <span class="k">def</span> <span class="nf">new_subplotspec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">rowspan</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">colspan</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create and return a `.SubplotSpec` instance.&quot;&quot;&quot;</span>
+        <span class="n">loc1</span><span class="p">,</span> <span class="n">loc2</span> <span class="o">=</span> <span class="n">loc</span>
+        <span class="n">subplotspec</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">loc1</span><span class="p">:</span><span class="n">loc1</span><span class="o">+</span><span class="n">rowspan</span><span class="p">,</span> <span class="n">loc2</span><span class="p">:</span><span class="n">loc2</span><span class="o">+</span><span class="n">colspan</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">subplotspec</span></div>
+
+<div class="viewcode-block" id="GridSpecBase.set_width_ratios"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.set_width_ratios">[docs]</a>    <span class="k">def</span> <span class="nf">set_width_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width_ratios</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">width_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">width_ratios</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncols</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Expected the given number of width ratios to &#39;</span>
+                             <span class="s1">&#39;match the number of columns of the grid&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span> <span class="o">=</span> <span class="n">width_ratios</span></div>
+
+<div class="viewcode-block" id="GridSpecBase.get_width_ratios"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.get_width_ratios">[docs]</a>    <span class="k">def</span> <span class="nf">get_width_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span></div>
+
+<div class="viewcode-block" id="GridSpecBase.set_height_ratios"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.set_height_ratios">[docs]</a>    <span class="k">def</span> <span class="nf">set_height_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height_ratios</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">height_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">height_ratios</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nrows</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Expected the given number of height ratios to &#39;</span>
+                             <span class="s1">&#39;match the number of rows of the grid&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span> <span class="o">=</span> <span class="n">height_ratios</span></div>
+
+<div class="viewcode-block" id="GridSpecBase.get_height_ratios"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.get_height_ratios">[docs]</a>    <span class="k">def</span> <span class="nf">get_height_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span></div>
+
+<div class="viewcode-block" id="GridSpecBase.get_grid_positions"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecBase.html#matplotlib.gridspec.GridSpecBase.get_grid_positions">[docs]</a>    <span class="k">def</span> <span class="nf">get_grid_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return lists of bottom and top position of rows, left and</span>
+<span class="sd">        right positions of columns.</span>
+
+<span class="sd">        If raw=True, then these are all in units relative to the container</span>
+<span class="sd">        with no margins.  (used for constrained_layout).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_geometry</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">raw</span><span class="p">:</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">wspace</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">subplot_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_subplot_params</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">subplot_params</span><span class="o">.</span><span class="n">left</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">subplot_params</span><span class="o">.</span><span class="n">right</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">subplot_params</span><span class="o">.</span><span class="n">bottom</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">subplot_params</span><span class="o">.</span><span class="n">top</span>
+            <span class="n">wspace</span> <span class="o">=</span> <span class="n">subplot_params</span><span class="o">.</span><span class="n">wspace</span>
+            <span class="n">hspace</span> <span class="o">=</span> <span class="n">subplot_params</span><span class="o">.</span><span class="n">hspace</span>
+        <span class="n">tot_width</span> <span class="o">=</span> <span class="n">right</span> <span class="o">-</span> <span class="n">left</span>
+        <span class="n">tot_height</span> <span class="o">=</span> <span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span>
+
+        <span class="c1"># calculate accumulated heights of columns</span>
+        <span class="n">cell_h</span> <span class="o">=</span> <span class="n">tot_height</span> <span class="o">/</span> <span class="p">(</span><span class="n">nrows</span> <span class="o">+</span> <span class="n">hspace</span><span class="o">*</span><span class="p">(</span><span class="n">nrows</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">sep_h</span> <span class="o">=</span> <span class="n">hspace</span> <span class="o">*</span> <span class="n">cell_h</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">norm</span> <span class="o">=</span> <span class="n">cell_h</span> <span class="o">*</span> <span class="n">nrows</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span><span class="p">)</span>
+            <span class="n">cell_heights</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="n">norm</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_height_ratios</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cell_heights</span> <span class="o">=</span> <span class="p">[</span><span class="n">cell_h</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrows</span>
+        <span class="n">sep_heights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="n">sep_h</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">nrows</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">cell_hs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">sep_heights</span><span class="p">,</span> <span class="n">cell_heights</span><span class="p">])</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
+
+        <span class="c1"># calculate accumulated widths of rows</span>
+        <span class="n">cell_w</span> <span class="o">=</span> <span class="n">tot_width</span> <span class="o">/</span> <span class="p">(</span><span class="n">ncols</span> <span class="o">+</span> <span class="n">wspace</span><span class="o">*</span><span class="p">(</span><span class="n">ncols</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">sep_w</span> <span class="o">=</span> <span class="n">wspace</span> <span class="o">*</span> <span class="n">cell_w</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">norm</span> <span class="o">=</span> <span class="n">cell_w</span> <span class="o">*</span> <span class="n">ncols</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span><span class="p">)</span>
+            <span class="n">cell_widths</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="n">norm</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_width_ratios</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cell_widths</span> <span class="o">=</span> <span class="p">[</span><span class="n">cell_w</span><span class="p">]</span> <span class="o">*</span> <span class="n">ncols</span>
+        <span class="n">sep_widths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="n">sep_w</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">ncols</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">cell_ws</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">sep_widths</span><span class="p">,</span> <span class="n">cell_widths</span><span class="p">])</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
+
+        <span class="n">fig_tops</span><span class="p">,</span> <span class="n">fig_bottoms</span> <span class="o">=</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">cell_hs</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">fig_lefts</span><span class="p">,</span> <span class="n">fig_rights</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">cell_ws</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">return</span> <span class="n">fig_bottoms</span><span class="p">,</span> <span class="n">fig_tops</span><span class="p">,</span> <span class="n">fig_lefts</span><span class="p">,</span> <span class="n">fig_rights</span></div>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create and return a `.SubplotSpec` instance.&quot;&quot;&quot;</span>
+        <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_geometry</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_normalize</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>  <span class="c1"># Includes last index.</span>
+            <span class="n">orig_key</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+                <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">stop</span> <span class="o">&gt;</span> <span class="n">start</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;GridSpec slice would result in no space &quot;</span>
+                                 <span class="s2">&quot;allocated for subplot&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="n">key</span> <span class="o">+</span> <span class="n">size</span>
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">key</span>
+                <span class="k">elif</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;index </span><span class="si">{orig_key}</span><span class="s2"> is out of bounds for &quot;</span>
+                                     <span class="sa">f</span><span class="s2">&quot;axis </span><span class="si">{axis}</span><span class="s2"> with size </span><span class="si">{size}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># flat index</span>
+                    <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;index </span><span class="si">{orig_key}</span><span class="s2"> is out of bounds for &quot;</span>
+                                     <span class="sa">f</span><span class="s2">&quot;GridSpec with size </span><span class="si">{size}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unrecognized subplot spec&quot;</span><span class="p">)</span>
+            <span class="n">num1</span><span class="p">,</span> <span class="n">num2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">_normalize</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">_normalize</span><span class="p">(</span><span class="n">k2</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span>
+                <span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Single key</span>
+            <span class="n">num1</span><span class="p">,</span> <span class="n">num2</span> <span class="o">=</span> <span class="n">_normalize</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nrows</span> <span class="o">*</span> <span class="n">ncols</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SubplotSpec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num1</span><span class="p">,</span> <span class="n">num2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GridSpec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec">[docs]</a><span class="k">class</span> <span class="nc">GridSpec</span><span class="p">(</span><span class="n">GridSpecBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Specifies the geometry of the grid that a subplot can be placed in.</span>
+
+<span class="sd">    The location of grid is determined by similar way as the SubplotParams.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">wspace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">width_ratios</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height_ratios</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The number of rows and number of columns of the grid need to be set.</span>
+<span class="sd">        Optionally, the subplot layout parameters (e.g., left, right, etc.)</span>
+<span class="sd">        can be tuned.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nrows : int</span>
+<span class="sd">            Number of rows in grid.</span>
+
+<span class="sd">        ncols : int</span>
+<span class="sd">            Number or columns in grid.</span>
+
+<span class="sd">        figure : `~.figure.Figure`, optional</span>
+
+<span class="sd">        left, right, top, bottom : float, optional</span>
+<span class="sd">            Extent of the subplots as a fraction of figure width or height.</span>
+<span class="sd">            Left cannot be larger than right, and bottom cannot be larger than</span>
+<span class="sd">            top.</span>
+
+<span class="sd">        wspace : float, optional</span>
+<span class="sd">            The amount of width reserved for space between subplots,</span>
+<span class="sd">            expressed as a fraction of the average axis width.</span>
+
+<span class="sd">        hspace : float, optional</span>
+<span class="sd">            The amount of height reserved for space between subplots,</span>
+<span class="sd">            expressed as a fraction of the average axis height.</span>
+
+<span class="sd">        width_ratios : length *ncols* iterable, optional</span>
+<span class="sd">            Width ratios of the columns.</span>
+
+<span class="sd">        height_ratios : length *nrows* iterable, optional</span>
+<span class="sd">            Height ratios of the rows.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        See `~.figure.SubplotParams` for descriptions of the layout parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="o">=</span> <span class="n">bottom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="n">top</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wspace</span> <span class="o">=</span> <span class="n">wspace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hspace</span> <span class="o">=</span> <span class="n">hspace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="n">figure</span>
+
+        <span class="n">GridSpecBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span>
+                              <span class="n">width_ratios</span><span class="o">=</span><span class="n">width_ratios</span><span class="p">,</span>
+                              <span class="n">height_ratios</span><span class="o">=</span><span class="n">height_ratios</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_constrained_layout</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">init_layoutbox</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="n">layoutbox</span><span class="o">.</span><span class="n">LayoutBox</span><span class="p">(</span>
+                <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">_layoutbox</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gridspec&#39;</span> <span class="o">+</span> <span class="n">layoutbox</span><span class="o">.</span><span class="n">seq_id</span><span class="p">(),</span>
+                <span class="n">artist</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># by default the layoutbox for a gridspec will fill a figure.</span>
+        <span class="c1"># but this can change below if the gridspec is created from a</span>
+        <span class="c1"># subplotspec. (GridSpecFromSubplotSpec)</span>
+
+    <span class="n">_AllowedKeys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;wspace&quot;</span><span class="p">,</span> <span class="s2">&quot;hspace&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;_layoutbox&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="c1"># layoutboxes don&#39;t survive pickling...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="GridSpec.update"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the current values.</span>
+
+<span class="sd">        Values set to None use the rcParams value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AllowedKeys</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{k}</span><span class="s2"> is an unknown keyword&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">figmanager</span> <span class="ow">in</span> <span class="n">_pylab_helpers</span><span class="o">.</span><span class="n">Gcf</span><span class="o">.</span><span class="n">figs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">figmanager</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
+                <span class="c1"># copied from Figure.subplots_adjust</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">SubplotBase</span><span class="p">):</span>
+                    <span class="c1"># Check if sharing a subplots axis</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">_sharex</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">SubplotBase</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">_sharex</span><span class="o">.</span><span class="n">get_subplotspec</span><span class="p">()</span><span class="o">.</span><span class="n">get_gridspec</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
+                            <span class="n">ax</span><span class="o">.</span><span class="n">_sharex</span><span class="o">.</span><span class="n">update_params</span><span class="p">()</span>
+                            <span class="n">ax</span><span class="o">.</span><span class="n">_set_position</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">_sharex</span><span class="o">.</span><span class="n">figbox</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">_sharey</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">SubplotBase</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">_sharey</span><span class="o">.</span><span class="n">get_subplotspec</span><span class="p">()</span><span class="o">.</span><span class="n">get_gridspec</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
+                            <span class="n">ax</span><span class="o">.</span><span class="n">_sharey</span><span class="o">.</span><span class="n">update_params</span><span class="p">()</span>
+                            <span class="n">ax</span><span class="o">.</span><span class="n">_set_position</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">_sharey</span><span class="o">.</span><span class="n">figbox</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ss</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_subplotspec</span><span class="p">()</span><span class="o">.</span><span class="n">get_topmost_subplotspec</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">ss</span><span class="o">.</span><span class="n">get_gridspec</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">update_params</span><span class="p">()</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">_set_position</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figbox</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridSpec.get_subplot_params"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.get_subplot_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_subplot_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dictionary of subplot layout parameters. The default</span>
+<span class="sd">        parameters are from rcParams unless a figure attribute is set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">figure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kw</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.subplot.&quot;</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AllowedKeys</span><span class="p">}</span>
+            <span class="n">subplotpars</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">SubplotParams</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">subplotpars</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">figure</span><span class="o">.</span><span class="n">subplotpars</span><span class="p">)</span>
+
+        <span class="n">subplotpars</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AllowedKeys</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">subplotpars</span></div>
+
+<div class="viewcode-block" id="GridSpec.locally_modified_subplot_params"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.locally_modified_subplot_params">[docs]</a>    <span class="k">def</span> <span class="nf">locally_modified_subplot_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AllowedKeys</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="GridSpec.tight_layout"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpec.html#matplotlib.gridspec.GridSpec.tight_layout">[docs]</a>    <span class="k">def</span> <span class="nf">tight_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">renderer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">pad</span><span class="o">=</span><span class="mf">1.08</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">w_pad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adjust subplot parameters to give specified padding.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        pad : float</span>
+<span class="sd">            Padding between the figure edge and the edges of subplots, as a</span>
+<span class="sd">            fraction of the font-size.</span>
+<span class="sd">        h_pad, w_pad : float, optional</span>
+<span class="sd">            Padding (height/width) between edges of adjacent subplots.</span>
+<span class="sd">            Defaults to *pad*.</span>
+<span class="sd">        rect : tuple of 4 floats, optional</span>
+<span class="sd">            (left, bottom, right, top) rectangle in normalized figure</span>
+<span class="sd">            coordinates that the whole subplots area (including labels) will</span>
+<span class="sd">            fit into.  Default is (0, 0, 1, 1).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">subplotspec_list</span> <span class="o">=</span> <span class="n">tight_layout</span><span class="o">.</span><span class="n">get_subplotspec_list</span><span class="p">(</span>
+            <span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">grid_spec</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">subplotspec_list</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">_warn_external</span><span class="p">(</span><span class="s2">&quot;This figure includes Axes that are not &quot;</span>
+                                 <span class="s2">&quot;compatible with tight_layout, so results &quot;</span>
+                                 <span class="s2">&quot;might be incorrect.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">renderer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">renderer</span> <span class="o">=</span> <span class="n">tight_layout</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">tight_layout</span><span class="o">.</span><span class="n">get_tight_layout_figure</span><span class="p">(</span>
+            <span class="n">figure</span><span class="p">,</span> <span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">subplotspec_list</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span>
+            <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="n">h_pad</span><span class="p">,</span> <span class="n">w_pad</span><span class="o">=</span><span class="n">w_pad</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="n">rect</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GridSpecFromSubplotSpec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec">[docs]</a><span class="k">class</span> <span class="nc">GridSpecFromSubplotSpec</span><span class="p">(</span><span class="n">GridSpecBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    GridSpec whose subplot layout parameters are inherited from the</span>
+<span class="sd">    location specified by a given SubplotSpec.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span>
+                 <span class="n">subplot_spec</span><span class="p">,</span>
+                 <span class="n">wspace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">height_ratios</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The number of rows and number of columns of the grid need to</span>
+<span class="sd">        be set. An instance of SubplotSpec is also needed to be set</span>
+<span class="sd">        from which the layout parameters will be inherited. The wspace</span>
+<span class="sd">        and hspace of the layout can be optionally specified or the</span>
+<span class="sd">        default values (from the figure or rcParams) will be used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wspace</span> <span class="o">=</span> <span class="n">wspace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hspace</span> <span class="o">=</span> <span class="n">hspace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subplot_spec</span> <span class="o">=</span> <span class="n">subplot_spec</span>
+        <span class="n">GridSpecBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span>
+                              <span class="n">width_ratios</span><span class="o">=</span><span class="n">width_ratios</span><span class="p">,</span>
+                              <span class="n">height_ratios</span><span class="o">=</span><span class="n">height_ratios</span><span class="p">)</span>
+        <span class="c1"># do the layoutboxes</span>
+        <span class="n">subspeclb</span> <span class="o">=</span> <span class="n">subplot_spec</span><span class="o">.</span><span class="n">_layoutbox</span>
+        <span class="k">if</span> <span class="n">subspeclb</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># OK, this is needed to divide the figure.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="n">subspeclb</span><span class="o">.</span><span class="n">layout_from_subplotspec</span><span class="p">(</span>
+                    <span class="n">subplot_spec</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">subspeclb</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.gridspec&#39;</span> <span class="o">+</span> <span class="n">layoutbox</span><span class="o">.</span><span class="n">seq_id</span><span class="p">(),</span>
+                    <span class="n">artist</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GridSpecFromSubplotSpec.get_subplot_params"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec.get_subplot_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_subplot_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary of subplot layout parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hspace</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hspace</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                  <span class="k">else</span> <span class="n">figure</span><span class="o">.</span><span class="n">subplotpars</span><span class="o">.</span><span class="n">hspace</span> <span class="k">if</span> <span class="n">figure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                  <span class="k">else</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.subplot.hspace&quot;</span><span class="p">])</span>
+        <span class="n">wspace</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wspace</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                  <span class="k">else</span> <span class="n">figure</span><span class="o">.</span><span class="n">subplotpars</span><span class="o">.</span><span class="n">wspace</span> <span class="k">if</span> <span class="n">figure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                  <span class="k">else</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.subplot.wspace&quot;</span><span class="p">])</span>
+
+        <span class="n">figbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subplot_spec</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="n">figbox</span><span class="o">.</span><span class="n">extents</span>
+
+        <span class="k">return</span> <span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">SubplotParams</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span>
+                                        <span class="n">bottom</span><span class="o">=</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span>
+                                        <span class="n">wspace</span><span class="o">=</span><span class="n">wspace</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="n">hspace</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridSpecFromSubplotSpec.get_topmost_subplotspec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.GridSpecFromSubplotSpec.html#matplotlib.gridspec.GridSpecFromSubplotSpec.get_topmost_subplotspec">[docs]</a>    <span class="k">def</span> <span class="nf">get_topmost_subplotspec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the topmost `.SubplotSpec` instance associated with the subplot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subplot_spec</span><span class="o">.</span><span class="n">get_topmost_subplotspec</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="SubplotSpec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec">[docs]</a><span class="k">class</span> <span class="nc">SubplotSpec</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Specifies the location of a subplot in a `GridSpec`.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        Likely, you&#39;ll never instantiate a `SubplotSpec` yourself. Instead you</span>
+<span class="sd">        will typically obtain one from a `GridSpec` using item-access.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gridspec : `~matplotlib.gridspec.GridSpec`</span>
+<span class="sd">        The GridSpec, which the subplot is referencing.</span>
+<span class="sd">    num1, num2 : int</span>
+<span class="sd">        The subplot will occupy the num1-th cell of the given</span>
+<span class="sd">        gridspec.  If num2 is provided, the subplot will span between</span>
+<span class="sd">        num1-th cell and num2-th cell.</span>
+
+<span class="sd">        The index starts from 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridspec</span><span class="p">,</span> <span class="n">num1</span><span class="p">,</span> <span class="n">num2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gridspec</span> <span class="o">=</span> <span class="n">gridspec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num1</span> <span class="o">=</span> <span class="n">num1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num2</span> <span class="o">=</span> <span class="n">num2</span>
+        <span class="k">if</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">glb</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">_layoutbox</span>
+            <span class="c1"># So note that here we don&#39;t assign any layout yet,</span>
+            <span class="c1"># just make the layoutbox that will contain all items</span>
+            <span class="c1"># associated w/ this axis.  This can include other axes like</span>
+            <span class="c1"># a colorbar or a legend.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="n">layoutbox</span><span class="o">.</span><span class="n">LayoutBox</span><span class="p">(</span>
+                    <span class="n">parent</span><span class="o">=</span><span class="n">glb</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">glb</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.ss&#39;</span> <span class="o">+</span> <span class="n">layoutbox</span><span class="o">.</span><span class="n">seq_id</span><span class="p">(),</span>
+                    <span class="n">artist</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;_layoutbox&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="c1"># layoutboxes don&#39;t survive pickling...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layoutbox</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SubplotSpec.get_gridspec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec.get_gridspec">[docs]</a>    <span class="k">def</span> <span class="nf">get_gridspec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gridspec</span></div>
+
+<div class="viewcode-block" id="SubplotSpec.get_geometry"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec.get_geometry">[docs]</a>    <span class="k">def</span> <span class="nf">get_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the subplot geometry as tuple ``(n_rows, n_cols, start, stop)``.</span>
+
+<span class="sd">        The indices *start* and *stop* define the range of the subplot within</span>
+<span class="sd">        the `GridSpec`. *stop* is inclusive (i.e. for a single cell</span>
+<span class="sd">        ``start == stop``).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gridspec</span><span class="p">()</span><span class="o">.</span><span class="n">get_geometry</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span></div>
+
+<div class="viewcode-block" id="SubplotSpec.get_rows_columns"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec.get_rows_columns">[docs]</a>    <span class="k">def</span> <span class="nf">get_rows_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the subplot row and column numbers as a tuple</span>
+<span class="sd">        ``(n_rows, n_cols, row_start, row_stop, col_start, col_stop)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gridspec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gridspec</span><span class="p">()</span>
+        <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">get_geometry</span><span class="p">()</span>
+        <span class="n">row_start</span><span class="p">,</span> <span class="n">col_start</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">,</span> <span class="n">ncols</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">row_stop</span><span class="p">,</span> <span class="n">col_stop</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num2</span><span class="p">,</span> <span class="n">ncols</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">row_stop</span> <span class="o">=</span> <span class="n">row_start</span>
+            <span class="n">col_stop</span> <span class="o">=</span> <span class="n">col_start</span>
+        <span class="k">return</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">row_start</span><span class="p">,</span> <span class="n">row_stop</span><span class="p">,</span> <span class="n">col_start</span><span class="p">,</span> <span class="n">col_stop</span></div>
+
+<div class="viewcode-block" id="SubplotSpec.get_position"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec.get_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">return_all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subplot position from ``figure.subplotpars``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gridspec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gridspec</span><span class="p">()</span>
+        <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">get_geometry</span><span class="p">()</span>
+        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span><span class="p">],</span>
+            <span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">))</span>
+        <span class="n">fig_bottoms</span><span class="p">,</span> <span class="n">fig_tops</span><span class="p">,</span> <span class="n">fig_lefts</span><span class="p">,</span> <span class="n">fig_rights</span> <span class="o">=</span> \
+            <span class="n">gridspec</span><span class="o">.</span><span class="n">get_grid_positions</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+
+        <span class="n">fig_bottom</span> <span class="o">=</span> <span class="n">fig_bottoms</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">fig_top</span> <span class="o">=</span> <span class="n">fig_tops</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">fig_left</span> <span class="o">=</span> <span class="n">fig_lefts</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">fig_right</span> <span class="o">=</span> <span class="n">fig_rights</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">figbox</span> <span class="o">=</span> <span class="n">Bbox</span><span class="o">.</span><span class="n">from_extents</span><span class="p">(</span><span class="n">fig_left</span><span class="p">,</span> <span class="n">fig_bottom</span><span class="p">,</span> <span class="n">fig_right</span><span class="p">,</span> <span class="n">fig_top</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">return_all</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">figbox</span><span class="p">,</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">figbox</span></div>
+
+<div class="viewcode-block" id="SubplotSpec.get_topmost_subplotspec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec.get_topmost_subplotspec">[docs]</a>    <span class="k">def</span> <span class="nf">get_topmost_subplotspec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the topmost `SubplotSpec` instance associated with the subplot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gridspec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gridspec</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">gridspec</span><span class="p">,</span> <span class="s2">&quot;get_topmost_subplotspec&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">get_topmost_subplotspec</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Two SubplotSpecs are considered equal if they refer to the same</span>
+<span class="sd">        position(s) in the same `GridSpec`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># other may not even have the attributes we are checking.</span>
+        <span class="k">return</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_gridspec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span><span class="p">)</span>
+                <span class="o">==</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;_gridspec&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">()),</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;num1&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">()),</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;num2&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">())))</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_gridspec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num2</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SubplotSpec.subgridspec"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.gridspec.SubplotSpec.html#matplotlib.gridspec.SubplotSpec.subgridspec">[docs]</a>    <span class="k">def</span> <span class="nf">subgridspec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a GridSpec within this subplot.</span>
+
+<span class="sd">        The created `.GridSpecFromSubplotSpec` will have this `SubplotSpec` as</span>
+<span class="sd">        a parent.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nrows : int</span>
+<span class="sd">            Number of rows in grid.</span>
+
+<span class="sd">        ncols : int</span>
+<span class="sd">            Number or columns in grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        gridspec : `.GridSpecFromSubplotSpec`</span>
+
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            All other parameters are passed to `.GridSpecFromSubplotSpec`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        matplotlib.pyplot.subplots</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Adding three subplots in the space occupied by a single subplot::</span>
+
+<span class="sd">            fig = plt.figure()</span>
+<span class="sd">            gs0 = fig.add_gridspec(3, 1)</span>
+<span class="sd">            ax1 = fig.add_subplot(gs0[0])</span>
+<span class="sd">            ax2 = fig.add_subplot(gs0[1])</span>
+<span class="sd">            gssub = gs0[2].subgridspec(1, 3)</span>
+<span class="sd">            for i in range(3):</span>
+<span class="sd">                fig.add_subplot(gssub[0, i])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GridSpecFromSubplotSpec</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+        <br />
+      Last updated on Feb 09, 2020.
+	Created using
+	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+	Doc version v3.1.3-2-g782f6ef56.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+</footer>
+</html>
