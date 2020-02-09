@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>matplotlib.cbook &mdash; Matplotlib 3.1.2 documentation</title>
+    <title>matplotlib.cbook &mdash; Matplotlib 3.1.3 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.1-79-g90d53b526"
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.1.3-2-g782f6ef56"
 type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css"
 type="text/css" />
@@ -28,16 +28,16 @@ type="text/css" />
         <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.1.2 documentation"
+          title="Search within Matplotlib 3.1.3 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html"
 />
     <link rel="search" title="Search" href="../../search.html"
 />
-    <link rel="top" title="Matplotlib 3.1.2 documentation" href="../../index.html" />
+    <link rel="top" title="Matplotlib 3.1.3 documentation" href="../../index.html" />
     <link rel="up" title="matplotlib" href="../matplotlib.html" />
-    <link rel="canonical" href="https://matplotlib.org/3.1.2/_modules/matplotlib/cbook.html" />
+    <link rel="canonical" href="https://matplotlib.org/3.1.3/_modules/matplotlib/cbook.html" />
 
 
 
@@ -48,24 +48,26 @@ type="text/css" />
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
 <a href="../../index.html">
-    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.1.2</span></div>
+    <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.1.3</span></div>
     <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
 <!-- The "Fork me on github" ribbon -->
 <div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
 </div>
-
-
-<nav class="main-nav">
-  <ul>
-    <li><a href="../../users/installing.html">Installation</a></li>
-    <li><a href="../../contents.html">Documentation</a></li>
-    <li><a href="../../gallery/index.html">Examples</a></li>
-    <li><a href="../../tutorials/index.html">Tutorials</a></li>
-    <li><a href="../../devel/index.html">Contributing</a></li>
-  </ul>
-</nav>
-
+    <nav class="main-nav">
+        <ul>
+            <li><a href="../../users/installing.html">Installation</a></li>
+            <li><a href="../../contents.html">Documentation</a></li>
+            <li><a href="../../gallery/index.html">Examples</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../../devel/index.html">Contributing</a></li>
+            <li class="nav-right">
+                <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" aria-labelledby="searchlabel" placeholder="Search"/>
+                </form>
+            </li>
+        </ul>
+     </nav>
 
 
 
@@ -88,19 +90,7 @@ type="text/css" />
 
   
       <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+        <div class="sphinxsidebarwrapper"><div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../contents.html">Documentation overview</a><ul>
@@ -1520,11 +1510,34 @@ type="text/css" />
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">ndim</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span>
-            <span class="c1"># work around https://github.com/pandas-dev/pandas/issues/27775</span>
-            <span class="c1"># which mean the shape is not as expected. That this ever worked</span>
-            <span class="c1"># was an unintentional quirk of pandas the above line will raise</span>
-            <span class="c1"># an exception in the future.</span>
+            <span class="c1"># work around</span>
+            <span class="c1"># https://github.com/pandas-dev/pandas/issues/27775 which</span>
+            <span class="c1"># means the shape of multi-dimensional slicing is not as</span>
+            <span class="c1"># expected.  That this ever worked was an unintentional</span>
+            <span class="c1"># quirk of pandas and will raise an exception in the</span>
+            <span class="c1"># future.  This slicing warns in pandas &gt;= 1.0rc0 via</span>
+            <span class="c1"># https://github.com/pandas-dev/pandas/pull/30588</span>
+            <span class="c1">#</span>
+            <span class="c1"># &lt; 1.0rc0 : x[:, None].ndim == 1, no warning, custom type</span>
+            <span class="c1"># &gt;= 1.0rc1 : x[:, None].ndim == 2, warns, numpy array</span>
+            <span class="c1"># future : x[:, None] -&gt; raises</span>
+            <span class="c1">#</span>
+            <span class="c1"># This code should correctly identify and coerce to a</span>
+            <span class="c1"># numpy array all pandas versions.</span>
+            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+                    <span class="s2">&quot;always&quot;</span><span class="p">,</span>
+                    <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Support for multi-dimensional indexing&#39;</span><span class="p">)</span>
+
+                <span class="n">ndim</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span>
+                <span class="c1"># we have definitely hit a pandas index or series object</span>
+                <span class="c1"># cast to a numpy array.</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="c1"># We have likely hit a pandas object, or at least</span>
+            <span class="c1"># something where 2D slicing does not result in a 2D</span>
+            <span class="c1"># object.</span>
             <span class="k">if</span> <span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">x</span>
@@ -2300,10 +2313,10 @@ type="text/css" />
     <div class="footer">
         &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
         <br />
-      Last updated on Jan 05, 2020.
+      Last updated on Feb 09, 2020.
 	Created using
 	<a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-	Doc version v3.1.1-79-g90d53b526.
+	Doc version v3.1.3-2-g782f6ef56.
     </div>
 
 <script>
