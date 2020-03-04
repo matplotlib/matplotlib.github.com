@@ -11,10 +11,10 @@
 Secondary Axis
 ==============
 
-Sometimes we want as secondary axis on a plot, for instance to convert
+Sometimes we want a secondary axis on a plot, for instance to convert
 radians to degrees on the same plot.  We can do this by making a child
-axes with only one axis visible via `.Axes.axes.secondary_xaxis` and
-`.Axes.axes.secondary_yaxis`.  This secondary axis can have a different scale
+axes with only one axis visible via `.axes.Axes.secondary_xaxis` and
+`.axes.Axes.secondary_yaxis`.  This secondary axis can have a different scale
 than the main axis by providing both a forward and an inverse conversion
 function in a tuple to the ``functions`` kwarg:
 
@@ -45,6 +45,7 @@ function in a tuple to the ``functions`` kwarg:
 
     def rad2deg(x):
         return x * 180 / np.pi
+
 
     secax = ax.secondary_xaxis('top', functions=(deg2rad, rad2deg))
     secax.set_xlabel('angle [rad]')
@@ -89,6 +90,7 @@ log-log scale.
     def inverse(x):
         return 1 / x
 
+
     secax = ax.secondary_xaxis('top', functions=(forward, inverse))
     secax.set_xlabel('period [s]')
     plt.show()
@@ -99,15 +101,6 @@ log-log scale.
 .. image:: /gallery/subplots_axes_and_figures/images/sphx_glr_secondary_axis_002.png
     :class: sphx-glr-single-img
 
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/tcaswell/.virtualenvs/mpl313/lib/python3.8/site-packages/numpy/ma/core.py:6759: RuntimeWarning: overflow encountered in power
-      result = np.where(m, fa, umath.power(fa, fb)).view(basetype)
 
 
 
@@ -143,6 +136,7 @@ one data set to the other.
     def inverse(x):
         return np.interp(x, xnew, xold)
 
+
     secax = ax.secondary_xaxis('top', functions=(forward, inverse))
     secax.xaxis.set_minor_locator(AutoMinorLocator())
     secax.set_xlabel('$X_{other}$')
@@ -168,7 +162,7 @@ from Celsius to Farenheit on the y axis:
 
 
     dates = [datetime.datetime(2018, 1, 1) + datetime.timedelta(hours=k * 6)
-                for k in range(240)]
+             for k in range(240)]
     temperature = np.random.randn(len(dates))
     fig, ax = plt.subplots(constrained_layout=True)
 
@@ -178,19 +172,16 @@ from Celsius to Farenheit on the y axis:
 
 
     def date2yday(x):
-        """
-        x is in matplotlib datenums, so they are floats.
-        """
+        """Convert matplotlib datenum to days since 2018-01-01."""
         y = x - mdates.date2num(datetime.datetime(2018, 1, 1))
         return y
 
 
     def yday2date(x):
-        """
-        return a matplotlib datenum (x is days since start of year)
-        """
+        """Return a matplotlib datenum for *x* days after 2018-01-01."""
         y = x + mdates.date2num(datetime.datetime(2018, 1, 1))
         return y
+
 
     secaxx = ax.secondary_xaxis('top', functions=(date2yday, yday2date))
     secaxx.set_xlabel('yday [2018]')
@@ -202,6 +193,7 @@ from Celsius to Farenheit on the y axis:
 
     def FtoC(x):
         return (x - 32) / 1.8
+
 
     secaxy = ax.secondary_yaxis('right', functions=(CtoF, FtoC))
     secaxy.set_ylabel(r'$T\ [^oF]$')
@@ -244,14 +236,14 @@ The use of the following functions and methods is shown in this example:
  .. code-block:: none
 
 
-    <function Axes.secondary_yaxis at 0x7f18a5a84dc0>
+    <function Axes.secondary_yaxis at 0x7f154d197d30>
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.476 seconds)
+   **Total running time of the script:** ( 0 minutes  1.509 seconds)
 
 
 .. _sphx_glr_download_gallery_subplots_axes_and_figures_secondary_axis.py:

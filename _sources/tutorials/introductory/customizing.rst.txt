@@ -32,6 +32,7 @@ just add:
     import numpy as np
     import matplotlib.pyplot as plt
     import matplotlib as mpl
+    from cycler import cycler
     plt.style.use('ggplot')
     data = np.random.randn(50)
 
@@ -60,7 +61,7 @@ To list all available styles, use:
 
  .. code-block:: none
 
-    ['seaborn-deep', 'seaborn-white', 'grayscale', 'fivethirtyeight', 'seaborn-whitegrid', 'seaborn-darkgrid', 'tableau-colorblind10', 'seaborn-dark-palette', 'seaborn-talk', 'seaborn-bright', 'seaborn-colorblind', 'seaborn-paper', '_classic_test', 'seaborn-muted', 'seaborn-pastel', 'seaborn-dark', 'Solarize_Light2', 'classic', 'seaborn', 'fast', 'seaborn-notebook', 'seaborn-poster', 'bmh', 'dark_background', 'ggplot', 'seaborn-ticks']
+    ['Solarize_Light2', '_classic_test_patch', 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight', 'ggplot', 'grayscale', 'seaborn', 'seaborn-bright', 'seaborn-colorblind', 'seaborn-dark', 'seaborn-dark-palette', 'seaborn-darkgrid', 'seaborn-deep', 'seaborn-muted', 'seaborn-notebook', 'seaborn-paper', 'seaborn-pastel', 'seaborn-poster', 'seaborn-talk', 'seaborn-ticks', 'seaborn-white', 'seaborn-whitegrid', 'tableau-colorblind10']
 
 
 
@@ -159,7 +160,7 @@ the matplotlib package. rcParams can be modified directly, for example:
 
 
     mpl.rcParams['lines.linewidth'] = 2
-    mpl.rcParams['lines.color'] = 'r'
+    mpl.rcParams['lines.linestyle'] = '--'
     plt.plot(data)
 
 
@@ -176,20 +177,19 @@ the matplotlib package. rcParams can be modified directly, for example:
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f18878cdd30>]
+    [<matplotlib.lines.Line2D object at 0x7f1529798a60>]
 
 
 
-Matplotlib also provides a couple of convenience functions for modifying rc
-settings. The :func:`matplotlib.rc` command can be used to modify multiple
-settings in a single group at once, using keyword arguments:
+Note, that in order to change the usual `plot` color you have to change the
+*prop_cycle* property of *axes*:
 
 
 .. code-block:: default
 
 
-    mpl.rc('lines', linewidth=4, color='g')
-    plt.plot(data)
+    mpl.rcParams['axes.prop_cycle'] = cycler(color=['r', 'g', 'b', 'y'])
+    plt.plot(data)  # first color is red
 
 
 
@@ -205,7 +205,36 @@ settings in a single group at once, using keyword arguments:
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f18898136d0>]
+    [<matplotlib.lines.Line2D object at 0x7f1529013f10>]
+
+
+
+Matplotlib also provides a couple of convenience functions for modifying rc
+settings. The :func:`matplotlib.rc` command can be used to modify multiple
+settings in a single group at once, using keyword arguments:
+
+
+.. code-block:: default
+
+
+    mpl.rc('lines', linewidth=4, linestyle='-.')
+    plt.plot(data)
+
+
+
+
+.. image:: /tutorials/introductory/images/sphx_glr_customizing_004.png
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [<matplotlib.lines.Line2D object at 0x7f1559d617c0>]
 
 
 
@@ -220,11 +249,11 @@ There is some degree of validation when setting the values of rcParams, see
 The :file:`matplotlibrc` file
 -----------------------------
 
-matplotlib uses :file:`matplotlibrc` configuration files to customize all kinds
-of properties, which we call `rc settings` or `rc parameters`. You can control
-the defaults of almost every property in matplotlib: figure size and dpi, line
-width, color and style, axes, axis and grid properties, text and font
-properties and so on. matplotlib looks for :file:`matplotlibrc` in four
+Matplotlib uses :file:`matplotlibrc` configuration files to customize all
+kinds of properties, which we call 'rc settings' or 'rc parameters'. You can
+control the defaults of almost every property in Matplotlib: figure size and
+DPI, line width, color and style, axes, axis and grid properties, text and
+font properties and so on. Matplotlib looks for :file:`matplotlibrc` in four
 locations, in the following order:
 
 1. :file:`matplotlibrc` in the current working directory, usually used for
@@ -234,8 +263,9 @@ locations, in the following order:
 
 3. It next looks in a user-specific place, depending on your platform:
 
-   - On Linux and FreeBSD, it looks in :file:`.config/matplotlib/matplotlibrc`
-     (or `$XDG_CONFIG_HOME/matplotlib/matplotlibrc`) if you've customized
+   - On Linux and FreeBSD, it looks in
+     :file:`.config/matplotlib/matplotlibrc` (or
+     :file:`$XDG_CONFIG_HOME/matplotlib/matplotlibrc`) if you've customized
      your environment.
 
    - On other platforms, it looks in :file:`.matplotlib/matplotlibrc`.

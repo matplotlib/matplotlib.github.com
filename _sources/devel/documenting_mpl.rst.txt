@@ -81,8 +81,9 @@ Other useful invocations include
    # Build pdf docs.
    make latexpdf
 
-The ``SPHINXOPTS`` variable is set to ``-W`` by default to turn warnings into
-errors.  To unset it, use
+The ``SPHINXOPTS`` variable is set to ``-W --keep-going`` by default to build
+the complete docs but exit with exit status 1 if there are warnings.  To unset
+it, use
 
 .. code-block:: sh
 
@@ -98,7 +99,7 @@ Multiple options can be combined using e.g. ``make O='-j4 -Dplot_gallery=0'
 html``.
 
 On Windows, options needs to be set as environment variables, e.g. ``set O=-W
--j4 & make html``.
+--keep-going -j4 & make html``.
 
 .. _writing-rest-pages:
 
@@ -349,11 +350,11 @@ An example docstring looks like:
             Respective beginning and end of each line. If scalars are
             provided, all lines will have the same length.
 
-        colors : array-like of colors, optional, default: 'k'
+        colors : array-like of colors, default: 'k'
 
-        linestyles : {'solid', 'dashed', 'dashdot', 'dotted'}, optional
+        linestyles : {'solid', 'dashed', 'dashdot', 'dotted'}, default: 'solid'
 
-        label : string, optional, default: ''
+        label : str, default: ''
 
         Returns
         -------
@@ -361,7 +362,7 @@ An example docstring looks like:
 
         Other Parameters
         ----------------
-        **kwargs : `~matplotlib.collections.LineCollection` properties.
+        **kwargs : `~matplotlib.collections.LineCollection` properties
 
         See also
         --------
@@ -389,7 +390,7 @@ consistent with Python's documentation:
 
 .. code-block:: rst
 
-  If *linestyles* is *None*, the 'solid' is used.
+  If *linestyles* is *None*, the default is 'solid'.
 
 Do not use the ```default role``` or the ````literal```` role:
 
@@ -409,6 +410,12 @@ Use simple single or double quotes when giving string values, e.g.
 
   If 'tight', try to figure out the tight bbox of the figure.
 
+  No ``'extra'`` literal quotes.
+
+The use of extra literal quotes around the text is discouraged. While they
+slightly improve the rendered docs, they are cumbersome to type and difficult
+to read in plain-text docs.
+
 Parameter type descriptions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The main goal for parameter type descriptions is to be readable and
@@ -421,13 +428,14 @@ rules expand on them where the numpydoc conventions are not specific.
 
 Use ``float`` for a type that can be any number.
 
-Use ``(float, float)`` to describe a 2D position.
+Use ``(float, float)`` to describe a 2D position. The parentheses should be
+included to make the tuple-ness more obvious.
 
 Use ``array-like`` for homogeneous numeric sequences, which could
 typically be a numpy.array. Dimensionality may be specified using ``2D``,
 ``3D``, ``n-dimensional``. If you need to have variables denoting the
 sizes of the dimensions, use capital letters in brackets
-(``array-like (M, N)``). When refering to them in the text they are easier
+(``array-like (M, N)``). When referring to them in the text they are easier
 read and no special formatting is needed.
 
 ``float`` is the implicit default dtype for array-likes. For other dtypes
@@ -459,8 +467,50 @@ Use abbreviated links ```.Normalize``` in the text.
 
 .. code-block:: rst
 
-  norm : `~matplotlib.colors.Normalize`, optional
-     A `.Normalize` instance is used to scale luminance data to 0, 1.
+   norm : `~matplotlib.colors.Normalize`, optional
+        A `.Normalize` instance is used to scale luminance data to 0, 1.
+
+Default values
+~~~~~~~~~~~~~~
+As opposed to the numpydoc guide, parameters need not be marked as
+*optional* if they have a simple default:
+
+- use ``{name} : {type}, default: {val}`` when possible.
+- use ``{name} : {type}, optional`` and describe the default in the text if
+  it cannot be explained sufficiently in the recommended manner.
+
+The default value should provide semantic information targeted at a human
+reader. In simple cases, it restates the value in the function signature.
+If applicable, units should be added.
+
+.. code-block:: rst
+
+   Prefer:
+       interval : int, default: 1000ms
+   over:
+       interval : int, default: 1000
+
+If *None* is only used as a sentinel value for "parameter not specified", do
+not document it as the default. Depending on the context, give the actual
+default, or mark the parameter as optional if not specifying has no particular
+effect.
+
+.. code-block:: rst
+
+   Prefer:
+       dpi : int, default: :rc:`figure.dpi`
+   over:
+       dpi : int, default: None
+
+   Prefer:
+       textprops : dict, optional
+           Dictionary of keyword parameters to be passed to the
+           `~matplotlib.text.Text` instance contained inside TextArea.
+   over:
+       textprops : dict, default: None
+           Dictionary of keyword parameters to be passed to the
+           `~matplotlib.text.Text` instance contained inside TextArea.
+
 
 ``See also`` sections
 ~~~~~~~~~~~~~~~~~~~~~
@@ -502,12 +552,6 @@ rcParams
 rcParams can be referenced with the custom ``:rc:`` role:
 :literal:`:rc:\`foo\`` yields ``rcParams["foo"] = 'default'``, which is a link
 to the :file:`matplotlibrc` file description.
-
-Deprecated formatting conventions
----------------------------------
-Formerly, we have used square brackets for explicit parameter lists
-``['solid' | 'dashed' | 'dotted']``. With numpydoc we have switched to their
-standard using curly braces ``{'solid', 'dashed', 'dotted'}``.
 
 Setters and getters
 -------------------
@@ -630,7 +674,7 @@ reuse the parent docstring for the method of the child class. Python does this
 automatically, if the subclass method does not have a docstring.
 
 Use a plain comment `# docstring inherited` to denote the intention to reuse
-the parent docstring. That way we do not accidentially create a docstring in
+the parent docstring. That way we do not accidentally create a docstring in
 the future::
 
     class A:
@@ -670,7 +714,7 @@ Note that ``examples/text_labels_and_annotations/legend.py`` has been mapped to
 fixed in future re-organization of the docs.
 
 Plots can also be directly placed inside docstrings.  Details are in
-:doc:`/devel/plot_directive`.  A short example is:
+:doc:`/api/sphinxext_plot_directive_api`.  A short example is:
 
 .. code-block:: python
 
@@ -777,7 +821,7 @@ two step process from within the :file:`/doc/sphinxext/gallery_order.py`:
   and a list of examples for the subsection order. The order of the items
   shown in the doc pages is the order those items appear in those lists.
 * *Implicit order*: If a folder or example is not in those lists, it will be
-  appended after the explicitely ordered items and all of those additional
+  appended after the explicitly ordered items and all of those additional
   items will be ordered by pathname (for the sections) or by filename
   (for the subsections).
 
@@ -799,7 +843,7 @@ which was used to setup the github account but can be used for other
 purposes, like hosting Google docs or Youtube videos.  You can embed a
 Matplotlib animation in the docs by first saving the animation as a
 movie using :meth:`matplotlib.animation.Animation.save`, and then
-uploading to `matplotlib's Youtube
+uploading to `Matplotlib's Youtube
 channel <https://www.youtube.com/user/matplotlib>`_ and inserting the
 embedding string youtube provides like:
 

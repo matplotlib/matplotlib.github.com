@@ -48,16 +48,14 @@ inside a cgi-script *without* needing to write a figure to disk.
     # etc.).
     fig.savefig("test.png")
 
-    # Option 2: Save the figure to a string.
+    # Option 2: Retrieve a view on the renderer buffer...
     canvas.draw()
-    s, (width, height) = canvas.print_to_buffer()
-
-    # Option 2a: Convert to a NumPy array.
-    X = np.frombuffer(s, np.uint8).reshape((height, width, 4))
-
-    # Option 2b: Pass off to PIL.
+    buf = canvas.buffer_rgba()
+    # ... convert to a NumPy array ...
+    X = np.asarray(buf)
+    # ... and pass it to PIL.
     from PIL import Image
-    im = Image.frombytes("RGBA", (width, height), s)
+    im = Image.fromarray(X)
 
     # Uncomment this line to display the image using ImageMagick's `display` tool.
     # im.show()
@@ -98,7 +96,7 @@ in this example:
  .. code-block:: none
 
 
-    <function Axes.plot at 0x7f18a5a87550>
+    <function Axes.plot at 0x7f154d1994c0>
 
 
 

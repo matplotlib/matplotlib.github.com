@@ -111,9 +111,11 @@ Matplotlib consists of the following submodules:
    patheffects_api.rst
    pyplot_summary.rst
    projections_api.rst
+   quiver_api.rst
    rcsetup_api.rst
    sankey_api.rst
    scale_api.rst
+   sphinxext_plot_directive_api.rst
    spines_api.rst
    style_api.rst
    table_api.rst

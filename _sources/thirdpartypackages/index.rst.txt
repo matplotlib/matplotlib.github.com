@@ -8,9 +8,9 @@ Several external packages that extend or build on Matplotlib functionality are
 listed below.  They are maintained and distributed separately from Matplotlib
 and thus need to be installed individually.
 
-Please submit an issue or pull request on Github if you have created
+Please submit an issue or pull request on GitHub if you have created
 a package that you would like to have included.  We are also happy to
-host third party packages within the `Matplotlib Github Organization
+host third party packages within the `Matplotlib GitHub Organization
 <https://github.com/matplotlib>`_.
 
 Mapping toolkits
@@ -103,6 +103,14 @@ DeCiDa
 `DeCiDa <https://pypi.org/project/DeCiDa/>`_ is a library of functions
 and classes for electron device characterization, electronic circuit design and
 general data visualization and analysis.
+
+matplotlib-scalebar
+===================
+
+`matplotlib-scalebar <https://github.com/ppinard/matplotlib-scalebar>`_ provides a new artist to display a scale bar, aka micron bar.
+It is particularly useful when displaying calibrated images plotted using ``plt.imshow(...)``.
+
+.. image:: /_static/gold_on_carbon.jpg
 
 Matplotlib-Venn
 ===============
@@ -265,3 +273,41 @@ animated PNG file.  See the example on the PyPI page or at the ``numpngw``
 `github repository <https://github.com/WarrenWeckesser/numpngw>`_.
 
 .. image:: /_static/numpngw_animated_example.png
+
+blume
+=====
+
+`blume <https://pypi.org/project/blume/>`_ provides a replacement for
+the Matplotlib ``table`` module.  It fixes a number of issues with the
+existing table. See the `blume github repository
+<https://github.com/swfiua/blume>`_ for more details.
+
+.. image:: /_static/blume_table_example.png
+
+
+DNA Features Viewer
+===================
+
+`DNA Features Viewer <https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer>`_
+provides methods to plot annotated DNA sequence maps (possibly along other Matplotlib
+plots) for Bioinformatics and Synthetic Biology applications.
+
+.. image:: /_static/dna_features_viewer_screenshot.png
+
+GUI applications
+****************
+
+sviewgui
+========
+
+`sviewgui <https://pypi.org/project/sviewgui/>`_ is a PyQt-based GUI for
+visualisation of data from csv files or `pandas.DataFrame`\s. Main features:
+
+- Scatter, line, density, histgram, and box plot types
+- Settings for the marker size, line width, number of bins of histgram,
+  color map (from cmocean)
+- Save figure as editable PDF
+- Code of the plotted graph is available so that it can be reused and modified
+  outside of sviewgui
+
+.. image:: /_static/sviewgui_sample.png

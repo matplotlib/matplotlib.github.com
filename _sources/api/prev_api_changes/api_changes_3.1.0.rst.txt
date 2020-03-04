@@ -17,14 +17,6 @@ regardless of whether `matplotlib.pyplot` has been imported. If the user
 tries to switch from an already-started interactive backend to a different
 interactive backend, an `ImportError` will be raised.
 
-mplot3d auto-registration
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-`mpl_toolkits.mplot3d` is always registered by default now. It is no
-longer necessary to import mplot3d to create 3d axes with ::
-
-  ax = fig.add_subplot(111, projection="3d")
-
 Invalid points in PathCollections
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PathCollections created with `~.Axes.scatter` now keep track of invalid points.
@@ -715,9 +707,9 @@ likewise changed.
 Dependency changes
 ------------------
 
-numpy
+NumPy
 ~~~~~
-Matplotlib 3.1 now requires numpy>=1.11.
+Matplotlib 3.1 now requires NumPy>=1.11.
 
 ghostscript
 ~~~~~~~~~~~
@@ -865,13 +857,13 @@ future version.
 
 - `.projections.process_projection_requirements`
 
-- `.backend_ps.PsBackendHelper``
-- `.backend_ps.ps_backend_helper``,
+- ``backend_ps.PsBackendHelper``
+- ``backend_ps.ps_backend_helper``,
 
 - `.cbook.iterable`
 - `.cbook.get_label`
 - `.cbook.safezip`
-  Manually check the lengths of the inputs instead, or rely on numpy to do it.
+  Manually check the lengths of the inputs instead, or rely on NumPy to do it.
 - `.cbook.is_hashable`
   Use ``isinstance(..., collections.abc.Hashable)`` instead.
 
@@ -938,7 +930,8 @@ Axes3D
 - `.axes3d.Axes3D.w_yaxis`
 - `.axes3d.Axes3D.w_zaxis`
 
-Use `.axes3d.Axes3D.xaxis`, `.axes3d.Axes3D.and `.axes3d.Axes3D.zaxis` instead.
+Use `.axes3d.Axes3D.xaxis`, `.axes3d.Axes3D.yaxis` and `.axes3d.Axes3D.zaxis`
+instead.
 
 Testing
 ~~~~~~~
@@ -960,8 +953,8 @@ whereas calling ``set_facecolor`` does.
 GUI / backend details
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `.get_py2exe_datafiles``
-- `.tk_window_focus``
+- ``.get_py2exe_datafiles``
+- ``.tk_window_focus``
 - `.backend_gtk3.FileChooserDialog`
 - `.backend_gtk3.NavigationToolbar2GTK3.get_filechooser`
 - `.backend_gtk3.SaveFigureGTK3.get_filechooser`

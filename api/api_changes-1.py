@@ -1,26 +1,18 @@
 import matplotlib.pyplot as plt
-import datetime
-import matplotlib.dates as mdates
+import numpy as np
 
-t0 = datetime.datetime(2009, 8, 20, 1, 10, 12)
-tf = datetime.datetime(2009, 8, 20, 1, 42, 11)
+fig, (ax_old, ax_new) = plt.subplots(1, 2, constrained_layout=True)
 
+ax_new.set_title('new values (-5, 6)')
+ax_old.set_title('old values (-7, 7)')
 
-fig, axs = plt.subplots(1, 2, constrained_layout=True)
-ax = axs[0]
-ax.axhspan(t0, tf, facecolor="blue", alpha=0.25)
-ax.set_ylim(t0 - datetime.timedelta(minutes=3),
-            tf + datetime.timedelta(minutes=3))
-ax.set_title('NEW DEFAULT')
+x = np.logspace(-8, 8, 1024)
+y = 1e-5 * np.exp(-x / 1e5) + 1e-6
 
-ax = axs[1]
-ax.axhspan(t0, tf, facecolor="blue", alpha=0.25)
-ax.set_ylim(t0 - datetime.timedelta(minutes=3),
-            tf + datetime.timedelta(minutes=3))
-# old behavior
-locator = mdates.AutoDateLocator(interval_multiples=False, )
-ax.yaxis.set_major_locator(locator)
-ax.yaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
+ax_old.xaxis.get_major_formatter().set_powerlimits((-7, 7))
+ax_old.yaxis.get_major_formatter().set_powerlimits((-7, 7))
 
-ax.set_title('OLD')
-plt.show()
+for ax in [ax_new, ax_old]:
+    ax.plot(x, y)
+    ax.set_xlim(0, 1e6)
+    ax.set_ylim(1e-6, 1e-5)
