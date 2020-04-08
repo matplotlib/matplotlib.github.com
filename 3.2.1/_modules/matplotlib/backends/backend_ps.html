@@ -7,19 +7,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>matplotlib.backends.backend_ps &#8212; Matplotlib 3.2.1 documentation</title>
-    <link rel="stylesheet" href="../../../_static/mpl.css?v3.2.1-6-g9a2f0578f" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/mpl.css?v3.2.1-13-g7a9bc5ebb-dirty" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
-    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
           title="Search within Matplotlib 3.2.1 documentation"
           href="../../../_static/opensearch.xml"/>
@@ -37,14 +39,6 @@
 
   </head><body>
 
-
-
-<div id="annc-banner">
-  <p>Matplotlib is partcipating in GSOC 2020!
-  <a href="https://discourse.matplotlib.org/t/gsoc-due-march-31-18-00utc/20975"> See discourse for details.
-  </a>
-  Apply by March 31, 2020.</p>
-</div>
 
 <div id="annc-banner">
   <p>John Hunter Excellence in Plotting Contest 2020
@@ -121,40 +115,40 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">TextIOWrapper</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">TextIOWrapper</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">tempfile</span> <span class="k">import</span> <span class="n">TemporaryDirectory</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
 <span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">cbook</span><span class="p">,</span> <span class="n">_path</span><span class="p">,</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">rcParams</span><span class="p">,</span> <span class="n">checkdep_ghostscript</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_text_layout</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_text_layout</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">GraphicsContextBase</span><span class="p">,</span>
     <span class="n">RendererBase</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="p">(</span><span class="n">get_realpath_and_stat</span><span class="p">,</span> <span class="n">is_writable_file_like</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_realpath_and_stat</span><span class="p">,</span> <span class="n">is_writable_file_like</span><span class="p">,</span>
                               <span class="n">file_requires_unicode</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">is_opentype_cff_font</span><span class="p">,</span> <span class="n">get_font</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="k">import</span> <span class="n">LOAD_NO_HINTING</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ttconv</span> <span class="k">import</span> <span class="n">convert_ttf_to_ps</span>
-<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="k">import</span> <span class="n">MathTextParser</span>
-<span class="kn">from</span> <span class="nn">matplotlib._mathtext_data</span> <span class="k">import</span> <span class="n">uni2type1</span>
-<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">matplotlib.texmanager</span> <span class="k">import</span> <span class="n">TexManager</span>
-<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Affine2D</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="k">import</span> <span class="n">MixedModeRenderer</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_backend_pdf_ps</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">is_opentype_cff_font</span><span class="p">,</span> <span class="n">get_font</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="kn">import</span> <span class="n">LOAD_NO_HINTING</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ttconv</span> <span class="kn">import</span> <span class="n">convert_ttf_to_ps</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="kn">import</span> <span class="n">MathTextParser</span>
+<span class="kn">from</span> <span class="nn">matplotlib._mathtext_data</span> <span class="kn">import</span> <span class="n">uni2type1</span>
+<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.texmanager</span> <span class="kn">import</span> <span class="n">TexManager</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Affine2D</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="kn">import</span> <span class="n">MixedModeRenderer</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_backend_pdf_ps</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -165,7 +159,7 @@
 
 <div class="viewcode-block" id="PsBackendHelper"><a class="viewcode-back" href="../../../api/backend_ps_api.html#matplotlib.backends.backend_ps.PsBackendHelper">[docs]</a><span class="k">class</span> <span class="nc">PsBackendHelper</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cached</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">)</span>
@@ -316,7 +310,7 @@
     <span class="n">_afm_font_dir</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_get_data_path</span><span class="p">(</span><span class="s2">&quot;fonts/afm&quot;</span><span class="p">)</span>
     <span class="n">_use_afm_rc_name</span> <span class="o">=</span> <span class="s2">&quot;ps.useafm&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">pswriter</span><span class="p">,</span> <span class="n">imagedpi</span><span class="o">=</span><span class="mi">72</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">pswriter</span><span class="p">,</span> <span class="n">imagedpi</span><span class="o">=</span><span class="mi">72</span><span class="p">):</span>
         <span class="c1"># Although postscript itself is dpi independent, we need to inform the</span>
         <span class="c1"># image code about a requested dpi to generate high resolution images</span>
         <span class="c1"># and them scale them before embedding them.</span>
@@ -420,29 +414,29 @@
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;H</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hatches</span><span class="p">)</span>
         <span class="n">linewidth</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;hatch.linewidth&#39;</span><span class="p">]</span>
         <span class="n">pageheight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mi">72</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">  &lt;&lt; /PatternType 1</span>
 <span class="s2">     /PaintType 2</span>
 <span class="s2">     /TilingType 2</span>
-<span class="s2">     /BBox[0 0 </span><span class="si">{sidelen:d}</span><span class="s2"> </span><span class="si">{sidelen:d}</span><span class="s2">]</span>
-<span class="s2">     /XStep </span><span class="si">{sidelen:d}</span><span class="s2"></span>
-<span class="s2">     /YStep </span><span class="si">{sidelen:d}</span><span class="s2"></span>
+<span class="s2">     /BBox[0 0 </span><span class="si">{</span><span class="n">sidelen</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sidelen</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">]</span>
+<span class="s2">     /XStep </span><span class="si">{</span><span class="n">sidelen</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">     /YStep </span><span class="si">{</span><span class="n">sidelen</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"></span>
 
-<span class="s2">     /PaintProc {{</span>
+<span class="s2">     /PaintProc </span><span class="se">{{</span><span class="s2"></span>
 <span class="s2">        pop</span>
-<span class="s2">        </span><span class="si">{linewidth:f}</span><span class="s2"> setlinewidth</span>
-<span class="s2">{self._convert_path(</span>
-<span class="s2">    Path.hatch(hatch), Affine2D().scale(sidelen), simplify=False)}</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">linewidth</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> setlinewidth</span>
+<span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert_path</span><span class="p">(</span>
+    <span class="n">Path</span><span class="o">.</span><span class="n">hatch</span><span class="p">(</span><span class="n">hatch</span><span class="p">),</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">sidelen</span><span class="p">),</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">        gsave</span>
 <span class="s2">        fill</span>
 <span class="s2">        grestore</span>
 <span class="s2">        stroke</span>
-<span class="s2">     }} bind</span>
+<span class="s2">     </span><span class="se">}}</span><span class="s2"> bind</span>
 <span class="s2">   &gt;&gt;</span>
 <span class="s2">   matrix</span>
-<span class="s2">   0.0 </span><span class="si">{pageheight:f}</span><span class="s2"> translate</span>
+<span class="s2">   0.0 </span><span class="si">{</span><span class="n">pageheight</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> translate</span>
 <span class="s2">   makepattern</span>
-<span class="s2">   /</span><span class="si">{name}</span><span class="s2"> exch def</span>
+<span class="s2">   /</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> exch def</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hatches</span><span class="p">[</span><span class="n">hatch</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">return</span> <span class="n">name</span></div>
@@ -489,18 +483,18 @@
             <span class="n">clip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">id</span><span class="p">)</span>
         <span class="n">clip</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">gsave</span>
-<span class="si">{clip}</span><span class="s2"></span>
-<span class="si">{x:f}</span><span class="s2"> </span><span class="si">{y:f}</span><span class="s2"> translate</span>
-<span class="s2">[</span><span class="si">{matrix}</span><span class="s2">] concat</span>
-<span class="si">{xscale:f}</span><span class="s2"> </span><span class="si">{yscale:f}</span><span class="s2"> scale</span>
-<span class="s2">/DataString </span><span class="si">{w:d}</span><span class="s2"> string def</span>
-<span class="si">{w:d}</span><span class="s2"> </span><span class="si">{h:d}</span><span class="s2"> 8 [ </span><span class="si">{w:d}</span><span class="s2"> 0 0 -</span><span class="si">{h:d}</span><span class="s2"> 0 </span><span class="si">{h:d}</span><span class="s2"> ]</span>
-<span class="s2">{{</span>
+<span class="si">{</span><span class="n">clip</span><span class="si">}</span><span class="s2"></span>
+<span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> translate</span>
+<span class="s2">[</span><span class="si">{</span><span class="n">matrix</span><span class="si">}</span><span class="s2">] concat</span>
+<span class="si">{</span><span class="n">xscale</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">yscale</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> scale</span>
+<span class="s2">/DataString </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> string def</span>
+<span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> 8 [ </span><span class="si">{</span><span class="n">w</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> 0 0 -</span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> 0 </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> ]</span>
+<span class="se">{{</span><span class="s2"></span>
 <span class="s2">currentfile DataString readhexstring pop</span>
-<span class="s2">}} bind </span><span class="si">{imagecmd}</span><span class="s2"></span>
-<span class="si">{hexlines}</span><span class="s2"></span>
+<span class="se">}}</span><span class="s2"> bind </span><span class="si">{</span><span class="n">imagecmd</span><span class="si">}</span><span class="s2"></span>
+<span class="si">{</span><span class="n">hexlines</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">grestore</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span></div>
 
@@ -520,12 +514,12 @@
             <span class="n">pid</span> <span class="o">=</span> <span class="s1">&#39;c</span><span class="si">%x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clip_paths</span><span class="p">)</span>
             <span class="n">clippath_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_path</span><span class="p">(</span>
                 <span class="n">clippath</span><span class="p">,</span> <span class="n">clippath_transform</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
-<span class="s2">/</span><span class="si">{pid}</span><span class="s2"> {{</span>
-<span class="si">{clippath_bytes}</span><span class="s2"></span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">/</span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="s2"></span>
+<span class="si">{</span><span class="n">clippath_bytes</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">clip</span>
 <span class="s2">newpath</span>
-<span class="s2">}} bind def</span>
+<span class="se">}}</span><span class="s2"> bind def</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_clip_paths</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">pid</span>
         <span class="k">return</span> <span class="n">pid</span>
@@ -622,12 +616,12 @@
                 <span class="n">master_transform</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">all_transforms</span><span class="p">)):</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;p</span><span class="si">%x</span><span class="s1">_</span><span class="si">%x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path_collection_id</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
             <span class="n">path_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
-<span class="s2">/</span><span class="si">{name}</span><span class="s2"> {{</span>
+            <span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="se">{{</span><span class="s2"></span>
 <span class="s2">newpath</span>
 <span class="s2">translate</span>
-<span class="si">{path_bytes}</span><span class="s2"></span>
-<span class="s2">}} bind def</span>
+<span class="si">{</span><span class="n">path_bytes</span><span class="si">}</span><span class="s2"></span>
+<span class="se">}}</span><span class="s2"> bind def</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
             <span class="n">path_codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
@@ -668,10 +662,10 @@
                 <span class="sa">r</span><span class="s1">&#39;\psfrag{</span><span class="si">%s</span><span class="s1">}[bl][bl][1][</span><span class="si">%f</span><span class="s1">]{\fontsize{</span><span class="si">%f</span><span class="s1">}{</span><span class="si">%f</span><span class="s1">}</span><span class="si">%s</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">thetext</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">*</span><span class="mf">1.25</span><span class="p">,</span> <span class="n">tex</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">gsave</span>
-<span class="si">{pos}</span><span class="s2"> moveto</span>
-<span class="s2">(</span><span class="si">{thetext}</span><span class="s2">)</span>
+<span class="si">{</span><span class="n">pos</span><span class="si">}</span><span class="s2"> moveto</span>
+<span class="s2">(</span><span class="si">{</span><span class="n">thetext</span><span class="si">}</span><span class="s2">)</span>
 <span class="s2">show</span>
 <span class="s2">grestore</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
@@ -725,14 +719,14 @@
                 <span class="n">thisx</span> <span class="o">+=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">scale</span>
 
             <span class="n">thetext</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">gsave</span>
-<span class="s2">/</span><span class="si">{fontname}</span><span class="s2"> findfont</span>
-<span class="si">{fontsize}</span><span class="s2"> scalefont</span>
+<span class="s2">/</span><span class="si">{</span><span class="n">fontname</span><span class="si">}</span><span class="s2"> findfont</span>
+<span class="si">{</span><span class="n">fontsize</span><span class="si">}</span><span class="s2"> scalefont</span>
 <span class="s2">setfont</span>
-<span class="si">{x:f}</span><span class="s2"> </span><span class="si">{y:f}</span><span class="s2"> translate</span>
-<span class="si">{angle:f}</span><span class="s2"> rotate</span>
-<span class="si">{thetext}</span><span class="s2"></span>
+<span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> translate</span>
+<span class="si">{</span><span class="n">angle</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> rotate</span>
+<span class="si">{</span><span class="n">thetext</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">grestore</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 
@@ -749,11 +743,11 @@
             <span class="n">thetext</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="s1">&#39;</span><span class="si">%f</span><span class="s1"> 0 m /</span><span class="si">%s</span><span class="s1"> glyphshow&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">font</span><span class="o">.</span><span class="n">get_glyph_name</span><span class="p">(</span><span class="n">glyph_idx</span><span class="p">))</span>
                 <span class="k">for</span> <span class="n">glyph_idx</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">_text_layout</span><span class="o">.</span><span class="n">layout</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">font</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">gsave</span>
-<span class="si">{x:f}</span><span class="s2"> </span><span class="si">{y:f}</span><span class="s2"> translate</span>
-<span class="si">{angle:f}</span><span class="s2"> rotate</span>
-<span class="si">{thetext}</span><span class="s2"></span>
+<span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> translate</span>
+<span class="si">{</span><span class="n">angle</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> rotate</span>
+<span class="si">{</span><span class="n">thetext</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">grestore</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span></div>
 
@@ -771,11 +765,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">merge_used_characters</span><span class="p">(</span><span class="n">used_characters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="o">*</span><span class="n">gc</span><span class="o">.</span><span class="n">get_rgb</span><span class="p">())</span>
         <span class="n">thetext</span> <span class="o">=</span> <span class="n">pswriter</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">gsave</span>
-<span class="si">{x:f}</span><span class="s2"> </span><span class="si">{y:f}</span><span class="s2"> translate</span>
-<span class="si">{angle:f}</span><span class="s2"> rotate</span>
-<span class="si">{thetext}</span><span class="s2"></span>
+<span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> translate</span>
+<span class="si">{</span><span class="n">angle</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> rotate</span>
+<span class="si">{</span><span class="n">thetext</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">grestore</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span></div>
 
@@ -814,7 +808,7 @@
 
         <span class="n">stream</span> <span class="o">=</span> <span class="n">quote_ps_string</span><span class="p">(</span><span class="n">streamarr</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">gsave</span>
 <span class="s2">&lt;&lt; /ShadingType 4</span>
 <span class="s2">   /ColorSpace [/DeviceRGB]</span>
@@ -822,8 +816,8 @@
 <span class="s2">   /BitsPerComponent 8</span>
 <span class="s2">   /BitsPerFlag 8</span>
 <span class="s2">   /AntiAlias true</span>
-<span class="s2">   /Decode [ </span><span class="si">{xmin:f}</span><span class="s2"> </span><span class="si">{xmax:f}</span><span class="s2"> </span><span class="si">{ymin:f}</span><span class="s2"> </span><span class="si">{ymax:f}</span><span class="s2"> 0 1 0 1 0 1 ]</span>
-<span class="s2">   /DataSource (</span><span class="si">{stream}</span><span class="s2">)</span>
+<span class="s2">   /Decode [ </span><span class="si">{</span><span class="n">xmin</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">xmax</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">ymin</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">ymax</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2"> 0 1 0 1 0 1 ]</span>
+<span class="s2">   /DataSource (</span><span class="si">{</span><span class="n">stream</span><span class="si">}</span><span class="s2">)</span>
 <span class="s2">&gt;&gt;</span>
 <span class="s2">shfill</span>
 <span class="s2">grestore</span>
@@ -1074,9 +1068,9 @@
             <span class="k">if</span> <span class="n">is_eps</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;%!PS-Adobe-3.0 EPSF-3.0&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">fh</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;%!PS-Adobe-3.0</span><span class="se">\n</span><span class="s2">&quot;</span>
-                      <span class="n">f</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">DocumentPaperSizes: </span><span class="si">{papertype}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                      <span class="n">f</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">Pages: 1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%!PS-Adobe-3.0</span><span class="se">\n</span><span class="s2">&quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;%%DocumentPaperSizes: </span><span class="si">{</span><span class="n">papertype</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;%%Pages: 1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
                       <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">fh</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">Title: &quot;</span> <span class="o">+</span> <span class="n">title</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">fh</span><span class="p">)</span>
@@ -1088,11 +1082,11 @@
                     <span class="nb">int</span><span class="p">(</span><span class="n">source_date_epoch</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%a</span><span class="s2"> %b </span><span class="si">%d</span><span class="s2"> %H:%M:%S %Y&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">source_date</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">Creator: </span><span class="si">{creator_str}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                  <span class="n">f</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">CreationDate: </span><span class="si">{source_date}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                  <span class="n">f</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">Orientation: </span><span class="si">{orientation.name}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                  <span class="n">f</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">BoundingBox: </span><span class="si">{bbox[0]}</span><span class="s2"> </span><span class="si">{bbox[1]}</span><span class="s2"> </span><span class="si">{bbox[2]}</span><span class="s2"> </span><span class="si">{bbox[3]}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                  <span class="n">f</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">EndComments</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%%Creator: </span><span class="si">{</span><span class="n">creator_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;%%CreationDate: </span><span class="si">{</span><span class="n">source_date</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;%%Orientation: </span><span class="si">{</span><span class="n">orientation</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;%%BoundingBox: </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;%%EndComments</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
                   <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">fh</span><span class="p">)</span>
 
             <span class="n">Ndict</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">psDefs</span><span class="p">)</span>
@@ -1279,24 +1273,24 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">source_date</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">()</span>
             <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+                <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">%!PS-Adobe-3.0 EPSF-3.0</span>
-<span class="s2">{f&#39;&#39;&#39;</span><span class="si">%%</span><span class="s2">Title: </span><span class="si">{title}</span><span class="s2"></span>
-<span class="s2">&#39;&#39;&#39; if title else &quot;&quot;}</span><span class="se">\</span>
-<span class="si">%%</span><span class="s2">Creator: </span><span class="si">{creator_str}</span><span class="s2"></span>
-<span class="si">%%</span><span class="s2">CreationDate: </span><span class="si">{source_date}</span><span class="s2"></span>
-<span class="si">%%</span><span class="s2">BoundingBox: </span><span class="si">{bbox[0]}</span><span class="s2"> </span><span class="si">{bbox[1]}</span><span class="s2"> </span><span class="si">{bbox[2]}</span><span class="s2"> </span><span class="si">{bbox[3]}</span><span class="s2"></span>
-<span class="si">%%</span><span class="s2">EndComments</span>
-<span class="si">%%</span><span class="s2">BeginProlog</span>
-<span class="s2">/mpldict {len(psDefs)} dict def</span>
+<span class="si">{</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;%%Title: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">&#39;&#39;&#39;</span> <span class="k">if</span> <span class="n">title</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="si">}</span><span class="se">\</span>
+<span class="s2">%%Creator: </span><span class="si">{</span><span class="n">creator_str</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">%%CreationDate: </span><span class="si">{</span><span class="n">source_date</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">%%BoundingBox: </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">%%EndComments</span>
+<span class="s2">%%BeginProlog</span>
+<span class="s2">/mpldict </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">psDefs</span><span class="p">)</span><span class="si">}</span><span class="s2"> dict def</span>
 <span class="s2">mpldict begin</span>
-<span class="s2">{&quot;&quot;.join(psDefs)}</span>
+<span class="si">{</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">psDefs</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">end</span>
-<span class="si">%%</span><span class="s2">EndProlog</span>
+<span class="s2">%%EndProlog</span>
 <span class="s2">mpldict begin</span>
-<span class="s2">{_nums_to_str(xo, yo)} translate</span>
-<span class="s2">{_nums_to_str(width*72, height*72)} 0 0 clipbox</span>
-<span class="s2">{self._pswriter.getvalue()}</span>
+<span class="si">{</span><span class="n">_nums_to_str</span><span class="p">(</span><span class="n">xo</span><span class="p">,</span> <span class="n">yo</span><span class="p">)</span><span class="si">}</span><span class="s2"> translate</span>
+<span class="si">{</span><span class="n">_nums_to_str</span><span class="p">(</span><span class="n">width</span><span class="o">*</span><span class="mi">72</span><span class="p">,</span> <span class="n">height</span><span class="o">*</span><span class="mi">72</span><span class="p">)</span><span class="si">}</span><span class="s2"> 0 0 clipbox</span>
+<span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_pswriter</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">end</span>
 <span class="s2">showpage</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
@@ -1594,10 +1588,10 @@
     <div class="footer">
     &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
 <br />
-    Last updated on Mar 19, 2020.
+    Last updated on Apr 08, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
-Doc version v3.2.1-6-g9a2f0578f.
+<a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+Doc version v3.2.1-13-g7a9bc5ebb-dirty.
     </div>
 </footer>
 <script>

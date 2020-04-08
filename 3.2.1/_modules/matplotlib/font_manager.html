@@ -7,19 +7,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>matplotlib.font_manager &#8212; Matplotlib 3.2.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.1-6-g9a2f0578f" type="text/css" />
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.1-13-g7a9bc5ebb-dirty" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
-    <script type="text/javascript" src="../../_static/copybutton.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
           title="Search within Matplotlib 3.2.1 documentation"
           href="../../_static/opensearch.xml"/>
@@ -37,14 +39,6 @@
 
   </head><body>
 
-
-
-<div id="annc-banner">
-  <p>Matplotlib is partcipating in GSOC 2020!
-  <a href="https://discourse.matplotlib.org/t/gsoc-due-march-31-18-00utc/20975"> See discourse for details.
-  </a>
-  Apply by March 31, 2020.</p>
-</div>
 
 <div id="annc-banner">
   <p>John Hunter Excellence in Plotting Contest 2020
@@ -141,22 +135,22 @@
 <span class="c1">#   - setWeights function needs improvement</span>
 <span class="c1">#   - &#39;light&#39; is an invalid weight value, remove it.</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Timer</span>
+    <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Timer</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">dummy_threading</span> <span class="k">import</span> <span class="n">Timer</span>
+    <span class="kn">from</span> <span class="nn">dummy_threading</span> <span class="kn">import</span> <span class="n">Timer</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">afm</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">ft2font</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib.fontconfig_pattern</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">afm</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">ft2font</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib.fontconfig_pattern</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">parse_fontconfig_pattern</span><span class="p">,</span> <span class="n">generate_fontconfig_pattern</span><span class="p">)</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -447,7 +441,7 @@
 <span class="sd">    A class for storing Font properties.  It is used when populating</span>
 <span class="sd">    the font lookup dictionary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">fname</span>  <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                  <span class="n">name</span>   <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                  <span class="n">style</span>  <span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span>
@@ -467,7 +461,7 @@
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;Font &#39;</span><span class="si">%s</span><span class="s2">&#39; (</span><span class="si">%s</span><span class="s2">) </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">variant</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stretch</span><span class="p">)</span></div>
@@ -738,7 +732,7 @@
 <span class="sd">    fontconfig.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">family</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">style</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">variant</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -778,7 +772,7 @@
     <span class="k">def</span> <span class="nf">_parse_fontconfig_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">parse_fontconfig_pattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_family</span><span class="p">()),</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">get_slant</span><span class="p">(),</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">get_variant</span><span class="p">(),</span>
@@ -788,10 +782,10 @@
              <span class="bp">self</span><span class="o">.</span><span class="n">get_file</span><span class="p">())</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fontconfig_pattern</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FontProperties.get_family"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontProperties.get_family">[docs]</a>    <span class="k">def</span> <span class="nf">get_family</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1075,7 +1069,7 @@
     <span class="c1"># cache files to be rebuilt.</span>
     <span class="n">__version__</span> <span class="o">=</span> <span class="mi">310</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__version__</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__default_weight</span> <span class="o">=</span> <span class="n">weight</span>
@@ -1479,10 +1473,10 @@
     <div class="footer">
     &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
 <br />
-    Last updated on Mar 19, 2020.
+    Last updated on Apr 08, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
-Doc version v3.2.1-6-g9a2f0578f.
+<a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+Doc version v3.2.1-13-g7a9bc5ebb-dirty.
     </div>
 </footer>
 <script>

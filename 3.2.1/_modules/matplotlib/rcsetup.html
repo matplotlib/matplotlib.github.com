@@ -7,19 +7,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>matplotlib.rcsetup &#8212; Matplotlib 3.2.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.1-6-g9a2f0578f" type="text/css" />
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.1-13-g7a9bc5ebb-dirty" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
-    <script type="text/javascript" src="../../_static/copybutton.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
           title="Search within Matplotlib 3.2.1 documentation"
           href="../../_static/opensearch.xml"/>
@@ -37,14 +39,6 @@
 
   </head><body>
 
-
-
-<div id="annc-banner">
-  <p>Matplotlib is partcipating in GSOC 2020!
-  <a href="https://discourse.matplotlib.org/t/gsoc-due-march-31-18-00utc/20975"> See discourse for details.
-  </a>
-  Apply by March 31, 2020.</p>
-</div>
 
 <div id="annc-banner">
   <p>John Hunter Excellence in Plotting Contest 2020
@@ -132,21 +126,21 @@
 <span class="sd">:file:`matplotlibrc.template` in matplotlib&#39;s root source directory.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">operator</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span>
-<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="k">import</span> <span class="n">ls_mapper</span>
-<span class="kn">from</span> <span class="nn">matplotlib.fontconfig_pattern</span> <span class="k">import</span> <span class="n">parse_fontconfig_pattern</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">is_color_like</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cbook</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="n">ls_mapper</span>
+<span class="kn">from</span> <span class="nn">matplotlib.fontconfig_pattern</span> <span class="kn">import</span> <span class="n">parse_fontconfig_pattern</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">is_color_like</span>
 
 <span class="c1"># Don&#39;t let the original cycler collide with our validating cycler</span>
-<span class="kn">from</span> <span class="nn">cycler</span> <span class="k">import</span> <span class="n">Cycler</span><span class="p">,</span> <span class="n">cycler</span> <span class="k">as</span> <span class="n">ccycler</span>
+<span class="kn">from</span> <span class="nn">cycler</span> <span class="kn">import</span> <span class="n">Cycler</span><span class="p">,</span> <span class="n">cycler</span> <span class="k">as</span> <span class="n">ccycler</span>
 
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -165,7 +159,7 @@
 
 
 <div class="viewcode-block" id="ValidateInStrings"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.ValidateInStrings">[docs]</a><span class="k">class</span> <span class="nc">ValidateInStrings</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span> <span class="n">ignorecase</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span> <span class="n">ignorecase</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="s1">&#39;valid is a list of legal strings&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ignorecase</span> <span class="o">=</span> <span class="n">ignorecase</span>
@@ -177,7 +171,7 @@
                 <span class="k">return</span> <span class="n">s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">valid</span> <span class="o">=</span> <span class="p">{</span><span class="n">func</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">valid</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignorecase</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
@@ -314,7 +308,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Could not convert </span><span class="si">{s!r}</span><span class="s1"> to </span><span class="si">{cls.__name__}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not convert </span><span class="si">{</span><span class="n">s</span><span class="si">!r}</span><span class="s1"> to </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">validator</span>
 
@@ -392,19 +386,19 @@
             <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
             <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s1">&#39;Expected exactly </span><span class="si">{n}</span><span class="s1"> comma-separated values, &#39;</span>
-                    <span class="n">f</span><span class="s1">&#39;but got {len(s)} comma-separated values: </span><span class="si">{s}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s1">&#39;Expected exactly </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1"> comma-separated values, &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;but got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s1"> comma-separated values: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s1">&#39;Expected exactly </span><span class="si">{n}</span><span class="s1"> values, &#39;</span>
-                    <span class="n">f</span><span class="s1">&#39;but got {len(s)} values: </span><span class="si">{s}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s1">&#39;Expected exactly </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1"> values, &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;but got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s1"> values: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_none</span> <span class="ow">or</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">val</span>
                     <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="n">f</span><span class="s1">&#39;Could not convert all entries to </span><span class="si">{cls.__name__}</span><span class="s1">s&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">&#39;Could not convert all entries to </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">s&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">validator</span>
 
@@ -529,7 +523,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{s}</span><span class="s1"> is not a valid font weight.&#39;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1"> is not a valid font weight.&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="validate_font_properties"><a class="viewcode-back" href="../../api/rcsetup_api.html#matplotlib.rcsetup.validate_font_properties">[docs]</a><span class="k">def</span> <span class="nf">validate_font_properties</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -785,13 +779,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Value must be in interval</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">closedmin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">closedmax</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">closedmin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">closedmax</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmin</span> <span class="o">=</span> <span class="n">closedmin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmax</span> <span class="o">=</span> <span class="n">closedmax</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -818,7 +812,7 @@
     <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">s</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Value must be &gt;=0 and &lt;1; got </span><span class="si">{s}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value must be &gt;=0 and &lt;1; got </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_validate_greaterequal0_lessequal1</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -826,7 +820,7 @@
     <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">s</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Value must be &gt;=0 and &lt;=1; got </span><span class="si">{s}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value must be &gt;=0 and &lt;=1; got </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
 <span class="n">_range_validators</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1"># Slightly nicer (internal) API.</span>
@@ -1062,7 +1056,7 @@
     <span class="c1"># are already loaded and reset the writers (which will validate</span>
     <span class="c1"># the path on next call)</span>
     <span class="n">cbook</span><span class="o">.</span><span class="n">_check_isinstance</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">modules</span>
+    <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">modules</span>
     <span class="c1"># set dirty, so that the next call to the registry will re-evaluate</span>
     <span class="c1"># the state.</span>
     <span class="c1"># only set dirty if already loaded. If not loaded, the load will</span>
@@ -1605,10 +1599,10 @@
     <div class="footer">
     &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
 <br />
-    Last updated on Mar 19, 2020.
+    Last updated on Apr 08, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
-Doc version v3.2.1-6-g9a2f0578f.
+<a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+Doc version v3.2.1-13-g7a9bc5ebb-dirty.
     </div>
 </footer>
 <script>
