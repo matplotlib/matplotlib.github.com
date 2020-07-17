@@ -161,21 +161,15 @@ also affected by the axes limits.
             for ax, extent in zip(columns[origin], extents):
                 plot_imshow_with_labels(ax, data, extent, origin, xlim, ylim)
 
+        columns['label'][0].set_title('extent=')
         for ax, extent in zip(columns['label'], extents):
-            text_kwargs = {'ha': 'right',
-                           'va': 'center',
-                           'xycoords': 'axes fraction',
-                           'xy': (1, .5)}
             if extent is None:
-                ax.annotate('None', **text_kwargs)
-                ax.set_title('extent=')
+                text = 'None'
             else:
                 left, right, bottom, top = extent
-                text = ('left: {left:0.1f}\nright: {right:0.1f}\n' +
-                        'bottom: {bottom:0.1f}\ntop: {top:0.1f}\n').format(
-                            left=left, right=right, bottom=bottom, top=top)
-
-                ax.annotate(text, **text_kwargs)
+                text = (f'left: {left:0.1f}\nright: {right:0.1f}\n'
+                        f'bottom: {bottom:0.1f}\ntop: {top:0.1f}\n')
+            ax.text(1., .5, text, transform=ax.transAxes, ha='right', va='center')
             ax.axis('off')
         return columns
 
@@ -213,7 +207,7 @@ First, let's have a look at the default ``extent=None``
  .. code-block:: none
 
 
-    {'label': [<matplotlib.axes._subplots.AxesSubplot object at 0x7f613b16d6a0>], 'upper': [<matplotlib.axes._subplots.AxesSubplot object at 0x7f614d842460>], 'lower': [<matplotlib.axes._subplots.AxesSubplot object at 0x7f614d4e6d60>]}
+    {'label': [<AxesSubplot:title={'center':'extent='}>], 'upper': [<AxesSubplot:title={'center':'origin: upper'}>], 'lower': [<AxesSubplot:title={'center':'origin: lower'}>]}
 
 
 
@@ -282,7 +276,7 @@ may invert the axis so they do not increase in the 'natural' direction.
 
 
 .. image:: /tutorials/intermediate/images/sphx_glr_imshow_extent_002.png
-    :alt: origin: upper, origin: upper, origin: upper, origin: upper, origin: lower, origin: lower, origin: lower, origin: lower
+    :alt: extent=, origin: upper, origin: upper, origin: upper, origin: upper, origin: lower, origin: lower, origin: lower, origin: lower
     :class: sphx-glr-single-img
 
 
@@ -320,6 +314,8 @@ We can see that:
     generate_imshow_demo_grid(extents=[None] + extents,
                               xlim=(-2, 8), ylim=(-1, 6))
 
+    plt.show()
+
 
 
 .. image:: /tutorials/intermediate/images/sphx_glr_imshow_extent_003.png
@@ -327,21 +323,13 @@ We can see that:
     :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-
-    {'label': [<matplotlib.axes._subplots.AxesSubplot object at 0x7f613b75dbe0>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d84bdc0>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d4e7bb0>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f613b489b50>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d399f70>], 'upper': [<matplotlib.axes._subplots.AxesSubplot object at 0x7f614ccf4400>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d3127f0>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614c87ec10>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d5c89a0>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614c36b3a0>], 'lower': [<matplotlib.axes._subplots.AxesSubplot object at 0x7f614d29f7c0>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d4a5280>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f613b160a00>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d8641c0>, <matplotlib.axes._subplots.AxesSubplot object at 0x7f614d341940>]}
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.144 seconds)
+   **Total running time of the script:** ( 0 minutes  2.489 seconds)
 
 
 .. _sphx_glr_download_tutorials_intermediate_imshow_extent.py:

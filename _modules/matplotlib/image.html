@@ -6,32 +6,31 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>matplotlib.image &#8212; Matplotlib 3.2.2 documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.2-2-g137edd56a" type="text/css" />
+    <title>matplotlib.image &#8212; Matplotlib 3.3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.3.0-3-g8994f1b60" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.2.2 documentation"
+          title="Search within Matplotlib 3.3.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
 
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-<link rel="top" title="Matplotlib 3.2.2 documentation" href="#" />
-    <link rel="canonical" href="https://matplotlib.org/3.2.2/_modules/matplotlib/image.html" />
+<link rel="top" title="Matplotlib 3.3.0 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/3.3.0/_modules/matplotlib/image.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -49,7 +48,7 @@
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
     <a href="../../index.html">
-        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.2.2</span></div>
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.3.0</span></div>
         <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
     <!-- The "Fork me on github" ribbon -->
@@ -82,8 +81,7 @@
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../contents.html">contents</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">matplotlib.image</a></li> 
+          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li> 
       </ul>
     </div>
 
@@ -115,31 +113,28 @@
 <span class="sd">operations.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">PIL.PngImagePlugin</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">matplotlib.artist</span> <span class="k">as</span> <span class="nn">martist</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="kn">import</span> <span class="n">FigureCanvasBase</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="n">FigureCanvasBase</span>
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cbook</span> <span class="k">as</span> <span class="nn">cbook</span>
-
 <span class="c1"># For clarity, names from _image are given explicitly in this module:</span>
 <span class="kn">import</span> <span class="nn">matplotlib._image</span> <span class="k">as</span> <span class="nn">_image</span>
-
 <span class="c1"># For user convenience, the names from _image are also imported into</span>
 <span class="c1"># the image namespace:</span>
-<span class="kn">from</span> <span class="nn">matplotlib._image</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Affine2D</span><span class="p">,</span> <span class="n">BboxBase</span><span class="p">,</span> <span class="n">Bbox</span><span class="p">,</span> <span class="n">BboxTransform</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">matplotlib._image</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="p">(</span><span class="n">Affine2D</span><span class="p">,</span> <span class="n">BboxBase</span><span class="p">,</span> <span class="n">Bbox</span><span class="p">,</span> <span class="n">BboxTransform</span><span class="p">,</span>
                                    <span class="n">IdentityTransform</span><span class="p">,</span> <span class="n">TransformedBbox</span><span class="p">)</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -173,7 +168,7 @@
 <div class="viewcode-block" id="composite_images"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.composite_images">[docs]</a><span class="k">def</span> <span class="nf">composite_images</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">magnification</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Composite a number of RGBA images into one.  The images are</span>
-<span class="sd">    composited in the order in which they appear in the `images` list.</span>
+<span class="sd">    composited in the order in which they appear in the *images* list.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -183,20 +178,18 @@
 <span class="sd">        enforced by this function.  Each image must have a purely</span>
 <span class="sd">        affine transformation with no shear.</span>
 
-<span class="sd">    renderer : RendererBase instance</span>
+<span class="sd">    renderer : `.RendererBase`</span>
 
-<span class="sd">    magnification : float</span>
+<span class="sd">    magnification : float, default: 1</span>
 <span class="sd">        The additional magnification to apply for the renderer in use.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    tuple : image, offset_x, offset_y</span>
-<span class="sd">        Returns the tuple:</span>
-
-<span class="sd">        - image: A numpy array of the same type as the input images.</span>
-
-<span class="sd">        - offset_x, offset_y: The offset of the image (left, bottom)</span>
-<span class="sd">          in the output figure.</span>
+<span class="sd">    image : uint8 3d array</span>
+<span class="sd">        The composited RGBA image.</span>
+<span class="sd">    offset_x, offset_y : float</span>
+<span class="sd">        The (left, bottom) offset where the composited image should be placed</span>
+<span class="sd">        in the output figure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
@@ -234,7 +227,7 @@
 <span class="sd">    Draw a sorted list of artists, compositing images into a single</span>
 <span class="sd">    image where possible.</span>
 
-<span class="sd">    For internal matplotlib use only: It is here to reduce duplication</span>
+<span class="sd">    For internal Matplotlib use only: It is here to reduce duplication</span>
 <span class="sd">    between `Figure.draw` and `Axes.draw`, but otherwise should not be</span>
 <span class="sd">    generally useful.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -266,7 +259,8 @@
             <span class="k">del</span> <span class="n">image_group</span><span class="p">[:]</span>
 
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">artists</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">_ImageBase</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">can_composite</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">_ImageBase</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">can_composite</span><span class="p">()</span> <span class="ow">and</span>
+                    <span class="n">a</span><span class="o">.</span><span class="n">get_clip_on</span><span class="p">()):</span>
                 <span class="n">image_group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">flush_images</span><span class="p">()</span>
@@ -346,7 +340,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">zorder</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -358,9 +352,9 @@
                  <span class="p">):</span>
         <span class="n">martist</span><span class="o">.</span><span class="n">Artist</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mouseover</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">origin</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span>
+        <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">([</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_filternorm</span><span class="p">(</span><span class="n">filternorm</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_filterrad</span><span class="p">(</span><span class="n">filterrad</span><span class="p">)</span>
@@ -418,8 +412,7 @@
 
     <span class="k">def</span> <span class="nf">changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Call this whenever the mappable is changed so observers can</span>
-<span class="sd">        update state</span>
+<span class="sd">        Call this whenever the mappable is changed so observers can update.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_imcache</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rgbacache</span> <span class="o">=</span> <span class="kc">None</span>
@@ -512,7 +505,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">unsampled</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid shape </span><span class="si">{</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> for image data&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Invalid shape </span><span class="si">{A.shape}</span><span class="s2"> for image data&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="c1"># if we are a 2D array, then we are running through the</span>
@@ -537,8 +530,8 @@
                     <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">):</span>
                         <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span>
                             <span class="n">cbook</span><span class="o">.</span><span class="n">_warn_external</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;Casting input data from &#39;</span><span class="si">{</span><span class="n">A</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&#39; to &quot;</span>
-                                <span class="sa">f</span><span class="s2">&quot;&#39;float64&#39; for imshow&quot;</span><span class="p">)</span>
+                                <span class="n">f</span><span class="s2">&quot;Casting input data from &#39;</span><span class="si">{A.dtype}</span><span class="s2">&#39; to &quot;</span>
+                                <span class="n">f</span><span class="s2">&quot;&#39;float64&#39; for imshow&quot;</span><span class="p">)</span>
                         <span class="n">scaled_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># probably an integer of some type.</span>
@@ -577,15 +570,36 @@
                 <span class="k">if</span> <span class="n">newmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">newmin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">A_scaled</span><span class="p">,</span> <span class="n">newmin</span><span class="p">,</span> <span class="n">newmax</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">A_scaled</span><span class="p">)</span>
 
+                <span class="c1"># used to rescale the raw data to [offset, 1-offset]</span>
+                <span class="c1"># so that the resampling code will run cleanly.  Using</span>
+                <span class="c1"># dyadic numbers here could reduce the error, but</span>
+                <span class="c1"># would not full eliminate it and breaks a number of</span>
+                <span class="c1"># tests (due to the slightly different error bouncing</span>
+                <span class="c1"># some pixels across a boundary in the (very</span>
+                <span class="c1"># quantized) color mapping step).</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+                <span class="n">frac</span> <span class="o">=</span> <span class="o">.</span><span class="mi">8</span>
+                <span class="c1"># we need to run the vmin/vmax through the same rescaling</span>
+                <span class="c1"># that we run the raw data through because there are small</span>
+                <span class="c1"># errors in the round-trip due to float precision.  If we</span>
+                <span class="c1"># do not run the vmin/vmax through the same pipeline we can</span>
+                <span class="c1"># have values close or equal to the boundaries end up on the</span>
+                <span class="c1"># wrong side.</span>
+                <span class="n">vrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">vmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">vmax</span><span class="p">],</span>
+                                  <span class="n">dtype</span><span class="o">=</span><span class="n">scaled_dtype</span><span class="p">)</span>
+
                 <span class="n">A_scaled</span> <span class="o">-=</span> <span class="n">a_min</span>
+                <span class="n">vrange</span> <span class="o">-=</span> <span class="n">a_min</span>
                 <span class="c1"># a_min and a_max might be ndarray subclasses so use</span>
                 <span class="c1"># item to avoid errors</span>
                 <span class="n">a_min</span> <span class="o">=</span> <span class="n">a_min</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">scaled_dtype</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
                 <span class="n">a_max</span> <span class="o">=</span> <span class="n">a_max</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">scaled_dtype</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="n">a_min</span> <span class="o">!=</span> <span class="n">a_max</span><span class="p">:</span>
-                    <span class="n">A_scaled</span> <span class="o">/=</span> <span class="p">((</span><span class="n">a_max</span> <span class="o">-</span> <span class="n">a_min</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.8</span><span class="p">)</span>
-                <span class="n">A_scaled</span> <span class="o">+=</span> <span class="mf">0.1</span>
+                    <span class="n">A_scaled</span> <span class="o">/=</span> <span class="p">((</span><span class="n">a_max</span> <span class="o">-</span> <span class="n">a_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">frac</span><span class="p">)</span>
+                    <span class="n">vrange</span> <span class="o">/=</span> <span class="p">((</span><span class="n">a_max</span> <span class="o">-</span> <span class="n">a_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">frac</span><span class="p">)</span>
+                <span class="n">A_scaled</span> <span class="o">+=</span> <span class="n">offset</span>
+                <span class="n">vrange</span> <span class="o">+=</span> <span class="n">offset</span>
                 <span class="c1"># resample the input data to the correct resolution and shape</span>
                 <span class="n">A_resampled</span> <span class="o">=</span> <span class="n">_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A_scaled</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
                 <span class="c1"># done with A_scaled now, remove from namespace to be sure!</span>
@@ -595,10 +609,13 @@
                 <span class="c1"># below the original min/max will still be above /</span>
                 <span class="c1"># below, but possibly clipped in the case of higher order</span>
                 <span class="c1"># interpolation + drastically changing data.</span>
-                <span class="n">A_resampled</span> <span class="o">-=</span> <span class="mf">0.1</span>
+                <span class="n">A_resampled</span> <span class="o">-=</span> <span class="n">offset</span>
+                <span class="n">vrange</span> <span class="o">-=</span> <span class="n">offset</span>
                 <span class="k">if</span> <span class="n">a_min</span> <span class="o">!=</span> <span class="n">a_max</span><span class="p">:</span>
-                    <span class="n">A_resampled</span> <span class="o">*=</span> <span class="p">((</span><span class="n">a_max</span> <span class="o">-</span> <span class="n">a_min</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.8</span><span class="p">)</span>
+                    <span class="n">A_resampled</span> <span class="o">*=</span> <span class="p">((</span><span class="n">a_max</span> <span class="o">-</span> <span class="n">a_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">frac</span><span class="p">)</span>
+                    <span class="n">vrange</span> <span class="o">*=</span> <span class="p">((</span><span class="n">a_max</span> <span class="o">-</span> <span class="n">a_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">frac</span><span class="p">)</span>
                 <span class="n">A_resampled</span> <span class="o">+=</span> <span class="n">a_min</span>
+                <span class="n">vrange</span> <span class="o">+=</span> <span class="n">a_min</span>
                 <span class="c1"># if using NoNorm, cast back to the original datatype</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">):</span>
                     <span class="n">A_resampled</span> <span class="o">=</span> <span class="n">A_resampled</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
@@ -625,7 +642,14 @@
                     <span class="n">out_alpha</span> <span class="o">*=</span> <span class="n">_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">,</span>
                                            <span class="n">t</span><span class="p">,</span> <span class="n">resample</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="c1"># mask and run through the norm</span>
-                <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">A_resampled</span><span class="p">,</span> <span class="n">out_mask</span><span class="p">))</span>
+                <span class="n">resampled_masked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">A_resampled</span><span class="p">,</span> <span class="n">out_mask</span><span class="p">)</span>
+                <span class="c1"># we have re-set the vmin/vmax to account for small errors</span>
+                <span class="c1"># that may have moved input values in/out of range</span>
+                <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_setattr_cm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span>
+                                       <span class="n">vmin</span><span class="o">=</span><span class="n">vrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                       <span class="n">vmax</span><span class="o">=</span><span class="n">vrange</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                       <span class="p">):</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">resampled_masked</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                     <span class="n">A</span> <span class="o">=</span> <span class="n">_rgb_to_rgba</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
@@ -689,21 +713,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;The make_image method must be overridden&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_draw_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">gc</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draw unsampled image. The renderer should support a draw_image method</span>
-<span class="sd">        with scale parameter.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">im</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_image</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">unsampled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">im</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
-
-        <span class="n">trans</span> <span class="o">=</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">trans</span>
-
-        <span class="n">renderer</span><span class="o">.</span><span class="n">draw_image</span><span class="p">(</span><span class="n">gc</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return whether the image is better to be drawn unsampled.</span>
 
@@ -717,22 +727,23 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_visible</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">return</span>
-
         <span class="c1"># for empty images, there is nothing to draw!</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_array</span><span class="p">()</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">return</span>
-
         <span class="c1"># actually render the image.</span>
         <span class="n">gc</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">new_gc</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_gc_clip</span><span class="p">(</span><span class="n">gc</span><span class="p">)</span>
         <span class="n">gc</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_scalar_alpha</span><span class="p">())</span>
         <span class="n">gc</span><span class="o">.</span><span class="n">set_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">())</span>
         <span class="n">gc</span><span class="o">.</span><span class="n">set_gid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_gid</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_unsampled_image</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span><span class="o">.</span><span class="n">is_affine</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_draw_unsampled_image</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">gc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">option_scale_image</span><span class="p">()</span>  <span class="c1"># Renderer supports transform kwarg.</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_unsampled_image</span><span class="p">()</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span><span class="o">.</span><span class="n">is_affine</span><span class="p">):</span>
+            <span class="n">im</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_image</span><span class="p">(</span><span class="n">renderer</span><span class="p">,</span> <span class="n">unsampled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">im</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">trans</span> <span class="o">=</span> <span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">trans</span>
+                <span class="n">renderer</span><span class="o">.</span><span class="n">draw_image</span><span class="p">(</span><span class="n">gc</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">im</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_image</span><span class="p">(</span>
                 <span class="n">renderer</span><span class="p">,</span> <span class="n">renderer</span><span class="o">.</span><span class="n">get_image_magnification</span><span class="p">())</span>
@@ -742,9 +753,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouseevent</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test whether the mouse event occurred within the image.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the mouse event occurred within the image.&quot;&quot;&quot;</span>
         <span class="n">inside</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_contains</span><span class="p">(</span><span class="n">mouseevent</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">inside</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">inside</span><span class="p">,</span> <span class="n">info</span>
@@ -774,12 +783,10 @@
         <span class="k">return</span> <span class="n">inside</span><span class="p">,</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">write_png</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Write the image to png file with fname&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
+        <span class="sd">&quot;&quot;&quot;Write the image to png file *fname*.&quot;&quot;&quot;</span>
         <span class="n">im</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="s1">&#39;lower&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">,</span>
                           <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-            <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -791,19 +798,18 @@
 <span class="sd">        ----------</span>
 <span class="sd">        A : array-like or `PIL.Image.Image`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
-                <span class="n">A</span> <span class="o">=</span> <span class="n">pil_to_array</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>  <span class="c1"># Needed e.g. to apply png palette.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">pil_to_array</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>  <span class="c1"># Needed e.g. to apply png palette.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_A</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">safe_masked_invalid</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span> <span class="ow">and</span>
                 <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">can_cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;same_kind&quot;</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Image data of dtype </span><span class="si">{}</span><span class="s2"> cannot be converted to &quot;</span>
                             <span class="s2">&quot;float&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># If just one dimension assume scalar and apply colormap</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span>
                 <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]):</span>
@@ -851,7 +857,6 @@
 <span class="sd">        &#39;spline36&#39;, &#39;hanning&#39;, &#39;hamming&#39;, &#39;hermite&#39;, &#39;kaiser&#39;, &#39;quadric&#39;,</span>
 <span class="sd">        &#39;catrom&#39;, &#39;gaussian&#39;, &#39;bessel&#39;, &#39;mitchell&#39;, &#39;sinc&#39;, &#39;lanczos&#39;,</span>
 <span class="sd">        or &#39;none&#39;.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolation</span>
 
@@ -859,20 +864,19 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the interpolation method the image uses when resizing.</span>
 
-<span class="sd">        if None, use a value from rc setting. If &#39;none&#39;, the image is</span>
+<span class="sd">        If None, use :rc:`image.interpolation`. If &#39;none&#39;, the image is</span>
 <span class="sd">        shown as is without interpolating. &#39;none&#39; is only supported in</span>
 <span class="sd">        agg, ps and pdf backends and will fall back to &#39;nearest&#39; mode</span>
 <span class="sd">        for other backends.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        s : {&#39;antialiased&#39;, &#39;nearest&#39;, &#39;bilinear&#39;, &#39;bicubic&#39;, &#39;spline16&#39;,</span>
+<span class="sd">        s : {&#39;antialiased&#39;, &#39;nearest&#39;, &#39;bilinear&#39;, &#39;bicubic&#39;, &#39;spline16&#39;, \</span>
 <span class="sd">&#39;spline36&#39;, &#39;hanning&#39;, &#39;hamming&#39;, &#39;hermite&#39;, &#39;kaiser&#39;, &#39;quadric&#39;, &#39;catrom&#39;, \</span>
-<span class="sd">&#39;gaussian&#39;, &#39;bessel&#39;, &#39;mitchell&#39;, &#39;sinc&#39;, &#39;lanczos&#39;, &#39;none&#39;}</span>
-
+<span class="sd">&#39;gaussian&#39;, &#39;bessel&#39;, &#39;mitchell&#39;, &#39;sinc&#39;, &#39;lanczos&#39;, &#39;none&#39;} or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">(</span><span class="n">_interpd_</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interpolation</span> <span class="o">=</span> <span class="n">s</span>
@@ -893,10 +897,10 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        v : bool or None</span>
-<span class="sd">            If None, use :rc:`image.resample` = True.</span>
+<span class="sd">            If None, use :rc:`image.resample`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.resample&#39;</span><span class="p">]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.resample&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_resample</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -943,6 +947,8 @@
 
 <div class="viewcode-block" id="AxesImage"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.AxesImage">[docs]</a><span class="k">class</span> <span class="nc">AxesImage</span><span class="p">(</span><span class="n">_ImageBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An image attached to an Axes.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    ax : `~.axes.Axes`</span>
@@ -980,18 +986,17 @@
 <span class="sd">        When True, use a full resampling method. When False, only resample when</span>
 <span class="sd">        the output image is larger than the input image.</span>
 <span class="sd">    **kwargs : `.Artist` properties</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;AxesImage(</span><span class="si">%g</span><span class="s2">,</span><span class="si">%g</span><span class="s2">;</span><span class="si">%g</span><span class="s2">x</span><span class="si">%g</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">extent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">filternorm</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">filternorm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">filterrad</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
                  <span class="n">resample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span>
@@ -1023,17 +1028,14 @@
         <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_extent</span><span class="p">()</span>
         <span class="n">bbox</span> <span class="o">=</span> <span class="n">Bbox</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">]]))</span>
         <span class="n">transformed_bbox</span> <span class="o">=</span> <span class="n">TransformedBbox</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_image</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">transformed_bbox</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_clip_box</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span>
-            <span class="n">magnification</span><span class="p">,</span> <span class="n">unsampled</span><span class="o">=</span><span class="n">unsampled</span><span class="p">)</span></div>
+        <span class="n">clip</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">get_clip_box</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clip_on</span><span class="p">()</span>
+                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">transformed_bbox</span><span class="p">,</span> <span class="n">clip</span><span class="p">,</span>
+                                <span class="n">magnification</span><span class="p">,</span> <span class="n">unsampled</span><span class="o">=</span><span class="n">unsampled</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return whether the image would be better drawn unsampled.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_interpolation</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span>
-                <span class="ow">and</span> <span class="n">renderer</span><span class="o">.</span><span class="n">option_scale_image</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return whether the image would be better drawn unsampled.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interpolation</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span>
 
 <div class="viewcode-block" id="AxesImage.set_extent"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.AxesImage.set_extent">[docs]</a>    <span class="k">def</span> <span class="nf">set_extent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1113,11 +1115,11 @@
 
 
 <div class="viewcode-block" id="NonUniformImage"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.NonUniformImage">[docs]</a><span class="k">class</span> <span class="nc">NonUniformImage</span><span class="p">(</span><span class="n">AxesImage</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        interpolation : {&#39;nearest&#39;, &#39;bilinear&#39;}</span>
+<span class="sd">        interpolation : {&#39;nearest&#39;, &#39;bilinear&#39;}, default: &#39;nearest&#39;</span>
 
 <span class="sd">        **kwargs</span>
 <span class="sd">            All other keyword arguments are identical to those of `.AxesImage`.</span>
@@ -1125,9 +1127,11 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_interpolation</span><span class="p">(</span><span class="n">interpolation</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return False. Do not use unsampled image.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">is_grayscale</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_deprecate_privatize_attribute</span><span class="p">(</span><span class="s2">&quot;3.3&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NonUniformImage.make_image"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.NonUniformImage.make_image">[docs]</a>    <span class="k">def</span> <span class="nf">make_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">magnification</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">unsampled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># docstring inherited</span>
@@ -1139,11 +1143,11 @@
         <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span>
                 <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">is_grayscale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="o">.</span><span class="n">is_gray</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_grayscale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="o">.</span><span class="n">is_gray</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="n">A</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">is_grayscale</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_grayscale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span>
                 <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="o">*</span><span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
@@ -1152,8 +1156,8 @@
                 <span class="n">B</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span>
                 <span class="n">B</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
                 <span class="n">A</span> <span class="o">=</span> <span class="n">B</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">is_grayscale</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">v_width</span><span class="p">,</span> <span class="n">v_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">viewLim</span><span class="o">.</span><span class="n">bounds</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_grayscale</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">vl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">viewLim</span>
         <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extents</span>
         <span class="n">width</span> <span class="o">=</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="n">height</span> <span class="o">=</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
@@ -1161,7 +1165,7 @@
         <span class="n">height</span> <span class="o">*=</span> <span class="n">magnification</span>
         <span class="n">im</span> <span class="o">=</span> <span class="n">_image</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Ay</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span>
                            <span class="nb">int</span><span class="p">(</span><span class="n">height</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">),</span>
-                           <span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x0</span><span class="o">+</span><span class="n">v_width</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y0</span><span class="o">+</span><span class="n">v_height</span><span class="p">),</span>
+                           <span class="p">(</span><span class="n">vl</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">vl</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">vl</span><span class="o">.</span><span class="n">y0</span><span class="p">,</span> <span class="n">vl</span><span class="o">.</span><span class="n">y1</span><span class="p">),</span>
                            <span class="n">_interpd_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_interpolation</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">im</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">IdentityTransform</span><span class="p">()</span></div>
 
@@ -1171,7 +1175,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x, y : 1D array-likes</span>
+<span class="sd">        x, y : 1D array-like</span>
 <span class="sd">            Monotonic arrays of shapes (N,) and (M,), respectively, specifying</span>
 <span class="sd">            pixel centers.</span>
 <span class="sd">        A : array-like</span>
@@ -1189,7 +1193,7 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;3D arrays must have three (RGB) &quot;</span>
                             <span class="s2">&quot;or four (RGBA) color components&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">A</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_A</span> <span class="o">=</span> <span class="n">A</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_Ax</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_Ay</span> <span class="o">=</span> <span class="n">y</span>
@@ -1204,8 +1208,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        s : str, None</span>
-<span class="sd">            Either &#39;nearest&#39;, &#39;bilinear&#39;, or ``None``.</span>
+<span class="sd">        s : {&#39;nearest&#39;, &#39;bilinear&#39;} or None</span>
+<span class="sd">            If None, use :rc:`image.interpolation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Only nearest neighbor and &#39;</span>
@@ -1241,7 +1245,7 @@
 <span class="sd">    This uses a variation of the original irregular image code,</span>
 <span class="sd">    and it is used by pcolorfast for the corresponding grid type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
                  <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">A</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1250,17 +1254,35 @@
                  <span class="o">**</span><span class="n">kwargs</span>
                  <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        cmap defaults to its rc setting</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ax : `~.axes.Axes`</span>
+<span class="sd">            The axes the image will belong to.</span>
+<span class="sd">        x, y : 1D array-like, optional</span>
+<span class="sd">            Monotonic arrays of length N+1 and M+1, respectively, specifying</span>
+<span class="sd">            rectangle boundaries.  If not given, will default to</span>
+<span class="sd">            ``range(N + 1)`` and ``range(M + 1)``, respectively.</span>
+<span class="sd">        A : array-like</span>
+<span class="sd">            The data to be color-coded. The interpretation depends on the</span>
+<span class="sd">            shape:</span>
 
-<span class="sd">        cmap is a colors.Colormap instance</span>
-<span class="sd">        norm is a colors.Normalize instance to map luminance to 0-1</span>
+<span class="sd">            - (M, N) ndarray or masked array: values to be colormapped</span>
+<span class="sd">            - (M, N, 3): RGB array</span>
+<span class="sd">            - (M, N, 4): RGBA array</span>
 
-<span class="sd">        Additional kwargs are matplotlib.artist properties</span>
+<span class="sd">        cmap : str or `~matplotlib.colors.Colormap`, default: :rc:`image.cmap`</span>
+<span class="sd">            The Colormap instance or registered colormap name used to map</span>
+<span class="sd">            scalar data to colors.</span>
+<span class="sd">        norm : `~matplotlib.colors.Normalize`</span>
+<span class="sd">            Maps luminance to 0-1.</span>
+<span class="sd">        **kwargs : `.Artist` properties</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+
+    <span class="n">is_grayscale</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_deprecate_privatize_attribute</span><span class="p">(</span><span class="s2">&quot;3.3&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PcolorImage.make_image"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.PcolorImage.make_image">[docs]</a>    <span class="k">def</span> <span class="nf">make_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">magnification</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">unsampled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># docstring inherited</span>
@@ -1274,14 +1296,13 @@
         <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extents</span>
         <span class="n">width</span> <span class="o">=</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="n">height</span> <span class="o">=</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
-        <span class="c1"># The extra cast-to-int is only needed for python2</span>
         <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">magnification</span><span class="p">))</span>
         <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">magnification</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rgbacache</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="p">,</span> <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_rgbacache</span> <span class="o">=</span> <span class="n">A</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">is_grayscale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="o">.</span><span class="n">is_gray</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_grayscale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="o">.</span><span class="n">is_gray</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rgbacache</span>
         <span class="n">vl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">viewLim</span>
@@ -1292,7 +1313,7 @@
                             <span class="n">bg</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">im</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">IdentityTransform</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_check_unsampled_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="PcolorImage.set_data"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.PcolorImage.set_data">[docs]</a>    <span class="k">def</span> <span class="nf">set_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -1301,13 +1322,17 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x, y : 1D array-likes or None</span>
-<span class="sd">            Monotonic arrays of shapes (N + 1,) and (M + 1,), respectively,</span>
-<span class="sd">            specifying rectangle boundaries.  If None, will default to</span>
+<span class="sd">        x, y : 1D array-like, optional</span>
+<span class="sd">            Monotonic arrays of length N+1 and M+1, respectively, specifying</span>
+<span class="sd">            rectangle boundaries.  If not given, will default to</span>
 <span class="sd">            ``range(N + 1)`` and ``range(M + 1)``, respectively.</span>
 <span class="sd">        A : array-like</span>
-<span class="sd">            (M, N) ndarray or masked array of values to be colormapped, or</span>
-<span class="sd">            (M, N, 3) RGB array, or (M, N, 4) RGBA array.</span>
+<span class="sd">            The data to be color-coded. The interpretation depends on the</span>
+<span class="sd">            shape:</span>
+
+<span class="sd">            - (M, N) ndarray or masked array: values to be colormapped</span>
+<span class="sd">            - (M, N, 3): RGB array</span>
+<span class="sd">            - (M, N, 4): RGBA array</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">safe_masked_invalid</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1326,13 +1351,13 @@
         <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A must be 2D or 3D&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">A</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_grayscale</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_grayscale</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="p">((</span><span class="n">A</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">A</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span>
                         <span class="p">(</span><span class="n">A</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">A</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">is_grayscale</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_is_grayscale</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;3D arrays must have RGB or RGBA as last dim&quot;</span><span class="p">)</span>
 
@@ -1368,11 +1393,13 @@
 
 
 <div class="viewcode-block" id="FigureImage"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.FigureImage">[docs]</a><span class="k">class</span> <span class="nc">FigureImage</span><span class="p">(</span><span class="n">_ImageBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An image attached to a figure.&quot;&quot;&quot;</span>
+
     <span class="n">zorder</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">_interpolation</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">offsetx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -1431,16 +1458,14 @@
 <div class="viewcode-block" id="BboxImage"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.BboxImage">[docs]</a><span class="k">class</span> <span class="nc">BboxImage</span><span class="p">(</span><span class="n">_ImageBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The Image class whose size is determined by the given bbox.&quot;&quot;&quot;</span>
 
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">_delete_parameter</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="s2">&quot;interp_at_native&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span>
                  <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">filternorm</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">filternorm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">filterrad</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
                  <span class="n">resample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">interp_at_native</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span>
                  <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1462,13 +1487,7 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="n">bbox</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_interp_at_native</span> <span class="o">=</span> <span class="n">interp_at_native</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span> <span class="o">=</span> <span class="n">IdentityTransform</span><span class="p">()</span>
-
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">)</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">interp_at_native</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interp_at_native</span>
 
 <div class="viewcode-block" id="BboxImage.get_transform"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.BboxImage.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span></div>
@@ -1482,7 +1501,7 @@
         <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unknown type of bbox&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown type of bbox&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BboxImage.contains"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.BboxImage.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouseevent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Test whether the mouse event occurred within the image.&quot;&quot;&quot;</span>
@@ -1527,21 +1546,12 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    imagedata : :class:`numpy.array`</span>
+<span class="sd">    `numpy.array`</span>
 <span class="sd">        The image data. The returned array has shape</span>
 
 <span class="sd">        - (M, N) for grayscale images.</span>
 <span class="sd">        - (M, N, 3) for RGB images.</span>
 <span class="sd">        - (M, N, 4) for RGBA images.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    Matplotlib can only read PNGs natively. Further image formats are</span>
-<span class="sd">    supported via the optional dependency on Pillow. Note, URL strings</span>
-<span class="sd">    are not compatible with Pillow. Check the `Pillow documentation`_</span>
-<span class="sd">    for more information.</span>
-
-<span class="sd">    .. _Pillow documentation: http://pillow.readthedocs.io/en/latest/</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -1551,8 +1561,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;png&#39;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-                <span class="n">ext</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;geturl&#39;</span><span class="p">):</span>  <span class="c1"># Returned by urlopen().</span>
             <span class="c1"># We could try to parse the url&#39;s path and use the extension, but</span>
             <span class="c1"># returning png is consistent with the block above.  Note that this</span>
@@ -1561,30 +1570,23 @@
             <span class="c1"># value &quot;&lt;urllib response&gt;&quot;).</span>
             <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;png&#39;</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">ext</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;png&#39;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ext</span> <span class="o">=</span> <span class="nb">format</span>
-    <span class="k">if</span> <span class="n">ext</span> <span class="o">!=</span> <span class="s1">&#39;png&#39;</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>  <span class="c1"># Try to load the image with PIL.</span>
-            <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only know how to handle PNG; with Pillow &#39;</span>
-                             <span class="s1">&#39;installed, Matplotlib can handle more images&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">image</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">pil_to_array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
+    <span class="n">img_open</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">PIL</span><span class="o">.</span><span class="n">PngImagePlugin</span><span class="o">.</span><span class="n">PngImageFile</span> <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;png&#39;</span> <span class="k">else</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">parsed</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-        <span class="c1"># If fname is a URL, download the data</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
-            <span class="n">fd</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-            <span class="k">return</span> <span class="n">_png</span><span class="o">.</span><span class="n">read_png</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_png</span><span class="o">.</span><span class="n">read_png</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Pillow doesn&#39;t handle URLs directly.</span>
+            <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">request</span>
+            <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">imread</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">ext</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">img_open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">image</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">_pil_png_to_float_array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">PIL</span><span class="o">.</span><span class="n">PngImagePlugin</span><span class="o">.</span><span class="n">PngImageFile</span><span class="p">)</span> <span class="k">else</span>
+                <span class="n">pil_to_array</span><span class="p">(</span><span class="n">image</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="imsave"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.imsave">[docs]</a><span class="k">def</span> <span class="nf">imsave</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1594,7 +1596,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fname : str or PathLike or file-like</span>
+<span class="sd">    fname : str or path-like or file-like</span>
 <span class="sd">        A path or a file-like object to store the image in.</span>
 <span class="sd">        If *format* is not set, then the output format is inferred from the</span>
 <span class="sd">        extension of *fname*, if any, and from :rc:`savefig.format` otherwise.</span>
@@ -1602,49 +1604,44 @@
 <span class="sd">    arr : array-like</span>
 <span class="sd">        The image data. The shape can be one of</span>
 <span class="sd">        MxN (luminance), MxNx3 (RGB) or MxNx4 (RGBA).</span>
-<span class="sd">    vmin, vmax : scalar, optional</span>
+<span class="sd">    vmin, vmax : float, optional</span>
 <span class="sd">        *vmin* and *vmax* set the color scaling for the image by fixing the</span>
 <span class="sd">        values that map to the colormap color limits. If either *vmin*</span>
 <span class="sd">        or *vmax* is None, that limit is determined from the *arr*</span>
 <span class="sd">        min/max value.</span>
-<span class="sd">    cmap : str or `~matplotlib.colors.Colormap`, optional</span>
+<span class="sd">    cmap : str or `~matplotlib.colors.Colormap`, default: :rc:`image.cmap`</span>
 <span class="sd">        A Colormap instance or registered colormap name. The colormap</span>
 <span class="sd">        maps scalar data to colors. It is ignored for RGB(A) data.</span>
-<span class="sd">        Defaults to :rc:`image.cmap` (&#39;viridis&#39;).</span>
 <span class="sd">    format : str, optional</span>
 <span class="sd">        The file format, e.g. &#39;png&#39;, &#39;pdf&#39;, &#39;svg&#39;, ...  The behavior when this</span>
 <span class="sd">        is unset is documented under *fname*.</span>
-<span class="sd">    origin : {&#39;upper&#39;, &#39;lower&#39;}, optional</span>
+<span class="sd">    origin : {&#39;upper&#39;, &#39;lower&#39;}, default: :rc:`image.origin`</span>
 <span class="sd">        Indicates whether the ``(0, 0)`` index of the array is in the upper</span>
-<span class="sd">        left or lower left corner of the axes.  Defaults to :rc:`image.origin`</span>
-<span class="sd">        (&#39;upper&#39;).</span>
-<span class="sd">    dpi : int</span>
+<span class="sd">        left or lower left corner of the axes.</span>
+<span class="sd">    dpi : float</span>
 <span class="sd">        The DPI to store in the metadata of the file.  This does not affect the</span>
-<span class="sd">        resolution of the output image.</span>
+<span class="sd">        resolution of the output image.  Depending on file format, this may be</span>
+<span class="sd">        rounded to the nearest integer.</span>
 <span class="sd">    metadata : dict, optional</span>
 <span class="sd">        Metadata in the image file.  The supported keys depend on the output</span>
 <span class="sd">        format, see the documentation of the respective backends for more</span>
 <span class="sd">        information.</span>
 <span class="sd">    pil_kwargs : dict, optional</span>
-<span class="sd">        If set to a non-None value, always use Pillow to save the figure</span>
-<span class="sd">        (regardless of the output format), and pass these keyword arguments to</span>
-<span class="sd">        `PIL.Image.save`.</span>
-
-<span class="sd">        If the &#39;pnginfo&#39; key is present, it completely overrides</span>
-<span class="sd">        *metadata*, including the default &#39;Software&#39; key.</span>
+<span class="sd">        Keyword arguments passed to `PIL.Image.Image.save`.  If the &#39;pnginfo&#39;</span>
+<span class="sd">        key is present, it completely overrides *metadata*, including the</span>
+<span class="sd">        default &#39;Software&#39; key.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">):</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">format</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-                  <span class="k">else</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;savefig.format&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                  <span class="k">else</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;savefig.format&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;ps&quot;</span><span class="p">,</span> <span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">]:</span>
         <span class="c1"># Vector formats that are not handled by PIL.</span>
         <span class="k">if</span> <span class="n">pil_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot use &#39;pil_kwargs&#39; when saving to </span><span class="si">{</span><span class="nb">format</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="s2">&quot;Cannot use &#39;pil_kwargs&#39; when saving to </span><span class="si">{format}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">figimage</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
                      <span class="n">resize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1656,52 +1653,57 @@
         <span class="n">sm</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
         <span class="n">sm</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">origin</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;image.origin&quot;</span><span class="p">]</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;image.origin&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">origin</span> <span class="o">==</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span>
             <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">rgba</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;png&quot;</span> <span class="ow">and</span> <span class="n">pil_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">rgba</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="nb">memoryview</span><span class="p">)</span> <span class="ow">and</span> <span class="n">arr</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span>
+                <span class="ow">and</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="c1"># Such an ``arr`` would also be handled fine by sm.to_rgba (after</span>
+            <span class="c1"># casting with asarray), but it is useful to special-case it</span>
+            <span class="c1"># because that&#39;s what backend_agg passes, and can be in fact used</span>
+            <span class="c1"># as is, saving a few operations.</span>
+            <span class="n">rgba</span> <span class="o">=</span> <span class="n">arr</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-                <span class="kn">from</span> <span class="nn">PIL.PngImagePlugin</span> <span class="kn">import</span> <span class="n">PngInfo</span>
-            <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">pil_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Setting &#39;pil_kwargs&#39; requires Pillow&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving to </span><span class="si">{</span><span class="nb">format</span><span class="si">}</span><span class="s2"> requires Pillow&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">pil_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">pil_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">pil_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
-                <span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="n">pil_shape</span><span class="p">,</span> <span class="n">rgba</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;png&quot;</span> <span class="ow">and</span> <span class="n">metadata</span><span class="p">:</span>
-                <span class="c1"># cf. backend_agg&#39;s print_png.</span>
-                <span class="k">if</span> <span class="s2">&quot;pnginfo&quot;</span> <span class="ow">in</span> <span class="n">pil_kwargs</span><span class="p">:</span>
+            <span class="n">rgba</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pil_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pil_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pil_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rgba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="n">pil_shape</span><span class="p">,</span> <span class="n">rgba</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;png&quot;</span><span class="p">:</span>
+            <span class="c1"># Only use the metadata kwarg if pnginfo is not set, because the</span>
+            <span class="c1"># semantics of duplicate keys in pnginfo is unclear.</span>
+            <span class="k">if</span> <span class="s2">&quot;pnginfo&quot;</span> <span class="ow">in</span> <span class="n">pil_kwargs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
                     <span class="n">cbook</span><span class="o">.</span><span class="n">_warn_external</span><span class="p">(</span><span class="s2">&quot;&#39;metadata&#39; is overridden by the &quot;</span>
                                          <span class="s2">&quot;&#39;pnginfo&#39; entry in &#39;pil_kwargs&#39;.&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">pnginfo</span> <span class="o">=</span> <span class="n">PngInfo</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;Software&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">f</span><span class="s2">&quot;Matplotlib version</span><span class="si">{mpl.__version__}</span><span class="s2">, &quot;</span>
+                                 <span class="n">f</span><span class="s2">&quot;https://matplotlib.org/&quot;</span><span class="p">),</span>
+                    <span class="o">**</span><span class="p">(</span><span class="n">metadata</span> <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}),</span>
+                <span class="p">}</span>
+                <span class="n">pil_kwargs</span><span class="p">[</span><span class="s2">&quot;pnginfo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pnginfo</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">PngImagePlugin</span><span class="o">.</span><span class="n">PngInfo</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">pnginfo</span><span class="o">.</span><span class="n">add_text</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-                    <span class="n">pil_kwargs</span><span class="p">[</span><span class="s2">&quot;pnginfo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pnginfo</span>
-            <span class="k">if</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">]:</span>
-                <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;jpeg&quot;</span>  <span class="c1"># Pillow doesn&#39;t recognize &quot;jpg&quot;.</span>
-                <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
-                    <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;savefig.facecolor&quot;</span><span class="p">]))</span>
-                <span class="n">background</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span> <span class="n">pil_shape</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
-                <span class="n">background</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
-                <span class="n">image</span> <span class="o">=</span> <span class="n">background</span>
-            <span class="n">pil_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;format&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
-            <span class="n">pil_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;dpi&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">dpi</span><span class="p">,</span> <span class="n">dpi</span><span class="p">))</span>
-            <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="o">**</span><span class="n">pil_kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">]:</span>
+            <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;jpeg&quot;</span>  <span class="c1"># Pillow doesn&#39;t recognize &quot;jpg&quot;.</span>
+            <span class="n">facecolor</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;savefig.facecolor&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_str_equal</span><span class="p">(</span><span class="n">facecolor</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">):</span>
+                <span class="n">facecolor</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.facecolor&quot;</span><span class="p">]</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">facecolor</span><span class="p">))</span>
+            <span class="n">background</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span> <span class="n">pil_shape</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+            <span class="n">background</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">background</span>
+        <span class="n">pil_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;format&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
+        <span class="n">pil_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;dpi&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">dpi</span><span class="p">,</span> <span class="n">dpi</span><span class="p">))</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="o">**</span><span class="n">pil_kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="pil_to_array"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.pil_to_array">[docs]</a><span class="k">def</span> <span class="nf">pil_to_array</span><span class="p">(</span><span class="n">pilImage</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Load a `PIL image`_ and return it as a numpy array.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a `PIL image`_ and return it as a numpy int array.</span>
 
 <span class="sd">    .. _PIL image: https://pillow.readthedocs.io/en/latest/reference/Image.html</span>
 
@@ -1714,7 +1716,6 @@
 <span class="sd">        - (M, N) for grayscale images.</span>
 <span class="sd">        - (M, N, 3) for RGB images.</span>
 <span class="sd">        - (M, N, 4) for RGBA images.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">pilImage</span><span class="o">.</span><span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="s1">&#39;RGBX&#39;</span><span class="p">,</span> <span class="s1">&#39;RGB&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">]:</span>
         <span class="c1"># return MxNx4 RGBA, MxNx3 RBA, or MxN luminance array</span>
@@ -1730,9 +1731,39 @@
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># try to convert to an rgba image</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">pilImage</span> <span class="o">=</span> <span class="n">pilImage</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown image mode&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown image mode&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pilImage</span><span class="p">)</span>  <span class="c1"># return MxNx4 RGBA array</span></div>
+
+
+<span class="k">def</span> <span class="nf">_pil_png_to_float_array</span><span class="p">(</span><span class="n">pil_png</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a PIL `PNGImageFile` to a 0-1 float array.&quot;&quot;&quot;</span>
+    <span class="c1"># Unlike pil_to_array this converts to 0-1 float32s for backcompat with the</span>
+    <span class="c1"># old libpng-based loader.</span>
+    <span class="c1"># The supported rawmodes are from PIL.PngImagePlugin._MODES.  When</span>
+    <span class="c1"># mode == &quot;RGB(A)&quot;, the 16-bit raw data has already been coarsened to 8-bit</span>
+    <span class="c1"># by Pillow.</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">pil_png</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">rawmode</span> <span class="o">=</span> <span class="n">pil_png</span><span class="o">.</span><span class="n">png</span><span class="o">.</span><span class="n">im_rawmode</span>
+    <span class="k">if</span> <span class="n">rawmode</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>  <span class="c1"># Grayscale.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pil_png</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rawmode</span> <span class="o">==</span> <span class="s2">&quot;L;2&quot;</span><span class="p">:</span>  <span class="c1"># Grayscale.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rawmode</span> <span class="o">==</span> <span class="s2">&quot;L;4&quot;</span><span class="p">:</span>  <span class="c1"># Grayscale.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rawmode</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span>  <span class="c1"># Grayscale.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rawmode</span> <span class="o">==</span> <span class="s2">&quot;I;16B&quot;</span><span class="p">:</span>  <span class="c1"># Grayscale.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">16</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;RGB&quot;</span><span class="p">:</span>  <span class="c1"># RGB.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;P&quot;</span><span class="p">:</span>  <span class="c1"># Palette.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="o">**</span><span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;LA&quot;</span><span class="p">:</span>  <span class="c1"># Grayscale + alpha.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="o">**</span><span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;RGBA&quot;</span><span class="p">:</span>  <span class="c1"># RGBA.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pil_png</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Unknown PIL rawmode: </span><span class="si">{rawmode}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="thumbnail"><a class="viewcode-back" href="../../api/image_api.html#matplotlib.image.thumbnail">[docs]</a><span class="k">def</span> <span class="nf">thumbnail</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">thumbfile</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
@@ -1745,31 +1776,32 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    infile : str or file-like</span>
-<span class="sd">        The image file -- must be PNG, or Pillow-readable if you have Pillow_</span>
-<span class="sd">        installed.</span>
+<span class="sd">        The image file. Matplotlib relies on Pillow_ for image reading, and</span>
+<span class="sd">        thus supports a wide range of file formats, including PNG, JPG, TIFF</span>
+<span class="sd">        and others.</span>
 
-<span class="sd">        .. _Pillow: http://python-pillow.org/</span>
+<span class="sd">        .. _Pillow: https://python-pillow.org/</span>
 
 <span class="sd">    thumbfile : str or file-like</span>
 <span class="sd">        The thumbnail filename.</span>
 
-<span class="sd">    scale : float, optional</span>
+<span class="sd">    scale : float, default: 0.1</span>
 <span class="sd">        The scale factor for the thumbnail.</span>
 
-<span class="sd">    interpolation : str, optional</span>
+<span class="sd">    interpolation : str, default: &#39;bilinear&#39;</span>
 <span class="sd">        The interpolation scheme used in the resampling. See the</span>
 <span class="sd">        *interpolation* parameter of `~.Axes.imshow` for possible values.</span>
 
-<span class="sd">    preview : bool, optional</span>
+<span class="sd">    preview : bool, default: False</span>
 <span class="sd">        If True, the default backend (presumably a user interface</span>
 <span class="sd">        backend) will be used which will cause a figure to be raised if</span>
 <span class="sd">        `~matplotlib.pyplot.show` is called.  If it is False, the figure is</span>
-<span class="sd">        created using `FigureCanvasBase` and the drawing backend is selected</span>
-<span class="sd">        as `~matplotlib.figure.savefig` would normally do.</span>
+<span class="sd">        created using `.FigureCanvasBase` and the drawing backend is selected</span>
+<span class="sd">        as `.Figure.savefig` would normally do.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    figure : `~.figure.Figure`</span>
+<span class="sd">    `~.figure.Figure`</span>
 <span class="sd">        The figure instance containing the thumbnail.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1787,7 +1819,7 @@
         <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
         <span class="n">FigureCanvasBase</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 
@@ -1806,12 +1838,12 @@
     </div>
 <footer>
     <div class="footer">
-    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2020 The Matplotlib development team.
 <br />
-    Last updated on Jun 17, 2020.
+    Last updated on Jul 17, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.
-Doc version v3.2.2-2-g137edd56a.
+<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+Doc version v3.3.0-3-g8994f1b60.
     </div>
 </footer>
 <script>

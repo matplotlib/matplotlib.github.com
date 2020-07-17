@@ -36,7 +36,6 @@ clipped.
 .. code-block:: default
 
 
-    # sphinx_gallery_thumbnail_number = 7
 
     import matplotlib.pyplot as plt
     import numpy as np
@@ -69,9 +68,8 @@ clipped.
 
 To prevent this, the location of axes needs to be adjusted. For
 subplots, this can be done by adjusting the subplot params
-(:ref:`howto-subplots-adjust`). Matplotlib v1.1 introduces a new
-command :func:`~matplotlib.pyplot.tight_layout` that does this
-automatically for you.
+(:ref:`howto-subplots-adjust`). Matplotlib v1.1 introduced
+`.Figure.tight_layout` that does this automatically for you.
 
 
 .. code-block:: default
@@ -95,7 +93,7 @@ automatically for you.
 Note that :func:`matplotlib.pyplot.tight_layout` will only adjust the
 subplot params when it is called.  In order to perform this adjustment each
 time the figure is redrawn, you can call ``fig.set_tight_layout(True)``, or,
-equivalently, set the ``figure.autolayout`` rcParam to ``True``.
+equivalently, set :rc:`figure.autolayout` to ``True``.
 
 When you have multiple subplots, often you see labels of different
 axes overlapping each other.
@@ -289,8 +287,8 @@ Caveats
 Use with GridSpec
 =================
 
-GridSpec has its own :func:`~matplotlib.gridspec.GridSpec.tight_layout` method
-(the pyplot api :func:`~matplotlib.pyplot.tight_layout` also works).
+GridSpec has its own `.GridSpec.tight_layout` method (the pyplot api
+`.pyplot.tight_layout` also works).
 
 
 .. code-block:: default
@@ -321,9 +319,9 @@ GridSpec has its own :func:`~matplotlib.gridspec.GridSpec.tight_layout` method
 
 
 
-You may provide an optional *rect* parameter, which specifies the bounding box
-that the subplots will be fit inside. The coordinates must be in normalized
-figure coordinates and the default is (0, 0, 1, 1).
+You may provide an optional *rect* parameter, which specifies the bounding
+box that the subplots will be fit inside. The coordinates must be in
+normalized figure coordinates and the default is (0, 0, 1, 1).
 
 
 .. code-block:: default
@@ -396,16 +394,25 @@ For example, this can be used for a figure with multiple gridspecs.
     :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    /root/matplotlib/tutorials/intermediate/tight_layout_guide.py:228: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+      gs2.tight_layout(fig, rect=[0.5, 0, 1, 1], h_pad=0.5)
 
 
 
-While this should be mostly good enough, adjusting top and bottom
-may require adjustment of hspace also.  To update hspace & vspace, we
-call :func:`~matplotlib.gridspec.GridSpec.tight_layout` again with updated
-rect argument. Note that the rect argument specifies the area including the
-ticklabels, etc.  Thus, we will increase the bottom (which is 0 for the normal
-case) by the difference between the *bottom* from above and the bottom of each
-gridspec. Same thing for the top.
+
+While this should be mostly good enough, adjusting top and bottom may
+require adjustment of hspace also.  To update hspace & vspace, we call
+`.GridSpec.tight_layout` again with updated rect argument. Note that the
+rect argument specifies the area including the ticklabels, etc.  Thus, we
+will increase the bottom (which is 0 for the normal case) by the difference
+between the *bottom* from above and the bottom of each gridspec. Same thing
+for the top.
 
 
 .. code-block:: default
@@ -456,6 +463,19 @@ gridspec. Same thing for the top.
     :alt: Title, Title
     :class: sphx-glr-single-img
 
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    /root/matplotlib/tutorials/intermediate/tight_layout_guide.py:268: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+      gs2.tight_layout(fig, rect=[0.5, 0, 1, 1], h_pad=0.5)
+    /root/matplotlib/tutorials/intermediate/tight_layout_guide.py:279: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+      gs1.tight_layout(fig, rect=[None, 0 + (bottom-gs1.bottom),
+    /root/matplotlib/tutorials/intermediate/tight_layout_guide.py:281: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+      gs2.tight_layout(fig, rect=[0.5, 0 + (bottom-gs2.bottom),
 
 
 
@@ -554,10 +574,9 @@ While limited, :mod:`mpl_toolkits.axes_grid1` is also supported.
 Colorbar
 ========
 
-If you create a colorbar with the :func:`~matplotlib.pyplot.colorbar`
-command, the created colorbar is an instance of Axes, *not* Subplot, so
-tight_layout does not work. With Matplotlib v1.1, you may create a
-colorbar as a subplot using the gridspec.
+If you create a colorbar with `.Figure.colorbar`, the created colorbar is
+drawn in a Subplot as long as the parent axes is also a Subplot, so
+`.Figure.tight_layout` will work.
 
 
 .. code-block:: default
@@ -568,7 +587,7 @@ colorbar as a subplot using the gridspec.
     fig = plt.figure(figsize=(4, 4))
     im = plt.imshow(arr, interpolation="none")
 
-    plt.colorbar(im, use_gridspec=True)
+    plt.colorbar(im)
 
     plt.tight_layout()
 
@@ -616,7 +635,7 @@ explicitly create an axes for colorbar.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.073 seconds)
+   **Total running time of the script:** ( 0 minutes  6.039 seconds)
 
 
 .. _sphx_glr_download_tutorials_intermediate_tight_layout_guide.py:

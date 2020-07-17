@@ -23,8 +23,8 @@ been registered for.
 parameters. These parameters behave similarly as for the `.Figure.savefig()`
 method.
 
-`cbook.normalize_kwargs`
-------------------------
+`.cbook.normalize_kwargs`
+-------------------------
 `.cbook.normalize_kwargs` now presents a convenient interface to normalize
 artist properties (e.g., from "lw" to "linewidth"):
 
@@ -89,11 +89,11 @@ parameter.
 
 Shifting errorbars
 ------------------
-Previously, `.plt.errorbar()` accepted a kwarg ``errorevery`` such that the
-command ``plt.errorbar(x, y, yerr, errorevery=6)`` would add error bars to
-datapoints ``x[::6], y[::6]``.
+Previously, `~.Axes.errorbar()` accepted a keyword argument *errorevery* such
+that the command ``plt.errorbar(x, y, yerr, errorevery=6)`` would add error
+bars to datapoints ``x[::6], y[::6]``.
 
-`.plt.errorbar()` now also accepts a tuple for `errorevery` such that
+`~.Axes.errorbar()` now also accepts a tuple for *errorevery* such that
 ``plt.errorbar(x, y, yerr, errorevery=(start, N))`` adds error bars to points
 ``x[start::N], y[start::N]``.
 
@@ -124,3 +124,10 @@ will fall back to previous behaviour, which is using the color in ``text.color``
 Colors can now be specified using 3-digit or 4-digit hex colors, shorthand for
 the colors obtained by duplicating each character, e.g. ``#123`` is equivalent to
 ``#112233`` and  ``#123a`` is equivalent to ``#112233aa``.
+
+
+
+Added support for RGB(A) images in pcolorfast
+---------------------------------------------
+
+`.Axes.pcolorfast` now accepts 3D images (RGB or RGBA) arrays.

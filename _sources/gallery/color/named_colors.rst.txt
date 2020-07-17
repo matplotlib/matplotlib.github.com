@@ -27,6 +27,7 @@ For more information on colors in matplotlib see
 .. code-block:: default
 
 
+    from matplotlib.patches import Rectangle
     import matplotlib.pyplot as plt
     import matplotlib.colors as mcolors
 
@@ -72,15 +73,16 @@ For more information on colors in matplotlib see
             y = row * cell_height
 
             swatch_start_x = cell_width * col
-            swatch_end_x = cell_width * col + swatch_width
             text_pos_x = cell_width * col + swatch_width + 7
 
             ax.text(text_pos_x, y, name, fontsize=14,
                     horizontalalignment='left',
                     verticalalignment='center')
 
-            ax.hlines(y, swatch_start_x, swatch_end_x,
-                      color=colors[name], linewidth=18)
+            ax.add_patch(
+                Rectangle(xy=(swatch_start_x, y-9), width=swatch_width,
+                          height=18, facecolor=colors[name])
+            )
 
         return fig
 
@@ -89,7 +91,6 @@ For more information on colors in matplotlib see
     plot_colortable(mcolors.TABLEAU_COLORS, "Tableau Palette",
                     sort_colors=False, emptycols=2)
 
-    #sphinx_gallery_thumbnail_number = 3
     plot_colortable(mcolors.CSS4_COLORS, "CSS Colors")
 
     # Optionally plot the XKCD colors (Caution: will produce large figure)
@@ -146,21 +147,18 @@ in this example:
     matplotlib.figure.Figure.get_size_inches
     matplotlib.figure.Figure.subplots_adjust
     matplotlib.axes.Axes.text
-    matplotlib.axes.Axes.hlines
+    matplotlib.patches.Rectangle
 
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
 
 
-    <function Axes.hlines at 0x7f616026a550>
 
 
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  1.397 seconds)
 
 
 .. _sphx_glr_download_gallery_color_named_colors.py:

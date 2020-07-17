@@ -6,32 +6,31 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>matplotlib.backends.backend_svg &#8212; Matplotlib 3.2.2 documentation</title>
-    <link rel="stylesheet" href="../../../_static/mpl.css?v3.2.2-2-g137edd56a" type="text/css" />
+    <title>matplotlib.backends.backend_svg &#8212; Matplotlib 3.3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/mpl.css?v3.3.0-3-g8994f1b60" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.2.2 documentation"
+          title="Search within Matplotlib 3.3.0 documentation"
           href="../../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
 
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-<link rel="top" title="Matplotlib 3.2.2 documentation" href="#" />
-    <link rel="canonical" href="https://matplotlib.org/3.2.2/_modules/matplotlib/backends/backend_svg.html" />
+<link rel="top" title="Matplotlib 3.3.0 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/3.3.0/_modules/matplotlib/backends/backend_svg.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -49,7 +48,7 @@
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
     <a href="../../../index.html">
-        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.2.2</span></div>
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.3.0</span></div>
         <img src="../../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
     <!-- The "Fork me on github" ribbon -->
@@ -82,8 +81,7 @@
         <li><a href="../../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../../contents.html">contents</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">matplotlib.backends.backend_svg</a></li> 
+          <li class="nav-item nav-item-2"><a href="../../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li> 
       </ul>
     </div>
 
@@ -110,34 +108,39 @@
           <div class="body" role="main">
             
   <h1>Source code for matplotlib.backends.backend_svg</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">gzip</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span><span class="p">,</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">TextIOWrapper</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="kn">import</span> <span class="p">(</span>
-     <span class="n">_Backend</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span> <span class="n">RendererBase</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="kn">import</span> <span class="n">MixedModeRenderer</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">rgb2hex</span>
-<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">get_font</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="kn">import</span> <span class="n">LOAD_NO_HINTING</span>
-<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="kn">import</span> <span class="n">MathTextParser</span>
-<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_path</span>
-<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Affine2D</span><span class="p">,</span> <span class="n">Affine2DBase</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_png</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cbook</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backend_bases</span> <span class="k">import</span> <span class="p">(</span>
+     <span class="n">_Backend</span><span class="p">,</span> <span class="n">_check_savefig_extra_args</span><span class="p">,</span> <span class="n">FigureCanvasBase</span><span class="p">,</span> <span class="n">FigureManagerBase</span><span class="p">,</span>
+     <span class="n">RendererBase</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_mixed</span> <span class="k">import</span> <span class="n">MixedModeRenderer</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">rgb2hex</span>
+<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="k">import</span> <span class="n">UTC</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">get_font</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="k">import</span> <span class="n">LOAD_NO_HINTING</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="k">import</span> <span class="n">MathTextParser</span>
+<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Affine2D</span><span class="p">,</span> <span class="n">Affine2DBase</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">backend_version</span> <span class="o">=</span> <span class="n">__version__</span>
+<span class="n">backend_version</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">__version__</span>
 
 <span class="c1"># ----------------------------------------------------------------------</span>
 <span class="c1"># SimpleXMLWriter class</span>
@@ -216,7 +219,7 @@
 <span class="sd">    file : writable text file-like object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__write</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;flush&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flush</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">flush</span>
@@ -240,7 +243,7 @@
 
 <div class="viewcode-block" id="XMLWriter.start"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.XMLWriter.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="p">{},</span> <span class="o">**</span><span class="n">extra</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Opens a new element.  Attributes can be given as keyword</span>
+<span class="sd">        Open a new element.  Attributes can be given as keyword</span>
 <span class="sd">        arguments, or as a string/string dictionary. The method returns</span>
 <span class="sd">        an opaque identifier that can be passed to the :meth:`close`</span>
 <span class="sd">        method, to close all open elements up to and including this one.</span>
@@ -273,7 +276,7 @@
 
 <div class="viewcode-block" id="XMLWriter.comment"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.XMLWriter.comment">[docs]</a>    <span class="k">def</span> <span class="nf">comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds a comment to the output stream.</span>
+<span class="sd">        Add a comment to the output stream.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -286,7 +289,7 @@
 
 <div class="viewcode-block" id="XMLWriter.data"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.XMLWriter.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds character data to the output stream.</span>
+<span class="sd">        Add character data to the output stream.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -297,7 +300,7 @@
 
 <div class="viewcode-block" id="XMLWriter.end"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.XMLWriter.end">[docs]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Closes the current element (opened by the most recent call to</span>
+<span class="sd">        Close the current element (opened by the most recent call to</span>
 <span class="sd">        :meth:`start`).</span>
 
 <span class="sd">        Parameters</span>
@@ -325,7 +328,7 @@
 
 <div class="viewcode-block" id="XMLWriter.close"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.XMLWriter.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Closes open elements, up to (and including) the element identified</span>
+<span class="sd">        Close open elements, up to (and including) the element identified</span>
 <span class="sd">        by the given identifier.</span>
 
 <span class="sd">        Parameters</span>
@@ -338,7 +341,7 @@
 
 <div class="viewcode-block" id="XMLWriter.element"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.XMLWriter.element">[docs]</a>    <span class="k">def</span> <span class="nf">element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="p">{},</span> <span class="o">**</span><span class="n">extra</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds an entire element.  This is the same as calling :meth:`start`,</span>
+<span class="sd">        Add an entire element.  This is the same as calling :meth:`start`,</span>
 <span class="sd">        :meth:`data`, and :meth:`end` in sequence. The *text* argument can be</span>
 <span class="sd">        omitted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -348,13 +351,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="XMLWriter.flush"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.XMLWriter.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Flushes the output stream.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Flush the output stream.&quot;&quot;&quot;</span>
         <span class="k">pass</span>  <span class="c1"># replaced by the constructor</span></div></div>
 
 
 <div class="viewcode-block" id="generate_transform"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.generate_transform">[docs]</a><span class="k">def</span> <span class="nf">generate_transform</span><span class="p">(</span><span class="n">transform_list</span><span class="o">=</span><span class="p">[]):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transform_list</span><span class="p">):</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="k">for</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">transform_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;scale&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
                     <span class="ow">or</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;translate&#39;</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -370,7 +373,7 @@
 
 <div class="viewcode-block" id="generate_css"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.generate_css">[docs]</a><span class="k">def</span> <span class="nf">generate_css</span><span class="p">(</span><span class="n">attrib</span><span class="o">=</span><span class="p">{}):</span>
     <span class="k">if</span> <span class="n">attrib</span><span class="p">:</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="n">attrib</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">attrib</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attrib</span><span class="p">:</span>
             <span class="n">k</span> <span class="o">=</span> <span class="n">escape_attrib</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
@@ -384,7 +387,8 @@
 
 
 <div class="viewcode-block" id="RendererSVG"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.RendererSVG">[docs]</a><span class="k">class</span> <span class="nc">RendererSVG</span><span class="p">(</span><span class="n">RendererBase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">svgwriter</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">svgwriter</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">XMLWriter</span><span class="p">(</span><span class="n">svgwriter</span><span class="p">)</span>
@@ -415,6 +419,7 @@
             <span class="n">xmlns</span><span class="o">=</span><span class="s2">&quot;http://www.w3.org/2000/svg&quot;</span><span class="p">,</span>
             <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.1&quot;</span><span class="p">,</span>
             <span class="n">attrib</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;xmlns:xlink&#39;</span><span class="p">:</span> <span class="s2">&quot;http://www.w3.org/1999/xlink&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_default_style</span><span class="p">()</span>
 
 <div class="viewcode-block" id="RendererSVG.finalize"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.RendererSVG.finalize">[docs]</a>    <span class="k">def</span> <span class="nf">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -423,19 +428,123 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
+    <span class="k">def</span> <span class="nf">_write_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># Add metadata following the Dublin Core Metadata Initiative, and the</span>
+        <span class="c1"># Creative Commons Rights Expression Language. This is mainly for</span>
+        <span class="c1"># compatibility with Inkscape.</span>
+        <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Format&#39;</span><span class="p">:</span> <span class="s1">&#39;image/svg+xml&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Type&#39;</span><span class="p">:</span> <span class="s1">&#39;http://purl.org/dc/dcmitype/StillImage&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Creator&#39;</span><span class="p">:</span>
+                <span class="n">f</span><span class="s1">&#39;Matplotlib v</span><span class="si">{mpl.__version__}</span><span class="s1">, https://matplotlib.org/&#39;</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">metadata</span>
+        <span class="p">}</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span>
+
+        <span class="k">if</span> <span class="s1">&#39;Title&#39;</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Special handling.</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">date</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">)):</span>
+                <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()]</span>
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+                <span class="n">dates</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">date</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">)):</span>
+                        <span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s1">&#39;Invalid type for Date metadata. &#39;</span>
+                            <span class="s1">&#39;Expected iterable of str, date, or datetime, &#39;</span>
+                            <span class="s1">&#39;not </span><span class="si">{!r}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid type for Date metadata. &#39;</span>
+                                 <span class="s1">&#39;Expected str, date, datetime, or iterable &#39;</span>
+                                 <span class="s1">&#39;of the same, not </span><span class="si">{!r}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">date</span><span class="p">)))</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Get source date from SOURCE_DATE_EPOCH, if set.</span>
+            <span class="c1"># See https://reproducible-builds.org/specs/source-date-epoch/</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SOURCE_DATE_EPOCH&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
+                <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="n">mid</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;rdf:RDF&#39;</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;xmlns:dc&#39;</span><span class="p">:</span> <span class="s2">&quot;http://purl.org/dc/elements/1.1/&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;xmlns:cc&#39;</span><span class="p">:</span> <span class="s2">&quot;http://creativecommons.org/ns#&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;xmlns:rdf&#39;</span><span class="p">:</span> <span class="s2">&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;</span><span class="p">,</span>
+            <span class="p">})</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;cc:Work&#39;</span><span class="p">)</span>
+
+        <span class="n">uri</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;Type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">uri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;dc:type&#39;</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;rdf:resource&#39;</span><span class="p">:</span> <span class="n">uri</span><span class="p">})</span>
+
+        <span class="c1"># Single value only.</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;coverage&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;identifier&#39;</span><span class="p">,</span> <span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="s1">&#39;relation&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">]:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;dc:</span><span class="si">{key}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="c1"># Multiple Agent values.</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;creator&#39;</span><span class="p">,</span> <span class="s1">&#39;contributor&#39;</span><span class="p">,</span> <span class="s1">&#39;publisher&#39;</span><span class="p">,</span> <span class="s1">&#39;rights&#39;</span><span class="p">]:</span>
+            <span class="n">agents</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">agents</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">agents</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">agents</span> <span class="o">=</span> <span class="p">[</span><span class="n">agents</span><span class="p">]</span>
+
+            <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;dc:</span><span class="si">{key}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;cc:Agent&#39;</span><span class="p">)</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;dc:title&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">agent</span><span class="p">)</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;cc:Agent&#39;</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;dc:</span><span class="si">{key}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Multiple values.</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;Keywords&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="n">keywords</span><span class="p">]</span>
+
+            <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;dc:subject&#39;</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;rdf:Bag&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;rdf:li&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">keyword</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;rdf:Bag&#39;</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;dc:subject&#39;</span><span class="p">)</span>
+
+        <span class="n">writer</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown metadata key(s) passed to SVG writer: &#39;</span> <span class="o">+</span>
+                             <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadata</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">_write_default_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span>
         <span class="n">default_style</span> <span class="o">=</span> <span class="n">generate_css</span><span class="p">({</span>
             <span class="s1">&#39;stroke-linejoin&#39;</span><span class="p">:</span> <span class="s1">&#39;round&#39;</span><span class="p">,</span>
             <span class="s1">&#39;stroke-linecap&#39;</span><span class="p">:</span> <span class="s1">&#39;butt&#39;</span><span class="p">})</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
-        <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text/css&#39;</span><span class="p">)</span>
-        <span class="n">writer</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s1">&#39;*{</span><span class="si">%s</span><span class="s1">}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">default_style</span><span class="p">)</span>
-        <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text/css&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;*{</span><span class="si">%s</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">default_style</span><span class="p">)</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_make_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="n">salt</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;svg.hashsalt&#39;</span><span class="p">]</span>
+        <span class="n">salt</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;svg.hashsalt&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">salt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">salt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
@@ -502,16 +611,19 @@
                 <span class="n">x</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">HATCH_SIZE</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
                 <span class="n">height</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">HATCH_SIZE</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
                 <span class="n">fill</span><span class="o">=</span><span class="n">fill</span><span class="p">)</span>
+            <span class="n">hatch_style</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;fill&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">stroke</span><span class="p">),</span>
+                    <span class="s1">&#39;stroke&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">stroke</span><span class="p">),</span>
+                    <span class="s1">&#39;stroke-width&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;hatch.linewidth&#39;</span><span class="p">]),</span>
+                    <span class="s1">&#39;stroke-linecap&#39;</span><span class="p">:</span> <span class="s1">&#39;butt&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;stroke-linejoin&#39;</span><span class="p">:</span> <span class="s1">&#39;miter&#39;</span>
+                    <span class="p">}</span>
+            <span class="k">if</span> <span class="n">stroke</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">hatch_style</span><span class="p">[</span><span class="s1">&#39;stroke-opacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">stroke</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span>
                 <span class="s1">&#39;path&#39;</span><span class="p">,</span>
                 <span class="n">d</span><span class="o">=</span><span class="n">path_data</span><span class="p">,</span>
-                <span class="n">style</span><span class="o">=</span><span class="n">generate_css</span><span class="p">({</span>
-                    <span class="s1">&#39;fill&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">stroke</span><span class="p">),</span>
-                    <span class="s1">&#39;stroke&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">stroke</span><span class="p">),</span>
-                    <span class="s1">&#39;stroke-width&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;hatch.linewidth&#39;</span><span class="p">]),</span>
-                    <span class="s1">&#39;stroke-linecap&#39;</span><span class="p">:</span> <span class="s1">&#39;butt&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;stroke-linejoin&#39;</span><span class="p">:</span> <span class="s1">&#39;miter&#39;</span>
-                    <span class="p">})</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">generate_css</span><span class="p">(</span><span class="n">hatch_style</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;pattern&#39;</span><span class="p">)</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
@@ -625,7 +737,7 @@
 
 <div class="viewcode-block" id="RendererSVG.option_image_nocomposite"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.RendererSVG.option_image_nocomposite">[docs]</a>    <span class="k">def</span> <span class="nf">option_image_nocomposite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># docstring inherited</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.composite_image&#39;</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.composite_image&#39;</span><span class="p">]</span></div>
 
     <span class="k">def</span> <span class="nf">_convert_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">sketch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -762,6 +874,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_path_collection_id</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="RendererSVG.draw_gouraud_triangle"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.RendererSVG.draw_gouraud_triangle">[docs]</a>    <span class="k">def</span> <span class="nf">draw_gouraud_triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">trans</span><span class="p">):</span>
+        <span class="c1"># docstring inherited</span>
+
         <span class="c1"># This uses a method described here:</span>
         <span class="c1">#</span>
         <span class="c1">#   http://www.svgopen.org/2005/papers/Converting3DFaceToSVG/index.html</span>
@@ -797,9 +911,9 @@
                        <span class="s1">&#39; </span><span class="se">\n</span><span class="s1">1 1 1 1 0 </span><span class="se">\n</span><span class="s1">0 0 0 0 1 &#39;</span><span class="p">)</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;filter&#39;</span><span class="p">)</span>
 
-        <span class="n">avg_color</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">colors</span><span class="p">[:,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">3.0</span>
-        <span class="c1"># Just skip fully-transparent triangles</span>
-        <span class="k">if</span> <span class="n">avg_color</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">avg_color</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">avg_color</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Skip fully-transparent triangles</span>
             <span class="k">return</span>
 
         <span class="n">trans_and_flip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_flip_transform</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
@@ -810,7 +924,7 @@
             <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">tpoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">tpoints</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">]</span>
             <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span> <span class="o">=</span> <span class="n">tpoints</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">]</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">][:]</span>
+            <span class="n">rgba_color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">x2</span> <span class="o">==</span> <span class="n">x3</span><span class="p">:</span>
                 <span class="n">xb</span> <span class="o">=</span> <span class="n">x2</span>
@@ -835,12 +949,13 @@
             <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span>
                 <span class="s1">&#39;stop&#39;</span><span class="p">,</span>
                 <span class="n">offset</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span>
-                <span class="n">style</span><span class="o">=</span><span class="n">generate_css</span><span class="p">({</span><span class="s1">&#39;stop-color&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">avg_color</span><span class="p">),</span>
-                                    <span class="s1">&#39;stop-opacity&#39;</span><span class="p">:</span> <span class="n">short_float_fmt</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])}))</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">generate_css</span><span class="p">({</span>
+                    <span class="s1">&#39;stop-color&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">avg_color</span><span class="p">),</span>
+                    <span class="s1">&#39;stop-opacity&#39;</span><span class="p">:</span> <span class="n">short_float_fmt</span><span class="p">(</span><span class="n">rgba_color</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])}))</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span>
                 <span class="s1">&#39;stop&#39;</span><span class="p">,</span>
                 <span class="n">offset</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span>
-                <span class="n">style</span><span class="o">=</span><span class="n">generate_css</span><span class="p">({</span><span class="s1">&#39;stop-color&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">c</span><span class="p">),</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">generate_css</span><span class="p">({</span><span class="s1">&#39;stop-color&#39;</span><span class="p">:</span> <span class="n">rgb2hex</span><span class="p">(</span><span class="n">rgba_color</span><span class="p">),</span>
                                     <span class="s1">&#39;stop-opacity&#39;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">}))</span>
 
             <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;linearGradient&#39;</span><span class="p">)</span>
@@ -932,12 +1047,13 @@
         <span class="n">url</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_url</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;xlink:href&#39;</span><span class="p">:</span> <span class="n">url</span><span class="p">})</span>
-        <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;svg.image_inline&#39;</span><span class="p">]:</span>
-            <span class="n">buf</span> <span class="o">=</span> <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">oid</span> <span class="o">=</span> <span class="n">oid</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_id</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;svg.image_inline&#39;</span><span class="p">]:</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+            <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">)</span>
+            <span class="n">oid</span> <span class="o">=</span> <span class="n">oid</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_id</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
             <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;xlink:href&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="s2">&quot;data:image/png;base64,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-                <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+                <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot save image data to filesystem when &quot;</span>
@@ -945,8 +1061,7 @@
             <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.image</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">basename</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_counter</span><span class="p">))</span>
             <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Writing image file for inclusion: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                <span class="n">_png</span><span class="o">.</span><span class="n">write_png</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+            <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="n">oid</span> <span class="o">=</span> <span class="n">oid</span> <span class="ow">or</span> <span class="s1">&#39;Im_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_id</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;xlink:href&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
 
@@ -979,6 +1094,9 @@
 
             <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;transform&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_transform</span><span class="p">(</span>
                 <span class="p">[(</span><span class="s1">&#39;matrix&#39;</span><span class="p">,</span> <span class="n">flipped</span><span class="o">.</span><span class="n">frozen</span><span class="p">())])</span>
+            <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s1">&#39;image-rendering:crisp-edges;&#39;</span>
+                <span class="s1">&#39;image-rendering:pixelated&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span>
                 <span class="s1">&#39;image&#39;</span><span class="p">,</span>
                 <span class="n">width</span><span class="o">=</span><span class="n">short_float_fmt</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="n">short_float_fmt</span><span class="p">(</span><span class="n">h</span><span class="p">),</span>
@@ -989,27 +1107,37 @@
         <span class="k">if</span> <span class="n">clipid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">_update_glyph_map_defs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">glyph_map_new</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Emit definitions for not-yet-defined glyphs, and record them as having</span>
+<span class="sd">        been defined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span>
+        <span class="k">if</span> <span class="n">glyph_map_new</span><span class="p">:</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">char_id</span><span class="p">,</span> <span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">codes</span><span class="p">)</span> <span class="ow">in</span> <span class="n">glyph_map_new</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">char_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adjust_char_id</span><span class="p">(</span><span class="n">char_id</span><span class="p">)</span>
+                <span class="n">path_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_path</span><span class="p">(</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">codes</span><span class="p">),</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">char_id</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_glyph_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">glyph_map_new</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_adjust_char_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char_id</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">char_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;%20&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_draw_text_as_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="p">,</span> <span class="n">mtext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        draw the text by converting them to paths using textpath module.</span>
+<span class="sd">        Draw the text by converting them to paths using the textpath module.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        prop : `matplotlib.font_manager.FontProperties`</span>
-<span class="sd">          font property</span>
-
 <span class="sd">        s : str</span>
 <span class="sd">          text to be converted</span>
-
-<span class="sd">        usetex : bool</span>
-<span class="sd">          If True, use matplotlib usetex mode.</span>
-
+<span class="sd">        prop : `matplotlib.font_manager.FontProperties`</span>
+<span class="sd">          font property</span>
 <span class="sd">        ismath : bool</span>
 <span class="sd">          If True, use mathtext parser. If &quot;TeX&quot;, use *usetex* mode.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span>
 
@@ -1024,47 +1152,34 @@
         <span class="n">style</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">color</span> <span class="o">!=</span> <span class="s1">&#39;#000000&#39;</span><span class="p">:</span>
             <span class="n">style</span><span class="p">[</span><span class="s1">&#39;fill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
-
         <span class="n">alpha</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span> <span class="k">if</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_forced_alpha</span><span class="p">()</span> <span class="k">else</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_rgb</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">style</span><span class="p">[</span><span class="s1">&#39;opacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">short_float_fmt</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">font_scale</span> <span class="o">=</span> <span class="n">fontsize</span> <span class="o">/</span> <span class="n">text2path</span><span class="o">.</span><span class="n">FONT_SCALE</span>
+        <span class="n">attrib</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="n">generate_css</span><span class="p">(</span><span class="n">style</span><span class="p">),</span>
+            <span class="s1">&#39;transform&#39;</span><span class="p">:</span> <span class="n">generate_transform</span><span class="p">([</span>
+                <span class="p">(</span><span class="s1">&#39;translate&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s1">&#39;rotate&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">,)),</span>
+                <span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">font_scale</span><span class="p">,</span> <span class="o">-</span><span class="n">font_scale</span><span class="p">))]),</span>
+        <span class="p">}</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="n">attrib</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ismath</span><span class="p">:</span>
             <span class="n">font</span> <span class="o">=</span> <span class="n">text2path</span><span class="o">.</span><span class="n">_get_font</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
             <span class="n">_glyphs</span> <span class="o">=</span> <span class="n">text2path</span><span class="o">.</span><span class="n">get_glyphs_with_font</span><span class="p">(</span>
                 <span class="n">font</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">glyph_map</span><span class="o">=</span><span class="n">glyph_map</span><span class="p">,</span> <span class="n">return_new_glyphs_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">glyph_info</span><span class="p">,</span> <span class="n">glyph_map_new</span><span class="p">,</span> <span class="n">rects</span> <span class="o">=</span> <span class="n">_glyphs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_glyph_map_defs</span><span class="p">(</span><span class="n">glyph_map_new</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">glyph_map_new</span><span class="p">:</span>
-                <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">char_id</span><span class="p">,</span> <span class="n">glyph_path</span> <span class="ow">in</span> <span class="n">glyph_map_new</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">glyph_path</span><span class="p">)</span>
-                    <span class="n">path_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                    <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">char_id</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
-                <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
-
-                <span class="n">glyph_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">glyph_map_new</span><span class="p">)</span>
-
-            <span class="n">attrib</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_css</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
-            <span class="n">font_scale</span> <span class="o">=</span> <span class="n">fontsize</span> <span class="o">/</span> <span class="n">text2path</span><span class="o">.</span><span class="n">FONT_SCALE</span>
-            <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;transform&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_transform</span><span class="p">([</span>
-                <span class="p">(</span><span class="s1">&#39;translate&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)),</span>
-                <span class="p">(</span><span class="s1">&#39;rotate&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">,)),</span>
-                <span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">font_scale</span><span class="p">,</span> <span class="o">-</span><span class="n">font_scale</span><span class="p">))])</span>
-
-            <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="n">attrib</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">glyph_id</span><span class="p">,</span> <span class="n">xposition</span><span class="p">,</span> <span class="n">yposition</span><span class="p">,</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">glyph_info</span><span class="p">:</span>
                 <span class="n">attrib</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;xlink:href&#39;</span><span class="p">:</span> <span class="s1">&#39;#</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">glyph_id</span><span class="p">}</span>
                 <span class="k">if</span> <span class="n">xposition</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
                     <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">short_float_fmt</span><span class="p">(</span><span class="n">xposition</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">yposition</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
                     <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">short_float_fmt</span><span class="p">(</span><span class="n">yposition</span><span class="p">)</span>
-                <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span>
-                    <span class="s1">&#39;use&#39;</span><span class="p">,</span>
-                    <span class="n">attrib</span><span class="o">=</span><span class="n">attrib</span><span class="p">)</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;use&#39;</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="n">attrib</span><span class="p">)</span>
 
-            <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ismath</span> <span class="o">==</span> <span class="s2">&quot;TeX&quot;</span><span class="p">:</span>
                 <span class="n">_glyphs</span> <span class="o">=</span> <span class="n">text2path</span><span class="o">.</span><span class="n">get_glyphs_tex</span><span class="p">(</span>
@@ -1072,38 +1187,11 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">_glyphs</span> <span class="o">=</span> <span class="n">text2path</span><span class="o">.</span><span class="n">get_glyphs_mathtext</span><span class="p">(</span>
                     <span class="n">prop</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">glyph_map</span><span class="o">=</span><span class="n">glyph_map</span><span class="p">,</span> <span class="n">return_new_glyphs_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
             <span class="n">glyph_info</span><span class="p">,</span> <span class="n">glyph_map_new</span><span class="p">,</span> <span class="n">rects</span> <span class="o">=</span> <span class="n">_glyphs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_glyph_map_defs</span><span class="p">(</span><span class="n">glyph_map_new</span><span class="p">)</span>
 
-            <span class="c1"># We store the character glyphs w/o flipping.  Instead, the</span>
-            <span class="c1"># coordinate will be flipped when these characters are used.</span>
-            <span class="k">if</span> <span class="n">glyph_map_new</span><span class="p">:</span>
-                <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">char_id</span><span class="p">,</span> <span class="n">glyph_path</span> <span class="ow">in</span> <span class="n">glyph_map_new</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">char_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adjust_char_id</span><span class="p">(</span><span class="n">char_id</span><span class="p">)</span>
-                    <span class="c1"># Some characters are blank</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">glyph_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-                        <span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">glyph_path</span><span class="p">)</span>
-                        <span class="n">path_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                    <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">char_id</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
-                <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;defs&#39;</span><span class="p">)</span>
-
-                <span class="n">glyph_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">glyph_map_new</span><span class="p">)</span>
-
-            <span class="n">attrib</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">font_scale</span> <span class="o">=</span> <span class="n">fontsize</span> <span class="o">/</span> <span class="n">text2path</span><span class="o">.</span><span class="n">FONT_SCALE</span>
-            <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_css</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
-            <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;transform&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_transform</span><span class="p">([</span>
-                <span class="p">(</span><span class="s1">&#39;translate&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)),</span>
-                <span class="p">(</span><span class="s1">&#39;rotate&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">,)),</span>
-                <span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">font_scale</span><span class="p">,</span> <span class="o">-</span><span class="n">font_scale</span><span class="p">))])</span>
-
-            <span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">attrib</span><span class="o">=</span><span class="n">attrib</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">char_id</span><span class="p">,</span> <span class="n">xposition</span><span class="p">,</span> <span class="n">yposition</span><span class="p">,</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">glyph_info</span><span class="p">:</span>
                 <span class="n">char_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adjust_char_id</span><span class="p">(</span><span class="n">char_id</span><span class="p">)</span>
-
                 <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span>
                     <span class="s1">&#39;use&#39;</span><span class="p">,</span>
                     <span class="n">transform</span><span class="o">=</span><span class="n">generate_transform</span><span class="p">([</span>
@@ -1117,7 +1205,7 @@
                 <span class="n">path_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">writer</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">path_data</span><span class="p">)</span>
 
-            <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_draw_text_as_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="p">,</span> <span class="n">mtext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span>
@@ -1136,11 +1224,12 @@
             <span class="n">font</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">LOAD_NO_HINTING</span><span class="p">)</span>
 
             <span class="n">attrib</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">family_name</span><span class="p">)</span>
+            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">get_weight</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-stretch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">get_stretch</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">get_style</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
             <span class="c1"># Must add &quot;px&quot; to workaround a Firefox bug</span>
             <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">short_float_fmt</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">get_size</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span>
-            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">family_name</span><span class="p">)</span>
-            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">get_style</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;font-weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">get_weight</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
             <span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_css</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">mtext</span> <span class="ow">and</span> <span class="p">(</span><span class="n">angle</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">mtext</span><span class="o">.</span><span class="n">get_rotation_mode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;anchor&quot;</span><span class="p">):</span>
@@ -1245,7 +1334,8 @@
 
             <span class="n">writer</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RendererSVG.draw_tex"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.RendererSVG.draw_tex">[docs]</a>    <span class="k">def</span> <span class="nf">draw_tex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="o">=</span><span class="s1">&#39;TeX!&#39;</span><span class="p">,</span> <span class="n">mtext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RendererSVG.draw_tex"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.RendererSVG.draw_tex">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">_delete_parameter</span><span class="p">(</span><span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="s2">&quot;ismath&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">draw_tex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="o">=</span><span class="s1">&#39;TeX!&#39;</span><span class="p">,</span> <span class="n">mtext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># docstring inherited</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_draw_text_as_path</span><span class="p">(</span><span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="o">=</span><span class="s2">&quot;TeX&quot;</span><span class="p">)</span></div>
 
@@ -1262,7 +1352,7 @@
         <span class="k">if</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_url</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;xlink:href&#39;</span><span class="p">:</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_url</span><span class="p">()})</span>
 
-        <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;svg.fonttype&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;svg.fonttype&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_draw_text_as_path</span><span class="p">(</span><span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="p">,</span> <span class="n">mtext</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_draw_text_as_text</span><span class="p">(</span><span class="n">gc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">ismath</span><span class="p">,</span> <span class="n">mtext</span><span class="p">)</span>
@@ -1293,6 +1383,36 @@
     <span class="n">fixed_dpi</span> <span class="o">=</span> <span class="mi">72</span>
 
 <div class="viewcode-block" id="FigureCanvasSVG.print_svg"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.FigureCanvasSVG.print_svg">[docs]</a>    <span class="k">def</span> <span class="nf">print_svg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str or path-like or file-like</span>
+<span class="sd">            Output target; if a string, a file will be opened for writing.</span>
+<span class="sd">        metadata : Dict[str, Any], optional</span>
+<span class="sd">            Metadata in the SVG file defined as key-value pairs of strings,</span>
+<span class="sd">            datetimes, or lists of strings, e.g., ``{&#39;Creator&#39;: &#39;My software&#39;,</span>
+<span class="sd">            &#39;Contributor&#39;: [&#39;Me&#39;, &#39;My Friend&#39;], &#39;Title&#39;: &#39;Awesome&#39;}``.</span>
+
+<span class="sd">            The standard keys and their value types are:</span>
+
+<span class="sd">            * *str*: ``&#39;Coverage&#39;``, ``&#39;Description&#39;``, ``&#39;Format&#39;``,</span>
+<span class="sd">              ``&#39;Identifier&#39;``, ``&#39;Language&#39;``, ``&#39;Relation&#39;``, ``&#39;Source&#39;``,</span>
+<span class="sd">              ``&#39;Title&#39;``, and ``&#39;Type&#39;``.</span>
+<span class="sd">            * *str* or *list of str*: ``&#39;Contributor&#39;``, ``&#39;Creator&#39;``,</span>
+<span class="sd">              ``&#39;Keywords&#39;``, ``&#39;Publisher&#39;``, and ``&#39;Rights&#39;``.</span>
+<span class="sd">            * *str*, *date*, *datetime*, or *tuple* of same: ``&#39;Date&#39;``. If a</span>
+<span class="sd">              non-*str*, then it will be formatted as ISO 8601.</span>
+
+<span class="sd">            Values have been predefined for ``&#39;Creator&#39;``, ``&#39;Date&#39;``,</span>
+<span class="sd">            ``&#39;Format&#39;``, and ``&#39;Type&#39;``. They can be removed by setting them</span>
+<span class="sd">            to `None`.</span>
+
+<span class="sd">            Information is encoded as `Dublin Core Metadata`__.</span>
+
+<span class="sd">            .. _DC: https://www.dublincore.org/specifications/dublin-core/</span>
+
+<span class="sd">            __ DC_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
 
             <span class="n">filename</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -1302,32 +1422,31 @@
             <span class="k">if</span> <span class="n">cbook</span><span class="o">.</span><span class="n">file_requires_unicode</span><span class="p">(</span><span class="n">fh</span><span class="p">):</span>
                 <span class="n">detach</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">fh</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">TextIOWrapper</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                <span class="n">fh</span> <span class="o">=</span> <span class="n">TextIOWrapper</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
                 <span class="n">detach</span> <span class="o">=</span> <span class="kc">True</span>
 
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_print_svg</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_print_svg</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
             <span class="c1"># Detach underlying stream from wrapper so that it remains open in</span>
             <span class="c1"># the caller.</span>
             <span class="k">if</span> <span class="n">detach</span><span class="p">:</span>
-                <span class="n">fh</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">result</span></div>
+                <span class="n">fh</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FigureCanvasSVG.print_svgz"><a class="viewcode-back" href="../../../api/backend_svg_api.html#matplotlib.backends.backend_svg.FigureCanvasSVG.print_svgz">[docs]</a>    <span class="k">def</span> <span class="nf">print_svgz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">open_file_cm</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">,</span> \
                 <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">fileobj</span><span class="o">=</span><span class="n">fh</span><span class="p">)</span> <span class="k">as</span> <span class="n">gzipwriter</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_svg</span><span class="p">(</span><span class="n">gzipwriter</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_print_svg</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nd">@_check_savefig_extra_args</span>
+    <span class="k">def</span> <span class="nf">_print_svg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="mf">72.0</span><span class="p">)</span>
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
         <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">72</span><span class="p">,</span> <span class="n">height</span> <span class="o">*</span> <span class="mi">72</span>
 
         <span class="n">renderer</span> <span class="o">=</span> <span class="n">MixedModeRenderer</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span>
-            <span class="n">RendererSVG</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="p">),</span>
+            <span class="n">RendererSVG</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">),</span>
             <span class="n">bbox_inches_restore</span><span class="o">=</span><span class="n">bbox_inches_restore</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
@@ -1361,12 +1480,12 @@
     </div>
 <footer>
     <div class="footer">
-    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2020 The Matplotlib development team.
 <br />
-    Last updated on Jun 17, 2020.
+    Last updated on Jul 17, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.
-Doc version v3.2.2-2-g137edd56a.
+<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+Doc version v3.3.0-3-g8994f1b60.
     </div>
 </footer>
 <script>

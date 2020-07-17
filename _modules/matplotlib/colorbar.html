@@ -6,32 +6,31 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>matplotlib.colorbar &#8212; Matplotlib 3.2.2 documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.2-2-g137edd56a" type="text/css" />
+    <title>matplotlib.colorbar &#8212; Matplotlib 3.3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.3.0-3-g8994f1b60" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.2.2 documentation"
+          title="Search within Matplotlib 3.3.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
 
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-<link rel="top" title="Matplotlib 3.2.2 documentation" href="#" />
-    <link rel="canonical" href="https://matplotlib.org/3.2.2/_modules/matplotlib/colorbar.html" />
+<link rel="top" title="Matplotlib 3.3.0 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/3.3.0/_modules/matplotlib/colorbar.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -49,7 +48,7 @@
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
     <a href="../../index.html">
-        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.2.2</span></div>
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.3.0</span></div>
         <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
     <!-- The "Fork me on github" ribbon -->
@@ -82,8 +81,7 @@
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../contents.html">contents</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">matplotlib.colorbar</a></li> 
+          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li> 
       </ul>
     </div>
 
@@ -110,26 +108,39 @@
           <div class="body" role="main">
             
   <h1>Source code for matplotlib.colorbar</h1><div class="highlight"><pre>
-<span></span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Colorbar toolkit with two classes and a function:</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Colorbars are a visualization of the mapping from scalar values to colors.</span>
+<span class="sd">In Matplotlib they are drawn into a dedicated `~.axes.Axes`.</span>
 
-<span class="sd">    :class:`ColorbarBase`</span>
-<span class="sd">        the base class with full colorbar drawing functionality.</span>
-<span class="sd">        It can be used as-is to make a colorbar for a given colormap;</span>
-<span class="sd">        a mappable object (e.g., image) is not needed.</span>
+<span class="sd">.. note::</span>
+<span class="sd">   Colorbars are typically created through `.Figure.colorbar` or its pyplot</span>
+<span class="sd">   wrapper `.pyplot.colorbar`, which use `.make_axes` and `.Colorbar`</span>
+<span class="sd">   internally.</span>
 
-<span class="sd">    :class:`Colorbar`</span>
-<span class="sd">        the derived class for use with images or contour plots.</span>
+<span class="sd">   As an end-user, you most likely won&#39;t have to call the methods or</span>
+<span class="sd">   instantiate the classes in this module explicitly.</span>
 
-<span class="sd">    :func:`make_axes`</span>
-<span class="sd">        a function for resizing an axes and adding a second axes</span>
-<span class="sd">        suitable for a colorbar</span>
+<span class="sd">:class:`ColorbarBase`</span>
+<span class="sd">    The base class with full colorbar drawing functionality.</span>
+<span class="sd">    It can be used as-is to make a colorbar for a given colormap;</span>
+<span class="sd">    a mappable object (e.g., image) is not needed.</span>
 
-<span class="sd">The :meth:`~matplotlib.figure.Figure.colorbar` method uses :func:`make_axes`</span>
-<span class="sd">and :class:`Colorbar`; the :func:`~matplotlib.pyplot.colorbar` function</span>
-<span class="sd">is a thin wrapper over :meth:`~matplotlib.figure.Figure.colorbar`.</span>
+<span class="sd">:class:`Colorbar`</span>
+<span class="sd">    On top of `.ColorbarBase` this connects the colorbar with a</span>
+<span class="sd">    `.ScalarMappable` such as an image or contour plot.</span>
 
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">:class:`ColorbarPatch`</span>
+<span class="sd">    A specialized `.Colorbar` to support hatched contour plots.</span>
+
+<span class="sd">:func:`make_axes`</span>
+<span class="sd">    Create an `~.axes.Axes` suitable for a colorbar. This functions can be</span>
+<span class="sd">    used with figures containing a single axes or with freely placed axes.</span>
+
+<span class="sd">:func:`make_axes_gridspec`</span>
+<span class="sd">    Create a `~.SubplotBase` suitable for a colorbar. This function should</span>
+<span class="sd">    be used for adding a colorbar to a `.GridSpec`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -149,182 +160,179 @@
 <span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">mtransforms</span>
 <span class="kn">import</span> <span class="nn">matplotlib._layoutbox</span> <span class="k">as</span> <span class="nn">layoutbox</span>
 <span class="kn">import</span> <span class="nn">matplotlib._constrained_layout</span> <span class="k">as</span> <span class="nn">constrained_layout</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">docstring</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">docstring</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">make_axes_kw_doc</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="n">_make_axes_param_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    fraction : float, default: 0.15</span>
+<span class="s2">        Fraction of original axes to use for colorbar.</span>
+<span class="s2">    shrink : float, default: 1.0</span>
+<span class="s2">        Fraction by which to multiply the size of the colorbar.</span>
+<span class="s2">    aspect : float, default: 20</span>
+<span class="s2">        Ratio of long to short dimensions.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">_make_axes_other_param_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    pad : float, default: 0.05 if vertical, 0.15 if horizontal</span>
+<span class="s2">        Fraction of original axes between colorbar and new image axes.</span>
+<span class="s2">    anchor : (float, float), optional</span>
+<span class="s2">        The anchor point of the colorbar axes.</span>
+<span class="s2">        Defaults to (0.0, 0.5) if vertical; (0.5, 1.0) if horizontal.</span>
+<span class="s2">    panchor : (float, float), or *False*, optional</span>
+<span class="s2">        The anchor point of the colorbar parent axes. If *False*, the parent</span>
+<span class="s2">        axes&#39; anchor will be unchanged.</span>
+<span class="s2">        Defaults to (1.0, 0.5) if vertical; (0.5, 0.0) if horizontal.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">make_axes_kw_doc</span> <span class="o">=</span> <span class="n">_make_axes_param_doc</span> <span class="o">+</span> <span class="n">_make_axes_other_param_doc</span>
 
-<span class="s1">    ============= ====================================================</span>
-<span class="s1">    Property      Description</span>
-<span class="s1">    ============= ====================================================</span>
-<span class="s1">    *orientation* vertical or horizontal</span>
-<span class="s1">    *fraction*    0.15; fraction of original axes to use for colorbar</span>
-<span class="s1">    *pad*         0.05 if vertical, 0.15 if horizontal; fraction</span>
-<span class="s1">                  of original axes between colorbar and new image axes</span>
-<span class="s1">    *shrink*      1.0; fraction by which to multiply the size of the colorbar</span>
-<span class="s1">    *aspect*      20; ratio of long to short dimensions</span>
-<span class="s1">    *anchor*      (0.0, 0.5) if vertical; (0.5, 1.0) if horizontal;</span>
-<span class="s1">                  the anchor point of the colorbar axes</span>
-<span class="s1">    *panchor*     (1.0, 0.5) if vertical; (0.5, 0.0) if horizontal;</span>
-<span class="s1">                  the anchor point of the colorbar parent axes. If</span>
-<span class="s1">                  False, the parent axes&#39; anchor will be unchanged</span>
-<span class="s1">    ============= ====================================================</span>
+<span class="n">colormap_kw_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="s2">    ============  ====================================================</span>
+<span class="s2">    Property      Description</span>
+<span class="s2">    ============  ====================================================</span>
+<span class="s2">    *extend*      {&#39;neither&#39;, &#39;both&#39;, &#39;min&#39;, &#39;max&#39;}</span>
+<span class="s2">                  If not &#39;neither&#39;, make pointed end(s) for out-of-</span>
+<span class="s2">                  range values.  These are set for a given colormap</span>
+<span class="s2">                  using the colormap set_under and set_over methods.</span>
+<span class="s2">    *extendfrac*  {*None*, &#39;auto&#39;, length, lengths}</span>
+<span class="s2">                  If set to *None*, both the minimum and maximum</span>
+<span class="s2">                  triangular colorbar extensions with have a length of</span>
+<span class="s2">                  5</span><span class="si">% o</span><span class="s2">f the interior colorbar length (this is the</span>
+<span class="s2">                  default setting). If set to &#39;auto&#39;, makes the</span>
+<span class="s2">                  triangular colorbar extensions the same lengths as</span>
+<span class="s2">                  the interior boxes (when *spacing* is set to</span>
+<span class="s2">                  &#39;uniform&#39;) or the same lengths as the respective</span>
+<span class="s2">                  adjacent interior boxes (when *spacing* is set to</span>
+<span class="s2">                  &#39;proportional&#39;). If a scalar, indicates the length</span>
+<span class="s2">                  of both the minimum and maximum triangular colorbar</span>
+<span class="s2">                  extensions as a fraction of the interior colorbar</span>
+<span class="s2">                  length. A two-element sequence of fractions may also</span>
+<span class="s2">                  be given, indicating the lengths of the minimum and</span>
+<span class="s2">                  maximum colorbar extensions respectively as a</span>
+<span class="s2">                  fraction of the interior colorbar length.</span>
+<span class="s2">    *extendrect*  bool</span>
+<span class="s2">                  If *False* the minimum and maximum colorbar extensions</span>
+<span class="s2">                  will be triangular (the default). If *True* the</span>
+<span class="s2">                  extensions will be rectangular.</span>
+<span class="s2">    *spacing*     {&#39;uniform&#39;, &#39;proportional&#39;}</span>
+<span class="s2">                  Uniform spacing gives each discrete color the same</span>
+<span class="s2">                  space; proportional makes the space proportional to</span>
+<span class="s2">                  the data interval.</span>
+<span class="s2">    *ticks*       *None* or list of ticks or Locator</span>
+<span class="s2">                  If None, ticks are determined automatically from the</span>
+<span class="s2">                  input.</span>
+<span class="s2">    *format*      None or str or Formatter</span>
+<span class="s2">                  If None, `~.ticker.ScalarFormatter` is used.</span>
+<span class="s2">                  If a format string is given, e.g., &#39;</span><span class="si">%.3f</span><span class="s2">&#39;, that is used.</span>
+<span class="s2">                  An alternative `~.ticker.Formatter` may be given instead.</span>
+<span class="s2">    *drawedges*   bool</span>
+<span class="s2">                  Whether to draw lines at color boundaries.</span>
+<span class="s2">    *label*       str</span>
+<span class="s2">                  The label on the colorbar&#39;s long axis.</span>
+<span class="s2">    ============  ====================================================</span>
 
-<span class="n">colormap_kw_doc</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s2">    The following will probably be useful only in the context of</span>
+<span class="s2">    indexed colors (that is, when the mappable has norm=NoNorm()),</span>
+<span class="s2">    or other unusual circumstances.</span>
 
-<span class="s1">    ============  ====================================================</span>
-<span class="s1">    Property      Description</span>
-<span class="s1">    ============  ====================================================</span>
-<span class="s1">    *extend*      {&#39;neither&#39;, &#39;both&#39;, &#39;min&#39;, &#39;max&#39;}</span>
-<span class="s1">                  If not &#39;neither&#39;, make pointed end(s) for out-of-</span>
-<span class="s1">                  range values.  These are set for a given colormap</span>
-<span class="s1">                  using the colormap set_under and set_over methods.</span>
-<span class="s1">    *extendfrac*  {*None*, &#39;auto&#39;, length, lengths}</span>
-<span class="s1">                  If set to *None*, both the minimum and maximum</span>
-<span class="s1">                  triangular colorbar extensions with have a length of</span>
-<span class="s1">                  5</span><span class="si">% o</span><span class="s1">f the interior colorbar length (this is the</span>
-<span class="s1">                  default setting). If set to &#39;auto&#39;, makes the</span>
-<span class="s1">                  triangular colorbar extensions the same lengths as</span>
-<span class="s1">                  the interior boxes (when *spacing* is set to</span>
-<span class="s1">                  &#39;uniform&#39;) or the same lengths as the respective</span>
-<span class="s1">                  adjacent interior boxes (when *spacing* is set to</span>
-<span class="s1">                  &#39;proportional&#39;). If a scalar, indicates the length</span>
-<span class="s1">                  of both the minimum and maximum triangular colorbar</span>
-<span class="s1">                  extensions as a fraction of the interior colorbar</span>
-<span class="s1">                  length. A two-element sequence of fractions may also</span>
-<span class="s1">                  be given, indicating the lengths of the minimum and</span>
-<span class="s1">                  maximum colorbar extensions respectively as a</span>
-<span class="s1">                  fraction of the interior colorbar length.</span>
-<span class="s1">    *extendrect*  bool</span>
-<span class="s1">                  If *False* the minimum and maximum colorbar extensions</span>
-<span class="s1">                  will be triangular (the default). If *True* the</span>
-<span class="s1">                  extensions will be rectangular.</span>
-<span class="s1">    *spacing*     {&#39;uniform&#39;, &#39;proportional&#39;}</span>
-<span class="s1">                  Uniform spacing gives each discrete color the same</span>
-<span class="s1">                  space; proportional makes the space proportional to</span>
-<span class="s1">                  the data interval.</span>
-<span class="s1">    *ticks*       *None* or list of ticks or Locator</span>
-<span class="s1">                  If None, ticks are determined automatically from the</span>
-<span class="s1">                  input.</span>
-<span class="s1">    *format*      None or str or Formatter</span>
-<span class="s1">                  If None, the</span>
-<span class="s1">                  :class:`~matplotlib.ticker.ScalarFormatter` is used.</span>
-<span class="s1">                  If a format string is given, e.g., &#39;</span><span class="si">%.3f</span><span class="s1">&#39;, that is</span>
-<span class="s1">                  used. An alternative</span>
-<span class="s1">                  :class:`~matplotlib.ticker.Formatter` object may be</span>
-<span class="s1">                  given instead.</span>
-<span class="s1">    *drawedges*   bool</span>
-<span class="s1">                  Whether to draw lines at color boundaries.</span>
-<span class="s1">    *label*       str</span>
-<span class="s1">                  The label on the colorbar&#39;s long axis.</span>
-<span class="s1">    ============  ====================================================</span>
+<span class="s2">    ============   ===================================================</span>
+<span class="s2">    Property       Description</span>
+<span class="s2">    ============   ===================================================</span>
+<span class="s2">    *boundaries*   None or a sequence</span>
+<span class="s2">    *values*       None or a sequence which must be of length 1 less</span>
+<span class="s2">                   than the sequence of *boundaries*. For each region</span>
+<span class="s2">                   delimited by adjacent entries in *boundaries*, the</span>
+<span class="s2">                   color mapped to the corresponding value in values</span>
+<span class="s2">                   will be used.</span>
+<span class="s2">    ============   ===================================================</span>
 
-<span class="s1">    The following will probably be useful only in the context of</span>
-<span class="s1">    indexed colors (that is, when the mappable has norm=NoNorm()),</span>
-<span class="s1">    or other unusual circumstances.</span>
+<span class="s2">&quot;&quot;&quot;</span>
 
-<span class="s1">    ============   ===================================================</span>
-<span class="s1">    Property       Description</span>
-<span class="s1">    ============   ===================================================</span>
-<span class="s1">    *boundaries*   None or a sequence</span>
-<span class="s1">    *values*       None or a sequence which must be of length 1 less</span>
-<span class="s1">                   than the sequence of *boundaries*. For each region</span>
-<span class="s1">                   delimited by adjacent entries in *boundaries*, the</span>
-<span class="s1">                   color mapped to the corresponding value in values</span>
-<span class="s1">                   will be used.</span>
-<span class="s1">    ============   ===================================================</span>
+<span class="n">colorbar_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="s2">Add a colorbar to a plot.</span>
 
-<span class="n">colorbar_doc</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s2">Function signatures for the :mod:`~matplotlib.pyplot` interface; all</span>
+<span class="s2">but the first are also method signatures for the `~.Figure.colorbar` method::</span>
 
-<span class="s1">Add a colorbar to a plot.</span>
+<span class="s2">  colorbar(**kwargs)</span>
+<span class="s2">  colorbar(mappable, **kwargs)</span>
+<span class="s2">  colorbar(mappable, cax=cax, **kwargs)</span>
+<span class="s2">  colorbar(mappable, ax=ax, **kwargs)</span>
 
-<span class="s1">Function signatures for the :mod:`~matplotlib.pyplot` interface; all</span>
-<span class="s1">but the first are also method signatures for the</span>
-<span class="s1">:meth:`~matplotlib.figure.Figure.colorbar` method::</span>
+<span class="s2">Parameters</span>
+<span class="s2">----------</span>
+<span class="s2">mappable</span>
+<span class="s2">    The `matplotlib.cm.ScalarMappable` (i.e., `~matplotlib.image.AxesImage`,</span>
+<span class="s2">    `~matplotlib.contour.ContourSet`, etc.) described by this colorbar.</span>
+<span class="s2">    This argument is mandatory for the `.Figure.colorbar` method but optional</span>
+<span class="s2">    for the `.pyplot.colorbar` function, which sets the default to the current</span>
+<span class="s2">    image.</span>
 
-<span class="s1">  colorbar(**kwargs)</span>
-<span class="s1">  colorbar(mappable, **kwargs)</span>
-<span class="s1">  colorbar(mappable, cax=cax, **kwargs)</span>
-<span class="s1">  colorbar(mappable, ax=ax, **kwargs)</span>
+<span class="s2">    Note that one can create a `.ScalarMappable` &quot;on-the-fly&quot; to generate</span>
+<span class="s2">    colorbars not attached to a previously drawn artist, e.g. ::</span>
 
-<span class="s1">Parameters</span>
-<span class="s1">----------</span>
-<span class="s1">mappable</span>
-<span class="s1">    The `matplotlib.cm.ScalarMappable` (i.e., `~matplotlib.image.Image`,</span>
-<span class="s1">    `~matplotlib.contour.ContourSet`, etc.) described by this colorbar.</span>
-<span class="s1">    This argument is mandatory for the `.Figure.colorbar` method but optional</span>
-<span class="s1">    for the `.pyplot.colorbar` function, which sets the default to the current</span>
-<span class="s1">    image.</span>
+<span class="s2">        fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax)</span>
 
-<span class="s1">    Note that one can create a `ScalarMappable` &quot;on-the-fly&quot; to generate</span>
-<span class="s1">    colorbars not attached to a previously drawn artist, e.g. ::</span>
+<span class="s2">cax : `~matplotlib.axes.Axes`, optional</span>
+<span class="s2">    Axes into which the colorbar will be drawn.</span>
 
-<span class="s1">        fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax)</span>
+<span class="s2">ax : `~matplotlib.axes.Axes`, list of Axes, optional</span>
+<span class="s2">    Parent axes from which space for a new colorbar axes will be stolen.</span>
+<span class="s2">    If a list of axes is given they will all be resized to make room for the</span>
+<span class="s2">    colorbar axes.</span>
 
-<span class="s1">cax : :class:`~matplotlib.axes.Axes` object, optional</span>
-<span class="s1">    Axes into which the colorbar will be drawn.</span>
+<span class="s2">use_gridspec : bool, optional</span>
+<span class="s2">    If *cax* is ``None``, a new *cax* is created as an instance of Axes.  If</span>
+<span class="s2">    *ax* is an instance of Subplot and *use_gridspec* is ``True``, *cax* is</span>
+<span class="s2">    created as an instance of Subplot using the :mod:`~.gridspec` module.</span>
 
-<span class="s1">ax : :class:`~matplotlib.axes.Axes`, list of Axes, optional</span>
-<span class="s1">    Parent axes from which space for a new colorbar axes will be stolen.</span>
-<span class="s1">    If a list of axes is given they will all be resized to make room for the</span>
-<span class="s1">    colorbar axes.</span>
+<span class="s2">Returns</span>
+<span class="s2">-------</span>
+<span class="s2">colorbar : `~matplotlib.colorbar.Colorbar`</span>
+<span class="s2">    See also its base class, `~matplotlib.colorbar.ColorbarBase`.</span>
 
-<span class="s1">use_gridspec : bool, optional</span>
-<span class="s1">    If *cax* is ``None``, a new *cax* is created as an instance of Axes.  If</span>
-<span class="s1">    *ax* is an instance of Subplot and *use_gridspec* is ``True``, *cax* is</span>
-<span class="s1">    created as an instance of Subplot using the :mod:`~.gridspec` module.</span>
+<span class="s2">Notes</span>
+<span class="s2">-----</span>
+<span class="s2">Additional keyword arguments are of two kinds:</span>
 
-<span class="s1">Returns</span>
-<span class="s1">-------</span>
-<span class="s1">colorbar : `~matplotlib.colorbar.Colorbar`</span>
-<span class="s1">    See also its base class, `~matplotlib.colorbar.ColorbarBase`.</span>
+<span class="s2">  axes properties:</span>
+<span class="si">%s</span><span class="s2"></span>
+<span class="s2">  colorbar properties:</span>
+<span class="si">%s</span><span class="s2"></span>
 
-<span class="s1">Notes</span>
-<span class="s1">-----</span>
-<span class="s1">Additional keyword arguments are of two kinds:</span>
+<span class="s2">If *mappable* is a `~.contour.ContourSet`, its *extend* kwarg is included</span>
+<span class="s2">automatically.</span>
 
-<span class="s1">  axes properties:</span>
-<span class="si">%s</span><span class="s1"></span>
-<span class="s1">  colorbar properties:</span>
-<span class="si">%s</span><span class="s1"></span>
+<span class="s2">The *shrink* kwarg provides a simple way to scale the colorbar with respect</span>
+<span class="s2">to the axes. Note that if *cax* is specified, it determines the size of the</span>
+<span class="s2">colorbar and *shrink* and *aspect* kwargs are ignored.</span>
 
-<span class="s1">If *mappable* is a :class:`~matplotlib.contours.ContourSet`, its *extend*</span>
-<span class="s1">kwarg is included automatically.</span>
+<span class="s2">For more precise control, you can manually specify the positions of</span>
+<span class="s2">the axes objects in which the mappable and the colorbar are drawn.  In</span>
+<span class="s2">this case, do not use any of the axes properties kwargs.</span>
 
-<span class="s1">The *shrink* kwarg provides a simple way to scale the colorbar with respect</span>
-<span class="s1">to the axes. Note that if *cax* is specified, it determines the size of the</span>
-<span class="s1">colorbar and *shrink* and *aspect* kwargs are ignored.</span>
+<span class="s2">It is known that some vector graphics viewers (svg and pdf) renders white gaps</span>
+<span class="s2">between segments of the colorbar.  This is due to bugs in the viewers, not</span>
+<span class="s2">Matplotlib.  As a workaround, the colorbar can be rendered with overlapping</span>
+<span class="s2">segments::</span>
 
-<span class="s1">For more precise control, you can manually specify the positions of</span>
-<span class="s1">the axes objects in which the mappable and the colorbar are drawn.  In</span>
-<span class="s1">this case, do not use any of the axes properties kwargs.</span>
+<span class="s2">    cbar = colorbar()</span>
+<span class="s2">    cbar.solids.set_edgecolor(&quot;face&quot;)</span>
+<span class="s2">    draw()</span>
 
-<span class="s1">It is known that some vector graphics viewers (svg and pdf) renders white gaps</span>
-<span class="s1">between segments of the colorbar.  This is due to bugs in the viewers, not</span>
-<span class="s1">Matplotlib.  As a workaround, the colorbar can be rendered with overlapping</span>
-<span class="s1">segments::</span>
+<span class="s2">However this has negative consequences in other circumstances, e.g. with</span>
+<span class="s2">semi-transparent images (alpha &lt; 1) and colorbar extensions; therefore, this</span>
+<span class="s2">workaround is not used by default (see issue #1188).</span>
 
-<span class="s1">    cbar = colorbar()</span>
-<span class="s1">    cbar.solids.set_edgecolor(&quot;face&quot;)</span>
-<span class="s1">    draw()</span>
-
-<span class="s1">However this has negative consequences in other circumstances, e.g. with</span>
-<span class="s1">semi-transparent images (alpha &lt; 1) and colorbar extensions; therefore, this</span>
-<span class="s1">workaround is not used by default (see issue #1188).</span>
-
-<span class="s1">&#39;&#39;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">make_axes_kw_doc</span><span class="p">,</span> <span class="n">colormap_kw_doc</span><span class="p">)</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">make_axes_kw_doc</span><span class="p">,</span> <span class="n">colormap_kw_doc</span><span class="p">)</span>
 
 <span class="n">docstring</span><span class="o">.</span><span class="n">interpd</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">colorbar_doc</span><span class="o">=</span><span class="n">colorbar_doc</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_set_ticks_on_axis_warn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
     <span class="c1"># a top level function which gets put in at the axes&#39;</span>
-    <span class="c1"># set_xticks set_yticks by _patch_ax</span>
+    <span class="c1"># set_xticks and set_yticks by ColorbarBase.__init__.</span>
     <span class="n">cbook</span><span class="o">.</span><span class="n">_warn_external</span><span class="p">(</span><span class="s2">&quot;Use the colorbar set_ticks() method instead.&quot;</span><span class="p">)</span>
 
 
@@ -338,7 +346,7 @@
 <span class="sd">    extrude into the &quot;extend regions&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colorbar</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colorbar</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This ticker needs to know the *colorbar* so that it can access</span>
 <span class="sd">        its *vmin* and *vmax*.  Otherwise it is the same as</span>
@@ -371,7 +379,7 @@
 <span class="sd">    don&#39;t extrude into the &quot;extend regions&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colorbar</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colorbar</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This ticker needs to know the *colorbar* so that it can access</span>
 <span class="sd">        its *vmin* and *vmax*.</span>
@@ -380,7 +388,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ndivs</span> <span class="o">=</span> <span class="n">n</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">vmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_colorbar</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">vmin</span>
         <span class="n">vmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_colorbar</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">vmax</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span>
@@ -398,10 +406,8 @@
 <span class="sd">    extrude into the &quot;extend regions&quot;.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colorbar</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colorbar</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        _ColorbarLogLocator(colorbar, *args, **kwargs)</span>
-
 <span class="sd">        This ticker needs to know the *colorbar* so that it can access</span>
 <span class="sd">        its *vmin* and *vmax*.  Otherwise it is the same as</span>
 <span class="sd">        `~.ticker.LogLocator`.  The ``*args`` and ``**kwargs`` are the</span>
@@ -418,51 +424,11 @@
         <span class="n">ticks</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tick_values</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
         <span class="n">rtol</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">vmin</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1e-10</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="n">ticks</span><span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">vmin</span><span class="p">)</span> <span class="o">-</span> <span class="n">rtol</span><span class="p">)</span> <span class="o">&amp;</span>
-              <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span> <span class="o">+</span> <span class="n">rtol</span><span class="p">)]</span>
+                      <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span> <span class="o">+</span> <span class="n">rtol</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">ticks</span>
 
 
-<span class="k">class</span> <span class="nc">_ColorbarMappableDummy</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Private class to hold deprecated ColorbarBase methods that used to be</span>
-<span class="sd">    inhereted from ScalarMappable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;ScalarMappable.set_norm&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">set_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        `.colorbar.Colorbar.set_norm` does nothing; set the norm on</span>
-<span class="sd">        the mappable associated with this colorbar.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;ScalarMappable.set_cmap&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">set_cmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        `.colorbar.Colorbar.set_cmap` does nothing; set the norm on</span>
-<span class="sd">        the mappable associated with this colorbar.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;ScalarMappable.set_clim&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">set_clim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        `.colorbar.Colorbar.set_clim` does nothing; set the limits on</span>
-<span class="sd">        the mappable associated with this colorbar.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;ScalarMappable.get_cmap&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">get_cmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the colormap.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span>
-
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;ScalarMappable.get_clim&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">get_clim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the min, max of the color limits for image scaling.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">vmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">vmax</span>
-
-
-<div class="viewcode-block" id="ColorbarBase"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase">[docs]</a><span class="k">class</span> <span class="nc">ColorbarBase</span><span class="p">(</span><span class="n">_ColorbarMappableDummy</span><span class="p">):</span>
+<div class="viewcode-block" id="ColorbarBase"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase">[docs]</a><span class="k">class</span> <span class="nc">ColorbarBase</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Draw a colorbar in an existing axes.</span>
 
@@ -503,11 +469,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    ax : `~matplotlib.axes.Axes`</span>
 <span class="sd">        The `~.axes.Axes` instance in which the colorbar is drawn.</span>
-<span class="sd">    cmap : `~matplotlib.colors.Colormap` or None</span>
-<span class="sd">        The colormap to use. If *None*, use :rc:`image.cmap`.</span>
+<span class="sd">    cmap : `~matplotlib.colors.Colormap`, default: :rc:`image.cmap`</span>
+<span class="sd">        The colormap to use.</span>
 <span class="sd">    norm : `~matplotlib.colors.Normalize`</span>
 
 <span class="sd">    alpha : float</span>
+<span class="sd">        The colorbar transparency between 0 (transparent) and 1 (opaque).</span>
 
 <span class="sd">    values</span>
 
@@ -535,21 +502,18 @@
 
 <span class="sd">    label : str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_slice_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;neither&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                   <span class="s1">&#39;both&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                   <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                   <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)}</span>
 
     <span class="n">n_rasterize</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># rasterize solids if number of colors &gt;= n_rasterize</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="nd">@cbook</span><span class="o">.</span><span class="n">_make_keyword_only</span><span class="p">(</span><span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="s2">&quot;cmap&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">boundaries</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span>
                  <span class="n">ticklocation</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
-                 <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;neither&#39;</span><span class="p">,</span>
+                 <span class="n">extend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">spacing</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span>  <span class="c1"># uniform or proportional</span>
                  <span class="n">ticks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -566,23 +530,32 @@
             <span class="p">[</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">],</span>
             <span class="n">ticklocation</span><span class="o">=</span><span class="n">ticklocation</span><span class="p">)</span>
         <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_slice_dict</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="n">extend</span><span class="p">)</span>
-        <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">(</span>
             <span class="p">[</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;proportional&#39;</span><span class="p">],</span> <span class="n">spacing</span><span class="o">=</span><span class="n">spacing</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_patch_ax</span><span class="p">()</span>
+        <span class="c1"># Bind some methods to the axes to warn users against using them.</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span> <span class="o">=</span> <span class="n">_set_ticks_on_axis_warn</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">frame_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">navigate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">norm</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">extend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="s1">&#39;extend&#39;</span><span class="p">):</span>
+                <span class="n">extend</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">extend</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">extend</span> <span class="o">=</span> <span class="s1">&#39;neither&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span> <span class="o">=</span> <span class="n">cmap</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="n">norm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boundaries</span> <span class="o">=</span> <span class="n">boundaries</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">=</span> <span class="n">extend</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_inside</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slice_dict</span><span class="p">[</span><span class="n">extend</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inside</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_check_getitem</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;neither&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)},</span>
+            <span class="n">extend</span><span class="o">=</span><span class="n">extend</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="n">spacing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">orientation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawedges</span> <span class="o">=</span> <span class="n">drawedges</span>
@@ -590,9 +563,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">extendfrac</span> <span class="o">=</span> <span class="n">extendfrac</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extendrect</span> <span class="o">=</span> <span class="n">extendrect</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solids</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">patch</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.edgecolor&#39;</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">],</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">clip_box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clip_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.facecolor&#39;</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">dividers</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span> <span class="o">=</span> <span class="kc">None</span>
@@ -622,57 +605,65 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_extend_upper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return whether the uper limit is open ended.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return whether the upper limit is open ended.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_patch_ax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># bind some methods to the axes to warn users</span>
-        <span class="c1"># against using those methods.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span> <span class="o">=</span> <span class="n">_set_ticks_on_axis_warn</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span> <span class="o">=</span> <span class="n">_set_ticks_on_axis_warn</span>
-
 <div class="viewcode-block" id="ColorbarBase.draw_all"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.draw_all">[docs]</a>    <span class="k">def</span> <span class="nf">draw_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate any free parameters based on the current cmap and norm,</span>
 <span class="sd">        and do all the drawing.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># sets self._boundaries and self._values in real data units.</span>
         <span class="c1"># takes into account extend values:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_values</span><span class="p">()</span>
-        <span class="c1"># sets self.vmin and vmax in data units, but just for</span>
-        <span class="c1"># the part of the colorbar that is not part of the extend</span>
-        <span class="c1"># patch:</span>
+        <span class="c1"># sets self.vmin and vmax in data units, but just for the part of the</span>
+        <span class="c1"># colorbar that is not part of the extend patch:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_find_range</span><span class="p">()</span>
-        <span class="c1"># returns the X and Y mesh, *but* this was/is in normalized</span>
-        <span class="c1"># units:</span>
+        <span class="c1"># returns the X and Y mesh, *but* this was/is in normalized units:</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="p">()</span>
         <span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-        <span class="c1"># decide minor/major axis</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config_axis</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_config_axes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_axis</span><span class="p">()</span>  <span class="c1"># Inline it after deprecation elapses.</span>
+        <span class="c1"># Configure axes limits, patch, and outline.</span>
+        <span class="n">xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outline</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="n">xy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">xy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">set_xy</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">set_xy</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filled</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_solids</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ColorbarBase.config_axis"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.config_axis">[docs]</a>    <span class="k">def</span> <span class="nf">config_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+<div class="viewcode-block" id="ColorbarBase.config_axis"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.config_axis">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.3&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">config_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_axis</span><span class="p">()</span></div>
 
+    <span class="k">def</span> <span class="nf">_config_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set up long and short axis.&quot;&quot;&quot;</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span><span class="p">:</span>
             <span class="n">long_axis</span><span class="p">,</span> <span class="n">short_axis</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span>
+            <span class="k">if</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ytick.minor.visible&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">long_axis</span><span class="p">,</span> <span class="n">short_axis</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span>
-
-        <span class="n">long_axis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ticklocation</span><span class="p">)</span>
-        <span class="n">long_axis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ticklocation</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.minor.visible&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+        <span class="n">long_axis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">label_position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ticklocation</span><span class="p">,</span>
+                      <span class="n">ticks_position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ticklocation</span><span class="p">)</span>
         <span class="n">short_axis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([])</span>
         <span class="n">short_axis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([],</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_label</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_label</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_get_ticker_locator_formatter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This code looks at the norm being used by the colorbar</span>
-<span class="sd">        and decides what locator and formatter to use.  If ``locator`` has</span>
-<span class="sd">        already been set by hand, it just returns</span>
-<span class="sd">        ``self.locator, self.formatter``.</span>
+<span class="sd">        Return the ``locator`` and ``formatter`` of the colorbar.</span>
+
+<span class="sd">        If they have not been defined (i.e. are *None*), suitable formatter</span>
+<span class="sd">        and locator instances will be created, attached to the respective</span>
+<span class="sd">        attributes and returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">locator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locator</span>
         <span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span>
@@ -736,7 +727,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">):</span>
             <span class="c1"># *both* axes are made log so that determining the</span>
             <span class="c1"># mid point is easier.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
@@ -761,8 +752,7 @@
         <span class="n">locator</span><span class="p">,</span> <span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ticker_locator_formatter</span><span class="p">()</span>
         <span class="n">long_axis</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_auto_colorbar_locator</span><span class="p">():</span>
-            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Using auto colorbar locator on colorbar&#39;</span><span class="p">)</span>
-            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;locator: </span><span class="si">%r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">locator</span><span class="p">)</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Using auto colorbar locator </span><span class="si">%r</span><span class="s1"> on colorbar&#39;</span><span class="p">,</span> <span class="n">locator</span><span class="p">)</span>
             <span class="n">long_axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">locator</span><span class="p">)</span>
             <span class="n">long_axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -778,12 +768,14 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        ticks : {None, sequence, :class:`~matplotlib.ticker.Locator` instance}</span>
-<span class="sd">            If None, a default Locator will be used.</span>
+<span class="sd">        ticks : array-like or `~matplotlib.ticker.Locator` or None</span>
+<span class="sd">            The tick positions can be hard-coded by an array of values; or</span>
+<span class="sd">            they can be defined by a `.Locator`. Setting to *None* reverts</span>
+<span class="sd">            to using a default locator.</span>
 
-<span class="sd">        update_ticks : {True, False}, optional</span>
-<span class="sd">            If True, tick locations are updated immediately.  If False,</span>
-<span class="sd">            use :meth:`update_ticks` to manually update the ticks.</span>
+<span class="sd">        update_ticks : bool, default: True</span>
+<span class="sd">            If True, tick locations are updated immediately.  If False, the</span>
+<span class="sd">            user has to call `update_ticks` later to update the ticks.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">ticks</span><span class="p">):</span>
@@ -824,7 +816,7 @@
 
 <div class="viewcode-block" id="ColorbarBase.minorticks_on"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.minorticks_on">[docs]</a>    <span class="k">def</span> <span class="nf">minorticks_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Turns on the minor ticks on the colorbar without extruding</span>
+<span class="sd">        Turn the minor ticks of the colorbar on without extruding</span>
 <span class="sd">        into the &quot;extend regions&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
@@ -838,47 +830,11 @@
             <span class="n">long_axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">_ColorbarAutoMinorLocator</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ColorbarBase.minorticks_off"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.minorticks_off">[docs]</a>    <span class="k">def</span> <span class="nf">minorticks_off</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Turns off the minor ticks on the colorbar.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Turn the minor ticks of the colorbar off.&quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="n">long_axis</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span>
 
         <span class="n">long_axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">NullLocator</span><span class="p">())</span></div>
-
-    <span class="k">def</span> <span class="nf">_config_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Make an axes patch and outline.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_frame_on</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_navigate</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outline</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">ignore_existing_data_limits</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">update_datalim</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">*</span><span class="n">ax</span><span class="o">.</span><span class="n">dataLim</span><span class="o">.</span><span class="n">intervalx</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">ax</span><span class="o">.</span><span class="n">dataLim</span><span class="o">.</span><span class="n">intervaly</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span>
-            <span class="n">xy</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.edgecolor&#39;</span><span class="p">],</span>
-            <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">],</span>
-            <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">set_clip_box</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">set_clip_path</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.facecolor&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
-                                      <span class="n">facecolor</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
-                                      <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                                      <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_set_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span><span class="p">:</span>
@@ -887,17 +843,38 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_labelkw</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="ColorbarBase.set_label"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.set_label">[docs]</a>    <span class="k">def</span> <span class="nf">set_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Label the long axis of the colorbar.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ColorbarBase.set_label"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.set_label">[docs]</a>    <span class="k">def</span> <span class="nf">set_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a label to the long axis of the colorbar.&quot;&quot;&quot;</span>
+        <span class="n">_pos_xy</span> <span class="o">=</span> <span class="s1">&#39;y&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span> <span class="k">else</span> <span class="s1">&#39;x&#39;</span>
+        <span class="n">_protected_kw</span> <span class="o">=</span> <span class="p">[</span><span class="n">_pos_xy</span><span class="p">,</span> <span class="s1">&#39;horizontalalignment&#39;</span><span class="p">,</span> <span class="s1">&#39;ha&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">k</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_protected_kw</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">loc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Specifying *loc* is disallowed when any of &#39;</span>
+                                <span class="n">f</span><span class="s1">&#39;its corresponding low level keyword &#39;</span>
+                                <span class="n">f</span><span class="s1">&#39;arguments </span><span class="si">{_protected_kw}</span><span class="s1"> are also supplied&#39;</span><span class="p">)</span>
+            <span class="n">loc</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">loc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">axis.labellocation&#39;</span> <span class="o">%</span> <span class="n">_pos_xy</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">((</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">((</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">loc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_pos_xy</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;horizontalalignment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;right&#39;</span>
+        <span class="k">elif</span> <span class="n">loc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">]:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_pos_xy</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;horizontalalignment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="n">label</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_labelkw</span> <span class="o">=</span> <span class="n">kw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_labelkw</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_label</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_outline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return *x*, *y* arrays of colorbar bounding polygon,</span>
 <span class="sd">        taking orientation into account.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">N</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">ii</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">ii</span><span class="p">]</span>
@@ -907,9 +884,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]))</span>
 
     <span class="k">def</span> <span class="nf">_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Return the separator line segments; helper for _add_solids.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Return the separator line segments; helper for _add_solids.&quot;&quot;&quot;</span>
         <span class="n">N</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># Using the non-array form of these line segments is much</span>
         <span class="c1"># simpler than making them into arrays.</span>
@@ -919,10 +894,10 @@
             <span class="k">return</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">_add_solids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Draw the colors using :meth:`~matplotlib.axes.Axes.pcolormesh`;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the colors using `~.axes.Axes.pcolormesh`;</span>
 <span class="sd">        optionally add separators.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span><span class="p">:</span>
             <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -932,7 +907,7 @@
                   <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span>
                   <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Setting pcolormesh&#39;</span><span class="p">)</span>
-        <span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;flat&#39;</span><span class="p">)</span>
         <span class="c1"># self.add_observer(col) # We should observe, not be observed...</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -952,15 +927,24 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">solids</span><span class="o">.</span><span class="n">set_rasterized</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ColorbarBase.add_lines"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.add_lines">[docs]</a>    <span class="k">def</span> <span class="nf">add_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">linewidths</span><span class="p">,</span> <span class="n">erase</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw lines on the colorbar.</span>
 
-<span class="sd">        *colors* and *linewidths* must be scalars or</span>
-<span class="sd">        sequences the same length as *levels*.</span>
+<span class="sd">        The lines are appended to the list :attr:`lines`.</span>
 
-<span class="sd">        Set *erase* to False to add lines without first</span>
-<span class="sd">        removing any previously added lines.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        levels : array-like</span>
+<span class="sd">            The positions of the lines.</span>
+<span class="sd">        colors : color or list of colors</span>
+<span class="sd">            Either a single color applying to all lines or one color value for</span>
+<span class="sd">            each line.</span>
+<span class="sd">        linewidths : float or array-like</span>
+<span class="sd">            Either a single linewidth applying to all lines or one linewidth</span>
+<span class="sd">            for each line.</span>
+<span class="sd">        erase : bool, default: True</span>
+<span class="sd">            Whether to remove any previously added lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locate</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
         <span class="n">rtol</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-10</span>
         <span class="n">igood</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rtol</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">rtol</span><span class="p">)</span>
@@ -986,10 +970,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
     <span class="k">def</span> <span class="nf">_ticker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locator</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the sequence of ticks (colorbar data locations),</span>
 <span class="sd">        ticklabels (strings), and the corresponding offset string.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundaries</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">intv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1015,11 +999,11 @@
         <span class="k">return</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">ticklabels</span><span class="p">,</span> <span class="n">offset_string</span>
 
     <span class="k">def</span> <span class="nf">_process_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the :attr:`_boundaries` and :attr:`_values` attributes</span>
 <span class="sd">        based on the input boundaries and values.  Input boundaries</span>
 <span class="sd">        can be *self.boundaries* or the argument *b*.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundaries</span>
         <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1100,10 +1084,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_values</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_find_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set :attr:`vmin` and :attr:`vmax` attributes to the first and</span>
 <span class="sd">        last boundary excluding extended end boundaries.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_boundaries</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_inside</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -1118,10 +1102,10 @@
         <span class="k">return</span> <span class="n">nb</span>
 
     <span class="k">def</span> <span class="nf">_extended_N</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Based on the colormap and extend variable, return the</span>
 <span class="sd">        number of boundaries.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
             <span class="n">N</span> <span class="o">+=</span> <span class="mi">2</span>
@@ -1130,11 +1114,11 @@
         <span class="k">return</span> <span class="n">N</span>
 
     <span class="k">def</span> <span class="nf">_get_extension_lengths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frac</span><span class="p">,</span> <span class="n">automin</span><span class="p">,</span> <span class="n">automax</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Get the lengths of colorbar extensions.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the lengths of colorbar extensions.</span>
 
-<span class="sd">        A helper method for _uniform_y and _proportional_y.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        This is a helper method for _uniform_y and _proportional_y.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Set the default value.</span>
         <span class="n">extendlength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">default</span><span class="p">,</span> <span class="n">default</span><span class="p">])</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frac</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -1149,16 +1133,16 @@
                 <span class="c1"># be encountered. This is an error.</span>
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">extendlength</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
-            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
                 <span class="c1"># Raise an error on encountering an invalid value for frac.</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid value for extendfrac&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid value for extendfrac&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
         <span class="k">return</span> <span class="n">extendlength</span>
 
     <span class="k">def</span> <span class="nf">_uniform_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return colorbar data coordinates for *N* uniformly</span>
 <span class="sd">        spaced boundaries, plus ends if required.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">==</span> <span class="s1">&#39;neither&#39;</span><span class="p">:</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1180,10 +1164,10 @@
         <span class="k">return</span> <span class="n">y</span>
 
     <span class="k">def</span> <span class="nf">_proportional_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return colorbar data coordinates for the boundaries of</span>
 <span class="sd">        a proportional colorbar.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">):</span>
             <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_boundaries</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_boundaries</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -1219,17 +1203,17 @@
         <span class="k">return</span> <span class="n">y</span>
 
     <span class="k">def</span> <span class="nf">_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return ``(X, Y)``, the coordinate arrays for the colorbar pcolormesh.</span>
 <span class="sd">        These are suitable for a vertical colorbar; swapping and transposition</span>
 <span class="sd">        for a horizontal colorbar are done outside this function.</span>
 
 <span class="sd">        These are scaled between vmin and vmax.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># copy the norm and change the vmin and vmax to the vmin and</span>
         <span class="c1"># vmax of the colorbar, not the norm.  This allows the situation</span>
         <span class="c1"># where the colormap has a narrower range than the colorbar, to</span>
-        <span class="c1"># accomodate extra contours:</span>
+        <span class="c1"># accommodate extra contours:</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
         <span class="n">norm</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmin</span>
         <span class="n">norm</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmax</span>
@@ -1259,10 +1243,10 @@
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
 
     <span class="k">def</span> <span class="nf">_locate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given a set of color data values, return their</span>
 <span class="sd">        corresponding colorbar data coordinates.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">NoNorm</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">)):</span>
             <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_boundaries</span>
             <span class="n">xn</span> <span class="o">=</span> <span class="n">x</span>
@@ -1288,78 +1272,91 @@
         <span class="k">return</span> <span class="n">z</span>
 
 <div class="viewcode-block" id="ColorbarBase.set_alpha"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.set_alpha">[docs]</a>    <span class="k">def</span> <span class="nf">set_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the transparency between 0 (transparent) and 1 (opaque).&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span></div>
 
 <div class="viewcode-block" id="ColorbarBase.remove"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarBase.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Remove this colorbar from the figure</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Remove this colorbar from the figure.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span></div></div>
 
-        <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">)</span></div></div>
+
+<span class="k">def</span> <span class="nf">_add_disjoint_kwargs</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update dict *d* with entries in *kwargs*, which must be absent from *d*.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span>
+                <span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;The </span><span class="si">{k!r}</span><span class="s2"> parameter to Colorbar has no &quot;</span>
+                <span class="s2">&quot;effect because it is overridden by the mappable; it is &quot;</span>
+                <span class="s2">&quot;deprecated since </span><span class="si">%(since)s</span><span class="s2"> and will be removed </span><span class="si">%(removal)s</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 
 
 <div class="viewcode-block" id="Colorbar"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.Colorbar">[docs]</a><span class="k">class</span> <span class="nc">Colorbar</span><span class="p">(</span><span class="n">ColorbarBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class connects a :class:`ColorbarBase` to a</span>
-<span class="sd">    :class:`~matplotlib.cm.ScalarMappable` such as a</span>
-<span class="sd">    :class:`~matplotlib.image.AxesImage` generated via</span>
-<span class="sd">    :meth:`~matplotlib.axes.Axes.imshow`.</span>
+<span class="sd">    This class connects a `ColorbarBase` to a `~.cm.ScalarMappable`</span>
+<span class="sd">    such as an `~.image.AxesImage` generated via `~.axes.Axes.imshow`.</span>
 
-<span class="sd">    It is not intended to be instantiated directly; instead,</span>
-<span class="sd">    use :meth:`~matplotlib.figure.Figure.colorbar` or</span>
-<span class="sd">    :func:`~matplotlib.pyplot.colorbar` to make your colorbar.</span>
-
+<span class="sd">    .. note::</span>
+<span class="sd">        This class is not intended to be instantiated directly; instead, use</span>
+<span class="sd">        `.Figure.colorbar` or `.pyplot.colorbar` to create a colorbar.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">mappable</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">mappable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Ensure the given mappable&#39;s norm has appropriate vmin and vmax set</span>
         <span class="c1"># even if mappable.draw has not yet been called.</span>
         <span class="k">if</span> <span class="n">mappable</span><span class="o">.</span><span class="n">get_array</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mappable</span><span class="o">.</span><span class="n">autoscale_None</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mappable</span> <span class="o">=</span> <span class="n">mappable</span>
-        <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;cmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">mappable</span><span class="o">.</span><span class="n">cmap</span>
-        <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mappable</span><span class="o">.</span><span class="n">norm</span>
+        <span class="n">_add_disjoint_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">mappable</span><span class="o">.</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">mappable</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mappable</span><span class="p">,</span> <span class="n">contour</span><span class="o">.</span><span class="n">ContourSet</span><span class="p">):</span>
-            <span class="n">CS</span> <span class="o">=</span> <span class="n">mappable</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mappable</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;boundaries&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">_levels</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">cvalues</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;extend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">extend</span>
-            <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;ticks&#39;</span><span class="p">,</span> <span class="n">ticker</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">(</span><span class="n">CS</span><span class="o">.</span><span class="n">levels</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;filled&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">filled</span>
-            <span class="n">ColorbarBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">CS</span><span class="o">.</span><span class="n">filled</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_lines</span><span class="p">(</span><span class="n">CS</span><span class="p">)</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">mappable</span>
+            <span class="n">_add_disjoint_kwargs</span><span class="p">(</span>
+                <span class="n">kwargs</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">(),</span>
+                <span class="n">boundaries</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">_levels</span><span class="p">,</span>
+                <span class="n">values</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">cvalues</span><span class="p">,</span>
+                <span class="n">extend</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">extend</span><span class="p">,</span>
+                <span class="n">filled</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">filled</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                <span class="s1">&#39;ticks&#39;</span><span class="p">,</span> <span class="n">ticker</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">levels</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+            <span class="n">ColorbarBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cs</span><span class="o">.</span><span class="n">filled</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_lines</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="s1">&#39;colorbar_extend&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-                <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;extend&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">.</span><span class="n">colorbar_extend</span><span class="p">)</span>
-
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mappable</span><span class="o">.</span><span class="n">cmap</span><span class="p">,</span> <span class="s1">&#39;colorbar_extend&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;extend&#39;</span><span class="p">,</span> <span class="n">mappable</span><span class="o">.</span><span class="n">cmap</span><span class="o">.</span><span class="n">colorbar_extend</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mappable</span><span class="p">,</span> <span class="n">martist</span><span class="o">.</span><span class="n">Artist</span><span class="p">):</span>
-                <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mappable</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span>
+                <span class="n">_add_disjoint_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">mappable</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">())</span>
+            <span class="n">ColorbarBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-            <span class="n">ColorbarBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Colorbar.on_mappable_changed"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.Colorbar.on_mappable_changed">[docs]</a>    <span class="k">def</span> <span class="nf">on_mappable_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mappable</span><span class="p">):</span>
+<div class="viewcode-block" id="Colorbar.on_mappable_changed"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.Colorbar.on_mappable_changed">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;update_normal&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">on_mappable_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mappable</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Updates this colorbar to match the mappable&#39;s properties.</span>
+<span class="sd">        Update this colorbar to match the mappable&#39;s properties.</span>
 
 <span class="sd">        Typically this is automatically registered as an event handler</span>
 <span class="sd">        by :func:`colorbar_factory` and should not be called manually.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;colorbar mappable changed&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_normal</span><span class="p">(</span><span class="n">mappable</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Colorbar.add_lines"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.Colorbar.add_lines">[docs]</a>    <span class="k">def</span> <span class="nf">add_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CS</span><span class="p">,</span> <span class="n">erase</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Add the lines from a non-filled</span>
-<span class="sd">        :class:`~matplotlib.contour.ContourSet` to the colorbar.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the lines from a non-filled `~.contour.ContourSet` to the colorbar.</span>
 
-<span class="sd">        Set *erase* to False if these lines should be added to</span>
-<span class="sd">        any pre-existing lines.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        CS : `~.contour.ContourSet`</span>
+<span class="sd">            The line positions are taken from the ContourSet levels. The</span>
+<span class="sd">            ContourSet must not be filled.</span>
+<span class="sd">        erase : bool, default: True</span>
+<span class="sd">            Whether to remove any previously added lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">contour</span><span class="o">.</span><span class="n">ContourSet</span><span class="p">)</span> <span class="ow">or</span> <span class="n">CS</span><span class="o">.</span><span class="n">filled</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;add_lines is only for a ContourSet of lines&#39;</span><span class="p">)</span>
         <span class="n">tcolors</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">CS</span><span class="o">.</span><span class="n">tcolors</span><span class="p">]</span>
@@ -1378,9 +1375,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update solid patches, lines, etc.</span>
 
-<span class="sd">        Unlike `.update_bruteforce`, this does not clear the axes.  This is</span>
-<span class="sd">        meant to be called when the norm of the image or contour plot to which</span>
-<span class="sd">        this colorbar belongs changes.</span>
+<span class="sd">        This is meant to be called when the norm of the image or contour plot</span>
+<span class="sd">        to which this colorbar belongs changes.</span>
 
 <span class="sd">        If the norm on the mappable is different than before, this resets the</span>
 <span class="sd">        locator and formatter for the axis, so if these have been customized,</span>
@@ -1388,7 +1384,6 @@
 <span class="sd">        changes values of *vmin*, *vmax* or *cmap* then the old formatter</span>
 <span class="sd">        and locator will be preserved.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;colorbar update normal </span><span class="si">%r</span><span class="s1"> </span><span class="si">%r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">mappable</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mappable</span> <span class="o">=</span> <span class="n">mappable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="n">mappable</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">())</span>
@@ -1404,15 +1399,15 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_lines</span><span class="p">(</span><span class="n">CS</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Colorbar.update_bruteforce"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.Colorbar.update_bruteforce">[docs]</a>    <span class="k">def</span> <span class="nf">update_bruteforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mappable</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="Colorbar.update_bruteforce"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.Colorbar.update_bruteforce">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;update_normal&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">update_bruteforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mappable</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Destroy and rebuild the colorbar.  This is</span>
 <span class="sd">        intended to become obsolete, and will probably be</span>
 <span class="sd">        deprecated and then removed.  It is not called when</span>
 <span class="sd">        the pyplot.colorbar function or the Figure.colorbar</span>
 <span class="sd">        method are used to create the colorbar.</span>
-
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># We are using an ugly brute-force method: clearing and</span>
         <span class="c1"># redrawing the whole thing.  The problem is that if any</span>
         <span class="c1"># properties have been changed by methods other than the</span>
@@ -1422,10 +1417,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># clearing the axes will delete outline, patch, solids, and lines:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">patch</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.edgecolor&#39;</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">],</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">clip_box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clip_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.facecolor&#39;</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solids</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dividers</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_normal</span><span class="p">(</span><span class="n">mappable</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_all</span><span class="p">()</span>
@@ -1443,10 +1446,11 @@
 
 <div class="viewcode-block" id="Colorbar.remove"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.Colorbar.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Remove this colorbar from the figure.  If the colorbar was created with</span>
-<span class="sd">        ``use_gridspec=True`` then restore the gridspec to its previous value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Remove this colorbar from the figure.</span>
 
+<span class="sd">        If the colorbar was created with ``use_gridspec=True`` the previous</span>
+<span class="sd">        gridspec is restored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ColorbarBase</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mappable</span><span class="o">.</span><span class="n">callbacksSM</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mappable</span><span class="o">.</span><span class="n">colorbar_cid</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mappable</span><span class="o">.</span><span class="n">colorbar</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1469,30 +1473,43 @@
             <span class="n">ax</span><span class="o">.</span><span class="n">set_subplotspec</span><span class="p">(</span><span class="n">subplotspec</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="make_axes"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.make_axes">[docs]</a><span class="nd">@docstring</span><span class="o">.</span><span class="n">Substitution</span><span class="p">(</span><span class="n">make_axes_kw_doc</span><span class="p">)</span>
+<div class="viewcode-block" id="make_axes"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.make_axes">[docs]</a><span class="nd">@docstring</span><span class="o">.</span><span class="n">Substitution</span><span class="p">(</span><span class="n">_make_axes_param_doc</span><span class="p">,</span> <span class="n">_make_axes_other_param_doc</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">make_axes</span><span class="p">(</span><span class="n">parents</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
               <span class="n">shrink</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Resize and reposition parent axes, and return a child</span>
-<span class="sd">    axes suitable for a colorbar.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create an `~.axes.Axes` suitable for a colorbar.</span>
 
-<span class="sd">    Keyword arguments may include the following (with defaults):</span>
+<span class="sd">    The axes is placed in the figure of the *parents* axes, by resizing and</span>
+<span class="sd">    repositioning *parents*.</span>
 
-<span class="sd">        location : [None|&#39;left&#39;|&#39;right&#39;|&#39;top&#39;|&#39;bottom&#39;]</span>
-<span class="sd">            The position, relative to **parents**, where the colorbar axes</span>
-<span class="sd">            should be created. If None, the value will either come from the</span>
-<span class="sd">            given ``orientation``, else it will default to &#39;right&#39;.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parents : `~.axes.Axes` or list of `~.axes.Axes`</span>
+<span class="sd">        The Axes to use as parents for placing the colorbar.</span>
 
-<span class="sd">        orientation :  [None|&#39;vertical&#39;|&#39;horizontal&#39;]</span>
-<span class="sd">            The orientation of the colorbar. Typically, this keyword shouldn&#39;t</span>
-<span class="sd">            be used, as it can be derived from the ``location`` keyword.</span>
+<span class="sd">    location : None or {&#39;left&#39;, &#39;right&#39;, &#39;top&#39;, &#39;bottom&#39;}</span>
+<span class="sd">        The position, relative to *parents*, where the colorbar axes</span>
+<span class="sd">        should be created. If None, the value will either come from the</span>
+<span class="sd">        given ``orientation``, else it will default to &#39;right&#39;.</span>
+
+<span class="sd">    orientation : None or {&#39;vertical&#39;, &#39;horizontal&#39;}</span>
+<span class="sd">        The orientation of the colorbar. Typically, this keyword shouldn&#39;t</span>
+<span class="sd">        be used, as it can be derived from the ``location`` keyword.</span>
 
 <span class="sd">    %s</span>
 
-<span class="sd">    Returns (cax, kw), the child axes and the reduced kw dictionary to be</span>
-<span class="sd">    passed when creating the colorbar instance.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cax : `~.axes.Axes`</span>
+<span class="sd">        The child axes.</span>
+<span class="sd">    kw : dict</span>
+<span class="sd">        The reduced keyword dictionary to be passed when creating the colorbar</span>
+<span class="sd">        instance.</span>
 
+<span class="sd">    Other Parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    %s</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;bottom&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">orientation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;position and orientation are mutually exclusive. &#39;</span>
@@ -1625,40 +1642,52 @@
     <span class="k">return</span> <span class="n">cax</span><span class="p">,</span> <span class="n">kw</span></div>
 
 
-<div class="viewcode-block" id="make_axes_gridspec"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.make_axes_gridspec">[docs]</a><span class="nd">@docstring</span><span class="o">.</span><span class="n">Substitution</span><span class="p">(</span><span class="n">make_axes_kw_doc</span><span class="p">)</span>
+<div class="viewcode-block" id="make_axes_gridspec"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.make_axes_gridspec">[docs]</a><span class="nd">@docstring</span><span class="o">.</span><span class="n">Substitution</span><span class="p">(</span><span class="n">_make_axes_param_doc</span><span class="p">,</span> <span class="n">_make_axes_other_param_doc</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">make_axes_gridspec</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Resize and reposition a parent axes, and return a child axes</span>
-<span class="sd">    suitable for a colorbar. This function is similar to</span>
-<span class="sd">    make_axes. Prmary differences are</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a `~.SubplotBase` suitable for a colorbar.</span>
 
-<span class="sd">     * *make_axes_gridspec* only handles the *orientation* keyword</span>
-<span class="sd">       and cannot handle the &quot;location&quot; keyword.</span>
+<span class="sd">    The axes is placed in the figure of the *parent* axes, by resizing and</span>
+<span class="sd">    repositioning *parent*.</span>
 
-<span class="sd">     * *make_axes_gridspec* should only be used with a subplot parent.</span>
+<span class="sd">    This function is similar to `.make_axes`. Primary differences are</span>
 
-<span class="sd">     * *make_axes* creates an instance of Axes. *make_axes_gridspec*</span>
-<span class="sd">        creates an instance of Subplot.</span>
+<span class="sd">    - `.make_axes_gridspec` only handles the *orientation* keyword</span>
+<span class="sd">      and cannot handle the *location* keyword.</span>
 
-<span class="sd">     * *make_axes* updates the position of the</span>
-<span class="sd">        parent. *make_axes_gridspec* replaces the grid_spec attribute</span>
-<span class="sd">        of the parent with a new one.</span>
+<span class="sd">    - `.make_axes_gridspec` should only be used with a `.SubplotBase` parent.</span>
 
-<span class="sd">    While this function is meant to be compatible with *make_axes*,</span>
+<span class="sd">    - `.make_axes` creates an `~.axes.Axes`; `.make_axes_gridspec` creates a</span>
+<span class="sd">      `.SubplotBase`.</span>
+
+<span class="sd">    - `.make_axes` updates the position of the parent.  `.make_axes_gridspec`</span>
+<span class="sd">      replaces the ``grid_spec`` attribute of the parent with a new one.</span>
+
+<span class="sd">    While this function is meant to be compatible with `.make_axes`,</span>
 <span class="sd">    there could be some minor differences.</span>
 
-<span class="sd">    Keyword arguments may include the following (with defaults):</span>
-
-<span class="sd">        *orientation*</span>
-<span class="sd">            &#39;vertical&#39; or &#39;horizontal&#39;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parent : `~.axes.Axes`</span>
+<span class="sd">        The Axes to use as parent for placing the colorbar.</span>
 
 <span class="sd">    %s</span>
 
-<span class="sd">    All but the first of these are stripped from the input kw set.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cax : `~.axes.SubplotBase`</span>
+<span class="sd">        The child axes.</span>
+<span class="sd">    kw : dict</span>
+<span class="sd">        The reduced keyword dictionary to be passed when creating the colorbar</span>
+<span class="sd">        instance.</span>
 
-<span class="sd">    Returns (cax, kw), the child axes and the reduced kw dictionary to be</span>
-<span class="sd">    passed when creating the colorbar instance.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    Other Parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    orientation : {&#39;vertical&#39;, &#39;horizontal&#39;}, default: &#39;vertical&#39;</span>
+<span class="sd">        The orientation of the colorbar.</span>
+
+<span class="sd">    %s</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">orientation</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;orientation&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
     <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;ticklocation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span>
@@ -1716,15 +1745,13 @@
 
 <div class="viewcode-block" id="ColorbarPatch"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.ColorbarPatch">[docs]</a><span class="k">class</span> <span class="nc">ColorbarPatch</span><span class="p">(</span><span class="n">Colorbar</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A Colorbar which is created using :class:`~matplotlib.patches.Patch`</span>
-<span class="sd">    rather than the default :func:`~matplotlib.axes.pcolor`.</span>
-
-<span class="sd">    It uses a list of Patch instances instead of a</span>
-<span class="sd">    :class:`~matplotlib.collections.PatchCollection` because the</span>
-<span class="sd">    latter does not allow the hatch pattern to vary among the</span>
+<span class="sd">    A Colorbar that uses a list of `~.patches.Patch` instances rather than the</span>
+<span class="sd">    default `~.collections.PatchCollection` created by `~.axes.Axes.pcolor`,</span>
+<span class="sd">    because the latter does not allow the hatch pattern to vary among the</span>
 <span class="sd">    members of the collection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">mappable</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">mappable</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="c1"># we do not want to override the behaviour of solids</span>
         <span class="c1"># so add a new attribute which will be a list of the</span>
         <span class="c1"># colored patches in the colorbar</span>
@@ -1733,7 +1760,7 @@
 
     <span class="k">def</span> <span class="nf">_add_solids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draw the colors using :class:`~matplotlib.patches.Patch`;</span>
+<span class="sd">        Draw the colors using `~matplotlib.patches.Patch`;</span>
 <span class="sd">        optionally add separators.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n_segments</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
@@ -1782,11 +1809,28 @@
 
 <div class="viewcode-block" id="colorbar_factory"><a class="viewcode-back" href="../../api/colorbar_api.html#matplotlib.colorbar.colorbar_factory">[docs]</a><span class="k">def</span> <span class="nf">colorbar_factory</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">mappable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a colorbar on the given axes for the given mappable.</span>
+<span class="sd">    Create a colorbar on the given axes for the given mappable.</span>
 
-<span class="sd">    Typically, for automatic colorbar placement given only a mappable use</span>
-<span class="sd">    :meth:`~matplotlib.figure.Figure.colorbar`.</span>
+<span class="sd">    .. note::</span>
+<span class="sd">        This is a low-level function to turn an existing axes into a colorbar</span>
+<span class="sd">        axes.  Typically, you&#39;ll want to use `~.Figure.colorbar` instead, which</span>
+<span class="sd">        automatically handles creation and placement of a suitable axes as</span>
+<span class="sd">        well.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cax : `~matplotlib.axes.Axes`</span>
+<span class="sd">        The `~.axes.Axes` to turn into a colorbar.</span>
+<span class="sd">    mappable : `~matplotlib.cm.ScalarMappable`</span>
+<span class="sd">        The mappable to be described by the colorbar.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments are passed to the respective colorbar class.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    `.Colorbar` or `.ColorbarPatch`</span>
+<span class="sd">        The created colorbar instance. `.ColorbarPatch` is only used if</span>
+<span class="sd">        *mappable* is a `.ContourSet` with hatches.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if the given mappable is a contourset with any hatching, use</span>
     <span class="c1"># ColorbarPatch else use Colorbar</span>
@@ -1796,7 +1840,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">cb</span> <span class="o">=</span> <span class="n">Colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">mappable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="n">cid</span> <span class="o">=</span> <span class="n">mappable</span><span class="o">.</span><span class="n">callbacksSM</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;changed&#39;</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">on_mappable_changed</span><span class="p">)</span>
+    <span class="n">cid</span> <span class="o">=</span> <span class="n">mappable</span><span class="o">.</span><span class="n">callbacksSM</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;changed&#39;</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">update_normal</span><span class="p">)</span>
     <span class="n">mappable</span><span class="o">.</span><span class="n">colorbar</span> <span class="o">=</span> <span class="n">cb</span>
     <span class="n">mappable</span><span class="o">.</span><span class="n">colorbar_cid</span> <span class="o">=</span> <span class="n">cid</span>
 
@@ -1811,12 +1855,12 @@
     </div>
 <footer>
     <div class="footer">
-    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2020 The Matplotlib development team.
 <br />
-    Last updated on Jun 17, 2020.
+    Last updated on Jul 17, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.
-Doc version v3.2.2-2-g137edd56a.
+<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+Doc version v3.3.0-3-g8994f1b60.
     </div>
 </footer>
 <script>

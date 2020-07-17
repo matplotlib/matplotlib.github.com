@@ -18,8 +18,8 @@ Mapping toolkits
 
 Basemap
 =======
-`Basemap <http://matplotlib.org/basemap>`_ plots data on map projections, with
-continental and political boundaries.
+`Basemap <https://matplotlib.org/basemap/>`_ plots data on map projections,
+with continental and political boundaries.
 
 .. image:: /_static/basemap_contour1.png
     :height: 400px
@@ -68,7 +68,7 @@ to python based on Matplotlib.
 holoviews
 =========
 `holoviews <http://holoviews.org>`_ makes it easier to visualize data
-interactively, especially in a `Jupyter notebook <http://jupyter.org>`_, by
+interactively, especially in a `Jupyter notebook <https://jupyter.org>`_, by
 providing a set of declarative plotting objects that store your data and
 associated metadata.  Your data is then immediately visualizable alongside or
 overlaid with other data, either statically or with automatically provided
@@ -120,8 +120,8 @@ diagrams.
 
 mpl-probscale
 =============
-`mpl-probscale <http://matplotlib.org/mpl-probscale/>`_ is a small extension
-that allows Matplotlib users to specify probabilty scales. Simply importing the
+`mpl-probscale <https://matplotlib.org/mpl-probscale/>`_ is a small extension
+that allows Matplotlib users to specify probability scales. Simply importing the
 ``probscale`` module registers the scale with Matplotlib, making it accessible
 via e.g., ``ax.set_xscale('prob')`` or ``plt.yscale('prob')``.
 
@@ -194,6 +194,36 @@ Yellowbrick
 .. image:: /_static/yellowbrick.png
     :height: 400px
 
+Animations
+**********
+
+animatplot
+==========
+`animatplot <https://animatplot.readthedocs.io/>`_ is a library for
+producing interactive animated plots with the goal of making production of
+animated plots almost as easy as static ones.
+
+.. image:: /_static/animatplot.png
+
+For an animated version of the above picture and more examples, see the
+`animatplot gallery. <https://animatplot.readthedocs.io/en/stable/gallery.html>`_
+
+gif
+===
+`gif <https://github.com/maxhumber/gif/>`_ is an ultra lightweight animated gif API.
+
+.. image:: /_static/gif_attachment_example.png
+
+numpngw
+=======
+
+`numpngw <https://pypi.org/project/numpngw/>`_  provides functions for writing
+NumPy arrays to PNG and animated PNG files.  It also includes the class
+``AnimatedPNGWriter`` that can be used to save a Matplotlib animation as an
+animated PNG file.  See the example on the PyPI page or at the ``numpngw``
+`github repository <https://github.com/WarrenWeckesser/numpngw>`_.
+
+.. image:: /_static/numpngw_animated_example.png
 
 Interactivity
 *************
@@ -208,17 +238,6 @@ MplDataCursor
 `MplDataCursor <https://github.com/joferkington/mpldatacursor>`_ is a toolkit
 written by Joe Kington to provide interactive "data cursors" (clickable
 annotation boxes) for Matplotlib.
-
-animatplot
-==========
-`animatplot <https://animatplot.readthedocs.io/>`_ is a library for
-producing interactive animated plots with the goal of making production of
-animated plots almost as easy as static ones.
-
-.. image:: /_static/animatplot.png
-
-For an animated version of the above picture and more examples, see the
-`animatplot gallery. <https://animatplot.readthedocs.io/en/stable/gallery.html>`_
 
 Rendering backends
 ******************
@@ -263,17 +282,6 @@ border, and logo.
 .. image:: /_static/mpl_template_example.png
     :height: 330px
 
-numpngw
-=======
-
-`numpngw <https://pypi.org/project/numpngw/>`_  provides functions for writing
-NumPy arrays to PNG and animated PNG files.  It also includes the class
-``AnimatedPNGWriter`` that can be used to save a Matplotlib animation as an
-animated PNG file.  See the example on the PyPI page or at the ``numpngw``
-`github repository <https://github.com/WarrenWeckesser/numpngw>`_.
-
-.. image:: /_static/numpngw_animated_example.png
-
 blume
 =====
 
@@ -303,8 +311,8 @@ sviewgui
 `sviewgui <https://pypi.org/project/sviewgui/>`_ is a PyQt-based GUI for
 visualisation of data from csv files or `pandas.DataFrame`\s. Main features:
 
-- Scatter, line, density, histgram, and box plot types
-- Settings for the marker size, line width, number of bins of histgram,
+- Scatter, line, density, histogram, and box plot types
+- Settings for the marker size, line width, number of bins of histogram,
   color map (from cmocean)
 - Save figure as editable PDF
 - Code of the plotted graph is available so that it can be reused and modified

@@ -6,32 +6,31 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>matplotlib.font_manager &#8212; Matplotlib 3.2.2 documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.2-2-g137edd56a" type="text/css" />
+    <title>matplotlib.font_manager &#8212; Matplotlib 3.3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.3.0-3-g8994f1b60" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.2.2 documentation"
+          title="Search within Matplotlib 3.3.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
 
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-<link rel="top" title="Matplotlib 3.2.2 documentation" href="#" />
-    <link rel="canonical" href="https://matplotlib.org/3.2.2/_modules/matplotlib/font_manager.html" />
+<link rel="top" title="Matplotlib 3.3.0 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/3.3.0/_modules/matplotlib/font_manager.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -49,7 +48,7 @@
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
     <a href="../../index.html">
-        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.2.2</span></div>
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.3.0</span></div>
         <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
     <!-- The "Fork me on github" ribbon -->
@@ -82,8 +81,7 @@
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../contents.html">contents</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">matplotlib.font_manager</a></li> 
+          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li> 
       </ul>
     </div>
 
@@ -135,22 +133,23 @@
 <span class="c1">#   - setWeights function needs improvement</span>
 <span class="c1">#   - &#39;light&#39; is an invalid weight value, remove it.</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Number</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Timer</span>
+    <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Timer</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">dummy_threading</span> <span class="kn">import</span> <span class="n">Timer</span>
+    <span class="kn">from</span> <span class="nn">dummy_threading</span> <span class="k">import</span> <span class="n">Timer</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">afm</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">ft2font</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib.fontconfig_pattern</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">afm</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">ft2font</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib.fontconfig_pattern</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">parse_fontconfig_pattern</span><span class="p">,</span> <span class="n">generate_fontconfig_pattern</span><span class="p">)</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -198,6 +197,33 @@
     <span class="s1">&#39;extra bold&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">,</span>
     <span class="s1">&#39;black&#39;</span><span class="p">:</span>      <span class="mi">900</span><span class="p">,</span>
 <span class="p">}</span>
+<span class="n">_weight_regexes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># From fontconfig&#39;s FcFreeTypeQueryFaceInternal; not the same as</span>
+    <span class="c1"># weight_dict!</span>
+    <span class="p">(</span><span class="s2">&quot;thin&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;extralight&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;ultralight&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;demilight&quot;</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;semilight&quot;</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;light&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>  <span class="c1"># Needs to come *after* demi/semilight!</span>
+    <span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">,</span> <span class="mi">380</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;regular&quot;</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;demibold&quot;</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;demi&quot;</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;semibold&quot;</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;extrabold&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;superbold&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;ultrabold&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>  <span class="c1"># Needs to come *after* extra/super/ultrabold!</span>
+    <span class="p">(</span><span class="s2">&quot;ultrablack&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;superblack&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;extrablack&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+    <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bultra&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="mi">900</span><span class="p">),</span>  <span class="c1"># Needs to come *after* ultra/super/extrablack!</span>
+    <span class="p">(</span><span class="s2">&quot;heavy&quot;</span><span class="p">,</span> <span class="mi">900</span><span class="p">),</span>
+<span class="p">]</span>
 <span class="n">font_family_aliases</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;serif&#39;</span><span class="p">,</span>
     <span class="s1">&#39;sans-serif&#39;</span><span class="p">,</span>
@@ -207,6 +233,8 @@
     <span class="s1">&#39;monospace&#39;</span><span class="p">,</span>
     <span class="s1">&#39;sans&#39;</span><span class="p">,</span>
 <span class="p">}</span>
+
+
 <span class="c1"># OS Font paths</span>
 <span class="n">MSFolders</span> <span class="o">=</span> \
     <span class="sa">r</span><span class="s1">&#39;Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders&#39;</span>
@@ -288,7 +316,7 @@
 
 <span class="k">def</span> <span class="nf">_win32RegistryFonts</span><span class="p">(</span><span class="n">reg_domain</span><span class="p">,</span> <span class="n">base_dir</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Searches for fonts in the Windows registry.</span>
+<span class="sd">    Search for fonts in the Windows registry.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -365,25 +393,9 @@
     <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">fontext</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="OSXInstalledFonts"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.OSXInstalledFonts">[docs]</a><span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">OSXInstalledFonts</span><span class="p">(</span><span class="n">directories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontext</span><span class="o">=</span><span class="s1">&#39;ttf&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get list of font files on OS X.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">directories</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">directories</span> <span class="o">=</span> <span class="n">OSXFontDirectories</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">path</span>
-            <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">directories</span>
-            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">list_fonts</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">get_fontext_synonyms</span><span class="p">(</span><span class="n">fontext</span><span class="p">))]</span></div>
-
-
 <span class="nd">@lru_cache</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">_call_fc_list</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Cache and list the font filenames known to `fc-list`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Delay the warning by 5s.</span>
-    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-        <span class="s1">&#39;Matplotlib is building the font cache using fc-list. &#39;</span>
-        <span class="s1">&#39;This may take a moment.&#39;</span><span class="p">))</span>
-    <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cache and list the font filenames known to `fc-list`.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;--format&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;fc-list&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">]):</span>
             <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>  <span class="c1"># fontconfig 2.7 implemented --format.</span>
@@ -392,14 +404,11 @@
         <span class="n">out</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;fc-list&#39;</span><span class="p">,</span> <span class="s1">&#39;--format=%</span><span class="si">{file}</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">])</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[]</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">timer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">fsdecode</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)]</span>
 
 
 <div class="viewcode-block" id="get_fontconfig_fonts"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.get_fontconfig_fonts">[docs]</a><span class="k">def</span> <span class="nf">get_fontconfig_fonts</span><span class="p">(</span><span class="n">fontext</span><span class="o">=</span><span class="s1">&#39;ttf&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List the font filenames known to `fc-list` having the given extension.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;List font filenames known to `fc-list` having the given extension.&quot;&quot;&quot;</span>
     <span class="n">fontext</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">ext</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">get_fontext_synonyms</span><span class="p">(</span><span class="n">fontext</span><span class="p">)]</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">fname</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">_call_fc_list</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">fontext</span><span class="p">]</span></div>
@@ -441,7 +450,7 @@
 <span class="sd">    A class for storing Font properties.  It is used when populating</span>
 <span class="sd">    the font lookup dictionary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">fname</span>  <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                  <span class="n">name</span>   <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                  <span class="n">style</span>  <span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span>
@@ -461,7 +470,7 @@
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;Font &#39;</span><span class="si">%s</span><span class="s2">&#39; (</span><span class="si">%s</span><span class="s2">) </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">variant</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stretch</span><span class="p">)</span></div>
@@ -487,14 +496,21 @@
     <span class="c1">#  Styles are: italic, oblique, and normal (default)</span>
 
     <span class="n">sfnt</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_sfnt</span><span class="p">()</span>
+    <span class="n">mac_key</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># platform: macintosh</span>
+               <span class="mi">0</span><span class="p">,</span>  <span class="c1"># id: roman</span>
+               <span class="mi">0</span><span class="p">)</span>  <span class="c1"># langid: english</span>
+    <span class="n">ms_key</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># platform: microsoft</span>
+              <span class="mi">1</span><span class="p">,</span>  <span class="c1"># id: unicode_cs</span>
+              <span class="mh">0x0409</span><span class="p">)</span>  <span class="c1"># langid: english_united_states</span>
+
     <span class="c1"># These tables are actually mac_roman-encoded, but mac_roman support may be</span>
     <span class="c1"># missing in some alternative Python implementations and we are only going</span>
     <span class="c1"># to look for ASCII substrings, where any ASCII-compatible encoding works</span>
     <span class="c1"># - or big-endian UTF-16, since important Microsoft fonts use that.</span>
-    <span class="n">sfnt2</span> <span class="o">=</span> <span class="p">(</span><span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>      <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span>
-             <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mh">0x0409</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf_16_be&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-    <span class="n">sfnt4</span> <span class="o">=</span> <span class="p">(</span><span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>      <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span>
-             <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mh">0x0409</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf_16_be&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">sfnt2</span> <span class="o">=</span> <span class="p">(</span><span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">mac_key</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span>
+             <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">ms_key</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf_16_be&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">sfnt4</span> <span class="o">=</span> <span class="p">(</span><span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">mac_key</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span>
+             <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">ms_key</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf_16_be&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 
     <span class="k">if</span> <span class="n">sfnt4</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;oblique&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">style</span> <span class="o">=</span> <span class="s1">&#39;oblique&#39;</span>
@@ -515,10 +531,47 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">variant</span> <span class="o">=</span> <span class="s1">&#39;normal&#39;</span>
 
-    <span class="k">if</span> <span class="n">font</span><span class="o">.</span><span class="n">style_flags</span> <span class="o">&amp;</span> <span class="n">ft2font</span><span class="o">.</span><span class="n">BOLD</span><span class="p">:</span>
-        <span class="n">weight</span> <span class="o">=</span> <span class="mi">700</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">weight</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">weight_dict</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">sfnt4</span><span class="p">),</span> <span class="mi">400</span><span class="p">)</span>
+    <span class="c1"># The weight-guessing algorithm is directly translated from fontconfig</span>
+    <span class="c1"># 2.13.1&#39;s FcFreeTypeQueryFaceInternal (fcfreetype.c).</span>
+    <span class="n">wws_subfamily</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">typographic_subfamily</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">font_subfamily</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">mac_key</span><span class="p">,</span> <span class="n">wws_subfamily</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">),</span>
+        <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">mac_key</span><span class="p">,</span> <span class="n">typographic_subfamily</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">),</span>
+        <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">mac_key</span><span class="p">,</span> <span class="n">font_subfamily</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">),</span>
+        <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">ms_key</span><span class="p">,</span> <span class="n">wws_subfamily</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-16-be&#39;</span><span class="p">),</span>
+        <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">ms_key</span><span class="p">,</span> <span class="n">typographic_subfamily</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-16-be&#39;</span><span class="p">),</span>
+        <span class="n">sfnt</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="o">*</span><span class="n">ms_key</span><span class="p">,</span> <span class="n">font_subfamily</span><span class="p">),</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-16-be&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">styles</span><span class="p">)]</span> <span class="ow">or</span> <span class="p">[</span><span class="n">font</span><span class="o">.</span><span class="n">style_name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_weight</span><span class="p">():</span>  <span class="c1"># From fontconfig&#39;s FcFreeTypeQueryFaceInternal.</span>
+        <span class="c1"># OS/2 table weight.</span>
+        <span class="n">os2</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_sfnt_table</span><span class="p">(</span><span class="s2">&quot;OS/2&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os2</span> <span class="ow">and</span> <span class="n">os2</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0xffff</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">os2</span><span class="p">[</span><span class="s2">&quot;usWeightClass&quot;</span><span class="p">]</span>
+        <span class="c1"># PostScript font info weight.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ps_font_info_weight</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">get_ps_font_info</span><span class="p">()[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">regex</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">_weight_regexes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">ps_font_info_weight</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">weight</span>
+        <span class="c1"># Style name weight.</span>
+        <span class="k">for</span> <span class="n">style</span> <span class="ow">in</span> <span class="n">styles</span><span class="p">:</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">regex</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">_weight_regexes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">weight</span>
+        <span class="k">if</span> <span class="n">font</span><span class="o">.</span><span class="n">style_flags</span> <span class="o">&amp;</span> <span class="n">ft2font</span><span class="o">.</span><span class="n">BOLD</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">700</span>  <span class="c1"># &quot;bold&quot;</span>
+        <span class="k">return</span> <span class="mi">500</span>  <span class="c1"># &quot;medium&quot;, not &quot;regular&quot;!</span>
+
+    <span class="n">weight</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">get_weight</span><span class="p">())</span>
 
     <span class="c1">#  Stretch can be absolute and relative</span>
     <span class="c1">#  Absolute stretches are: ultra-condensed, extra-condensed, condensed,</span>
@@ -621,7 +674,7 @@
 <div class="viewcode-block" id="createFontList"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.createFontList">[docs]</a><span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.2&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;FontManager.addfont&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">createFontList</span><span class="p">(</span><span class="n">fontfiles</span><span class="p">,</span> <span class="n">fontext</span><span class="o">=</span><span class="s1">&#39;ttf&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A function to create a font lookup list.  The default is to create</span>
+<span class="sd">    Create a font lookup list.  The default is to create</span>
 <span class="sd">    a list of TrueType fonts.  An AFM font list can optionally be</span>
 <span class="sd">    created.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -710,8 +763,10 @@
 
 <span class="sd">      sans-serif, normal, normal, normal, normal, scalable.</span>
 
-<span class="sd">    Alternatively, a font may be specified using an absolute path to a</span>
-<span class="sd">    .ttf file, by using the *fname* kwarg.</span>
+<span class="sd">    Alternatively, a font may be specified using the absolute path to a font</span>
+<span class="sd">    file, by using the *fname* kwarg.  However, in this case, it is typically</span>
+<span class="sd">    simpler to just pass the path (as a `pathlib.Path`, not a `str`) to the</span>
+<span class="sd">    *font* kwarg of the `.Text` object.</span>
 
 <span class="sd">    The preferred usage of font sizes is to use the relative values,</span>
 <span class="sd">    e.g.,  &#39;large&#39;, instead of absolute font sizes, e.g., 12.  This</span>
@@ -732,7 +787,7 @@
 <span class="sd">    fontconfig.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">family</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">style</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">variant</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -752,12 +807,8 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">family</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="c1"># Treat family as a fontconfig pattern if it is the only</span>
             <span class="c1"># parameter provided.</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">style</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span>
-                <span class="n">variant</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span>
-                <span class="n">weight</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span>
-                <span class="n">stretch</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span>
-                <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span>
-                <span class="n">fname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">style</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">variant</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">weight</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span>
+                    <span class="n">stretch</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_fontconfig_pattern</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
                 <span class="k">return</span>
 
@@ -769,10 +820,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_parse_fontconfig_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">parse_fontconfig_pattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_any</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generic constructor which can build a `.FontProperties` from any of the</span>
+<span class="sd">        following:</span>
 
-    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="sd">        - a `.FontProperties`: it is passed through as is;</span>
+<span class="sd">        - `None`: a `.FontProperties` using rc values is used;</span>
+<span class="sd">        - an `os.PathLike`: it is used as path to the font file;</span>
+<span class="sd">        - a `str`: it is parsed as a fontconfig pattern;</span>
+<span class="sd">        - a `dict`: it is passed as ``**kwargs`` to `.FontProperties`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">arg</span>
+        <span class="k">elif</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">arg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_family</span><span class="p">()),</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">get_slant</span><span class="p">(),</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">get_variant</span><span class="p">(),</span>
@@ -782,10 +853,10 @@
              <span class="bp">self</span><span class="o">.</span><span class="n">get_file</span><span class="p">())</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fontconfig_pattern</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FontProperties.get_family"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontProperties.get_family">[docs]</a>    <span class="k">def</span> <span class="nf">get_family</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -861,7 +932,7 @@
 <span class="sd">        is CSS parlance), such as: &#39;serif&#39;, &#39;sans-serif&#39;, &#39;cursive&#39;,</span>
 <span class="sd">        &#39;fantasy&#39;, or &#39;monospace&#39;, a real font name or a list of real</span>
 <span class="sd">        font names.  Real font names are not supported when</span>
-<span class="sd">        `text.usetex` is `True`.</span>
+<span class="sd">        :rc:`text.usetex` is `True`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">family</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">family</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span>
@@ -918,9 +989,9 @@
             <span class="n">stretch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">stretch</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">stretch</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">stretch</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">stretch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stretch_dict</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stretch is invalid&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stretch is invalid&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stretch</span> <span class="o">=</span> <span class="n">stretch</span></div>
 
 <div class="viewcode-block" id="FontProperties.set_size"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontProperties.set_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
@@ -936,10 +1007,10 @@
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">scale</span> <span class="o">=</span> <span class="n">font_scalings</span><span class="p">[</span><span class="n">size</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Size is invalid. Valid font size are &quot;</span>
-                    <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">font_scalings</span><span class="p">)))</span>
+                    <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">font_scalings</span><span class="p">)))</span> <span class="kn">from</span> <span class="nn">err</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">size</span> <span class="o">=</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">FontManager</span><span class="o">.</span><span class="n">get_default_size</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
@@ -962,7 +1033,7 @@
 <span class="sd">        This support does not depend on fontconfig; we are merely borrowing its</span>
 <span class="sd">        pattern syntax for use here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_fontconfig_pattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">parse_fontconfig_pattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
                 <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;set_&quot;</span> <span class="o">+</span> <span class="n">key</span><span class="p">)(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1013,12 +1084,16 @@
             <span class="n">r</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">get_data_path</span><span class="p">(),</span> <span class="n">r</span><span class="o">.</span><span class="n">fname</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">r</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;don&#39;t know how to deserialize __class__=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">cls</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know how to deserialize __class__=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">cls</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="json_dump"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.json_dump">[docs]</a><span class="k">def</span> <span class="nf">json_dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dump `FontManager` *data* as JSON to the file named *filename*.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    json_load</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1026,11 +1101,10 @@
 <span class="sd">    shipped with Matplotlib) are stored relative to that data path (to remain</span>
 <span class="sd">    valid across virtualenvs).</span>
 
-<span class="sd">    See Also</span>
-<span class="sd">    --------</span>
-<span class="sd">    json_load</span>
+<span class="sd">    This function temporarily locks the output file to prevent multiple</span>
+<span class="sd">    processes from overwriting one another&#39;s output.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_lock_path</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">_JSONEncoder</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1057,19 +1131,18 @@
 
 <div class="viewcode-block" id="FontManager"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager">[docs]</a><span class="k">class</span> <span class="nc">FontManager</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    On import, the :class:`FontManager` singleton instance creates a</span>
-<span class="sd">    list of TrueType fonts based on the font properties: name, style,</span>
-<span class="sd">    variant, weight, stretch, and size.  The :meth:`findfont` method</span>
-<span class="sd">    does a nearest neighbor search to find the font that most closely</span>
-<span class="sd">    matches the specification.  If no good enough match is found, a</span>
-<span class="sd">    default font is returned.</span>
+<span class="sd">    On import, the `FontManager` singleton instance creates a list of ttf and</span>
+<span class="sd">    afm fonts and caches their `FontProperties`.  The `FontManager.findfont`</span>
+<span class="sd">    method does a nearest neighbor search to find the font that most closely</span>
+<span class="sd">    matches the specification.  If no good enough match is found, the default</span>
+<span class="sd">    font is returned.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Increment this version number whenever the font cache data</span>
     <span class="c1"># format or behavior has changed and requires a existing font</span>
     <span class="c1"># cache files to be rebuilt.</span>
-    <span class="n">__version__</span> <span class="o">=</span> <span class="mi">310</span>
+    <span class="n">__version__</span> <span class="o">=</span> <span class="mi">330</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__version__</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__default_weight</span> <span class="o">=</span> <span class="n">weight</span>
@@ -1087,6 +1160,9 @@
                     <span class="n">paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ttfpath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ttfpath</span><span class="p">)</span>
+                <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span>
+                    <span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">pathname</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s2">&quot;environment variable&quot;</span><span class="p">,</span>
+                    <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;FontManager.addfont()&quot;</span><span class="p">)</span>
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;font search path </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">paths</span><span class="p">))</span>
         <span class="c1">#  Load TrueType fonts and create font dictionary.</span>
 
@@ -1096,16 +1172,24 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">afmlist</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ttflist</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">fontext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;afm&quot;</span><span class="p">,</span> <span class="s2">&quot;ttf&quot;</span><span class="p">]:</span>
-            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span><span class="o">*</span><span class="n">findSystemFonts</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">fontext</span><span class="o">=</span><span class="n">fontext</span><span class="p">),</span>
-                         <span class="o">*</span><span class="n">findSystemFonts</span><span class="p">(</span><span class="n">fontext</span><span class="o">=</span><span class="n">fontext</span><span class="p">)]:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">addfont</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                    <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Failed to open font file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                    <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Failed to extract font properties from </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                              <span class="n">path</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+
+        <span class="c1"># Delay the warning by 5s.</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Matplotlib is building the font cache; this may take a moment.&#39;</span><span class="p">))</span>
+        <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fontext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;afm&quot;</span><span class="p">,</span> <span class="s2">&quot;ttf&quot;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span><span class="o">*</span><span class="n">findSystemFonts</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">fontext</span><span class="o">=</span><span class="n">fontext</span><span class="p">),</span>
+                             <span class="o">*</span><span class="n">findSystemFonts</span><span class="p">(</span><span class="n">fontext</span><span class="o">=</span><span class="n">fontext</span><span class="p">)]:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">addfont</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Failed to open font file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Failed to extract font properties from </span><span class="si">%s</span><span class="s2">: &quot;</span>
+                                  <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FontManager.addfont"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.addfont">[docs]</a>    <span class="k">def</span> <span class="nf">addfont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1156,7 +1240,7 @@
     <span class="c1"># 0.0 (perfect match) and 1.0 (terrible match)</span>
 <div class="viewcode-block" id="FontManager.score_family"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.score_family">[docs]</a>    <span class="k">def</span> <span class="nf">score_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">families</span><span class="p">,</span> <span class="n">family2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a match score between the list of font families in</span>
+<span class="sd">        Return a match score between the list of font families in</span>
 <span class="sd">        *families* and the font family name *family2*.</span>
 
 <span class="sd">        An exact match at the head of the list returns 0.0.</span>
@@ -1189,7 +1273,7 @@
 
 <div class="viewcode-block" id="FontManager.score_style"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.score_style">[docs]</a>    <span class="k">def</span> <span class="nf">score_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">style1</span><span class="p">,</span> <span class="n">style2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a match score between *style1* and *style2*.</span>
+<span class="sd">        Return a match score between *style1* and *style2*.</span>
 
 <span class="sd">        An exact match returns 0.0.</span>
 
@@ -1206,7 +1290,7 @@
 
 <div class="viewcode-block" id="FontManager.score_variant"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.score_variant">[docs]</a>    <span class="k">def</span> <span class="nf">score_variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variant1</span><span class="p">,</span> <span class="n">variant2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a match score between *variant1* and *variant2*.</span>
+<span class="sd">        Return a match score between *variant1* and *variant2*.</span>
 
 <span class="sd">        An exact match returns 0.0, otherwise 1.0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1217,7 +1301,7 @@
 
 <div class="viewcode-block" id="FontManager.score_stretch"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.score_stretch">[docs]</a>    <span class="k">def</span> <span class="nf">score_stretch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stretch1</span><span class="p">,</span> <span class="n">stretch2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a match score between *stretch1* and *stretch2*.</span>
+<span class="sd">        Return a match score between *stretch1* and *stretch2*.</span>
 
 <span class="sd">        The result is the absolute value of the difference between the</span>
 <span class="sd">        CSS numeric values of *stretch1* and *stretch2*, normalized</span>
@@ -1235,7 +1319,7 @@
 
 <div class="viewcode-block" id="FontManager.score_weight"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.score_weight">[docs]</a>    <span class="k">def</span> <span class="nf">score_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight1</span><span class="p">,</span> <span class="n">weight2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a match score between *weight1* and *weight2*.</span>
+<span class="sd">        Return a match score between *weight1* and *weight2*.</span>
 
 <span class="sd">        The result is 0.0 if both weight1 and weight 2 are given as strings</span>
 <span class="sd">        and have the same value.</span>
@@ -1253,7 +1337,7 @@
 
 <div class="viewcode-block" id="FontManager.score_size"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.score_size">[docs]</a>    <span class="k">def</span> <span class="nf">score_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size1</span><span class="p">,</span> <span class="n">size2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a match score between *size1* and *size2*.</span>
+<span class="sd">        Return a match score between *size1* and *size2*.</span>
 
 <span class="sd">        If *size2* (the size specified in the font file) is &#39;scalable&#39;, this</span>
 <span class="sd">        function always returns 0.0, since any font size can be generated.</span>
@@ -1287,7 +1371,7 @@
 <span class="sd">            `.FontProperties` object or a string defining a</span>
 <span class="sd">            `fontconfig patterns`_.</span>
 
-<span class="sd">        fontext : {&#39;ttf&#39;, &#39;afm&#39;}, optional, default: &#39;ttf&#39;</span>
+<span class="sd">        fontext : {&#39;ttf&#39;, &#39;afm&#39;}, default: &#39;ttf&#39;</span>
 <span class="sd">            The extension of the font file:</span>
 
 <span class="sd">            - &#39;ttf&#39;: TrueType and OpenType fonts (.ttf, .ttc, .otf)</span>
@@ -1295,16 +1379,19 @@
 
 <span class="sd">        directory : str, optional</span>
 <span class="sd">            If given, only search this directory and its subdirectories.</span>
+
 <span class="sd">        fallback_to_default : bool</span>
 <span class="sd">            If True, will fallback to the default font family (usually</span>
 <span class="sd">            &quot;DejaVu Sans&quot; or &quot;Helvetica&quot;) if the first lookup hard-fails.</span>
+
 <span class="sd">        rebuild_if_missing : bool</span>
-<span class="sd">            Whether to rebuild the font cache and search again if no match</span>
-<span class="sd">            is found.</span>
+<span class="sd">            Whether to rebuild the font cache and search again if the first</span>
+<span class="sd">            match appears to point to a nonexisting font (i.e., the font cache</span>
+<span class="sd">            contains outdated entries).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        fontfile : str</span>
+<span class="sd">        str</span>
 <span class="sd">            The filename of the best matching font.</span>
 
 <span class="sd">        Notes</span>
@@ -1324,7 +1411,6 @@
 
 <span class="sd">        .. _fontconfig patterns:</span>
 <span class="sd">           https://www.freedesktop.org/software/fontconfig/fontconfig-user.html</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Pass the relevant rcParams (and the font manager, as `self`) to</span>
         <span class="c1"># _findfont_cached so to prevent using a stale cache entry after an</span>
@@ -1332,16 +1418,16 @@
         <span class="n">rc_params</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">rcParams</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span>
             <span class="s2">&quot;font.serif&quot;</span><span class="p">,</span> <span class="s2">&quot;font.sans-serif&quot;</span><span class="p">,</span> <span class="s2">&quot;font.cursive&quot;</span><span class="p">,</span> <span class="s2">&quot;font.fantasy&quot;</span><span class="p">,</span>
             <span class="s2">&quot;font.monospace&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_findfont_cached</span><span class="p">(</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_findfont_cached</span><span class="p">(</span>
             <span class="n">prop</span><span class="p">,</span> <span class="n">fontext</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">fallback_to_default</span><span class="p">,</span> <span class="n">rebuild_if_missing</span><span class="p">,</span>
-            <span class="n">rc_params</span><span class="p">)</span></div>
+            <span class="n">rc_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
     <span class="nd">@lru_cache</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">_findfont_cached</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">fontext</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">fallback_to_default</span><span class="p">,</span>
                          <span class="n">rebuild_if_missing</span><span class="p">,</span> <span class="n">rc_params</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">FontProperties</span><span class="p">):</span>
-            <span class="n">prop</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
+        <span class="n">prop</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="o">.</span><span class="n">_from_any</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
 
         <span class="n">fname</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">get_file</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">fname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1381,13 +1467,11 @@
                     <span class="n">prop</span><span class="o">.</span><span class="n">get_family</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultFamily</span><span class="p">[</span><span class="n">fontext</span><span class="p">])</span>
                 <span class="n">default_prop</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="n">default_prop</span><span class="o">.</span><span class="n">set_family</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defaultFamily</span><span class="p">[</span><span class="n">fontext</span><span class="p">])</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">findfont</span><span class="p">(</span><span class="n">default_prop</span><span class="p">,</span> <span class="n">fontext</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">findfont</span><span class="p">(</span><span class="n">default_prop</span><span class="p">,</span> <span class="n">fontext</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span>
+                                     <span class="n">fallback_to_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># This is a hard fail -- we can&#39;t find anything reasonable,</span>
-                <span class="c1"># so just return the DejaVuSans.ttf</span>
-                <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;findfont: Could not match </span><span class="si">%s</span><span class="s1">. Returning </span><span class="si">%s</span><span class="s1">.&#39;</span><span class="p">,</span>
-                             <span class="n">prop</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultFont</span><span class="p">[</span><span class="n">fontext</span><span class="p">])</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultFont</span><span class="p">[</span><span class="n">fontext</span><span class="p">]</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Failed to find font </span><span class="si">{prop}</span><span class="s2">, and fallback &quot;</span>
+                                 <span class="n">f</span><span class="s2">&quot;to the default font was disabled&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;findfont: Matching </span><span class="si">%s</span><span class="s1"> to </span><span class="si">%s</span><span class="s1"> (</span><span class="si">%r</span><span class="s1">) with score of </span><span class="si">%f</span><span class="s1">.&#39;</span><span class="p">,</span>
                        <span class="n">prop</span><span class="p">,</span> <span class="n">best_font</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">best_font</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="n">best_score</span><span class="p">)</span>
@@ -1399,7 +1483,7 @@
                     <span class="s1">&#39;findfont: Found a missing font file.  Rebuilding cache.&#39;</span><span class="p">)</span>
                 <span class="n">_rebuild</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">fontManager</span><span class="o">.</span><span class="n">findfont</span><span class="p">(</span>
-                    <span class="n">prop</span><span class="p">,</span> <span class="n">fontext</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                    <span class="n">prop</span><span class="p">,</span> <span class="n">fontext</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">rebuild_if_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No valid font could be found&quot;</span><span class="p">)</span>
 
@@ -1435,6 +1519,9 @@
 
 
 <div class="viewcode-block" id="get_font"><a class="viewcode-back" href="../../api/font_manager_api.html#matplotlib.font_manager.get_font">[docs]</a><span class="k">def</span> <span class="nf">get_font</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hinting_factor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Resolving the path avoids embedding the font twice in pdf/ps output if a</span>
+    <span class="c1"># single font is selected using two different relative paths.</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">hinting_factor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">hinting_factor</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.hinting_factor&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">_get_font</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">hinting_factor</span><span class="p">,</span>
@@ -1443,10 +1530,9 @@
 
 <span class="k">def</span> <span class="nf">_rebuild</span><span class="p">():</span>
     <span class="k">global</span> <span class="n">fontManager</span>
+    <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating new fontManager, this may take some time...&quot;</span><span class="p">)</span>
     <span class="n">fontManager</span> <span class="o">=</span> <span class="n">FontManager</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_lock_path</span><span class="p">(</span><span class="n">_fmcache</span><span class="p">):</span>
-        <span class="n">json_dump</span><span class="p">(</span><span class="n">fontManager</span><span class="p">,</span> <span class="n">_fmcache</span><span class="p">)</span>
-    <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;generated new fontManager&quot;</span><span class="p">)</span>
+    <span class="n">json_dump</span><span class="p">(</span><span class="n">fontManager</span><span class="p">,</span> <span class="n">_fmcache</span><span class="p">)</span>
 
 
 <span class="k">try</span><span class="p">:</span>
@@ -1471,12 +1557,12 @@
     </div>
 <footer>
     <div class="footer">
-    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2020 The Matplotlib development team.
 <br />
-    Last updated on Jun 17, 2020.
+    Last updated on Jul 17, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.
-Doc version v3.2.2-2-g137edd56a.
+<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+Doc version v3.3.0-3-g8994f1b60.
     </div>
 </footer>
 <script>

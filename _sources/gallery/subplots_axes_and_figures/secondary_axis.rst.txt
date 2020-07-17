@@ -28,9 +28,7 @@ function in a tuple to the ``functions`` kwarg:
     import numpy as np
     import datetime
     import matplotlib.dates as mdates
-    from matplotlib.transforms import Transform
-    from matplotlib.ticker import (
-        AutoLocator, AutoMinorLocator)
+    from matplotlib.ticker import AutoMinorLocator
 
     fig, ax = plt.subplots(constrained_layout=True)
     x = np.arange(0, 360, 1)
@@ -124,7 +122,7 @@ one data set to the other.
     ax.plot(xdata, ydata, label='Plotted data')
 
     xold = np.arange(0, 11, 0.2)
-    # fake data set relating x co-ordinate to another data-derived co-ordinate.
+    # fake data set relating x coordinate to another data-derived coordinate.
     # xnew must be monotonic, so we sort...
     xnew = np.sort(10 * np.exp(-xold / 4) + np.random.randn(len(xold)) / 3)
 
@@ -159,16 +157,17 @@ one data set to the other.
 
 
 A final example translates np.datetime64 to yearday on the x axis and
-from Celsius to Farenheit on the y axis:
+from Celsius to Fahrenheit on the y axis.  Note the addition of a
+third y axis, and that it can be placed using a float for the
+location argument
 
 
 .. code-block:: default
 
 
-
     dates = [datetime.datetime(2018, 1, 1) + datetime.timedelta(hours=k * 6)
              for k in range(240)]
-    temperature = np.random.randn(len(dates))
+    temperature = np.random.randn(len(dates)) * 4 + 6.7
     fig, ax = plt.subplots(constrained_layout=True)
 
     ax.plot(dates, temperature)
@@ -188,20 +187,36 @@ from Celsius to Farenheit on the y axis:
         return y
 
 
-    secaxx = ax.secondary_xaxis('top', functions=(date2yday, yday2date))
-    secaxx.set_xlabel('yday [2018]')
+    secax_x = ax.secondary_xaxis('top', functions=(date2yday, yday2date))
+    secax_x.set_xlabel('yday [2018]')
 
 
-    def CtoF(x):
+    def celsius_to_fahrenheit(x):
         return x * 1.8 + 32
 
 
-    def FtoC(x):
+    def fahrenheit_to_celsius(x):
         return (x - 32) / 1.8
 
 
-    secaxy = ax.secondary_yaxis('right', functions=(CtoF, FtoC))
-    secaxy.set_ylabel(r'$T\ [^oF]$')
+    secax_y = ax.secondary_yaxis(
+        'right', functions=(celsius_to_fahrenheit, fahrenheit_to_celsius))
+    secax_y.set_ylabel(r'$T\ [^oF]$')
+
+
+    def celsius_to_anomaly(x):
+        return (x - np.mean(temperature))
+
+
+    def anomaly_to_celsius(x):
+        return (x + np.mean(temperature))
+
+
+    # use of a float for the position:
+    secax_y2 = ax.secondary_yaxis(
+        1.2, functions=(celsius_to_anomaly, anomaly_to_celsius))
+    secax_y2.set_ylabel(r'$T - \overline{T}\ [^oC]$')
+
 
     plt.show()
 
@@ -242,14 +257,14 @@ The use of the following functions and methods is shown in this example:
  .. code-block:: none
 
 
-    <function Axes.secondary_yaxis at 0x7f616026a040>
+    <function Axes.secondary_yaxis at 0x7f08bbc3af70>
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.892 seconds)
+   **Total running time of the script:** ( 0 minutes  2.938 seconds)
 
 
 .. _sphx_glr_download_gallery_subplots_axes_and_figures_secondary_axis.py:

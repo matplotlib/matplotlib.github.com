@@ -11,7 +11,7 @@ Matplotlib is a library for making 2D plots of arrays in `Python
 the MATLAB graphics commands, it is
 independent of MATLAB, and can be used in a Pythonic, object oriented
 way.  Although Matplotlib is written primarily in pure Python, it
-makes heavy use of `NumPy <http://www.numpy.org>`_ and other extension
+makes heavy use of `NumPy <https://numpy.org>`_ and other extension
 code to provide good performance even for large arrays.
 
 Matplotlib is designed with the philosophy that you should be able to
@@ -62,7 +62,7 @@ without affecting user code.
 
 The Matplotlib code is conceptually divided into three parts: the
 *pylab interface* is the set of functions provided by
-:mod:`matplotlib.pylab` which allow the user to create plots with code
+:mod:`pylab` which allow the user to create plots with code
 quite similar to MATLAB figure generating code
 (:doc:`/tutorials/introductory/pyplot`).  The *Matplotlib frontend* or *Matplotlib
 API* is the set of classes that do the heavy lifting, creating and

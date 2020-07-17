@@ -6,32 +6,31 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>matplotlib.textpath &#8212; Matplotlib 3.2.2 documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.2-2-g137edd56a" type="text/css" />
+    <title>matplotlib.textpath &#8212; Matplotlib 3.3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.3.0-3-g8994f1b60" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.2.2 documentation"
+          title="Search within Matplotlib 3.3.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
 
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-<link rel="top" title="Matplotlib 3.2.2 documentation" href="#" />
-    <link rel="canonical" href="https://matplotlib.org/3.2.2/_modules/matplotlib/textpath.html" />
+<link rel="top" title="Matplotlib 3.3.0 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/3.3.0/_modules/matplotlib/textpath.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -49,7 +48,7 @@
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
     <a href="../../index.html">
-        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.2.2</span></div>
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.3.0</span></div>
         <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
     <!-- The "Fork me on github" ribbon -->
@@ -82,8 +81,7 @@
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../contents.html">contents</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">matplotlib.textpath</a></li> 
+          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li> 
       </ul>
     </div>
 
@@ -110,19 +108,19 @@
           <div class="body" role="main">
             
   <h1>Source code for matplotlib.textpath</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">_text_layout</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">dviread</span><span class="p">,</span> <span class="n">font_manager</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">FontProperties</span><span class="p">,</span> <span class="n">get_font</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="kn">import</span> <span class="n">LOAD_NO_HINTING</span><span class="p">,</span> <span class="n">LOAD_TARGET_LIGHT</span>
-<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="kn">import</span> <span class="n">MathTextParser</span>
-<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="kn">import</span> <span class="n">Affine2D</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">_text_layout</span><span class="p">,</span> <span class="n">dviread</span><span class="p">,</span> <span class="n">font_manager</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="k">import</span> <span class="n">FontProperties</span><span class="p">,</span> <span class="n">get_font</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ft2font</span> <span class="k">import</span> <span class="n">LOAD_NO_HINTING</span><span class="p">,</span> <span class="n">LOAD_TARGET_LIGHT</span>
+<span class="kn">from</span> <span class="nn">matplotlib.mathtext</span> <span class="k">import</span> <span class="n">MathTextParser</span>
+<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">matplotlib.transforms</span> <span class="k">import</span> <span class="n">Affine2D</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -133,7 +131,7 @@
     <span class="n">FONT_SCALE</span> <span class="o">=</span> <span class="mf">100.</span>
     <span class="n">DPI</span> <span class="o">=</span> <span class="mi">72</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mathtext_parser</span> <span class="o">=</span> <span class="n">MathTextParser</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_texmanager</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -163,18 +161,8 @@
         <span class="n">char_id</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ps_name</span><span class="p">,</span> <span class="n">ccode</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">char_id</span>
 
-<div class="viewcode-block" id="TextToPath.glyph_to_path"><a class="viewcode-back" href="../../api/textpath_api.html#matplotlib.textpath.TextToPath.glyph_to_path">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s2">&quot;3.1&quot;</span><span class="p">,</span>
-        <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;font.get_path() and manual translation of the vertices&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">glyph_to_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="n">currx</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convert the *font*&#39;s current glyph to a (vertices, codes) pair.&quot;&quot;&quot;</span>
-        <span class="n">verts</span><span class="p">,</span> <span class="n">codes</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_path</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">currx</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="n">verts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">currx</span>
-        <span class="k">return</span> <span class="n">verts</span><span class="p">,</span> <span class="n">codes</span></div>
-
 <div class="viewcode-block" id="TextToPath.get_text_width_height_descent"><a class="viewcode-back" href="../../api/textpath_api.html#matplotlib.textpath.TextToPath.get_text_width_height_descent">[docs]</a>    <span class="k">def</span> <span class="nf">get_text_width_height_descent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">ismath</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.usetex&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">ismath</span> <span class="o">==</span> <span class="s2">&quot;TeX&quot;</span><span class="p">:</span>
             <span class="n">texmanager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_texmanager</span><span class="p">()</span>
             <span class="n">fontsize</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">get_size_in_points</span><span class="p">()</span>
             <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">texmanager</span><span class="o">.</span><span class="n">get_text_width_height_descent</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span>
@@ -201,35 +189,34 @@
         <span class="n">d</span> <span class="o">/=</span> <span class="mf">64.0</span>
         <span class="k">return</span> <span class="n">w</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">h</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">d</span> <span class="o">*</span> <span class="n">scale</span></div>
 
-<div class="viewcode-block" id="TextToPath.get_text_path"><a class="viewcode-back" href="../../api/textpath_api.html#matplotlib.textpath.TextToPath.get_text_path">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">_delete_parameter</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="s2">&quot;usetex&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">get_text_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">ismath</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="TextToPath.get_text_path"><a class="viewcode-back" href="../../api/textpath_api.html#matplotlib.textpath.TextToPath.get_text_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_text_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">ismath</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert text *s* to path (a tuple of vertices and codes for</span>
 <span class="sd">        matplotlib.path.Path).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        prop : `matplotlib.font_manager.FontProperties` instance</span>
+<span class="sd">        prop : `~matplotlib.font_manager.FontProperties`</span>
 <span class="sd">            The font properties for the text.</span>
 
 <span class="sd">        s : str</span>
 <span class="sd">            The text to be converted.</span>
 
 <span class="sd">        ismath : {False, True, &quot;TeX&quot;}</span>
-<span class="sd">            If True, use mathtext parser.  If &quot;TeX&quot;, use tex for renderering.</span>
-
-<span class="sd">        usetex : bool, optional</span>
-<span class="sd">            If set, forces *ismath* to True.  This parameter is deprecated.</span>
+<span class="sd">            If True, use mathtext parser.  If &quot;TeX&quot;, use tex for rendering.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        verts, codes : tuple of lists</span>
-<span class="sd">            *verts*  is a list of numpy arrays containing the x and y</span>
-<span class="sd">            coordinates of the vertices. *codes* is a list of path codes.</span>
+<span class="sd">        verts : list</span>
+<span class="sd">            A list of numpy arrays containing the x and y coordinates of the</span>
+<span class="sd">            vertices.</span>
+
+<span class="sd">        codes : list</span>
+<span class="sd">            A list of path codes.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        Create a list of vertices and codes from a text, and create a `Path`</span>
+<span class="sd">        Create a list of vertices and codes from a text, and create a `.Path`</span>
 <span class="sd">        from those::</span>
 
 <span class="sd">            from matplotlib.path import Path</span>
@@ -242,8 +229,6 @@
 
 <span class="sd">        Also see `TextPath` for a more direct way to create a path from a text.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">usetex</span><span class="p">:</span>
-            <span class="n">ismath</span> <span class="o">=</span> <span class="s2">&quot;TeX&quot;</span>
         <span class="k">if</span> <span class="n">ismath</span> <span class="o">==</span> <span class="s2">&quot;TeX&quot;</span><span class="p">:</span>
             <span class="n">glyph_info</span><span class="p">,</span> <span class="n">glyph_map</span><span class="p">,</span> <span class="n">rects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_glyphs_tex</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">ismath</span><span class="p">:</span>
@@ -352,7 +337,7 @@
 <div class="viewcode-block" id="TextToPath.get_texmanager"><a class="viewcode-back" href="../../api/textpath_api.html#matplotlib.textpath.TextToPath.get_texmanager">[docs]</a>    <span class="k">def</span> <span class="nf">get_texmanager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the cached `~.texmanager.TexManager` instance.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_texmanager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">matplotlib.texmanager</span> <span class="kn">import</span> <span class="n">TexManager</span>
+            <span class="kn">from</span> <span class="nn">matplotlib.texmanager</span> <span class="k">import</span> <span class="n">TexManager</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_texmanager</span> <span class="o">=</span> <span class="n">TexManager</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_texmanager</span></div>
 
@@ -414,15 +399,15 @@
     <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_get_ps_font_and_encoding</span><span class="p">(</span><span class="n">texname</span><span class="p">):</span>
         <span class="n">tex_font_map</span> <span class="o">=</span> <span class="n">dviread</span><span class="o">.</span><span class="n">PsfontsMap</span><span class="p">(</span><span class="n">dviread</span><span class="o">.</span><span class="n">find_tex_file</span><span class="p">(</span><span class="s1">&#39;pdftex.map&#39;</span><span class="p">))</span>
-        <span class="n">font_bunch</span> <span class="o">=</span> <span class="n">tex_font_map</span><span class="p">[</span><span class="n">texname</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">font_bunch</span><span class="o">.</span><span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">psfont</span> <span class="o">=</span> <span class="n">tex_font_map</span><span class="p">[</span><span class="n">texname</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">psfont</span><span class="o">.</span><span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No usable font file found for </span><span class="si">{</span><span class="n">font_bunch</span><span class="o">.</span><span class="n">psname</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">texname</span><span class="si">}</span><span class="s2">). The font may lack a Type-1 version.&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="s2">&quot;No usable font file found for </span><span class="si">{psfont.psname}</span><span class="s2"> (</span><span class="si">{texname}</span><span class="s2">). &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;The font may lack a Type-1 version.&quot;</span><span class="p">)</span>
 
-        <span class="n">font</span> <span class="o">=</span> <span class="n">get_font</span><span class="p">(</span><span class="n">font_bunch</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="n">get_font</span><span class="p">(</span><span class="n">psfont</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">font_bunch</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">psfont</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span>
             <span class="c1"># If psfonts.map specifies an encoding, use it: it gives us a</span>
             <span class="c1"># mapping of glyph indices to Adobe glyph names; use it to convert</span>
             <span class="c1"># dvi indices to glyph names and use the FreeType-synthesized</span>
@@ -430,7 +415,7 @@
             <span class="c1"># FT_Get_Name_Index/get_name_index), and load the glyph using</span>
             <span class="c1"># FT_Load_Glyph/load_glyph.  (That charmap has a coverage at least</span>
             <span class="c1"># as good as, and possibly better than, the native charmaps.)</span>
-            <span class="n">enc</span> <span class="o">=</span> <span class="n">dviread</span><span class="o">.</span><span class="n">_parse_enc</span><span class="p">(</span><span class="n">font_bunch</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+            <span class="n">enc</span> <span class="o">=</span> <span class="n">dviread</span><span class="o">.</span><span class="n">_parse_enc</span><span class="p">(</span><span class="n">psfont</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># If psfonts.map specifies no encoding, the indices directly</span>
             <span class="c1"># map to the font&#39;s &quot;native&quot; charmap; so don&#39;t use the</span>
@@ -449,7 +434,7 @@
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No supported encoding in font (</span><span class="si">%s</span><span class="s2">).&quot;</span><span class="p">,</span>
-                             <span class="n">font_bunch</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+                             <span class="n">psfont</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
             <span class="n">enc</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">return</span> <span class="n">font</span><span class="p">,</span> <span class="n">enc</span></div>
@@ -463,9 +448,8 @@
 <span class="sd">    Create a path from the text.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">_interpolation_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">_interpolation_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a path from the text. Note that it simply is a path,</span>
 <span class="sd">        not an artist. You need to use the `~.PathPatch` (or other artists)</span>
@@ -488,11 +472,11 @@
 <span class="sd">            ``FontProperties`` with parameters from the</span>
 <span class="sd">            :ref:`rcParams &lt;matplotlib-rcparams&gt;`.</span>
 
-<span class="sd">        _interpolation_steps : integer, optional</span>
+<span class="sd">        _interpolation_steps : int, optional</span>
 <span class="sd">            (Currently ignored)</span>
 
-<span class="sd">        usetex : bool, optional</span>
-<span class="sd">            Whether to use tex rendering. Defaults to ``False``.</span>
+<span class="sd">        usetex : bool, default: False</span>
+<span class="sd">            Whether to use tex rendering.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -503,21 +487,15 @@
 <span class="sd">            from matplotlib.font_manager import FontProperties</span>
 
 <span class="sd">            fp = FontProperties(family=&quot;Helvetica&quot;, style=&quot;italic&quot;)</span>
-<span class="sd">            path1 = TextPath((12,12), &quot;ABC&quot;, size=12, prop=fp)</span>
-<span class="sd">            path2 = TextPath((0,0), r&quot;$\frac{1}{2}$&quot;, size=12, usetex=True)</span>
+<span class="sd">            path1 = TextPath((12, 12), &quot;ABC&quot;, size=12, prop=fp)</span>
+<span class="sd">            path2 = TextPath((0, 0), r&quot;$\frac{1}{2}$&quot;, size=12, usetex=True)</span>
 
 <span class="sd">        Also see :doc:`/gallery/text_labels_and_annotations/demo_text_path`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Circular import.</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.text</span> <span class="kn">import</span> <span class="n">Text</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.text</span> <span class="k">import</span> <span class="n">Text</span>
 
-        <span class="k">if</span> <span class="n">args</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span>
-                <span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Additional arguments to TextPath used to be &quot;</span>
-                <span class="s2">&quot;ignored, but will trigger a TypeError </span><span class="si">%(removal)s</span><span class="s2">.&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">prop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">prop</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">()</span>
+        <span class="n">prop</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="o">.</span><span class="n">_from_any</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">get_size_in_points</span><span class="p">()</span>
 
@@ -568,40 +546,7 @@
                   <span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">/</span> <span class="n">text_to_path</span><span class="o">.</span><span class="n">FONT_SCALE</span><span class="p">)</span>
                   <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_xy</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cached_vertices</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_invalid</span> <span class="o">=</span> <span class="kc">False</span>
-
-<div class="viewcode-block" id="TextPath.is_math_text"><a class="viewcode-back" href="../../api/textpath_api.html#matplotlib.textpath.TextPath.is_math_text">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">is_math_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns True if the given string *s* contains any mathtext.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># copied from Text.is_math_text -JJL</span>
-
-        <span class="c1"># Did we find an even number of non-escaped dollar signs?</span>
-        <span class="c1"># If so, treat is as math text.</span>
-        <span class="n">dollar_count</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\$&#39;</span><span class="p">)</span>
-        <span class="n">even_dollars</span> <span class="o">=</span> <span class="p">(</span><span class="n">dollar_count</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dollar_count</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.usetex&#39;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="s1">&#39;TeX&#39;</span>
-
-        <span class="k">if</span> <span class="n">even_dollars</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\$&#39;</span><span class="p">,</span> <span class="s1">&#39;$&#39;</span><span class="p">),</span> <span class="kc">False</span></div>
-
-<div class="viewcode-block" id="TextPath.text_get_vertices_codes"><a class="viewcode-back" href="../../api/textpath_api.html#matplotlib.textpath.TextPath.text_get_vertices_codes">[docs]</a>    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;TextPath&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">text_get_vertices_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">usetex</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convert string *s* to a (vertices, codes) pair using font property</span>
-<span class="sd">        *prop*.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Mostly copied from backend_svg.py.</span>
-        <span class="k">if</span> <span class="n">usetex</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">text_to_path</span><span class="o">.</span><span class="n">get_text_path</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">clean_line</span><span class="p">,</span> <span class="n">ismath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_math_text</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">text_to_path</span><span class="o">.</span><span class="n">get_text_path</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">clean_line</span><span class="p">,</span> <span class="n">ismath</span><span class="o">=</span><span class="n">ismath</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_invalid</span> <span class="o">=</span> <span class="kc">False</span></div>
 </pre></div>
 
           </div>
@@ -612,12 +557,12 @@
     </div>
 <footer>
     <div class="footer">
-    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2020 The Matplotlib development team.
 <br />
-    Last updated on Jun 17, 2020.
+    Last updated on Jul 17, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.
-Doc version v3.2.2-2-g137edd56a.
+<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+Doc version v3.3.0-3-g8994f1b60.
     </div>
 </footer>
 <script>

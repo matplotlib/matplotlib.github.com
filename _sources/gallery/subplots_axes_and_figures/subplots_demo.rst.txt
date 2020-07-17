@@ -23,7 +23,6 @@ within the figure.
 .. code-block:: default
 
 
-    # sphinx_gallery_thumbnail_number = 11
 
     import matplotlib.pyplot as plt
     import numpy as np
@@ -108,7 +107,7 @@ containing the list of created Axes.
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f616c8b3460>]
+    [<matplotlib.lines.Line2D object at 0x7f08b7873610>]
 
 
 
@@ -140,7 +139,7 @@ the more verbose ``axs[0]``.
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f614ede8670>]
+    [<matplotlib.lines.Line2D object at 0x7f08b7c0a610>]
 
 
 
@@ -171,7 +170,7 @@ columns.
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f616c8ff850>]
+    [<matplotlib.lines.Line2D object at 0x7f08b76d5ac0>]
 
 
 
@@ -215,7 +214,7 @@ all subplots in a 2D grid using ``for ax in axs.flat:``.
 
 
 
-You can  use tuple-unpacking also in 2D to assign all subplots to dedicated
+You can use tuple-unpacking also in 2D to assign all subplots to dedicated
 variables:
 
 
@@ -273,7 +272,7 @@ different the tick values of the subplots do not align.
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f614f78a910>]
+    [<matplotlib.lines.Line2D object at 0x7f08b63802b0>]
 
 
 
@@ -303,7 +302,7 @@ You can use *sharex* or *sharey* to align the horizontal or vertical axis.
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f614ea70af0>]
+    [<matplotlib.lines.Line2D object at 0x7f08b6f02490>]
 
 
 
@@ -336,7 +335,7 @@ same scale when using ``sharey=True``.
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f616c870880>]
+    [<matplotlib.lines.Line2D object at 0x7f08b6352df0>]
 
 
 
@@ -344,9 +343,10 @@ For subplots that are sharing axes one set of tick labels is enough. Tick
 labels of inner Axes are automatically removed by *sharex* and *sharey*.
 Still there remains an unused empty space between the subplots.
 
-The parameter *gridspec_kw* of `.pyplot.subplots` controls the grid
-properties (see also `.GridSpec`). For example, we can reduce the height
-between vertical subplots using ``gridspec_kw={'hspace': 0}``.
+To precisely control the positioning of the subplots, one can explicitly
+create a `.GridSpec` with `.add_gridspec`, and then call its
+`~.GridSpecBase.subplots` method.  For example, we can reduce the height
+between vertical subplots using ``add_gridspec(hspace=0)``.
 
 `.label_outer` is a handy method to remove labels and ticks from subplots
 that are not at the edge of the grid.
@@ -355,7 +355,9 @@ that are not at the edge of the grid.
 .. code-block:: default
 
 
-    fig, axs = plt.subplots(3, sharex=True, sharey=True, gridspec_kw={'hspace': 0})
+    fig = plt.figure()
+    gs = fig.add_gridspec(3, hspace=0)
+    axs = gs.subplots(sharex=True, sharey=True)
     fig.suptitle('Sharing both axes')
     axs[0].plot(x, y ** 2)
     axs[1].plot(x, 0.3 * y, 'o')
@@ -383,9 +385,9 @@ values 'row' and 'col' to share the values only per row or column.
 .. code-block:: default
 
 
-    fig, axs = plt.subplots(2, 2, sharex='col', sharey='row',
-                            gridspec_kw={'hspace': 0, 'wspace': 0})
-    (ax1, ax2), (ax3, ax4) = axs
+    fig = plt.figure()
+    gs = fig.add_gridspec(2, 2, hspace=0, wspace=0)
+    (ax1, ax2), (ax3, ax4) = gs.subplots(sharex='col', sharey='row')
     fig.suptitle('Sharing x per column, y per row')
     ax1.plot(x, y)
     ax2.plot(x, y**2, 'tab:orange')
@@ -400,6 +402,37 @@ values 'row' and 'col' to share the values only per row or column.
 
 .. image:: /gallery/subplots_axes_and_figures/images/sphx_glr_subplots_demo_011.png
     :alt: Sharing x per column, y per row
+    :class: sphx-glr-single-img
+
+
+
+
+
+If you want a more complex sharing structure, you can first create the
+grid of axes with no sharing, and then call `.axes.Axes.sharex` or
+`.axes.Axes.sharey` to add sharing info a posteriori.
+
+
+.. code-block:: default
+
+
+    fig, axs = plt.subplots(2, 2)
+    axs[0, 0].plot(x, y)
+    axs[0, 0].set_title("main")
+    axs[1, 0].plot(x, y**2)
+    axs[1, 0].set_title("shares x with main")
+    axs[1, 0].sharex(axs[0, 0])
+    axs[0, 1].plot(x + 1, y + 1)
+    axs[0, 1].set_title("unrelated")
+    axs[1, 1].plot(x + 2, y + 2)
+    axs[1, 1].set_title("also unrelated")
+    fig.tight_layout()
+
+
+
+
+.. image:: /gallery/subplots_axes_and_figures/images/sphx_glr_subplots_demo_012.png
+    :alt: main, unrelated, shares x with main, also unrelated
     :class: sphx-glr-single-img
 
 
@@ -425,7 +458,7 @@ to create a grid of polar Axes.
 
 
 
-.. image:: /gallery/subplots_axes_and_figures/images/sphx_glr_subplots_demo_012.png
+.. image:: /gallery/subplots_axes_and_figures/images/sphx_glr_subplots_demo_013.png
     :alt: subplots demo
     :class: sphx-glr-single-img
 
@@ -436,7 +469,7 @@ to create a grid of polar Axes.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.504 seconds)
+   **Total running time of the script:** ( 0 minutes  6.813 seconds)
 
 
 .. _sphx_glr_download_gallery_subplots_axes_and_figures_subplots_demo.py:

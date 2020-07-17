@@ -11,6 +11,10 @@ code.  e.g.
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+# Fixing random state for reproducibility
+np.random.seed(19680801)
+
 x = np.random.randn(50)
 
 # old style
@@ -21,8 +25,8 @@ ax3 = fig.add_subplot(223, sharex=ax1, sharey=ax1)
 ax3 = fig.add_subplot(224, sharex=ax1, sharey=ax1)
 
 ###############################################################################
-# Fernando Perez has provided a nice top level method in
-# :func:`~matplotlib.pyplot.subplots` (note the "s" at the end) to create
+# Fernando Perez has provided the nice top-level function
+# `~matplotlib.pyplot.subplots` (note the "s" at the end) to create
 # everything at once, and turn on x and y sharing for the whole bunch.
 # You can either unpack the axes individually...
 

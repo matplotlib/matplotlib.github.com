@@ -6,7 +6,7 @@ Image Demo
 Many ways to plot images in Matplotlib.
 
 The most common way to plot images in Matplotlib is with
-:meth:`~.axes.Axes.imshow`. The following examples demonstrate much of the
+`~.axes.Axes.imshow`. The following examples demonstrate much of the
 functionality of imshow and the many images you can create.
 """
 
@@ -16,6 +16,10 @@ import matplotlib.pyplot as plt
 import matplotlib.cbook as cbook
 from matplotlib.path import Path
 from matplotlib.patches import PathPatch
+
+
+# Fixing random state for reproducibility
+np.random.seed(19680801)
 
 ###############################################################################
 # First we'll generate a simple bivariate normal distribution.

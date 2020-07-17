@@ -155,21 +155,20 @@ Toolkits
 ========
 
 Matplotlib ships with several add-on :doc:`toolkits <api/toolkits/index>`,
-including 3D plotting with `mplot3d`, axes helpers in `axes_grid1` and axis
-helpers in `axisartist`.
+including 3D plotting with `.mplot3d`, axes helpers in `.axes_grid1` and axis
+helpers in `.axisartist`.
 
 Third party packages
 ====================
 
 A large number of :doc:`third party packages <thirdpartypackages/index>`
 extend and build on Matplotlib functionality, including several higher-level
-plotting interfaces (seaborn_, HoloViews_, ggplot_, ...), and two projection
-and mapping toolkits (Basemap_ and Cartopy_).
+plotting interfaces (seaborn_, HoloViews_, ggplot_, ...), and a projection
+and mapping toolkit (Cartopy_).
 
 .. _seaborn: https://seaborn.pydata.org
 .. _HoloViews: https://holoviews.org
 .. _ggplot: http://ggplot.yhathq.com
-.. _Basemap: https://matplotlib.org/basemap
 .. _Cartopy: https://scitools.org.uk/cartopy/docs/latest
 
 Citing Matplotlib
@@ -188,7 +187,7 @@ Open source
 
 .. raw:: html
 
-   <a href="https://www.numfocus.org/">
+   <a href="https://numfocus.org/">
    <img src="_static/numfocus_badge.png"
     alt="A Fiscally Sponsored Project of NUMFocus"
     style="float:right; margin-left:20px" />
@@ -211,7 +210,7 @@ the NumFOCUS organization or to the `John Hunter Technology Fellowship
 <jdh-fellowship_>`_.
 
 .. _donating: https://numfocus.org/donate-to-matplotlib
-.. _jdh-fellowship: https://www.numfocus.org/programs/john-hunter-technology-fellowship/
+.. _jdh-fellowship: https://numfocus.org/programs/john-hunter-technology-fellowship/
 .. _nf: https://numfocus.org
 
 The :doc:`Matplotlib license <users/license>` is based on the `Python Software

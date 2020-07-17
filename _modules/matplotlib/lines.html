@@ -6,32 +6,31 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>matplotlib.lines &#8212; Matplotlib 3.2.2 documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.2.2-2-g137edd56a" type="text/css" />
+    <title>matplotlib.lines &#8212; Matplotlib 3.3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.3.0-3-g8994f1b60" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.2.2 documentation"
+          title="Search within Matplotlib 3.3.0 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
 
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-<link rel="top" title="Matplotlib 3.2.2 documentation" href="#" />
-    <link rel="canonical" href="https://matplotlib.org/3.2.2/_modules/matplotlib/lines.html" />
+<link rel="top" title="Matplotlib 3.3.0 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/3.3.0/_modules/matplotlib/lines.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -49,7 +48,7 @@
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
     <a href="../../index.html">
-        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.2.2</span></div>
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.3.0</span></div>
         <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
     <!-- The "Fork me on github" ribbon -->
@@ -82,8 +81,7 @@
         <li><a href="../../index.html">home</a>|&nbsp;</li>
         <li><a href="../../contents.html">contents</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">matplotlib.lines</a></li> 
+          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li> 
       </ul>
     </div>
 
@@ -111,28 +109,30 @@
             
   <h1>Source code for matplotlib.lines</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains all the 2D line class which can draw with a</span>
-<span class="sd">variety of line styles, markers and colors.</span>
+<span class="sd">The 2D line class which can draw with a variety of line styles, markers and</span>
+<span class="sd">colors.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># TODO: expose cap and join style attrs</span>
-<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Integral</span><span class="p">,</span> <span class="n">Number</span><span class="p">,</span> <span class="n">Real</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Integral</span><span class="p">,</span> <span class="n">Number</span><span class="p">,</span> <span class="n">Real</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">artist</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">mcolors</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">.artist</span> <span class="kn">import</span> <span class="n">Artist</span><span class="p">,</span> <span class="n">allow_rasterization</span>
-<span class="kn">from</span> <span class="nn">.cbook</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">artist</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">mcolors</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="n">rcParams</span>
+<span class="kn">from</span> <span class="nn">.artist</span> <span class="k">import</span> <span class="n">Artist</span><span class="p">,</span> <span class="n">allow_rasterization</span>
+<span class="kn">from</span> <span class="nn">.cbook</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">_to_unmasked_float_array</span><span class="p">,</span> <span class="n">ls_mapper</span><span class="p">,</span> <span class="n">ls_mapper_r</span><span class="p">,</span> <span class="n">STEP_LOOKUP_MAP</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.markers</span> <span class="kn">import</span> <span class="n">MarkerStyle</span>
-<span class="kn">from</span> <span class="nn">.path</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">.transforms</span> <span class="kn">import</span> <span class="n">Bbox</span><span class="p">,</span> <span class="n">TransformedPath</span>
+<span class="kn">from</span> <span class="nn">.markers</span> <span class="k">import</span> <span class="n">MarkerStyle</span>
+<span class="kn">from</span> <span class="nn">.path</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">.transforms</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Affine2D</span><span class="p">,</span> <span class="n">Bbox</span><span class="p">,</span> <span class="n">BboxTransformFrom</span><span class="p">,</span> <span class="n">BboxTransformTo</span><span class="p">,</span> <span class="n">TransformedPath</span><span class="p">)</span>
 
 <span class="c1"># Imported here for backward compatibility, even though they don&#39;t</span>
 <span class="c1"># really belong.</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_path</span>
-<span class="kn">from</span> <span class="nn">.markers</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_path</span>
+<span class="kn">from</span> <span class="nn">.markers</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">CARETLEFT</span><span class="p">,</span> <span class="n">CARETRIGHT</span><span class="p">,</span> <span class="n">CARETUP</span><span class="p">,</span> <span class="n">CARETDOWN</span><span class="p">,</span>
     <span class="n">CARETLEFTBASE</span><span class="p">,</span> <span class="n">CARETRIGHTBASE</span><span class="p">,</span> <span class="n">CARETUPBASE</span><span class="p">,</span> <span class="n">CARETDOWNBASE</span><span class="p">,</span>
     <span class="n">TICKLEFT</span><span class="p">,</span> <span class="n">TICKRIGHT</span><span class="p">,</span> <span class="n">TICKUP</span><span class="p">,</span> <span class="n">TICKDOWN</span><span class="p">)</span>
@@ -141,14 +141,14 @@
 
 
 <span class="k">def</span> <span class="nf">_get_dash_pattern</span><span class="p">(</span><span class="n">style</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert linestyle -&gt; dash pattern</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Convert linestyle to dash pattern.&quot;&quot;&quot;</span>
     <span class="c1"># go from short hand -&gt; full strings</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">style</span> <span class="o">=</span> <span class="n">ls_mapper</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
     <span class="c1"># un-dashed styles</span>
     <span class="k">if</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">]:</span>
-        <span class="n">offset</span><span class="p">,</span> <span class="n">dashes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dashes</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1"># dashed styles</span>
     <span class="k">elif</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="s1">&#39;dashdot&#39;</span><span class="p">,</span> <span class="s1">&#39;dotted&#39;</span><span class="p">]:</span>
         <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
@@ -156,11 +156,17 @@
     <span class="c1">#</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="n">offset</span><span class="p">,</span> <span class="n">dashes</span> <span class="o">=</span> <span class="n">style</span>
+        <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span>
+                <span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Passing the dash offset as None is deprecated &quot;</span>
+                <span class="s2">&quot;since </span><span class="si">%(since)s</span><span class="s2"> and support for it will be removed &quot;</span>
+                <span class="s2">&quot;</span><span class="si">%(removal)s</span><span class="s2">; pass it as zero instead.&quot;</span><span class="p">)</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized linestyle: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">style</span><span class="p">))</span>
 
     <span class="c1"># normalize offset to be positive and shorter than the dash cycle</span>
-    <span class="k">if</span> <span class="n">dashes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">dashes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dsum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dashes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dsum</span><span class="p">:</span>
             <span class="n">offset</span> <span class="o">%=</span> <span class="n">dsum</span>
@@ -171,14 +177,9 @@
 <span class="k">def</span> <span class="nf">_scale_dashes</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">dashes</span><span class="p">,</span> <span class="n">lw</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.scale_dashes&#39;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">offset</span><span class="p">,</span> <span class="n">dashes</span>
-
-    <span class="n">scaled_offset</span> <span class="o">=</span> <span class="n">scaled_dashes</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">scaled_offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">*</span> <span class="n">lw</span>
-    <span class="k">if</span> <span class="n">dashes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">scaled_dashes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">lw</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-                         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dashes</span><span class="p">]</span>
-
+    <span class="n">scaled_offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">*</span> <span class="n">lw</span>
+    <span class="n">scaled_dashes</span> <span class="o">=</span> <span class="p">([</span><span class="n">x</span> <span class="o">*</span> <span class="n">lw</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dashes</span><span class="p">]</span>
+                     <span class="k">if</span> <span class="n">dashes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">scaled_offset</span><span class="p">,</span> <span class="n">scaled_dashes</span>
 
 
@@ -231,10 +232,7 @@
     <span class="n">codes</span><span class="p">,</span> <span class="n">verts</span> <span class="o">=</span> <span class="n">tpath</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="n">tpath</span><span class="o">.</span><span class="n">vertices</span>
 
     <span class="k">def</span> <span class="nf">_slice_or_none</span><span class="p">(</span><span class="n">in_v</span><span class="p">,</span> <span class="n">slc</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Helper function to cope with `codes` being an</span>
-<span class="sd">        ndarray or `None`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;Helper function to cope with `codes` being an ndarray or `None`.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">in_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">in_v</span><span class="p">[</span><span class="n">slc</span><span class="p">]</span>
@@ -290,8 +288,8 @@
             <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="n">_slice_or_none</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="n">inds</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;markevery=</span><span class="si">{</span><span class="n">markevery</span><span class="si">!r}</span><span class="s2"> is a tuple with len 2, but its &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;second element is not an int or a float&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="s2">&quot;markevery=</span><span class="si">{markevery!r}</span><span class="s2"> is a tuple with len 2, but its &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;second element is not an int or a float&quot;</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">markevery</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
         <span class="c1"># mazol tov, it&#39;s already a slice, just return</span>
@@ -301,12 +299,12 @@
         <span class="c1"># fancy indexing</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="n">markevery</span><span class="p">],</span> <span class="n">_slice_or_none</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="n">markevery</span><span class="p">))</span>
-        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;markevery=</span><span class="si">{</span><span class="n">markevery</span><span class="si">!r}</span><span class="s2"> is iterable but not a valid numpy &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;fancy index&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="s2">&quot;markevery=</span><span class="si">{markevery!r}</span><span class="s2"> is iterable but not a valid numpy &quot;</span>
+                <span class="n">f</span><span class="s2">&quot;fancy index&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;markevery=</span><span class="si">{</span><span class="n">markevery</span><span class="si">!r}</span><span class="s2"> is not a recognized value&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;markevery=</span><span class="si">{markevery!r}</span><span class="s2"> is not a recognized value&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Line2D"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D">[docs]</a><span class="nd">@cbook</span><span class="o">.</span><span class="n">_define_aliases</span><span class="p">({</span>
@@ -365,9 +363,9 @@
     <span class="n">validCap</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;butt&#39;</span><span class="p">,</span> <span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="s1">&#39;projecting&#39;</span><span class="p">)</span>
     <span class="n">validJoin</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;miter&#39;</span><span class="p">,</span> <span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="s1">&#39;bevel&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Line2D.__str__"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.__str__">[docs]</a>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Line2D(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;Line2D(</span><span class="si">{self._label}</span><span class="s2">)&quot;</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Line2D()&quot;</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
@@ -376,9 +374,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Line2D(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="nb">map</span><span class="p">(</span><span class="s2">&quot;(</span><span class="si">{:g}</span><span class="s2">,</span><span class="si">{:g}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">))</span>
+                <span class="nb">map</span><span class="p">(</span><span class="s2">&quot;(</span><span class="si">{:g}</span><span class="s2">,</span><span class="si">{:g}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span>
+<div class="viewcode-block" id="Line2D.__init__"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span>
                  <span class="n">linewidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># all Nones default to rc</span>
                  <span class="n">linestyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -447,16 +445,6 @@
         <span class="k">if</span> <span class="n">solid_joinstyle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">solid_joinstyle</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.solid_joinstyle&#39;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">linestyle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">ds</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_drawstyle_linestyle</span><span class="p">(</span><span class="n">linestyle</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">ds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">drawstyle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ds</span> <span class="o">!=</span> <span class="n">drawstyle</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inconsistent drawstyle (</span><span class="si">{!r}</span><span class="s2">) and linestyle &quot;</span>
-                                 <span class="s2">&quot;(</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">drawstyle</span><span class="p">,</span> <span class="n">linestyle</span><span class="p">))</span>
-            <span class="n">linestyle</span> <span class="o">=</span> <span class="n">ls</span>
-
-            <span class="k">if</span> <span class="n">ds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">drawstyle</span> <span class="o">=</span> <span class="n">ds</span>
-
         <span class="k">if</span> <span class="n">drawstyle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">drawstyle</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
 
@@ -512,8 +500,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span> <span class="o">=</span> <span class="n">pickradius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ind_offset</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_picker</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_picker</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_xorig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_yorig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([])</span>
@@ -527,21 +513,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_subslice</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x_filled</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># used in subslicing; only x is needed</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">)</span>
-
-    <span class="nd">@cbook</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s2">&quot;3.1&quot;</span><span class="p">)</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">verticalOffset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Line2D.contains"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouseevent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test whether the mouse event occurred on the line.  The pick</span>
-<span class="sd">        radius determines the precision of the location test (usually</span>
-<span class="sd">        within five points of the value).  Use</span>
-<span class="sd">        :meth:`~matplotlib.lines.Line2D.get_pickradius` or</span>
-<span class="sd">        :meth:`~matplotlib.lines.Line2D.set_pickradius` to view or</span>
-<span class="sd">        modify it.</span>
+<span class="sd">        Test whether *mouseevent* occurred on the line.</span>
+
+<span class="sd">        An event is deemed to have occurred &quot;on&quot; the line if it is less</span>
+<span class="sd">        than ``self.pickradius`` (default: 5 points) away from it.  Use</span>
+<span class="sd">        `~.Line2D.get_pickradius` or `~.Line2D.set_pickradius` to get or set</span>
+<span class="sd">        the pick radius.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -561,9 +542,6 @@
         <span class="n">inside</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_contains</span><span class="p">(</span><span class="n">mouseevent</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">inside</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">inside</span><span class="p">,</span> <span class="n">info</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pick radius should be a distance&quot;</span><span class="p">)</span>
 
         <span class="c1"># Make sure we have data to plot</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_invalidy</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_invalidx</span><span class="p">:</span>
@@ -613,10 +591,11 @@
 
 <span class="sd">        See `.contains` for more details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickradius</span></div>
 
 <div class="viewcode-block" id="Line2D.set_pickradius"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.set_pickradius">[docs]</a>    <span class="k">def</span> <span class="nf">set_pickradius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the pick radius used for containment tests.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the pick radius used for containment tests.</span>
 
 <span class="sd">        See `.contains` for more details.</span>
 
@@ -625,7 +604,11 @@
 <span class="sd">        d : float</span>
 <span class="sd">            Pick radius, in points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span> <span class="o">=</span> <span class="n">d</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">Number</span><span class="p">)</span> <span class="ow">or</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pick radius should be a distance&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pickradius</span> <span class="o">=</span> <span class="n">d</span></div>
+
+    <span class="n">pickradius</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_pickradius</span><span class="p">,</span> <span class="n">set_pickradius</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Line2D.get_fillstyle"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.get_fillstyle">[docs]</a>    <span class="k">def</span> <span class="nf">get_fillstyle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -650,21 +633,21 @@
 <span class="sd">              half of the marker is filled with *markerfacecoloralt*.</span>
 <span class="sd">            - &#39;none&#39;: No filling.</span>
 
-<span class="sd">            For examples see</span>
-<span class="sd">            :doc:`/gallery/lines_bars_and_markers/marker_fillstyle_reference`.</span>
+<span class="sd">            For examples see :ref:`marker_fill_styles`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_marker</span><span class="o">.</span><span class="n">set_fillstyle</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Line2D.set_markevery"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.set_markevery">[docs]</a>    <span class="k">def</span> <span class="nf">set_markevery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">every</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the markevery property to subsample the plot when using markers.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the markevery property to subsample the plot when using markers.</span>
 
-<span class="sd">        e.g., if `every=5`, every 5-th marker will be plotted.</span>
+<span class="sd">        e.g., if ``every=5``, every 5-th marker will be plotted.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        every : None or int or (int, int) or slice or List[int] or float or \</span>
-<span class="sd">(float, float)</span>
+<span class="sd">(float, float) or List[bool]</span>
 <span class="sd">            Which markers to plot.</span>
 
 <span class="sd">            - every=None, every point will be plotted.</span>
@@ -676,6 +659,8 @@
 <span class="sd">              point start, up to but not including point end, will be plotted.</span>
 <span class="sd">            - every=[i, j, m, n], only markers at points i, j, m, and n</span>
 <span class="sd">              will be plotted.</span>
+<span class="sd">            - every=[True, False, True], positions that are True will be</span>
+<span class="sd">              plotted.</span>
 <span class="sd">            - every=0.1, (i.e. a float) then markers will be spaced at</span>
 <span class="sd">              approximately equal distances along the line; the distance</span>
 <span class="sd">              along the line between markers is determined by multiplying the</span>
@@ -707,9 +692,8 @@
 <span class="sd">        axes-bounding-box-diagonal regardless of the actual axes data limits.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markevery</span> <span class="o">!=</span> <span class="n">every</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_markevery</span> <span class="o">=</span> <span class="n">every</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_markevery</span> <span class="o">=</span> <span class="n">every</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Line2D.get_markevery"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.get_markevery">[docs]</a>    <span class="k">def</span> <span class="nf">get_markevery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -720,16 +704,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markevery</span></div>
 
 <div class="viewcode-block" id="Line2D.set_picker"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.set_picker">[docs]</a>    <span class="k">def</span> <span class="nf">set_picker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sets the event picker details for the line.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        p : float or callable[[Artist, Event], Tuple[bool, dict]]</span>
-<span class="sd">            If a float, it is used as the pick radius in points.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_contains</span> <span class="o">=</span> <span class="n">p</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># docstring inherited</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Number</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="c1"># After deprecation, the whole method can be deleted and inherited.</span>
+            <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span>
+                <span class="s2">&quot;3.3&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Setting the line&#39;s pick radius via set_picker &quot;</span>
+                <span class="s2">&quot;is deprecated since </span><span class="si">%(since)s</span><span class="s2"> and will be removed &quot;</span>
+                <span class="s2">&quot;</span><span class="si">%(removal)s</span><span class="s2">; use set_pickradius instead.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pickradius</span> <span class="o">=</span> <span class="n">p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_picker</span> <span class="o">=</span> <span class="n">p</span></div>
 
@@ -802,8 +783,8 @@
             <span class="k">if</span> <span class="n">nanmask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_x_filled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_x_filled</span><span class="p">[</span><span class="n">nanmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="n">nanmask</span><span class="p">],</span>
-                        <span class="n">indices</span><span class="p">[</span><span class="o">~</span><span class="n">nanmask</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="o">~</span><span class="n">nanmask</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_x_filled</span><span class="p">[</span><span class="n">nanmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+                    <span class="n">indices</span><span class="p">[</span><span class="n">nanmask</span><span class="p">],</span> <span class="n">indices</span><span class="p">[</span><span class="o">~</span><span class="n">nanmask</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="o">~</span><span class="n">nanmask</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_x_filled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span>
 
@@ -862,7 +843,7 @@
 
 <div class="viewcode-block" id="Line2D.draw"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.draw">[docs]</a>    <span class="nd">@allow_rasterization</span>
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
-        <span class="c1"># docstring inherited from Artist.draw.</span>
+        <span class="c1"># docstring inherited</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_visible</span><span class="p">():</span>
             <span class="k">return</span>
@@ -881,7 +862,7 @@
             <span class="n">subslice</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path_effects</span><span class="p">():</span>
-            <span class="kn">from</span> <span class="nn">matplotlib.patheffects</span> <span class="kn">import</span> <span class="n">PathEffectRenderer</span>
+            <span class="kn">from</span> <span class="nn">matplotlib.patheffects</span> <span class="k">import</span> <span class="n">PathEffectRenderer</span>
             <span class="n">renderer</span> <span class="o">=</span> <span class="n">PathEffectRenderer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path_effects</span><span class="p">(),</span> <span class="n">renderer</span><span class="p">)</span>
 
         <span class="n">renderer</span><span class="o">.</span><span class="n">open_group</span><span class="p">(</span><span class="s1">&#39;line2d&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gid</span><span class="p">())</span>
@@ -891,6 +872,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tpath</span><span class="o">.</span><span class="n">vertices</span><span class="p">):</span>
                 <span class="n">gc</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">new_gc</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_set_gc_clip</span><span class="p">(</span><span class="n">gc</span><span class="p">)</span>
+                <span class="n">gc</span><span class="o">.</span><span class="n">set_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">())</span>
 
                 <span class="n">lc_rgba</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_color</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">)</span>
                 <span class="n">gc</span><span class="o">.</span><span class="n">set_foreground</span><span class="p">(</span><span class="n">lc_rgba</span><span class="p">,</span> <span class="n">isRGBA</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -917,6 +899,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_marker</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markersize</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">gc</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">new_gc</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_set_gc_clip</span><span class="p">(</span><span class="n">gc</span><span class="p">)</span>
+            <span class="n">gc</span><span class="o">.</span><span class="n">set_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">())</span>
             <span class="n">gc</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_markeredgewidth</span><span class="p">)</span>
             <span class="n">gc</span><span class="o">.</span><span class="n">set_antialiased</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_antialiased</span><span class="p">)</span>
 
@@ -947,7 +930,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">recache</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_transform_path</span><span class="p">(</span><span class="n">subslice</span><span class="p">)</span>
                     <span class="n">tpath</span><span class="p">,</span> <span class="n">affine</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_transformed_path</span><span class="p">()</span>
-                                    <span class="o">.</span><span class="n">get_transformed_points_and_affine</span><span class="p">())</span>
+                                     <span class="o">.</span><span class="n">get_transformed_points_and_affine</span><span class="p">())</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">tpath</span><span class="p">,</span> <span class="n">affine</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_transformed_path</span><span class="p">()</span>
                                  <span class="o">.</span><span class="n">get_transformed_points_and_affine</span><span class="p">())</span>
@@ -1063,12 +1046,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markeredgewidth</span></div>
 
     <span class="k">def</span> <span class="nf">_get_markerfacecolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fillstyle</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;none&#39;</span>
         <span class="n">fc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markerfacecoloralt</span> <span class="k">if</span> <span class="n">alt</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markerfacecolor</span>
         <span class="k">if</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_str_lower_equal</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">):</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fillstyle</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;none&#39;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">fc</span>
 
@@ -1223,39 +1205,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashOffset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dashSeq</span> <span class="o">=</span> <span class="n">_scale_dashes</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_us_dashOffset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_us_dashSeq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linewidth</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_split_drawstyle_linestyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Split drawstyle from linestyle string.</span>
-
-<span class="sd">        If *ls* is only a drawstyle default to returning a linestyle</span>
-<span class="sd">        of &#39;-&#39;.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        ls : str</span>
-<span class="sd">            The linestyle to be processed</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        ret_ds : str or None</span>
-<span class="sd">            If the linestyle string does not contain a drawstyle prefix</span>
-<span class="sd">            return None, otherwise return it.</span>
-
-<span class="sd">        ls : str</span>
-<span class="sd">            The linestyle with the drawstyle (if any) stripped.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawStyleKeys</span><span class="p">:</span>  <span class="c1"># long names are first in the list</span>
-            <span class="k">if</span> <span class="n">ls</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
-                <span class="n">cbook</span><span class="o">.</span><span class="n">warn_deprecated</span><span class="p">(</span>
-                    <span class="s2">&quot;3.1&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Passing the drawstyle with the linestyle &quot;</span>
-                    <span class="s2">&quot;as a single string is deprecated since Matplotlib &quot;</span>
-                    <span class="s2">&quot;</span><span class="si">%(since)s</span><span class="s2"> and support will be removed </span><span class="si">%(removal)s</span><span class="s2">; &quot;</span>
-                    <span class="s2">&quot;please pass the drawstyle separately using the drawstyle &quot;</span>
-                    <span class="s2">&quot;keyword argument to Line2D or set_drawstyle() method (or &quot;</span>
-                    <span class="s2">&quot;ds/set_ds()).&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ls</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="p">):]</span> <span class="ow">or</span> <span class="s1">&#39;-&#39;</span>
-        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ls</span>
-
 <div class="viewcode-block" id="Line2D.set_linestyle"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.set_linestyle">[docs]</a>    <span class="k">def</span> <span class="nf">set_linestyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the linestyle of the line.</span>
@@ -1288,10 +1237,6 @@
 <span class="sd">            For examples see :doc:`/gallery/lines_bars_and_markers/linestyles`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">ds</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_drawstyle_linestyle</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">ds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">set_drawstyle</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
-
             <span class="k">if</span> <span class="n">ls</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
                 <span class="n">ls</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
 
@@ -1315,7 +1260,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        marker : marker style</span>
+<span class="sd">        marker : marker style string, `~.path.Path` or `~.markers.MarkerStyle`</span>
 <span class="sd">            See `~matplotlib.markers` for full description of possible</span>
 <span class="sd">            arguments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1473,8 +1418,7 @@
 <span class="sd">        s : {&#39;miter&#39;, &#39;round&#39;, &#39;bevel&#39;}</span>
 <span class="sd">            For examples see :doc:`/gallery/lines_bars_and_markers/joinstyle`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validJoin</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcsetup</span><span class="o">.</span><span class="n">validate_joinstyle</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dashjoinstyle</span> <span class="o">!=</span> <span class="n">s</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashjoinstyle</span> <span class="o">=</span> <span class="n">s</span></div>
@@ -1488,8 +1432,7 @@
 <span class="sd">        s : {&#39;miter&#39;, &#39;round&#39;, &#39;bevel&#39;}</span>
 <span class="sd">            For examples see :doc:`/gallery/lines_bars_and_markers/joinstyle`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validJoin</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcsetup</span><span class="o">.</span><span class="n">validate_joinstyle</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solidjoinstyle</span> <span class="o">!=</span> <span class="n">s</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solidjoinstyle</span> <span class="o">=</span> <span class="n">s</span></div>
@@ -1519,8 +1462,7 @@
 <span class="sd">        s : {&#39;butt&#39;, &#39;round&#39;, &#39;projecting&#39;}</span>
 <span class="sd">            For examples see :doc:`/gallery/lines_bars_and_markers/joinstyle`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validCap</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcsetup</span><span class="o">.</span><span class="n">validate_capstyle</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dashcapstyle</span> <span class="o">!=</span> <span class="n">s</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dashcapstyle</span> <span class="o">=</span> <span class="n">s</span></div>
@@ -1534,8 +1476,7 @@
 <span class="sd">        s : {&#39;butt&#39;, &#39;round&#39;, &#39;projecting&#39;}</span>
 <span class="sd">            For examples see :doc:`/gallery/lines_bars_and_markers/joinstyle`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">cbook</span><span class="o">.</span><span class="n">_check_in_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validCap</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcsetup</span><span class="o">.</span><span class="n">validate_capstyle</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solidcapstyle</span> <span class="o">!=</span> <span class="n">s</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solidcapstyle</span> <span class="o">=</span> <span class="n">s</span></div>
@@ -1563,6 +1504,47 @@
 <span class="sd">        See also `~.Line2D.set_linestyle`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linestyle</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">_AxLine</span><span class="p">(</span><span class="n">Line2D</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper class that implements `~.Axes.axline`, by recomputing the artist</span>
+<span class="sd">    transform at draw time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span>
+        <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">transScale</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">())])</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s2">&quot;Cannot draw a line through two identical points &quot;</span>
+                    <span class="n">f</span><span class="s2">&quot;(x={self.get_xdata()}, y={self.get_ydata()})&quot;</span><span class="p">)</span>
+            <span class="c1"># First send y1 to 0 and y2 to 1.</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">Affine2D</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">dy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">y1</span> <span class="o">/</span> <span class="n">dy</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis_transform</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;grid&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+            <span class="c1"># First send x1 to 0 and x2 to 1.</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">Affine2D</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">dx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">x1</span> <span class="o">/</span> <span class="n">dx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yaxis_transform</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;grid&quot;</span><span class="p">))</span>
+        <span class="p">(</span><span class="n">vxlo</span><span class="p">,</span> <span class="n">vylo</span><span class="p">),</span> <span class="p">(</span><span class="n">vxhi</span><span class="p">,</span> <span class="n">vyhi</span><span class="p">)</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">transScale</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">viewLim</span><span class="p">)</span>
+        <span class="c1"># General case: find intersections with view limits in either</span>
+        <span class="c1"># direction, and draw between the middle two points.</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span>
+            <span class="p">(</span><span class="n">vxlo</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="p">(</span><span class="n">vxlo</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">dx</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">vxhi</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="p">(</span><span class="n">vxhi</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">dx</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">vylo</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">dy</span><span class="p">,</span> <span class="n">vylo</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">vyhi</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">dy</span><span class="p">,</span> <span class="n">vyhi</span><span class="p">),</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">BboxTransformFrom</span><span class="p">(</span><span class="n">Bbox</span><span class="p">([</span><span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">())]))</span>
+                <span class="o">+</span> <span class="n">BboxTransformTo</span><span class="p">(</span><span class="n">Bbox</span><span class="p">([</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">]))</span>
+                <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">transLimits</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transformed_path</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Force regen.</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="VertexSelector"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.VertexSelector.html#matplotlib.lines.VertexSelector">[docs]</a><span class="k">class</span> <span class="nc">VertexSelector</span><span class="p">:</span>
@@ -1596,7 +1578,7 @@
 <span class="sd">        plt.show()</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+<div class="viewcode-block" id="VertexSelector.__init__"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.VertexSelector.html#matplotlib.lines.VertexSelector.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the class with a `.Line2D` instance.  The line should</span>
 <span class="sd">        already be added to some :class:`matplotlib.axes.Axes` instance and</span>
@@ -1614,15 +1596,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;pick_event&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">onpick</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ind</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ind</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="VertexSelector.process_selected"><a class="viewcode-back" href="../../api/_as_gen/matplotlib.lines.VertexSelector.html#matplotlib.lines.VertexSelector.process_selected">[docs]</a>    <span class="k">def</span> <span class="nf">process_selected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Default &quot;do nothing&quot; implementation of the</span>
 <span class="sd">        :meth:`process_selected` method.</span>
 
-<span class="sd">        *ind* are the indices of the selected vertices.  *xs* and *ys*</span>
-<span class="sd">        are the coordinates of the selected vertices.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ind : list of int</span>
+<span class="sd">            The indices of the selected vertices.</span>
+<span class="sd">        xs, ys : array-like</span>
+<span class="sd">            The coordinates of the selected vertices.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
@@ -1656,12 +1642,12 @@
     </div>
 <footer>
     <div class="footer">
-    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2018 The Matplotlib development team.
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2020 The Matplotlib development team.
 <br />
-    Last updated on Jun 17, 2020.
+    Last updated on Jul 17, 2020.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.
-Doc version v3.2.2-2-g137edd56a.
+<a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+Doc version v3.3.0-3-g8994f1b60.
     </div>
 </footer>
 <script>
