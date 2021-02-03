@@ -52,17 +52,22 @@ toignore = tocheck + [
 logging.basicConfig(level=logging.DEBUG)
 
 
-def findlast(fname, tocheck):
+# beware of triksy mutable defaults!
+def findlast(fname, tocheck, *, _cache={}):
     """
     Check the directories listed in ``tocheck`` to see if they have
     ``fname`` in them.  Return the first one found, or None
     """
     p = pathlib.Path(fname)
+    if p in _cache:
+        return _cache[p]
     for t in tocheck:
         pnew = pathlib.Path(t, p)
         if pnew.exists():
+            _cache[p] = t
             return t
     else:
+        _cache[p] = None
         return None
 
 
@@ -88,34 +93,37 @@ def do_links(root0):
     Either soft link a file at the top level to its newest position,
     or make an html redirect if it is an html file.
     """
-    _log.info(f'Doing links on {root0}')
+
+    _log.info(f"Doing links on {root0}")
     for root, dirs, files in os.walk(root0):
         for name in files:
             fullname = os.path.join(root, name)
             last = findlast(fullname, tocheck)
-            _log.debug(f'Checking: {fullname} found {last}')
+            _log.debug(f"Checking: {fullname} found {last}")
+            depth = root.count("/")
             if last is not None:
                 os.remove(fullname)
-                if name.endswith(('.htm', '.html')):
+                if name.endswith((".htm", ".html")):
                     # make an html redirect.
-                    _log.info(f'Rewriting HTML: {fullname} in {last}')
-                    with open(fullname, 'w') as fout:
-                        oldname = '/' + os.path.join(last, fullname)
-                        st = html_redirect % (oldname, oldname, oldname)
+                    _log.info(f"Rewriting HTML: {fullname} in {last}")
+                    with open(fullname, "w") as fout:
+                        oldname = os.path.join(last, fullname)
+                        st = html_redirect % (
+                            "../" * (depth + 1) + oldname,
+                            "/" + oldname,
+                            "../" * (depth + 1) + oldname,
+                        )
                         fout.write(st)
                 else:
                     # soft link
                     # Need to do these relative to where the link is
                     # so if it is a level down `ln -s ../3.1.1/boo/who boo/who`
-                    last = os.path.join('..', last)
-                    depth = root.count('/')
+                    last = os.path.join("..", last)
                     for i in range(depth):
-                        last = os.path.join('..', last)
+                        last = os.path.join("..", last)
                     oldname = os.path.join(last, fullname)
-                    _log.info(f'Linking {fullname} to {oldname}')
+                    _log.info(f"Linking {fullname} to {oldname}")
                     os.symlink(oldname, fullname)
-        for d in dirs:
-            do_links(d)
 
 
 def do_canonicals(dname):
@@ -123,21 +131,21 @@ def do_canonicals(dname):
     For each html file in the versioned docs, make the canonical link point
     to the newest version.
     """
-    _log.debug(f'Walking {dname}')
+    _log.debug(f"Walking {dname}")
     for root, dirs, files in os.walk(dname):
         for name in files:
             fullname = os.path.join(root, name)
             p = pathlib.Path(fullname)
-            _log.debug(f'Checking {fullname}')
-            if name.endswith(('.htm', '.html')):
+            _log.debug(f"Checking {fullname}")
+            if name.endswith((".htm", ".html")):
                 basename = pathlib.Path(*p.parts[1:])
                 last = findlast(basename, tocheck)
                 if last is not None:
                     update_canonical(fullname, last)
 
         for d in dirs:
-            _log.info(f'DIR: {d}')
-            do_canonicals(os.path.join(dname,d))
+            _log.info(f"DIR: {d}")
+            do_canonicals(os.path.join(dname, d))
 
 
 def update_canonical(fullname, last):
@@ -150,19 +158,19 @@ def update_canonical(fullname, last):
     this will change  all of them.
     """
     p = pathlib.Path(fullname)
-    pre = 'https://matplotlib.org/'
+    pre = "https://matplotlib.org/"
     pnew = pathlib.Path(last, *p.parts[1:])
-    newcanon = f'{pre+str(pnew)}'
-    _log.info(f'{p} to {pre+str(pnew)}')
+    newcanon = f"{pre+str(pnew)}"
+    _log.info(f"{p} to {pre+str(pnew)}")
     with tempfile.NamedTemporaryFile(delete=False) as fout:
-        with open(fullname, 'rb') as fin:
+        with open(fullname, "rb") as fin:
             for line in fin:
                 if b'<link rel="canonical"' in line:
-                    new = bytes(f'<link rel="canonical" href="{newcanon}"',
-                                encoding='utf-8')
-                    ll = re.sub(b'<link rel="canonical" href=".*"', new,
-                                line)
-                    _log.debug(f'new {line}->{ll}')
+                    new = bytes(
+                        f'<link rel="canonical" href="{newcanon}"', encoding="utf-8"
+                    )
+                    ll = re.sub(b'<link rel="canonical" href=".*"', new, line)
+                    _log.debug(f"new {line}->{ll}")
                     fout.write(ll)
                 else:
                     fout.write(line)
@@ -171,13 +179,15 @@ def update_canonical(fullname, last):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Optional app description')
+    parser = argparse.ArgumentParser(description="Optional app description")
 
-    parser.add_argument('--np', type=int, help='Number of processors to use')
-    parser.add_argument('--no_canonicals', help='do not do canonical links',
-                        action="store_true")
-    parser.add_argument('--no_redirects', help='do not do redirects links',
-                        action="store_true")
+    parser.add_argument("--np", type=int, help="Number of processors to use")
+    parser.add_argument(
+        "--no_canonicals", help="do not do canonical links", action="store_true"
+    )
+    parser.add_argument(
+        "--no_redirects", help="do not do redirects links", action="store_true"
+    )
 
     args = parser.parse_args()
     if args.np:
@@ -188,22 +198,22 @@ if __name__ == "__main__":
     # html redirect or soft link most things in the top-level directory that
     # are not other modules or versioned docs.
     if not args.no_redirects:
-        for entry in os.scandir('./'):
+        for entry in os.scandir("./"):
             if not (entry.name in toignore):
                 if entry.is_dir():
                     do_links(entry.name)
-                elif entry.name.endswith(('.htm', '.html')):
+                elif entry.name.endswith((".htm", ".html")):
                     fullname = entry.name
                     last = findlast(fullname, tocheck)
-                    _log.debug(f'Checking: {fullname} found {last}')
+                    _log.debug(f"Checking: {fullname} found {last}")
                     if last is not None:
-                        os.remove('./'+fullname)
-                        _log.info(f'Rewriting HTML: {fullname} in {last}')
-                        with open(fullname, 'w') as fout:
-                            oldname = '/' + os.path.join(last, fullname)
-                            st = html_redirect % (oldname, oldname, oldname)
+                        os.remove("./" + fullname)
+                        _log.info(f"Rewriting HTML: {fullname} in {last}")
+                        with open(fullname, "w") as fout:
+                            oldname = os.path.join(last, fullname)
+                            st = html_redirect % (oldname, "/" + oldname, oldname)
                             fout.write(st)
-        _log.info('Done links and redirects')
+        _log.info("Done links and redirects")
 
     # change the canonical url for all html to the newest version in the docs:
     if not args.no_canonicals:
