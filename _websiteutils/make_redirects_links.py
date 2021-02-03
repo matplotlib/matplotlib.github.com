@@ -26,17 +26,28 @@ This script takes a while, and is destructive, so should probably be run on a
 branch and pushed as a PR so it can easily be reverted.
 """
 
-_log = logging.getLogger('make_redirect_links')
+_log = logging.getLogger("make_redirect_links")
 
 
-tocheck = ['stable'] + [f'{major}.{minor}.{micro}'
-                        for major in range(6, -1, -1)
-                        for minor in range(6, -1, -1)
-                        for micro in range(6, -1, -1)]
+tocheck = ["stable"] + [
+    f"{major}.{minor}.{micro}"
+    for major in range(6, -1, -1)
+    for minor in range(6, -1, -1)
+    for micro in range(6, -1, -1)
+    if pathlib.Path(f"{major}.{minor}.{micro}").exists()
+]
 
-toignore = tocheck + ['mpl-probscale', 'mpl_examples', 'mpl_toolkits',
-                      '_webpageutils', 'xkcd', 'sitemap.xml',
-                      'robots.txt', 'CNAME', '.git']
+toignore = tocheck + [
+    "mpl-probscale",
+    "mpl_examples",
+    "mpl_toolkits",
+    "_webpageutils",
+    "xkcd",
+    "sitemap.xml",
+    "robots.txt",
+    "CNAME",
+    ".git",
+]
 
 logging.basicConfig(level=logging.DEBUG)
 
