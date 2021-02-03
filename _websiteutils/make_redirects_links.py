@@ -54,17 +54,18 @@ def findlast(fname, tocheck):
     else:
         return None
 
+
 html_redirect = """
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="refresh" content="0;url=https://matplotlib.org%s" />
-        <link rel="canonical" href="https://matplotlib.org%s" />
+        <meta http-equiv="refresh" content="0;%s" />
+        <link rel="canonical" href="url=https://matplotlib.org%s" />
     </head>
     <body>
         <h1>
-            The page been moved to <a href="https://matplotlib.org%s"</a>
+            The page been moved to <a href="%s"</a>
         </h1>
     </body>
 </html>
