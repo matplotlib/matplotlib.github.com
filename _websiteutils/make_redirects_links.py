@@ -76,8 +76,8 @@ html_redirect = """
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="refresh" content="0;%s" />
-        <link rel="canonical" href="url=https://matplotlib.org%s" />
+        <meta http-equiv="refresh" content="0;url=%s" />
+        <link rel="canonical" href="https://matplotlib.org%s" />
     </head>
     <body>
         <h1>
