@@ -81,7 +81,7 @@ html_redirect = """
     </head>
     <body>
         <h1>
-            The page been moved to <a href="%s"</a>
+            The page been moved <a href="%s">here</a>!
         </h1>
     </body>
 </html>
