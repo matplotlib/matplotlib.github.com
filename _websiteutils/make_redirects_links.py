@@ -162,16 +162,19 @@ def update_canonical(fullname, last):
     pnew = pathlib.Path(last, *p.parts[1:])
     newcanon = f"{pre+str(pnew)}"
     _log.info(f"{p} to {pre+str(pnew)}")
+    rec = re.compile(b'<link rel="canonical" href=".*"')
     with tempfile.NamedTemporaryFile(delete=False) as fout:
+        found = False
         with open(fullname, "rb") as fin:
             for line in fin:
-                if b'<link rel="canonical"' in line:
+                if not found and b'<link rel="canonical"' in line:
                     new = bytes(
                         f'<link rel="canonical" href="{newcanon}"', encoding="utf-8"
                     )
-                    ll = re.sub(b'<link rel="canonical" href=".*"', new, line)
+                    ll = rec.sub(new, line)
                     _log.debug(f"new {line}->{ll}")
                     fout.write(ll)
+                    found = True
                 else:
                     fout.write(line)
     shutil.move(fout.name, fullname)
