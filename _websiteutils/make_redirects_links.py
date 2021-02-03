@@ -8,7 +8,7 @@ import re
 import subprocess
 import sys
 import tempfile
-
+import shutil
 
 """
 This script does two things that improve the website organization.
@@ -154,7 +154,7 @@ def update_canonical(fullname, last):
                     fout.write(ll)
                 else:
                     fout.write(line)
-    os.rename(fout.name, fullname)
+    shutil.move(fout.name, fullname)
 
 
 if __name__ == "__main__":
