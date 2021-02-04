@@ -73,12 +73,12 @@ html_redirect = """
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="refresh" content="0;%s" />
-        <link rel="canonical" href="url=https://matplotlib.org%s" />
+        <meta http-equiv="refresh" content="0;url=%s" />
+        <link rel="canonical" href="https://matplotlib.org%s" />
     </head>
     <body>
         <h1>
-            The page been moved to <a href="%s"</a>
+            The page been moved <a href="%s">here</a>!
         </h1>
     </body>
 </html>
