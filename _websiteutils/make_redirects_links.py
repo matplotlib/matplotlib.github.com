@@ -76,16 +76,27 @@ html_redirect = """
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="refresh" content="0;url=%s" />
-        <link rel="canonical" href="https://matplotlib.org%s" />
+        <meta http-equiv="refresh" content="0;%s" />
+        <link rel="canonical" href="url=https://matplotlib.org%s" />
     </head>
     <body>
         <h1>
-            The page been moved <a href="%s">here</a>!
+            The page been moved to <a href="%s"</a>
         </h1>
     </body>
 </html>
 """
+
+# note these are all one line so they are easy to search and replace in the
+# html files (otherwise we need to close tags)
+warn_banner_exists = ('<div id="olddocs-message"> You are reading an old '
+        'version of the documentation (v%s).  For the latest version see '
+        '<a href="%s">%s</a></div>\n')
+
+
+warn_banner_old = ('<div id="olddocs-message"> You are reading an old '
+        'version of the documentation (v%s).  For the latest version see '
+        '<a href="/stable/">https://matplotlib.org/stable/</a> </div>\n')
 
 
 def do_links(root0):
@@ -141,19 +152,17 @@ def do_canonicals(dname):
                 basename = pathlib.Path(*p.parts[1:])
                 last = findlast(basename, tocheck)
                 if last is not None:
-                    update_canonical(fullname, last)
-
-        for d in dirs:
-            _log.info(f"DIR: {d}")
-            do_canonicals(os.path.join(dname, d))
+                    update_canonical(fullname, last, dname==tocheck[1])
 
 
-def update_canonical(fullname, last):
+def update_canonical(fullname, last, newest):
     """
     Change the canonical link in *fullname* to the same link in the
     version given by *last*.  We do this with a regexp to prevent
     removing any other content on a line that has the canonical link.
 
+    Also add a banner (div) in the body if an old version of the docs.
+    
     Note that if for some reason there are more than one canonical link
     this will change  all of them.
     """
@@ -169,14 +178,31 @@ def update_canonical(fullname, last):
             for line in fin:
                 if not found and b'<link rel="canonical"' in line:
                     new = bytes(
-                        f'<link rel="canonical" href="{newcanon}"', encoding="utf-8"
+                        f'<link rel="canonical" href="{newcanon}"',
+                        encoding="utf-8"
                     )
                     ll = rec.sub(new, line)
                     _log.debug(f"new {line}->{ll}")
                     fout.write(ll)
                     found = True
+                elif b'<body>' in line and not newest:
+                    # add a warning right under:
+                    fout.write(line)
+                    line = next(fin)
+                    if last == 'stable':
+                        new = warn_banner_exists % (p.parts[0], newcanon,
+                                                    newcanon)
+                    else:
+                        new = warn_banner_old % (p.parts[0])
+                    fout.write(bytes(new, encoding="utf-8"))
+                    if not b'<div id="olddocs-message">' in line:
+                        # write the line out if it wasnt' an olddocs-message:
+                        fout.write(line)
+
+
                 else:
                     fout.write(line)
+
     shutil.move(fout.name, fullname)
 
 
@@ -197,6 +223,10 @@ if __name__ == "__main__":
         np = args.np
     else:
         np = None
+
+    # figure out the newest version and trim tocheck at the same time:
+    tocheck = [t for t in tocheck if os.path.exists(t)]
+    print(tocheck)
 
     # html redirect or soft link most things in the top-level directory that
     # are not other modules or versioned docs.
