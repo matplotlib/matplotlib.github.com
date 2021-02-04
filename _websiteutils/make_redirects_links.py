@@ -1,12 +1,9 @@
 import argparse
-import glob
 import logging
 import multiprocessing
 import os
 import pathlib
 import re
-import subprocess
-import sys
 import tempfile
 import shutil
 
@@ -89,14 +86,16 @@ html_redirect = """
 
 # note these are all one line so they are easy to search and replace in the
 # html files (otherwise we need to close tags)
-warn_banner_exists = ('<div id="olddocs-message"> You are reading an old '
-        'version of the documentation (v%s).  For the latest version see '
-        '<a href="%s">%s</a></div>\n')
+warn_banner_exists = (
+    '<div id="olddocs-message"> You are reading an old version of the'
+    'documentation (v%s).  For the latest version see '
+    '<a href="%s">%s</a></div>\n')
 
 
-warn_banner_old = ('<div id="olddocs-message"> You are reading an old '
-        'version of the documentation (v%s).  For the latest version see '
-        '<a href="/stable/">https://matplotlib.org/stable/</a> </div>\n')
+warn_banner_old = (
+    '<div id="olddocs-message"> You are reading an old version of the'
+    'documentation (v%s).  For the latest version see '
+    '<a href="/stable/">https://matplotlib.org/stable/</a> </div>\n')
 
 
 def do_links(root0):
@@ -152,7 +151,7 @@ def do_canonicals(dname):
                 basename = pathlib.Path(*p.parts[1:])
                 last = findlast(basename, tocheck)
                 if last is not None:
-                    update_canonical(fullname, last, dname==tocheck[1])
+                    update_canonical(fullname, last, dname == tocheck[1])
 
 
 def update_canonical(fullname, last, newest):
@@ -162,26 +161,23 @@ def update_canonical(fullname, last, newest):
     removing any other content on a line that has the canonical link.
 
     Also add a banner (div) in the body if an old version of the docs.
-    
+
     Note that if for some reason there are more than one canonical link
     this will change  all of them.
     """
     p = pathlib.Path(fullname)
     pre = "https://matplotlib.org/"
     pnew = pathlib.Path(last, *p.parts[1:])
-    newcanon = f"{pre+str(pnew)}"
-    _log.info(f"{p} to {pre+str(pnew)}")
+    newcanon = f"{pre}{str(pnew)}"
+    _log.info(f"{p} to {pre}{str(pnew)}")
     rec = re.compile(b'<link rel="canonical" href=".*"')
     with tempfile.NamedTemporaryFile(delete=False) as fout:
         found = False
         with open(fullname, "rb") as fin:
             for line in fin:
                 if not found and b'<link rel="canonical"' in line:
-                    new = bytes(
-                        f'<link rel="canonical" href="{newcanon}"',
-                        encoding="utf-8"
-                    )
-                    ll = rec.sub(new, line)
+                    new = f'<link rel="canonical" href="{newcanon}"'
+                    ll = rec.sub(new.encode("utf-8"), line)
                     _log.debug(f"new {line}->{ll}")
                     fout.write(ll)
                     found = True
@@ -194,11 +190,10 @@ def update_canonical(fullname, last, newest):
                                                     newcanon)
                     else:
                         new = warn_banner_old % (p.parts[0])
-                    fout.write(bytes(new, encoding="utf-8"))
-                    if not b'<div id="olddocs-message">' in line:
-                        # write the line out if it wasnt' an olddocs-message:
+                    fout.write(new.encode("utf-8"))
+                    if b'<div id="olddocs-message">' not in line:
+                        # write the line out if it wasn't an olddocs-message:
                         fout.write(line)
-
 
                 else:
                     fout.write(line)
@@ -211,12 +206,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optional app description")
 
     parser.add_argument("--np", type=int, help="Number of processors to use")
-    parser.add_argument(
-        "--no_canonicals", help="do not do canonical links", action="store_true"
-    )
-    parser.add_argument(
-        "--no_redirects", help="do not do redirects links", action="store_true"
-    )
+    parser.add_argument("--no_canonicals", help="do not do canonical links",
+                        action="store_true")
+    parser.add_argument("--no_redirects", help="do not do redirects links",
+                        action="store_true")
 
     args = parser.parse_args()
     if args.np:
@@ -244,7 +237,8 @@ if __name__ == "__main__":
                         _log.info(f"Rewriting HTML: {fullname} in {last}")
                         with open(fullname, "w") as fout:
                             oldname = os.path.join(last, fullname)
-                            st = html_redirect % (oldname, "/" + oldname, oldname)
+                            st = html_redirect % (oldname, "/" + oldname,
+                                                  oldname)
                             fout.write(st)
         _log.info("Done links and redirects")
 
