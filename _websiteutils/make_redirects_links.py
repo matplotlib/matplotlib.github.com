@@ -10,7 +10,7 @@ import tempfile
 import shutil
 
 """
-This script does two things that improve the website organization.
+This script does three things that improve the website organization.
 
 First, we used to host in the root of the webpage, but have now moved to
 ``/stable/``.  We do not want obsolete links to link to nothing (or that has
@@ -20,6 +20,9 @@ an html refresh redirect.
 
 Second, it changes the canonical link in each html file to the newest version
 found of the html file (including stable if its in the latest version.)
+
+Third, the script adds a new div to the top of all the old webpages with
+tag ``olddocs-message`` to warn users that the page is obsolete.  
 
 This script takes a while, and is destructive, so should probably be run on a
 branch and pushed as a PR so it can easily be reverted.
