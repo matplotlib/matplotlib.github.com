@@ -31,15 +31,14 @@ branch and pushed as a PR so it can easily be reverted.
 _log = logging.getLogger("make_redirect_links")
 
 
-tocheck = ["stable"] + [
-    f"{major}.{minor}.{micro}"
+tocheck = [pathlib.Path("stable")] + [
+    pathlib.Path(f"{major}.{minor}.{micro}")
     for major in range(6, -1, -1)
     for minor in range(6, -1, -1)
     for micro in range(6, -1, -1)
-    if pathlib.Path(f"{major}.{minor}.{micro}").exists()
 ]
 
-toignore = tocheck + [
+toignore = tocheck + [pathlib.Path(p) for p in [
     "mpl-probscale",
     "mpl_examples",
     "mpl_toolkits",
@@ -49,7 +48,7 @@ toignore = tocheck + [
     "robots.txt",
     "CNAME",
     ".git",
-]
+]]
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -60,16 +59,15 @@ def findlast(fname, tocheck, *, _cache={}):
     Check the directories listed in ``tocheck`` to see if they have
     ``fname`` in them.  Return the first one found, or None
     """
-    p = pathlib.Path(fname)
-    if p in _cache:
-        return _cache[p]
+    if fname in _cache:
+        return _cache[fname]
     for t in tocheck:
-        pnew = pathlib.Path(t, p)
+        pnew = t / fname
         if pnew.exists():
-            _cache[p] = t
+            _cache[fname] = t
             return t
     else:
-        _cache[p] = None
+        _cache[fname] = None
         return None
 
 
@@ -111,32 +109,29 @@ def do_links(root0):
     _log.info(f"Doing links on {root0}")
     for root, dirs, files in os.walk(root0):
         for name in files:
-            fullname = os.path.join(root, name)
+            fullname = pathlib.Path(root, name)
             last = findlast(fullname, tocheck)
             _log.debug(f"Checking: {fullname} found {last}")
-            depth = root.count("/")
             if last is not None:
-                os.remove(fullname)
+                fullname.unlink()
+                oldname = last / fullname
+                # Need to do these relative to where the final is, but note
+                # that `Path.relative_to` does not allow '.' as a common path
+                # prefix, so we need to use `os.path.relpath` instead.
+                relpath = os.path.relpath(oldname, start=fullname.parent)
                 if name.endswith((".htm", ".html")):
                     # make an html redirect.
                     _log.info(f"Rewriting HTML: {fullname} in {last}")
-                    with open(fullname, "w") as fout:
-                        oldname = os.path.join(last, fullname)
+                    with fullname.open("w") as fout:
                         st = html_redirect.format(
-                            newurl="../" * (depth + 1) + oldname,
+                            newurl=relpath,
                             canonical=oldname,
                         )
                         fout.write(st)
                 else:
                     # soft link
-                    # Need to do these relative to where the link is
-                    # so if it is a level down `ln -s ../3.1.1/boo/who boo/who`
-                    last = os.path.join("..", last)
-                    for i in range(depth):
-                        last = os.path.join("..", last)
-                    oldname = os.path.join(last, fullname)
                     _log.info(f"Linking {fullname} to {oldname}")
-                    os.symlink(oldname, fullname)
+                    fullname.symlink_to(relpath)
 
 
 def do_canonicals(dname):
@@ -145,16 +140,12 @@ def do_canonicals(dname):
     to the newest version.
     """
     _log.debug(f"Walking {dname}")
-    for root, dirs, files in os.walk(dname):
-        for name in files:
-            fullname = os.path.join(root, name)
-            p = pathlib.Path(fullname)
-            _log.debug(f"Checking {fullname}")
-            if name.endswith((".htm", ".html")):
-                basename = pathlib.Path(*p.parts[1:])
-                last = findlast(basename, tocheck)
-                if last is not None:
-                    update_canonical(fullname, last, dname == tocheck[1])
+    for fullname in dname.rglob("*.html"):
+        _log.debug(f"Checking {fullname}")
+        basename = pathlib.Path(*fullname.parts[1:])
+        last = findlast(basename, tocheck)
+        if last is not None:
+            update_canonical(fullname, last, dname == tocheck[1])
 
 
 def update_canonical(fullname, last, newest):
@@ -168,15 +159,14 @@ def update_canonical(fullname, last, newest):
     Note that if for some reason there are more than one canonical link
     this will change  all of them.
     """
-    p = pathlib.Path(fullname)
     pre = "https://matplotlib.org/"
-    pnew = pathlib.Path(last, *p.parts[1:])
+    pnew = last.joinpath(*fullname.parts[1:])
     newcanon = f"{pre}{str(pnew)}"
-    _log.info(f"{p} to {pre}{str(pnew)}")
+    _log.info(f"{fullname} to {pre}{str(pnew)}")
     rec = re.compile(b'<link rel="canonical" href=".*"')
     with tempfile.NamedTemporaryFile(delete=False) as fout:
         found = False
-        with open(fullname, "rb") as fin:
+        with fullname.open("rb") as fin:
             for line in fin:
                 if not found and b'<link rel="canonical"' in line:
                     new = f'<link rel="canonical" href="{newcanon}"'
@@ -188,11 +178,12 @@ def update_canonical(fullname, last, newest):
                     # add a warning right under:
                     fout.write(line)
                     line = next(fin)
-                    if last == 'stable':
-                        new = warn_banner_exists.format(version=p.parts[0],
-                                                        url=newcanon)
+                    if last == tocheck[0]:
+                        new = warn_banner_exists.format(
+                            version=fullname.parts[0],
+                            url=newcanon)
                     else:
-                        new = warn_banner_old.format(version=p.parts[0])
+                        new = warn_banner_old.format(version=fullname.parts[0])
                     fout.write(new.encode("utf-8"))
                     if b'<div id="olddocs-message">' not in line:
                         # write the line out if it wasn't an olddocs-message:
@@ -221,25 +212,25 @@ if __name__ == "__main__":
         np = None
 
     # figure out the newest version and trim tocheck at the same time:
-    tocheck = [t for t in tocheck if os.path.exists(t)]
+    tocheck = tuple(p for p in tocheck if p.exists())
     print(tocheck)
 
     # html redirect or soft link most things in the top-level directory that
     # are not other modules or versioned docs.
     if not args.no_redirects:
         for entry in os.scandir("."):
-            if entry.name not in toignore:
+            fullname = pathlib.Path(entry.name)
+            if fullname not in toignore:
                 if entry.is_dir():
                     do_links(entry.name)
-                elif entry.name.endswith((".htm", ".html")):
-                    fullname = entry.name
+                elif fullname.suffix == ".html":
                     last = findlast(fullname, tocheck)
                     _log.debug(f"Checking: {fullname} found {last}")
                     if last is not None:
-                        os.remove(fullname)
+                        fullname.unlink()
                         _log.info(f"Rewriting HTML: {fullname} in {last}")
-                        with open(fullname, "w") as fout:
-                            oldname = os.path.join(last, fullname)
+                        with fullname.open("w") as fout:
+                            oldname = last / fullname
                             st = html_redirect.format(newurl=oldname,
                                                       canonical=oldname)
                             fout.write(st)
