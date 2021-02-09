@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import functools
 import logging
 import multiprocessing
 import os
@@ -53,22 +54,17 @@ toignore = tocheck + [pathlib.Path(p) for p in [
 logging.basicConfig(level=logging.DEBUG)
 
 
-# beware of triksy mutable defaults!
-def findlast(fname, tocheck, *, _cache={}):
+@functools.cache
+def findlast(fname, tocheck):
     """
     Check the directories listed in ``tocheck`` to see if they have
     ``fname`` in them.  Return the first one found, or None
     """
-    if fname in _cache:
-        return _cache[fname]
     for t in tocheck:
         pnew = t / fname
         if pnew.exists():
-            _cache[fname] = t
             return t
-    else:
-        _cache[fname] = None
-        return None
+    return None
 
 
 html_redirect = """<!DOCTYPE HTML>
