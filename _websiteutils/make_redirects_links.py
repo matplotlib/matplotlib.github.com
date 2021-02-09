@@ -44,7 +44,7 @@ toignore = tocheck + [pathlib.Path(p) for p in [
     "mpl_toolkits",
     "_webpageutils",
     "xkcd",
-    "sitemap.xml",
+    "_sitemap",
     "robots.txt",
     "CNAME",
     ".git",
