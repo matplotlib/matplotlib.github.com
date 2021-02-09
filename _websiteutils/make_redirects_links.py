@@ -22,7 +22,7 @@ Second, it changes the canonical link in each html file to the newest version
 found of the html file (including stable if its in the latest version.)
 
 Third, the script adds a new div to the top of all the old webpages with
-tag ``olddocs-message`` to warn users that the page is obsolete.  
+tag ``olddocs-message`` to warn users that the page is obsolete.
 
 This script takes a while, and is destructive, so should probably be run on a
 branch and pushed as a PR so it can easily be reverted.
@@ -73,17 +73,16 @@ def findlast(fname, tocheck, *, _cache={}):
         return None
 
 
-html_redirect = """
-<!DOCTYPE HTML>
+html_redirect = """<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="refresh" content="0;url=%s" />
-        <link rel="canonical" href="https://matplotlib.org%s" />
+        <meta http-equiv="refresh" content="0;url={newurl}" />
+        <link rel="canonical" href="https://matplotlib.org/{canonical}" />
     </head>
     <body>
         <h1>
-            The page been moved <a href="%s">here</a>!
+            The page been moved <a href="{newurl}">here</a>!
         </h1>
     </body>
 </html>
@@ -92,14 +91,14 @@ html_redirect = """
 # note these are all one line so they are easy to search and replace in the
 # html files (otherwise we need to close tags)
 warn_banner_exists = (
-    '<div id="olddocs-message"> You are reading an old version of the'
-    'documentation (v%s).  For the latest version see '
-    '<a href="%s">%s</a></div>\n')
+    '<div id="olddocs-message"> You are reading an old version of the '
+    'documentation (v{version}).  For the latest version see '
+    '<a href="{url}">{url}</a></div>\n')
 
 
 warn_banner_old = (
-    '<div id="olddocs-message"> You are reading an old version of the'
-    'documentation (v%s).  For the latest version see '
+    '<div id="olddocs-message"> You are reading an old version of the '
+    'documentation (v{version}).  For the latest version see '
     '<a href="/stable/">https://matplotlib.org/stable/</a> </div>\n')
 
 
@@ -123,10 +122,9 @@ def do_links(root0):
                     _log.info(f"Rewriting HTML: {fullname} in {last}")
                     with open(fullname, "w") as fout:
                         oldname = os.path.join(last, fullname)
-                        st = html_redirect % (
-                            "../" * (depth + 1) + oldname,
-                            "/" + oldname,
-                            "../" * (depth + 1) + oldname,
+                        st = html_redirect.format(
+                            newurl="../" * (depth + 1) + oldname,
+                            canonical=oldname,
                         )
                         fout.write(st)
                 else:
@@ -191,10 +189,10 @@ def update_canonical(fullname, last, newest):
                     fout.write(line)
                     line = next(fin)
                     if last == 'stable':
-                        new = warn_banner_exists % (p.parts[0], newcanon,
-                                                    newcanon)
+                        new = warn_banner_exists.format(version=p.parts[0],
+                                                        url=newcanon)
                     else:
-                        new = warn_banner_old % (p.parts[0])
+                        new = warn_banner_old.format(version=p.parts[0])
                     fout.write(new.encode("utf-8"))
                     if b'<div id="olddocs-message">' not in line:
                         # write the line out if it wasn't an olddocs-message:
@@ -208,12 +206,12 @@ def update_canonical(fullname, last, newest):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Optional app description")
+    parser = argparse.ArgumentParser()
 
     parser.add_argument("--np", type=int, help="Number of processors to use")
-    parser.add_argument("--no_canonicals", help="do not do canonical links",
+    parser.add_argument("--no-canonicals", help="do not do canonical links",
                         action="store_true")
-    parser.add_argument("--no_redirects", help="do not do redirects links",
+    parser.add_argument("--no-redirects", help="do not do redirects links",
                         action="store_true")
 
     args = parser.parse_args()
@@ -229,8 +227,8 @@ if __name__ == "__main__":
     # html redirect or soft link most things in the top-level directory that
     # are not other modules or versioned docs.
     if not args.no_redirects:
-        for entry in os.scandir("./"):
-            if not (entry.name in toignore):
+        for entry in os.scandir("."):
+            if entry.name not in toignore:
                 if entry.is_dir():
                     do_links(entry.name)
                 elif entry.name.endswith((".htm", ".html")):
@@ -238,12 +236,12 @@ if __name__ == "__main__":
                     last = findlast(fullname, tocheck)
                     _log.debug(f"Checking: {fullname} found {last}")
                     if last is not None:
-                        os.remove("./" + fullname)
+                        os.remove(fullname)
                         _log.info(f"Rewriting HTML: {fullname} in {last}")
                         with open(fullname, "w") as fout:
                             oldname = os.path.join(last, fullname)
-                            st = html_redirect % (oldname, "/" + oldname,
-                                                  oldname)
+                            st = html_redirect.format(newurl=oldname,
+                                                      canonical=oldname)
                             fout.write(st)
         _log.info("Done links and redirects")
 
