@@ -85,13 +85,13 @@ html_redirect = """<!DOCTYPE HTML>
 # note these are all one line so they are easy to search and replace in the
 # html files (otherwise we need to close tags)
 warn_banner_exists = (
-    '<div id="olddocs-message"> You are reading an old version of the '
+    '<div id="unreleased-message"> You are reading an old version of the '
     'documentation (v{version}).  For the latest version see '
     '<a href="{url}">{url}</a></div>\n')
 
 
 warn_banner_old = (
-    '<div id="olddocs-message"> You are reading an old version of the '
+    '<div id="unreleased-message"> You are reading an old version of the '
     'documentation (v{version}).  For the latest version see '
     '<a href="/stable/">https://matplotlib.org/stable/</a> </div>\n')
 
