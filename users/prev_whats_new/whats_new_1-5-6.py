@@ -1,2 +1,1 @@
-plt.bar([1, 2], [.5, .75], tick_label=['bar1', 'bar2'],
-        align='center')
+../../stable/users/prev_whats_new/whats_new_1-5-6.py

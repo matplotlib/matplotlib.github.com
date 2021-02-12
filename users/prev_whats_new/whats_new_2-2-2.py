@@ -1,6 +1,1 @@
-import matplotlib.pyplot as plt
-import numpy as np
-
-fig, ax = plt.subplots()
-pcm = ax.pcolormesh(np.random.rand(32,32), cmap='cividis')
-fig.colorbar(pcm)
+../../stable/users/prev_whats_new/whats_new_2-2-2.py

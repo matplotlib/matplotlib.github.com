@@ -1,4 +1,1 @@
-import matplotlib.pyplot as plt
-plt.plot([1,2,3,4])
-plt.ylabel('some numbers')
-plt.show()
+../1.5.3/pyplots/pyplot_simple.py

@@ -1,18 +1,1 @@
-"""
-===========
-Ginput Demo
-===========
-
-This provides examples of uses of interactive functions, such as ginput,
-
-"""
-
-
-import matplotlib.pyplot as plt
-import numpy as np
-t = np.arange(10)
-plt.plot(t, np.sin(t))
-print("Please click")
-x = plt.ginput(3)
-print("clicked", x)
-plt.show()
+../../3.0.2/_downloads/580cc43ae9fd4c8ee3dd887978f3f4bb/ginput_demo_sgskip.py

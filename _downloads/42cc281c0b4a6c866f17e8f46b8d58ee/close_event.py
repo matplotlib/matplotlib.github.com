@@ -1,18 +1,1 @@
-"""
-===========
-Close Event
-===========
-
-Example to show connecting events that occur when the figure closes.
-"""
-import matplotlib.pyplot as plt
-
-
-def handle_close(evt):
-    print('Closed Figure!')
-
-fig = plt.figure()
-fig.canvas.mpl_connect('close_event', handle_close)
-
-plt.text(0.35, 0.5, 'Close Me!', dict(size=30))
-plt.show()
+../../3.1.0/_downloads/42cc281c0b4a6c866f17e8f46b8d58ee/close_event.py

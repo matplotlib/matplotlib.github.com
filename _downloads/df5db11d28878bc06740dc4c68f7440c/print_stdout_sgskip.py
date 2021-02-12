@@ -1,18 +1,1 @@
-"""
-============
-Print Stdout
-============
-
-print png to standard out
-
-usage: python print_stdout.py > somefile.png
-
-"""
-
-import sys
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-plt.plot([1, 2, 3])
-plt.savefig(sys.stdout.buffer)
+../../3.1.3/_downloads/df5db11d28878bc06740dc4c68f7440c/print_stdout_sgskip.py

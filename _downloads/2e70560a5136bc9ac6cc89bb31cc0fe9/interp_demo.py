@@ -1,18 +1,1 @@
-"""
-===========
-Interp Demo
-===========
-
-"""
-import matplotlib.pyplot as plt
-import numpy as np
-
-x = np.linspace(0, 2 * np.pi, 20)
-y = np.sin(x)
-yp = None
-xi = np.linspace(x[0], x[-1], 100)
-yi = np.interp(xi, x, y, yp)
-
-fig, ax = plt.subplots()
-ax.plot(x, y, 'o', xi, yi, '.')
-plt.show()
+../../3.0.3/_downloads/2e70560a5136bc9ac6cc89bb31cc0fe9/interp_demo.py

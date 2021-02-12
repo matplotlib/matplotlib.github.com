@@ -1,11 +1,1 @@
-"""
-=================
-Arrow Simple Demo
-=================
-
-"""
-import matplotlib.pyplot as plt
-
-ax = plt.axes()
-ax.arrow(0, 0, 0.5, 0.5, head_width=0.05, head_length=0.1, fc='k', ec='k')
-plt.show()
+../../stable/_downloads/7414efa8616c80b0c130dca67ff9c510/arrow_simple_demo.py

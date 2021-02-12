@@ -1,18 +1,1 @@
-"""
-===========
-Titles Demo
-===========
-
-matplotlib can display plot titles centered, flush with the left side of
-a set of axes, and flush with the right side of a set of axes.
-
-"""
-import matplotlib.pyplot as plt
-
-plt.plot(range(10))
-
-plt.title('Center Title')
-plt.title('Left Title', loc='left')
-plt.title('Right Title', loc='right')
-
-plt.show()
+../../3.0.3/_downloads/e6bf5e86787c2107f42eea5b20afdc02/titles_demo.py
