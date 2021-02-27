@@ -41,8 +41,6 @@ tocheck = [pathlib.Path("stable")] + [
 
 toignore = tocheck + [pathlib.Path(p) for p in [
     "mpl-probscale",
-    "mpl_examples",
-    "mpl_toolkits",
     "_webpageutils",
     "xkcd",
     "_sitemap",
@@ -67,18 +65,38 @@ def findlast(fname, tocheck):
     return None
 
 
-html_redirect = """<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="refresh" content="0;url={newurl}" />
-        <link rel="canonical" href="https://matplotlib.org/{canonical}" />
-    </head>
-    <body>
+html_redirect = """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Matplotlib: Python plotting &#8212; Page Moved</title>
+    <link rel="stylesheet" href="_static/mpl.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.9,
+     maximum-scale=0.9" />
+    <meta http-equiv="refresh" content="0;url={newurl}" />
+    <link rel="canonical" href="https://matplotlib.org/{canonical}" />
+  </head>
+  <body>
+    <div style="background-color: white; text-align: left;
+     padding: 10px 10px 15px 15px; position: relative;">
+    <a href="#">
+        <img src="_static/logo2_compressed.svg" height="125px" border="0"
+         alt="matplotlib"/>
+    </a>
+    <div class="body" role="main">
+        <div class="section">
         <h1>
-            The page been moved <a href="{newurl}">here</a>!
+            This page been moved <a href="{newurl}">here</a>!
         </h1>
-    </body>
+        </div>
+    </div>
+  </body>
 </html>
 """
 
