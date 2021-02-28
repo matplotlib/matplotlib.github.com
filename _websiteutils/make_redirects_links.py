@@ -41,8 +41,6 @@ tocheck = [pathlib.Path("stable")] + [
 
 toignore = tocheck + [pathlib.Path(p) for p in [
     "mpl-probscale",
-    "mpl_examples",
-    "mpl_toolkits",
     "_webpageutils",
     "xkcd",
     "_sitemap",
