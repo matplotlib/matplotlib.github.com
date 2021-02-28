@@ -47,6 +47,7 @@ toignore = tocheck + [pathlib.Path(p) for p in [
     "robots.txt",
     "CNAME",
     ".git",
+    "index.html",  # this is being hard coded now!
 ]]
 
 logging.basicConfig(level=logging.DEBUG)
