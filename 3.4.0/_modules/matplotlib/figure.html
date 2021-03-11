@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>matplotlib.figure &#8212; Matplotlib 3.4.0rc1.post1.dev0+ge4a9fbf59f documentation</title>
-    <link rel="stylesheet" href="../../_static/mpl.css?v3.4.0rc1-1-ge4a9fbf59f-dirty" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>matplotlib.figure &#8212; Matplotlib 3.4.0rc3 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.4.0rc3" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -20,19 +20,18 @@
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Matplotlib 3.4.0rc1.post1.dev0+ge4a9fbf59f documentation"
+          title="Search within Matplotlib 3.4.0rc3 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
 
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-<link rel="top" title="Matplotlib 3.4.0rc1.post1.dev0+ge4a9fbf59f documentation" href="#" />
-    <link rel="canonical" href="https://matplotlib.org/devdocs/_modules/matplotlib/figure.html" />
+<link rel="top" title="Matplotlib 3.4.0rc3 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/stable/_modules/matplotlib/figure.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -41,12 +40,6 @@
 
   </head><body>
 
-<div id="unreleased-message">
-    You are reading documentation for the unreleased version of Matplotlib.
-    <a href="https://matplotlib.org/search.html?q=matplotlib.figure&amp;check_keywords=yes&amp;area=default">
-        Try searching for the released version of this page instead?
-    </a>
-</div>
 
 <!--
 <div id="annc-banner">
@@ -56,7 +49,7 @@
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
     <a href="../../index.html">
-        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.4.0rc1.post1.dev0+ge4a9fbf59f</span></div>
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.4.0rc3</span></div>
         <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
 
     <!-- The "Fork me on github" ribbon -->
@@ -161,6 +154,71 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">stale</span> <span class="o">=</span> <span class="n">val</span>
 
 
+<span class="k">class</span> <span class="nc">_AxesStack</span><span class="p">(</span><span class="n">cbook</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Specialization of Stack, to handle all tracking of Axes in a Figure.</span>
+
+<span class="sd">    This stack stores ``ind, axes`` pairs, where ``ind`` is a serial index</span>
+<span class="sd">    tracking the order in which axes were added.</span>
+
+<span class="sd">    AxesStack is a callable; calling it returns the current axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ind</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">as_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of the Axes instances that have been added to the figure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">_entry_from_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(((</span><span class="n">ind</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">e</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove the axes from the stack.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_entry_from_axes</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">bubble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the given axes, which must already exist in the stack, to the top.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">bubble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_entry_from_axes</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add Axes *a* to the stack.</span>
+
+<span class="sd">        If *a* is already on the stack, don&#39;t add it again.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># All the error checking may be unnecessary; but this method</span>
+        <span class="c1"># is called so seldom that the overhead is negligible.</span>
+        <span class="n">_api</span><span class="o">.</span><span class="n">check_isinstance</span><span class="p">(</span><span class="n">Axes</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ind</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">push</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_ind</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the active axes.</span>
+
+<span class="sd">        If no axes exists on the stack, then returns None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_pos</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">axes</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_list</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="SubplotParams"><a class="viewcode-back" href="../../api/figure_api.html#matplotlib.figure.SubplotParams">[docs]</a><span class="k">class</span> <span class="nc">SubplotParams</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to hold the parameters for a subplot.</span>
@@ -250,7 +308,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="c1"># list of child gridspecs for this figure</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_gridspecs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_localaxes</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Stack</span><span class="p">()</span>  <span class="c1"># keep track of axes at this level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_localaxes</span> <span class="o">=</span> <span class="n">_AxesStack</span><span class="p">()</span>  <span class="c1"># track all axes and current axes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">artists</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
@@ -825,8 +883,8 @@
 
     <span class="k">def</span> <span class="nf">_add_axes_internal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Private helper for `add_axes` and `add_subplot`.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_axstack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_localaxes</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_axstack</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_localaxes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delaxes</span>
         <span class="c1"># this is to support plt.subplot&#39;s re-selection logic</span>
@@ -1801,6 +1859,8 @@
 
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">r0</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span> <span class="o">=</span> <span class="n">inp</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;List layout specification must be 2D&#39;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;List layout specification must be 2D&#39;</span><span class="p">)</span>
@@ -2218,6 +2278,10 @@
         <span class="c1"># a proxy property), but that actually need to be on the figure for</span>
         <span class="c1"># pickling.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_canvas_callbacks</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">CallbackRegistry</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_button_pick_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canvas_callbacks</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="s1">&#39;button_press_event&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scroll_pick_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canvas_callbacks</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="s1">&#39;scroll_event&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">figsize</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span>
@@ -2264,7 +2328,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="n">tight_layout</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_axstack</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">Stack</span><span class="p">()</span>  <span class="c1"># track all figure axes and current axes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_axstack</span> <span class="o">=</span> <span class="n">_AxesStack</span><span class="p">()</span>  <span class="c1"># track all figure axes and current axes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cachedRenderer</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -2318,7 +2382,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">NonGuiException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="n">_api</span><span class="o">.</span><span class="n">warn_external</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span></div>
+            <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                <span class="n">_api</span><span class="o">.</span><span class="n">warn_external</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Figure.get_axes"><a class="viewcode-back" href="../../api/figure_api.html#matplotlib.figure.Figure.get_axes">[docs]</a>    <span class="k">def</span> <span class="nf">get_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3242,10 +3307,10 @@
     <div class="footer">
     &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2021 The Matplotlib development team.
 <br />
-    Last updated on Feb 19, 2021.
+    Last updated on Mar 11, 2021.
 Created using
-<a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.
-Doc version v3.4.0rc1-1-ge4a9fbf59f-dirty.
+<a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.
+Doc version v3.4.0rc3.
     </div>
 </footer>
 <script>
