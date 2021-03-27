@@ -1,1 +1,1 @@
-../../stable/_downloads/0783af42818b53741fbf9b026190ed84/centered_spines_with_arrows.py
+../../3.3.4/_downloads/0783af42818b53741fbf9b026190ed84/centered_spines_with_arrows.py

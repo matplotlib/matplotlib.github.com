@@ -1,2 +1,1 @@
-from matplotlib._enums import CapStyle
-CapStyle.demo()
+../stable/api/_enums_api-2.py

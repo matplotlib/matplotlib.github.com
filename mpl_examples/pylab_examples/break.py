@@ -1,6 +1,1 @@
-import matplotlib.pyplot as plt
-
-plt.gcf().text(0.5, 0.95, 'Distance Histograms by Category is \
-    a really long title')
-
-plt.show()
+../../1.5.3/mpl_examples/pylab_examples/break.py

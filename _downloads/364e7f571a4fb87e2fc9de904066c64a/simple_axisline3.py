@@ -1,17 +1,1 @@
-"""
-================
-Simple Axisline3
-================
-
-"""
-import matplotlib.pyplot as plt
-from mpl_toolkits.axisartist.axislines import Axes
-
-fig = plt.figure(figsize=(3, 3))
-
-ax = fig.add_subplot(axes_class=Axes)
-
-ax.axis["right"].set_visible(False)
-ax.axis["top"].set_visible(False)
-
-plt.show()
+../../stable/_downloads/364e7f571a4fb87e2fc9de904066c64a/simple_axisline3.py

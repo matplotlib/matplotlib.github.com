@@ -1,2 +1,1 @@
-from matplotlib._enums import JoinStyle
-JoinStyle.demo()
+../stable/api/_enums_api-1.py

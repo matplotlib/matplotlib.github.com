@@ -1,2 +1,1 @@
-math_expr = r"$ x \overset{f}{\rightarrow} y \underset{f}{\leftarrow} z $"
-plt.text(0.4, 0.5, math_expr, usetex=False)
+../stable/users/whats_new-20.py
