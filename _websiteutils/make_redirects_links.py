@@ -23,7 +23,7 @@ Second, it changes the canonical link in each html file to the newest version
 found of the html file (including stable if its in the latest version.)
 
 Third, the script adds a new div to the top of all the old webpages with
-tag ``olddocs-message`` to warn users that the page is obsolete.
+id ``unreleased-message`` to warn users that the page is obsolete.
 
 This script takes a while, and is destructive, so should probably be run on a
 branch and pushed as a PR so it can easily be reverted.
@@ -179,8 +179,8 @@ def update_canonical(fullname, last, newest):
                     else:
                         new = warn_banner_old.format(version=fullname.parts[0])
                     fout.write(new.encode("utf-8"))
-                    if b'<div id="olddocs-message">' not in line:
-                        # write the line out if it wasn't an olddocs-message:
+                    if b'<div id="unreleased-message">' not in line:
+                        # Write the line out if it wasn't unreleased-message:
                         fout.write(line)
 
                 else:
