@@ -1,1 +1,2 @@
-../../stable/users/prev_whats_new/whats_new_1-5-4.py
+data = np.random.random([500, 500])
+plt.figimage(data, resize=True)

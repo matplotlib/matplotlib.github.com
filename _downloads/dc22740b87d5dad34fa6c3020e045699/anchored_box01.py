@@ -1,1 +1,18 @@
-../../stable/_downloads/dc22740b87d5dad34fa6c3020e045699/anchored_box01.py
+"""
+==============
+Anchored Box01
+==============
+
+"""
+import matplotlib.pyplot as plt
+from matplotlib.offsetbox import AnchoredText
+
+
+fig, ax = plt.subplots(figsize=(3, 3))
+
+at = AnchoredText("Figure 1a",
+                  prop=dict(size=15), frameon=True, loc='upper left')
+at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
+ax.add_artist(at)
+
+plt.show()

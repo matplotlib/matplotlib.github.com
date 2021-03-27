@@ -1,1 +1,1 @@
-../stable/users/whats_new-2.py
+plt.subplot_mosaic("AB;CC")

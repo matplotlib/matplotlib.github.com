@@ -1,1 +1,3 @@
-../stable/users/whats_new-4.py
+fig, ax = plt.subplots()
+ax.bar([1, 2], [2, 3], hatch=['+', 'o'])
+plt.show()

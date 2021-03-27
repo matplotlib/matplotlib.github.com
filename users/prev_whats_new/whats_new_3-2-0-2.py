@@ -1,1 +1,7 @@
-../../stable/users/prev_whats_new/whats_new_3-2-0-2.py
+import matplotlib.pyplot as plt
+
+# Use new kerning values:
+plt.rcParams['text.kerning_factor'] = 0
+fig, ax = plt.subplots()
+ax.text(0.0, 0.05, 'BRAVO\nAWKWARD\nVAT\nW.Test', fontsize=56)
+ax.set_title('After (text.kerning_factor = 0)')
