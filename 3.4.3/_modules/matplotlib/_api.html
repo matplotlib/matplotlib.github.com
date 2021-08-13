@@ -1,0 +1,346 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>matplotlib._api &#8212; Matplotlib 3.4.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/mpl.css?v3.4.3-2-ge48e4acce0" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.4.3 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<link rel="top" title="Matplotlib 3.4.3 documentation" href="#" />
+    <link rel="canonical" href="https://matplotlib.org/stable/_modules/matplotlib/_api.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+
+<!--
+<div id="annc-banner">
+
+</div>
+-->
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px; position: relative;">
+    <a href="../../index.html">
+        <div style="float: left; position: absolute; width: 496px; bottom: 0; padding-bottom: 24px"><span style="float: right; color: #789; background: white">Version 3.4.3</span></div>
+        <img src="../../_static/logo2_compressed.svg" height="125px" border="0" alt="matplotlib"/></a>
+
+    <!-- The "Fork me on github" ribbon -->
+    <div id="forkongithub"><a href="https://github.com/matplotlib/matplotlib">Fork me on GitHub</a></div>
+    </div>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="../../users/installing.html">Installation</a></li>
+            <li><a href="../../contents.html">Documentation</a></li>
+            <li><a href="../../gallery/index.html">Examples</a></li>
+            <li><a href="../../tutorials/index.html">Tutorials</a></li>
+            <li><a href="../../devel/index.html">Contributing</a></li>
+            <li class="nav-right">
+                <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" aria-labelledby="searchlabel" placeholder="Search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+                </form>
+            </li>
+        </ul>
+     </nav>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../contents.html">contents</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../matplotlib.html" accesskey="U">matplotlib</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">matplotlib._api</a></li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for matplotlib._api</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Helper functions for managing the Matplotlib API.</span>
+
+<span class="sd">This documentation is only relevant for Matplotlib developers, not for users.</span>
+
+<span class="sd">.. warning:</span>
+
+<span class="sd">    This module and its submodules are for internal use only.  Do not use them</span>
+<span class="sd">    in your own code.  We may change the API at any time with no warning.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">.deprecation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">deprecated</span><span class="p">,</span> <span class="n">warn_deprecated</span><span class="p">,</span>
+    <span class="n">rename_parameter</span><span class="p">,</span> <span class="n">delete_parameter</span><span class="p">,</span> <span class="n">make_keyword_only</span><span class="p">,</span>
+    <span class="n">deprecate_method_override</span><span class="p">,</span> <span class="n">deprecate_privatize_attribute</span><span class="p">,</span>
+    <span class="n">suppress_matplotlib_deprecation_warning</span><span class="p">,</span>
+    <span class="n">MatplotlibDeprecationWarning</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="classproperty"><a class="viewcode-back" href="../../api/_api_api.html#matplotlib._api.classproperty">[docs]</a><span class="k">class</span> <span class="nc">classproperty</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Like `property`, but also triggers on access via the class, and it is the</span>
+<span class="sd">    *class* that&#39;s passed as argument.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        class C:</span>
+<span class="sd">            @classproperty</span>
+<span class="sd">            def foo(cls):</span>
+<span class="sd">                return cls.__name__</span>
+
+<span class="sd">        assert C.foo == &quot;C&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fget</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fget</span> <span class="o">=</span> <span class="n">fget</span>
+        <span class="k">if</span> <span class="n">fset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">fdel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;classproperty only implements fget.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="o">=</span> <span class="n">fdel</span>
+        <span class="c1"># docs are ignored for now</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_doc</span> <span class="o">=</span> <span class="n">doc</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fget</span><span class="p">(</span><span class="n">owner</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fget</span></div>
+
+
+<span class="c1"># In the following check_foo() functions, the first parameter starts with an</span>
+<span class="c1"># underscore because it is intended to be positional-only (e.g., so that</span>
+<span class="c1"># `_api.check_isinstance([...], types=foo)` doesn&#39;t fail.</span>
+
+<div class="viewcode-block" id="check_isinstance"><a class="viewcode-back" href="../../api/_api_api.html#matplotlib._api.check_isinstance">[docs]</a><span class="k">def</span> <span class="nf">check_isinstance</span><span class="p">(</span><span class="n">_types</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each *key, value* pair in *kwargs*, check that *value* is an instance</span>
+<span class="sd">    of one of *_types*; if not, raise an appropriate TypeError.</span>
+
+<span class="sd">    As a special case, a ``None`` entry in *_types* is treated as NoneType.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; _api.check_isinstance((SomeClass, None), arg=arg)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="n">_types</span>
+    <span class="n">none_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="p">((</span><span class="n">types</span><span class="p">,)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="k">else</span>
+             <span class="p">(</span><span class="n">none_type</span><span class="p">,)</span> <span class="k">if</span> <span class="n">types</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
+             <span class="nb">tuple</span><span class="p">(</span><span class="n">none_type</span> <span class="k">if</span> <span class="n">tp</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">tp</span> <span class="k">for</span> <span class="n">tp</span> <span class="ow">in</span> <span class="n">types</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">type_name</span><span class="p">(</span><span class="n">tp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;None&quot;</span> <span class="k">if</span> <span class="n">tp</span> <span class="ow">is</span> <span class="n">none_type</span>
+                <span class="k">else</span> <span class="n">tp</span><span class="o">.</span><span class="vm">__qualname__</span> <span class="k">if</span> <span class="n">tp</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="s2">&quot;builtins&quot;</span>
+                <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tp</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">tp</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">types</span><span class="p">):</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">types</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="s2">&quot;None&quot;</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>  <span class="c1"># Move it to the end for better wording.</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{!r}</span><span class="s2"> must be an instance of </span><span class="si">{}</span><span class="s2">, not a </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">k</span><span class="p">,</span>
+                    <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; or &quot;</span> <span class="o">+</span> <span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">type_name</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">))))</span></div>
+
+
+<div class="viewcode-block" id="check_in_list"><a class="viewcode-back" href="../../api/_api_api.html#matplotlib._api.check_in_list">[docs]</a><span class="k">def</span> <span class="nf">check_in_list</span><span class="p">(</span><span class="n">_values</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">_print_supported_values</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each *key, value* pair in *kwargs*, check that *value* is in *_values*.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _values : iterable</span>
+<span class="sd">        Sequence of values to check on.</span>
+<span class="sd">    _print_supported_values : bool, default: True</span>
+<span class="sd">        Whether to print *_values* when raising ValueError.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        *key, value* pairs as keyword arguments to find in *_values*.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If any *value* in *kwargs* is not found in *_values*.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; _api.check_in_list([&quot;foo&quot;, &quot;bar&quot;], arg=arg, other_arg=other_arg)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">_values</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">_print_supported_values</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s2"> is not a valid value for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;supported values are </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s2"> is not a valid value for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_shape"><a class="viewcode-back" href="../../api/_api_api.html#matplotlib._api.check_shape">[docs]</a><span class="k">def</span> <span class="nf">check_shape</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each *key, value* pair in *kwargs*, check that *value* has the shape</span>
+<span class="sd">    *_shape*, if not, raise an appropriate ValueError.</span>
+
+<span class="sd">    *None* in the shape is treated as a &quot;free&quot; size that can have any length.</span>
+<span class="sd">    e.g. (None, 2) -&gt; (N, 2)</span>
+
+<span class="sd">    The values checked must be numpy arrays.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    To check for (N, 2) shaped arrays</span>
+
+<span class="sd">    &gt;&gt;&gt; _api.check_shape((None, 2), arg=arg, other_arg=other_arg)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">target_shape</span> <span class="o">=</span> <span class="n">_shape</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data_shape</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_shape</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_shape</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">target_shape</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">dim_labels</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
+                <span class="s1">&#39;MNLIJKLH&#39;</span><span class="p">,</span>
+                <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">())))</span>
+            <span class="n">text_shape</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                                    <span class="k">else</span> <span class="nb">next</span><span class="p">(</span><span class="n">dim_labels</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">target_shape</span><span class="p">))</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">!r}</span><span class="s2"> must be </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">target_shape</span><span class="p">)</span><span class="si">}</span><span class="s2">D &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;with shape (</span><span class="si">{</span><span class="n">text_shape</span><span class="si">}</span><span class="s2">). &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Your input has shape </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_getitem"><a class="viewcode-back" href="../../api/_api_api.html#matplotlib._api.check_getitem">[docs]</a><span class="k">def</span> <span class="nf">check_getitem</span><span class="p">(</span><span class="n">_mapping</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *kwargs* must consist of a single *key, value* pair.  If *key* is in</span>
+<span class="sd">    *_mapping*, return ``_mapping[value]``; else, raise an appropriate</span>
+<span class="sd">    ValueError.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; _api.check_getitem({&quot;foo&quot;: &quot;bar&quot;}, arg=arg)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">_mapping</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;check_getitem takes a single keyword argument&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mapping</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{!r}</span><span class="s2"> is not a valid value for </span><span class="si">{}</span><span class="s2">; supported values are </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span> <span class="n">mapping</span><span class="p">))))</span> <span class="kn">from</span> <span class="bp">None</span></div>
+
+
+<div class="viewcode-block" id="warn_external"><a class="viewcode-back" href="../../api/_api_api.html#matplotlib._api.warn_external">[docs]</a><span class="k">def</span> <span class="nf">warn_external</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    `warnings.warn` wrapper that sets *stacklevel* to &quot;outside Matplotlib&quot;.</span>
+
+<span class="sd">    The original emitter of the warning can be obtained by patching this</span>
+<span class="sd">    function back to `warnings.warn`, i.e. ``_api.warn_external =</span>
+<span class="sd">    warnings.warn`` (or ``functools.partial(warnings.warn, stacklevel=2)``,</span>
+<span class="sd">    etc.).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">stacklevel</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>  <span class="c1"># lgtm[py/unused-loop-variable]</span>
+        <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># when called in embedded context may hit frame is None</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\A(matplotlib|mpl_toolkits)(\Z|\.(?!tests\.))&quot;</span><span class="p">,</span>
+                        <span class="c1"># Work around sphinx-gallery not setting __name__.</span>
+                        <span class="n">frame</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)):</span>
+            <span class="k">break</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_back</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">stacklevel</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer>
+    <div class="footer">
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2021 The Matplotlib development team.
+<br />
+    Last updated on Aug 13, 2021.
+Created using
+<a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.
+Doc version v3.4.3-2-ge48e4acce0.
+    </div>
+</footer>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-55954603-1', 'auto');
+        ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
