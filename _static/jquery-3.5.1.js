@@ -1,1 +1,0 @@
-../stable/_static/jquery-3.5.1.js

@@ -1,1 +1,0 @@
-../stable/_static/language_data.js
