@@ -1,7 +1,20 @@
-from matplotlib import pyplot as plt
-from matplotlib.widgets import TextBox
+import matplotlib.patches as mpatches
 
-for i, alignment in enumerate(['left', 'center', 'right']):
-        box_input = plt.axes([0.2, 0.7 - i*0.2, 0.6, 0.1])
-        text_box = TextBox(ax=box_input, initial=f'{alignment} alignment',
-                           label='', textalignment=alignment)
+fig, ax = plt.subplots(figsize=(4, 4))
+
+ax.plot([0.75, 0.75], [0.25, 0.75], 'ok')
+ax.set(xlim=(0, 1), ylim=(0, 1), title='New ArrowStyle options')
+
+ax.annotate(']->', (0.75, 0.25), (0.25, 0.25),
+            arrowprops=dict(
+                arrowstyle=']->', connectionstyle="arc3,rad=-0.05",
+                shrinkA=5, shrinkB=5,
+            ),
+            bbox=dict(boxstyle='square', fc='w'), size='large')
+
+ax.annotate('<-[', (0.75, 0.75), (0.25, 0.75),
+            arrowprops=dict(
+                arrowstyle='<-[', connectionstyle="arc3,rad=-0.05",
+                shrinkA=5, shrinkB=5,
+            ),
+            bbox=dict(boxstyle='square', fc='w'), size='large')

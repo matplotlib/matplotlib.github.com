@@ -1,1 +1,1 @@
-../../stable/_downloads/43317544bd7b185ba97266e927bd9617/custom_ticker1.py
+../../3.4.3/_downloads/43317544bd7b185ba97266e927bd9617/custom_ticker1.py

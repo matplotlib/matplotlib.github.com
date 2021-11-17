@@ -1,14 +1,3 @@
-plt.rcParams['legend.labelcolor'] = 'linecolor'
-
-# Make some fake data.
-a = np.arange(0, 3, .02)
-c = np.exp(a)
-d = c[::-1]
-
-fig, ax = plt.subplots()
-ax.plot(a, c, 'g--', label='Model length')
-ax.plot(a, d, 'r:', label='Data length')
-
-ax.legend()
-
-plt.show()
+fig = plt.figure(figsize=(3, 1))
+fig.text(0.5, 0.5, r'$\dot{a} \ddot{b} \dddot{c} \ddddot{d}$', fontsize=40,
+         horizontalalignment='center', verticalalignment='center')
