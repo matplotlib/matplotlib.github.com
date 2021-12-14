@@ -1,1 +1,0 @@
-../2.1.1/_static/jquery-3.1.0.js
