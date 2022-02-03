@@ -1,0 +1,576 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MEP26: Artist styling &mdash; Matplotlib 1.5.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css"
+type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 1.5.1 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="top" title="Matplotlib 1.5.1 documentation" href="../../index.html" />
+    <link rel="up" title="Matplotlib Enhancement Proposals" href="index.html" />
+    <link rel="next" title="MEP27: decouple pyplot from backends" href="MEP27.html" />
+    <link rel="prev" title="MEP25: Serialization" href="MEP25.html" /> 
+
+
+    <link rel="canonical" href="https://matplotlib.org/stable/devel/MEP/MEP26.html" />
+  </head>
+  <body>
+<div id="unreleased-message"> You are reading an old version of the documentation (v1.5.1).  For the latest version see <a href="https://matplotlib.org/stable/devel/MEP/MEP26.html">https://matplotlib.org/stable/devel/MEP/MEP26.html</a></div>
+    <div class="alert" style="background-color: #FEA46C; padding: 10px 0;
+">
+<h3>We're updating the default styles for Matplotlib 2.0</h3>
+
+<p>Learn what to expect in the <a href="/style_changes.html" style="font-weight: bold;
+color: #11557C;">new updates</a></p>
+
+</div>
+
+
+
+<!-- The "Fork me on github" ribbon -->
+<img style="float: right; margin-bottom: -40px; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" usemap="#ribbonmap"/>
+<map name="ribbonmap">
+    <area shape="poly" coords="15,0,148,-1,148,135" href="https://github.com/matplotlib/matplotlib" title="Fork me on GitHub" />
+</map>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="../../index.html"><img src="../../_static/logo2.svg" width="540px" border="0" alt="matplotlib"/></a>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="MEP27.html" title="MEP27: decouple pyplot from backends"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MEP25.html" title="MEP25: Serialization"
+             accesskey="P">previous</a> |</li>
+
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../examples/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../gallery.html">gallery</a>|&nbsp;</li>
+        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../index.html" >The Matplotlib Developers&#8217; Guide</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Matplotlib Enhancement Proposals</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<a href="http://depsy.org/package/python/matplotlib">
+  <img src="http://depsy.org/api/package/pypi/matplotlib/badge.svg">
+</a>
+
+<br/>
+
+Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
+  <img src="https://travis-ci.org/matplotlib/matplotlib.svg?branch=master"/>
+</a>
+<br/>
+  <h3><a href="../../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MEP26: Artist styling</a><ul>
+<li><a class="reference internal" href="#status">Status</a></li>
+<li><a class="reference internal" href="#branches-and-pull-requests">Branches and Pull requests</a></li>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#detailed-description">Detailed description</a></li>
+<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#bnf-grammar">BNF Grammar</a></li>
+<li><a class="reference internal" href="#syntax">Syntax</a><ul>
+<li><a class="reference internal" href="#selectors">Selectors</a></li>
+<li><a class="reference internal" href="#gid-selector">GID selector</a></li>
+<li><a class="reference internal" href="#attributes-and-values">Attributes and values</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#parsing">Parsing</a></li>
+<li><a class="reference internal" href="#visitor-pattern-for-matplotlib-figure">Visitor pattern for matplotlib figure</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li><a class="reference internal" href="#alternatives">Alternatives</a></li>
+<li><a class="reference internal" href="#appendix">Appendix</a><ul>
+<li><a class="reference internal" href="#matplotlib-primitives">Matplotlib primitives</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../contents.html">Documentation overview</a><ul>
+  <li><a href="../index.html">The Matplotlib Developers&#8217; Guide</a><ul>
+  <li><a href="index.html">Matplotlib Enhancement Proposals</a><ul>
+      <li>Previous: <a href="MEP25.html" title="previous chapter">MEP25: Serialization</a></li>
+      <li>Next: <a href="MEP27.html" title="next chapter">MEP27: decouple pyplot from backends</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/devel/MEP/MEP26.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mep26-artist-styling">
+<h1>MEP26: Artist styling<a class="headerlink" href="#mep26-artist-styling" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#status" id="id1">Status</a></li>
+<li><a class="reference internal" href="#branches-and-pull-requests" id="id2">Branches and Pull requests</a></li>
+<li><a class="reference internal" href="#abstract" id="id3">Abstract</a></li>
+<li><a class="reference internal" href="#detailed-description" id="id4">Detailed description</a></li>
+<li><a class="reference internal" href="#implementation" id="id5">Implementation</a><ul>
+<li><a class="reference internal" href="#bnf-grammar" id="id6">BNF Grammar</a></li>
+<li><a class="reference internal" href="#syntax" id="id7">Syntax</a><ul>
+<li><a class="reference internal" href="#selectors" id="id8">Selectors</a></li>
+<li><a class="reference internal" href="#gid-selector" id="id9">GID selector</a></li>
+<li><a class="reference internal" href="#attributes-and-values" id="id10">Attributes and values</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#parsing" id="id11">Parsing</a></li>
+<li><a class="reference internal" href="#visitor-pattern-for-matplotlib-figure" id="id12">Visitor pattern for matplotlib figure</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#backward-compatibility" id="id13">Backward compatibility</a></li>
+<li><a class="reference internal" href="#alternatives" id="id14">Alternatives</a></li>
+<li><a class="reference internal" href="#appendix" id="id15">Appendix</a><ul>
+<li><a class="reference internal" href="#matplotlib-primitives" id="id16">Matplotlib primitives</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="status">
+<h2><a class="toc-backref" href="#id1">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
+<p><strong>Proposed</strong></p>
+</div>
+<div class="section" id="branches-and-pull-requests">
+<h2><a class="toc-backref" href="#id2">Branches and Pull requests</a><a class="headerlink" href="#branches-and-pull-requests" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="abstract">
+<h2><a class="toc-backref" href="#id3">Abstract</a><a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>This MEP proposes a new stylesheet implementation to allow more
+comprehensive and dynamic styling of artists.</p>
+<p>The current version of matplotlib (1.4.0) allows stylesheets based on
+the rcParams syntax to be applied before creation of a plot.  The
+methodology below proposes a new syntax, based on CSS, which would
+allow styling of individual artists and properties, which can be
+applied dynamically to existing objects.</p>
+<p>This is related to (and makes steps toward) the overall goal of moving
+to a DOM/tree-like architecture.</p>
+</div>
+<div class="section" id="detailed-description">
+<h2><a class="toc-backref" href="#id4">Detailed description</a><a class="headerlink" href="#detailed-description" title="Permalink to this headline">¶</a></h2>
+<p>Currently, the look and appearance of existing artist objects (figure,
+axes, Line2D etc...) can only be updated via <code class="xref py py-obj docutils literal"><span class="pre">set_</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">get_</span></code> methods
+on the artist object, which is quite laborious, especially if no
+reference to the artist(s) has been stored.  The new style sheets
+introduced in 1.4 allow styling before a plot is created, but do not
+offer any means to dynamically update plots or distinguish between
+artists of the same type (i.e. to specifiy the <code class="xref py py-obj docutils literal"><span class="pre">line</span> <span class="pre">color</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">line</span>
+<span class="pre">style</span></code> separately for differing <code class="xref py py-obj docutils literal"><span class="pre">Line2D</span></code> objects).</p>
+<p>The initial development should concentrate on allowing styling of
+artist primitives (those <code class="xref py py-obj docutils literal"><span class="pre">artists</span></code> that do not contain other
+<code class="xref py py-obj docutils literal"><span class="pre">artists</span></code>), and further development could expand the CSS syntax rules
+and parser to allow more complex styling. See the appendix for a list
+of primitives.</p>
+<p>The new methodology would require development of a number of steps:</p>
+<ul class="simple">
+<li>A new stylesheet syntax (likely based on CSS) to allow selection of
+artists by type, class, id etc...</li>
+<li>A mechanism by which to parse a stylesheet into a tree</li>
+<li>A mechanism by which to translate the parse-tree into something
+which can be used to update the properties of relevant
+artists. Ideally this would implement a method by which to traverse
+the artists in a tree-like structure.</li>
+<li>A mechanism by which to generate a stylesheet from existing artist
+properties. This would be useful to allow a user to export a
+stylesheet from an existing figure (where the appearance may have
+been set using the matplotlib API)...</li>
+</ul>
+</div>
+<div class="section" id="implementation">
+<h2><a class="toc-backref" href="#id5">Implementation</a><a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>It will be easiest to allow a &#8216;3rd party&#8217; to modify/set the style of
+an artist if the &#8216;style&#8217; is created as a separate class and store
+against the artist as a property.  The <code class="xref py py-obj docutils literal"><span class="pre">GraphicsContext</span></code> class already
+provides a the basis of a <code class="xref py py-obj docutils literal"><span class="pre">Style</span></code> class and an artists <code class="xref py py-obj docutils literal"><span class="pre">draw</span></code> method can
+be refactored to use the <code class="xref py py-obj docutils literal"><span class="pre">Style</span></code> class rather than setting up it&#8217;s own
+<code class="xref py py-obj docutils literal"><span class="pre">GraphicsContext</span></code> and transferring it&#8217;s style-related properties to
+it.  A minimal example of how this could be implemented is shown here:
+<a class="reference external" href="https://github.com/JamesRamm/mpl_experiment">https://github.com/JamesRamm/mpl_experiment</a></p>
+<p>IMO, this will also make the API and code base much neater as
+individual get/set methods for artist style properties are now
+redundant...  Indirectly related would be a general drive to replace
+get/set methods with properties. Implementing the style class with
+properties would be a big stride toward this...</p>
+<p>For initial development, I suggest developing a syntax based on a much
+(much much) simplified version of CSS. I am in favour of dubbing this
+Artist Style Sheets :+1: :</p>
+<div class="section" id="bnf-grammar">
+<h3><a class="toc-backref" href="#id6">BNF Grammar</a><a class="headerlink" href="#bnf-grammar" title="Permalink to this headline">¶</a></h3>
+<p>I propose a very simple syntax to implement initially (like a proof of
+concept), which can be expanded upon in the future. The BNF form of
+the syntax is given below and then explained</p>
+<div class="highlight-python"><div class="highlight"><pre>RuleSet ::= SelectorSequence &quot;{&quot;Declaration&quot;}&quot;
+
+SelectorSequence :: = Selector {&quot;,&quot; Selector}
+
+Declaration ::= propName&quot;:&quot; propValue&quot;;&quot;
+
+Selector ::= ArtistIdent{&quot;#&quot;Ident}
+
+propName ::= Ident
+
+propValue ::= Ident | Number | Colour | &quot;None&quot;
+</pre></div>
+</div>
+<p><code class="xref py py-obj docutils literal"><span class="pre">ArtistIdent</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">Ident</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">Number</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">Colour</span></code> are tokens (the basic
+building blocks of the expression) which are defined by regular
+expressions.</p>
+</div>
+<div class="section" id="syntax">
+<h3><a class="toc-backref" href="#id7">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p>A CSS stylesheet consists of a series of <strong>rule sets</strong> in hierarchical
+order (rules are applied from top to bottom). Each rule follows the
+syntax</p>
+<div class="highlight-python"><div class="highlight"><pre>selector {attribute: value;}
+</pre></div>
+</div>
+<p>Each rule can have any number of <code class="xref py py-obj docutils literal"><span class="pre">attribute</span></code>: <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> pairs, and a
+stylesheet can have any number of rules.</p>
+<p>The initial syntax is designed only for <code class="xref py py-obj docutils literal"><span class="pre">artist</span></code> primitives. It does
+not address the question of how to set properties on <code class="xref py py-obj docutils literal"><span class="pre">container</span></code> types
+(whose properties may themselves be <code class="xref py py-obj docutils literal"><span class="pre">artists</span></code> with settable
+properties), however, a future solution to this could simply be nested
+<code class="xref py py-obj docutils literal"><span class="pre">RuleSet</span></code> s</p>
+<div class="section" id="selectors">
+<h4><a class="toc-backref" href="#id8">Selectors</a><a class="headerlink" href="#selectors" title="Permalink to this headline">¶</a></h4>
+<p>Selectors define the object to which the attribute updates should be
+applied. As a starting point, I propose just 2 selectors to use in
+initial development:</p>
+<p>Artist Type Selector</p>
+<p>Select an <code class="xref py py-obj docutils literal"><span class="pre">artist</span></code> by it&#8217;s type. E.g <code class="xref py py-obj docutils literal"><span class="pre">Line2D</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">Text</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>Line2D {attribute: value}
+</pre></div>
+</div>
+<p>The regex for matching the artist type selector (<code class="xref py py-obj docutils literal"><span class="pre">ArtistIdent</span></code> in the BNF grammar) would be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ArtistIdent</span> <span class="o">=</span> <span class="s1">r&#39;(?P&lt;ArtistIdent&gt;\bLine2D\b|\bText\b|\bAxesImage\b|\bFigureImage\b|\bPatch\b)&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gid-selector">
+<h4><a class="toc-backref" href="#id9">GID selector</a><a class="headerlink" href="#gid-selector" title="Permalink to this headline">¶</a></h4>
+<p>Select an <code class="xref py py-obj docutils literal"><span class="pre">artist</span></code> by its <code class="xref py py-obj docutils literal"><span class="pre">gid</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Line2D</span><span class="c1">#myGID {attribute: value}</span>
+</pre></div>
+</div>
+<p>A <code class="xref py py-obj docutils literal"><span class="pre">gid</span></code> can be any string, so the regex could be as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Ident</span> <span class="o">=</span> <span class="s1">r&#39;(?P&lt;Ident&gt;[a-zA-Z_][a-zA-Z_0-9]*)&#39;</span>
+</pre></div>
+</div>
+<p>The above selectors roughly correspond to their CSS counterparts
+(<a class="reference external" href="http://www.w3.org/TR/CSS21/selector.html">http://www.w3.org/TR/CSS21/selector.html</a>)</p>
+</div>
+<div class="section" id="attributes-and-values">
+<h4><a class="toc-backref" href="#id10">Attributes and values</a><a class="headerlink" href="#attributes-and-values" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">Attributes</span></code> are any valid (settable) property for the <code class="xref py py-obj docutils literal"><span class="pre">artist</span></code> in question.</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">Values</span></code> are any valid value for the property (Usually a string, or number).</li>
+</ul>
+</div>
+</div>
+<div class="section" id="parsing">
+<h3><a class="toc-backref" href="#id11">Parsing</a><a class="headerlink" href="#parsing" title="Permalink to this headline">¶</a></h3>
+<p>Parsing would consist of breaking the stylesheet into tokens (the
+python cookbook gives a nice tokenizing recipe on page 66), applying
+the syntax rules and constructing a <code class="xref py py-obj docutils literal"><span class="pre">Tree</span></code>. This requires defining the
+grammar of the stylesheet (again, we can borrow from CSS) and writing
+a parser. Happily, there is a recipe for this in the python cookbook
+aswell.</p>
+</div>
+<div class="section" id="visitor-pattern-for-matplotlib-figure">
+<h3><a class="toc-backref" href="#id12">Visitor pattern for matplotlib figure</a><a class="headerlink" href="#visitor-pattern-for-matplotlib-figure" title="Permalink to this headline">¶</a></h3>
+<p>In order to apply the stylesheet rules to the relevant artists, we
+need to &#8216;visit&#8217; each artist in a figure and apply the relevant rule.
+Here is a visitor class (again, thanks to python cookbook), where each
+<code class="xref py py-obj docutils literal"><span class="pre">node</span></code> would be an artist in the figure. A <code class="xref py py-obj docutils literal"><span class="pre">visit_</span></code> method would need
+to be implemented for each mpl artist, to handle the different
+properties for each</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Visitor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+       <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;visit_&#39;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span>
+       <span class="n">meth</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">meth</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+       <span class="k">return</span> <span class="n">meth</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An <code class="xref py py-obj docutils literal"><span class="pre">evaluator</span></code> class would then take the stylesheet rules and
+implement the visitor on each one of them.</p>
+</div>
+</div>
+<div class="section" id="backward-compatibility">
+<h2><a class="toc-backref" href="#id13">Backward compatibility</a><a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>Implementing a separate <code class="xref py py-obj docutils literal"><span class="pre">Style</span></code> class would break backward
+compatibility as many get/set methods on an artist would become
+redundant.  While it would be possible to alter these methods to hook
+into the <code class="xref py py-obj docutils literal"><span class="pre">Style</span></code> class (stored as a property against the artist), I
+would be in favor of simply removing them to both neaten/simplify the
+codebase and to provide a simple, uncluttered API...</p>
+</div>
+<div class="section" id="alternatives">
+<h2><a class="toc-backref" href="#id14">Alternatives</a><a class="headerlink" href="#alternatives" title="Permalink to this headline">¶</a></h2>
+<p>No alternatives, but some of the ground covered here overlaps with
+MEP25, which may assist in this development</p>
+</div>
+<div class="section" id="appendix">
+<h2><a class="toc-backref" href="#id15">Appendix</a><a class="headerlink" href="#appendix" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="matplotlib-primitives">
+<h3><a class="toc-backref" href="#id16">Matplotlib primitives</a><a class="headerlink" href="#matplotlib-primitives" title="Permalink to this headline">¶</a></h3>
+<p>This will form the initial selectors which stylesheets can use.</p>
+<ul class="simple">
+<li>Line2D</li>
+<li>Text</li>
+<li>AxesImage</li>
+<li>FigureImage</li>
+<li>Patch</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
+      Last updated on Jun 18, 2016.
+      Created using <a
+href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<script>
+
+function open_window(cause_id) {
+var  protocol=String(document.location.protocol);
+var new_url;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+new_url="https://www.flipcause.com/widget/"+cause_id
+window.open(new_url);
+}
+
+else {
+document.getElementById("fc-fade").style.display = "block";
+document.getElementById("fc-fade").style.webkitAnimation = "backfadesin 1s";
+document.getElementById("fc-fade").style.animation = "backfadesin 1s";
+document.getElementById("fc-fade").style.mozAnimation = "backfadesin 1s";
+document.getElementById("fc-light").style.display = "block";
+document.getElementById("fc-light").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-light").style.animation = "fadesin 1.5s";
+document.getElementById("fc-light").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-main").style.display = "block";
+document.getElementById("fc-main").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-main").style.animation = "fadesin 1.5s";
+document.getElementById("fc-main").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-close").style.display = "block";
+document.getElementById("fc-close").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-close").style.animation = "fadesin 1.5s";
+document.getElementById("fc-close").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.display = "block";
+document.getElementById("fc-myFrame").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.animation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").src="https://www.flipcause.com/widget/"+cause_id;
+}
+}
+
+
+function close_window() {
+document.getElementById("fc-fade").style.display="none";
+document.getElementById("fc-light").style.display="none";
+document.getElementById("fc-main").style.display="none";
+document.getElementById("fc-close").style.display="none";
+document.getElementById("fc-myFrame").style.display="none";
+}
+
+</script>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MEP10: Docstring consistency &mdash; Matplotlib 2.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css"
+type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 2.0.1 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html"
+/>
+    <link rel="search" title="Search" href="../../search.html"
+/>
+    <link rel="top" title="Matplotlib 2.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Matplotlib Enhancement Proposals" href="index.html" />
+    <link rel="next" title="MEP11: Third-party dependencies" href="MEP11.html" />
+    <link rel="prev" title="MEP9: Global interaction manager" href="MEP09.html" /> 
+
+
+    <link rel="canonical" href="https://matplotlib.org/stable/devel/MEP/MEP10.html" />
+  </head>
+  <body>
+<div id="unreleased-message"> You are reading an old version of the documentation (v2.0.1).  For the latest version see <a href="https://matplotlib.org/stable/devel/MEP/MEP10.html">https://matplotlib.org/stable/devel/MEP/MEP10.html</a></div>
+
+
+
+<!-- The "Fork me on github" ribbon -->
+<img style="float: right; margin-bottom: -40px; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" usemap="#ribbonmap"/>
+<map name="ribbonmap">
+    <area shape="poly" coords="15,0,148,-1,148,135" href="https://github.com/matplotlib/matplotlib" title="Fork me on GitHub" />
+</map>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="../../index.html"><img src="../../_static/logo2.svg" width="540px" border="0" alt="matplotlib"/></a>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="MEP11.html" title="MEP11: Third-party dependencies"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MEP09.html" title="MEP9: Global interaction manager"
+             accesskey="P">previous</a> |</li>
+
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../examples/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../gallery.html">gallery</a>|&nbsp;</li>
+        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../index.html" >The Matplotlib Developers&#8217; Guide</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Matplotlib Enhancement Proposals</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<a href="http://depsy.org/package/python/matplotlib">
+  <img src="../../_static/depsy_badge.svg">
+</a>
+
+<br/>
+
+Travis-CI: <a href="https://travis-ci.org/matplotlib/matplotlib">
+  <img src="https://travis-ci.org/matplotlib/matplotlib.svg?branch=master"/>
+</a>
+<br/>
+  <h3><a href="../../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MEP10: Docstring consistency</a><ul>
+<li><a class="reference internal" href="#status">Status</a></li>
+<li><a class="reference internal" href="#branches-and-pull-requests">Branches and Pull requests</a></li>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#detailed-description">Detailed description</a><ul>
+<li><a class="reference internal" href="#numpy-docstring-format">Numpy docstring format</a></li>
+<li><a class="reference internal" href="#cross-references">Cross references</a></li>
+<li><a class="reference internal" href="#overriding-signatures">Overriding signatures</a></li>
+<li><a class="reference internal" href="#linking-rather-than-duplicating">Linking rather than duplicating</a></li>
+<li><a class="reference internal" href="#autosummary-extension">autosummary extension</a></li>
+<li><a class="reference internal" href="#examples-linking-to-relevant-documentation">Examples linking to relevant documentation</a></li>
+<li><a class="reference internal" href="#documentation-using-help-vs-a-browser">Documentation using help() vs a browser</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementation">Implementation</a></li>
+<li><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li><a class="reference internal" href="#alternatives">Alternatives</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../contents.html">Documentation overview</a><ul>
+  <li><a href="../index.html">The Matplotlib Developers&#8217; Guide</a><ul>
+  <li><a href="index.html">Matplotlib Enhancement Proposals</a><ul>
+      <li>Previous: <a href="MEP09.html" title="previous chapter">MEP9: Global interaction manager</a></li>
+      <li>Next: <a href="MEP11.html" title="next chapter">MEP11: Third-party dependencies</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/devel/MEP/MEP10.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mep10-docstring-consistency">
+<h1>MEP10: Docstring consistency<a class="headerlink" href="#mep10-docstring-consistency" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#status" id="id2">Status</a></li>
+<li><a class="reference internal" href="#branches-and-pull-requests" id="id3">Branches and Pull requests</a></li>
+<li><a class="reference internal" href="#abstract" id="id4">Abstract</a></li>
+<li><a class="reference internal" href="#detailed-description" id="id5">Detailed description</a><ul>
+<li><a class="reference internal" href="#numpy-docstring-format" id="id6">Numpy docstring format</a></li>
+<li><a class="reference internal" href="#cross-references" id="id7">Cross references</a></li>
+<li><a class="reference internal" href="#overriding-signatures" id="id8">Overriding signatures</a></li>
+<li><a class="reference internal" href="#linking-rather-than-duplicating" id="id9">Linking rather than duplicating</a></li>
+<li><a class="reference internal" href="#autosummary-extension" id="id10">autosummary extension</a></li>
+<li><a class="reference internal" href="#examples-linking-to-relevant-documentation" id="id11">Examples linking to relevant documentation</a></li>
+<li><a class="reference internal" href="#documentation-using-help-vs-a-browser" id="id12">Documentation using help() vs a browser</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementation" id="id13">Implementation</a></li>
+<li><a class="reference internal" href="#backward-compatibility" id="id14">Backward compatibility</a></li>
+<li><a class="reference internal" href="#alternatives" id="id15">Alternatives</a></li>
+</ul>
+</div>
+<div class="section" id="status">
+<h2><a class="toc-backref" href="#id2">Status</a><a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
+<p><strong>Progress</strong></p>
+<p>Targeted for 1.3</p>
+</div>
+<div class="section" id="branches-and-pull-requests">
+<h2><a class="toc-backref" href="#id3">Branches and Pull requests</a><a class="headerlink" href="#branches-and-pull-requests" title="Permalink to this headline">¶</a></h2>
+<p>#1665
+#1757
+#1795</p>
+</div>
+<div class="section" id="abstract">
+<h2><a class="toc-backref" href="#id4">Abstract</a><a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>matplotlib has a great deal of inconsistency between docstrings.  This
+not only makes the docs harder to read, but it is harder on
+contributors, because they don&#8217;t know which specifications to follow.
+There should be a clear docstring convention that is followed
+consistently.</p>
+<p>The organization of the API documentation is difficult to follow.
+Some pages, such as pyplot and axes, are enormous and hard to browse.
+There should instead be short summary tables that link to detailed
+documentation.  In addition, some of the docstrings themselves are
+quite long and contain redundant information.</p>
+<p>Building the documentation takes a long time and uses a <code class="xref py py-obj docutils literal"><span class="pre">make.py</span></code>
+script rather than a Makefile.</p>
+</div>
+<div class="section" id="detailed-description">
+<h2><a class="toc-backref" href="#id5">Detailed description</a><a class="headerlink" href="#detailed-description" title="Permalink to this headline">¶</a></h2>
+<p>There are number of new tools and conventions available since
+matplotlib started using Sphinx that make life easier.  The following
+is a list of proposed changes to docstrings, most of which involve
+these new features.</p>
+<div class="section" id="numpy-docstring-format">
+<h3><a class="toc-backref" href="#id6">Numpy docstring format</a><a class="headerlink" href="#numpy-docstring-format" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt">Numpy docstring format</a>:
+This format divides the docstring into clear sections, each having
+different parsing rules that make the docstring easy to read both as
+raw text and as HTML.  We could consider alternatives, or invent our
+own, but this is a strong choice, as it&#8217;s well used and understood in
+the Numpy/Scipy community.</p>
+</div>
+<div class="section" id="cross-references">
+<h3><a class="toc-backref" href="#id7">Cross references</a><a class="headerlink" href="#cross-references" title="Permalink to this headline">¶</a></h3>
+<p>Most of the docstrings in matplotlib use explicit &#8220;roles&#8221; when linking
+to other items, for example: <code class="docutils literal"><span class="pre">:func:`myfunction`</span></code>.  As of Sphinx
+0.4, there is a &#8220;default_role&#8221; that can be set to &#8220;obj&#8221;, which will
+polymorphically link to a Python object of any type.  This allows one
+to write <code class="docutils literal"><span class="pre">`myfunction`</span></code> instead.  This makes docstrings much easier
+to read and edit as raw text.  Additionally, Sphinx allows for setting
+a current module, so links like <code class="docutils literal"><span class="pre">`~matplotlib.axes.Axes.set_xlim`</span></code>
+could be written as <code class="docutils literal"><span class="pre">`~axes.Axes.set_xlim`</span></code>.</p>
+</div>
+<div class="section" id="overriding-signatures">
+<h3><a class="toc-backref" href="#id8">Overriding signatures</a><a class="headerlink" href="#overriding-signatures" title="Permalink to this headline">¶</a></h3>
+<p>Many methods in matplotlib use the <code class="docutils literal"><span class="pre">*args</span></code> and <code class="docutils literal"><span class="pre">**kwargs</span></code> syntax
+to dynamically handle the keyword arguments that are accepted by the
+function, or to delegate on to another function.  This, however, is
+often not useful as a signature in the documentation.  For this
+reason, many matplotlib methods include something like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">annotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create an annotation: a piece of text referring to a data</span>
+<span class="sd">    point.</span>
+
+<span class="sd">    Call signature::</span>
+
+<span class="sd">      annotate(s, xy, xytext=None, xycoords=&#39;data&#39;,</span>
+<span class="sd">               textcoords=&#39;data&#39;, arrowprops=None, **kwargs)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>This can&#8217;t be parsed by Sphinx, and is rather verbose in raw text.  As
+of Sphinx 1.1, if the <code class="xref py py-obj docutils literal"><span class="pre">autodoc_docstring_signature</span></code> config value is
+set to True, Sphinx will extract a replacement signature from the
+first line of the docstring, allowing this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">annotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    annotate(s, xy, xytext=None, xycoords=&#39;data&#39;,</span>
+<span class="sd">               textcoords=&#39;data&#39;, arrowprops=None, **kwargs)</span>
+
+<span class="sd">    Create an annotation: a piece of text referring to a data</span>
+<span class="sd">    point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>The explicit signature will replace the actual Python one in the
+generated documentation.</p>
+</div>
+<div class="section" id="linking-rather-than-duplicating">
+<h3><a class="toc-backref" href="#id9">Linking rather than duplicating</a><a class="headerlink" href="#linking-rather-than-duplicating" title="Permalink to this headline">¶</a></h3>
+<p>Many of the docstrings include long lists of accepted keywords by
+interpolating things into the docstring at load time.  This makes the
+docstrings very long.  Also, since these tables are the same across
+many docstrings, it inserts a lot of redundant information in the docs
+&#8211; particularly a problem in the printed version.</p>
+<p>These tables should be moved to docstrings on functions whose only
+purpose is for help.  The docstrings that refer to these tables should
+link to them, rather than including them verbatim.</p>
+</div>
+<div class="section" id="autosummary-extension">
+<h3><a class="toc-backref" href="#id10">autosummary extension</a><a class="headerlink" href="#autosummary-extension" title="Permalink to this headline">¶</a></h3>
+<p>The Sphinx autosummary extension should be used to generate summary
+tables, that link to separate pages of documentation.  Some classes
+that have many methods (e.g. <code class="xref py py-obj docutils literal"><span class="pre">Axes.axes</span></code>) should be documented with
+one method per page, whereas smaller classes should have all of their
+methods together.</p>
+</div>
+<div class="section" id="examples-linking-to-relevant-documentation">
+<h3><a class="toc-backref" href="#id11">Examples linking to relevant documentation</a><a class="headerlink" href="#examples-linking-to-relevant-documentation" title="Permalink to this headline">¶</a></h3>
+<p>The examples, while helpful at illustrating how to use a feature, do
+not link back to the relevant docstrings.  This could be addressed by
+adding module-level docstrings to the examples, and then including
+that docstring in the parsed content on the example page.  These
+docstrings could easily include references to any other part of the
+documentation.</p>
+</div>
+<div class="section" id="documentation-using-help-vs-a-browser">
+<h3><a class="toc-backref" href="#id12">Documentation using help() vs a browser</a><a class="headerlink" href="#documentation-using-help-vs-a-browser" title="Permalink to this headline">¶</a></h3>
+<p>Using Sphinx markup in the source allows for good-looking docs in your
+browser, but the markup also makes the raw text returned using help()
+look terrible. One of the aims of improving the docstrings should be
+to make both methods of accessing the docs look good.</p>
+</div>
+</div>
+<div class="section" id="implementation">
+<h2><a class="toc-backref" href="#id13">Implementation</a><a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">The numpydoc extensions should be turned on for matplotlib.  There
+is an important question as to whether these should be included in
+the matplotlib source tree, or used as a dependency.  Installing
+Numpy is not sufficient to get the numpydoc extensions &#8211; it&#8217;s a
+separate install procedure.  In any case, to the extent that they
+require customization for our needs, we should endeavor to submit
+those changes upstream and not fork them.</p>
+</li>
+<li><p class="first">Manually go through all of the docstrings and update them to the
+new format and conventions.  Updating the cross references (from
+<code class="docutils literal"><span class="pre">`:func:`myfunc`</span></code> to <code class="docutils literal"><span class="pre">`func`</span></code>) may be able to be
+semi-automated.  This is a lot of busy work, and perhaps this labor
+should be divided on a per-module basis so no single developer is
+over-burdened by it.</p>
+</li>
+<li><p class="first">Reorganize the API docs using autosummary and <code class="xref py py-obj docutils literal"><span class="pre">sphinx-autogen</span></code>.
+This should hopefully have minimal impact on the narrative
+documentation.</p>
+</li>
+<li><p class="first">Modify the example page generator (<code class="xref py py-obj docutils literal"><span class="pre">gen_rst.py</span></code>) so that it
+extracts the module docstring from the example and includes it in a
+non-literal part of the example page.</p>
+</li>
+<li><p class="first">Use <code class="xref py py-obj docutils literal"><span class="pre">sphinx-quickstart</span></code> to generate a new-style Sphinx Makefile.
+The following features in the current <code class="xref py py-obj docutils literal"><span class="pre">make.py</span></code> will have to be
+addressed in some other way:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Copying of some static content</li>
+<li>Specifying a &#8220;small&#8221; build (only low-resolution PNG files for examples)</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>Steps 1, 2, and 3 are interdependent.  4 and 5 may be done
+independently, though 5 has some dependency on 3.</p>
+</div>
+<div class="section" id="backward-compatibility">
+<h2><a class="toc-backref" href="#id14">Backward compatibility</a><a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>As this mainly involves docstrings, there should be minimal impact on
+backward compatibility.</p>
+</div>
+<div class="section" id="alternatives">
+<h2><a class="toc-backref" href="#id15">Alternatives</a><a class="headerlink" href="#alternatives" title="Permalink to this headline">¶</a></h2>
+<p>None yet discussed.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2016 The Matplotlib development team.
+      Last updated on May 02, 2017.
+      Created using <a
+href="http://sphinx-doc.org/">Sphinx</a> 1.5.5.
+    </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55954603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+<footer>
+  <!--Flipcause Integration v3.0// Flipcause Integration Instructions:
+Install the following code block once in the website Header (after <head> tag) -->
+
+<style>
+
+.fc-black_overlay{
+display:none; position: fixed; z-index:1000001; top: 0%;left: 0%;width: 100%;height: 100%;
+background-color: black; filter: alpha(opacity=50); cursor:pointer; opacity:0.5;
+}
+
+.fc-white_content {
+opacity:1; display:none; margin-top: -320px; margin-left: -485px; width:970px; height:640px;
+position:fixed; top:50%; left:50%; border: none;z-index:1000002;overflow: auto;
+}
+
+.fc-main-box{
+opacity:1; display:none; margin:15px auto 0 auto; width:930px; position:relative; z-index:1000003;
+}
+
+.fc-widget_close{
+opacity:1; content:url(http://i1338.photobucket.com/albums/o691/WeCause/X_zpse4a7e538.png);
+position:absolute; z-index=1000004; right:-16px; top:-16px; display:block; cursor:pointer;
+}
+
+.floating_button{
+display: block; margin-top: 0px; margin-left: 0px; width:auto ; height: auto;
+position:fixed; z-index:999999; overflow: auto;
+}
+
+@keyframes backfadesin {
+   from { opacity:0; }
+   to {opacity:.5;}
+}
+
+@-moz-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-webkit-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@-o-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+
+@-ms-keyframes backfadesin {
+    from { opacity:0; }
+    to {opacity:.5;}
+}
+
+@keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; transform: translateY(20px);}
+   100% {opacity: 1; transform: translateY(0);}
+}
+
+@-moz-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -moz-transform: translateY(20px);}
+   100% {opacity: 1; -moz-transform: translateY(0);}
+}
+
+@-webkit-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -webkit-transform: translateY(20px);}
+   100% {opacity: 1; -webkit-transform: translateY(0);}
+}
+
+@-o-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -o-transform: translateY(20px);}
+   100% {opacity: 1; -o-transform: translateY(0);}
+}
+
+@-ms-keyframes fadesin {
+   0%{ opacity:0; }
+   50%{ opacity:0; }
+   75% {opacity: 0; -ms-transform: translateY(20px);}
+   100% {opacity: 1; -ms-transform: translateY(0);}
+}
+
+</style>
+
+<script>
+
+function open_window(cause_id) {
+var  protocol=String(document.location.protocol);
+var new_url;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+new_url="https://www.flipcause.com/widget/"+cause_id
+window.open(new_url);
+}
+
+else {
+document.getElementById("fc-fade").style.display = "block";
+document.getElementById("fc-fade").style.webkitAnimation = "backfadesin 1s";
+document.getElementById("fc-fade").style.animation = "backfadesin 1s";
+document.getElementById("fc-fade").style.mozAnimation = "backfadesin 1s";
+document.getElementById("fc-light").style.display = "block";
+document.getElementById("fc-light").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-light").style.animation = "fadesin 1.5s";
+document.getElementById("fc-light").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-main").style.display = "block";
+document.getElementById("fc-main").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-main").style.animation = "fadesin 1.5s";
+document.getElementById("fc-main").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-close").style.display = "block";
+document.getElementById("fc-close").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-close").style.animation = "fadesin 1.5s";
+document.getElementById("fc-close").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.display = "block";
+document.getElementById("fc-myFrame").style.webkitAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.animation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").style.mozAnimation = "fadesin 1.5s";
+document.getElementById("fc-myFrame").src="https://www.flipcause.com/widget/"+cause_id;
+}
+}
+
+
+function close_window() {
+document.getElementById("fc-fade").style.display="none";
+document.getElementById("fc-light").style.display="none";
+document.getElementById("fc-main").style.display="none";
+document.getElementById("fc-close").style.display="none";
+document.getElementById("fc-myFrame").style.display="none";
+}
+
+</script>
+
+<div id="fc-fade" class="fc-black_overlay" onclick="close_window()"></div>
+<div id="fc-light" class="fc-white_content">
+<div id="fc-main" class="fc-main-box">
+<div id="fc-close" class="fc-widget_close" onclick="close_window()">
+</div><iframe id="fc-myFrame" iframe height="580" width="925" style="border: 0;
+border-radius:5px 5px 5px 5px; box-shadow:0 0 8px rgba(0, 0, 0, 0.5);" scrolling="no" src=""></iframe></div>
+</div>
+
+<!--END Flipcause Main Integration Code-->
+</footer>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Making a patch &mdash; Matplotlib 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/mpl.css"
+type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css"
+type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 1.4.0 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="top" title="Matplotlib 1.4.0 documentation" href="../../index.html" />
+    <link rel="up" title="Working with matplotlib source code" href="index.html" />
+    <link rel="next" title="Testing" href="../testing.html" />
+    <link rel="prev" title="git resources" href="git_resources.html" /> 
+<link href="http://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+
+    <link rel="canonical" href="https://matplotlib.org/stable/devel/gitwash/patching.html" />
+  </head>
+  <body>
+<div id="unreleased-message"> You are reading an old version of the documentation (v1.4.0).  For the latest version see <a href="https://matplotlib.org/stable/devel/gitwash/patching.html">https://matplotlib.org/stable/devel/gitwash/patching.html</a></div>
+
+
+
+<link rel="shortcut icon" href="/_static/favicon.ico">
+
+<!-- The "Fork me on github" ribbon -->
+<img style="float: right; margin-bottom: -40px; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" usemap="#ribbonmap"/>
+<map name="ribbonmap">
+    <area shape="poly" coords="15,0,148,-1,148,135" href="https://github.com/matplotlib/matplotlib" title="Fork me on GitHub" />
+</map>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="../../index.html"><img src="../../_static/logo2.png" border="0" alt="matplotlib"/></a>
+</div>
+
+
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../testing.html" title="Testing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="git_resources.html" title="git resources"
+             accesskey="P">previous</a> |</li>
+
+        <li><a href="../../index.html">home</a>|&nbsp;</li>
+        <li><a href="../../examples/index.html">examples</a>|&nbsp;</li>
+        <li><a href="../../gallery.html">gallery</a>|&nbsp;</li>
+        <li><a href="../../api/pyplot_summary.html">pyplot</a>|&nbsp;</li>
+        <li><a href="../../contents.html">docs</a> &raquo;</li>
+          <li><a href="../index.html" >The Matplotlib Developers&#8217; Guide</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Working with <em>matplotlib</em> source code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+  
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Making a patch</a><ul>
+<li><a class="reference internal" href="#making-patches">Making patches</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#in-detail">In detail</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="git_resources.html"
+                        title="previous chapter">git resources</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../testing.html"
+                        title="next chapter">Testing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/devel/gitwash/patching.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="making-a-patch">
+<h1>Making a patch<a class="headerlink" href="#making-a-patch" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="making-patches">
+<span id="id1"></span><h2>Making patches<a class="headerlink" href="#making-patches" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre># tell git who you are
+git config --global user.email you@yourdomain.example.com
+git config --global user.name &quot;Your Name Comes Here&quot;
+# get the repository if you don&#39;t have it
+git clone git://github.com/matplotlib/matplotlib.git
+# make a branch for your patching
+cd matplotlib
+git branch the-fix-im-thinking-of
+git checkout the-fix-im-thinking-of
+# hack, hack, hack
+# Tell git about any new files you&#39;ve made
+git add somewhere/tests/test_my_bug.py
+# commit work in progress as you go
+git commit -am &#39;BF - added tests for Funny bug&#39;
+# hack hack, hack
+git commit -am &#39;BF - added fix for Funny bug&#39;
+# make the patch files
+git format-patch -M -C master
+</pre></div>
+</div>
+<p>Then, send the generated patch files to the <a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/matplotlib-devel">matplotlib
+mailing list</a> — where we will thank you warmly.</p>
+</div>
+<div class="section" id="in-detail">
+<h3>In detail<a class="headerlink" href="#in-detail" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Tell <a class="reference external" href="http://git-scm.com/">git</a> who you are so it can label the commits you&#8217;ve
+made:</p>
+<div class="highlight-python"><div class="highlight"><pre>git config --global user.email you@yourdomain.example.com
+git config --global user.name &quot;Your Name Comes Here&quot;
+</pre></div>
+</div>
+</li>
+<li><p class="first">If you don&#8217;t already have one, clone a copy of the
+<a class="reference external" href="http://matplotlib.org">matplotlib</a> repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>git clone git://github.com/matplotlib/matplotlib.git
+cd matplotlib
+</pre></div>
+</div>
+</li>
+<li><p class="first">Make a &#8216;feature branch&#8217;.  This will be where you work on
+your bug fix.  It&#8217;s nice and safe and leaves you with
+access to an unmodified copy of the code in the main
+branch:</p>
+<div class="highlight-python"><div class="highlight"><pre>git branch the-fix-im-thinking-of
+git checkout the-fix-im-thinking-of
+</pre></div>
+</div>
+</li>
+<li><p class="first">Do some edits, and commit them as you go:</p>
+<div class="highlight-python"><div class="highlight"><pre># hack, hack, hack
+# Tell git about any new files you&#39;ve made
+git add somewhere/tests/test_my_bug.py
+# commit work in progress as you go
+git commit -am &#39;BF - added tests for Funny bug&#39;
+# hack hack, hack
+git commit -am &#39;BF - added fix for Funny bug&#39;
+</pre></div>
+</div>
+<p>Note the <tt class="docutils literal"><span class="pre">-am</span></tt> options to <tt class="docutils literal"><span class="pre">commit</span></tt>. The <tt class="docutils literal"><span class="pre">m</span></tt> flag just
+signals that you&#8217;re going to type a message on the command
+line.  The <tt class="docutils literal"><span class="pre">a</span></tt> flag — you can just take on faith —
+or see <a class="reference external" href="http://www.gitready.com/beginner/2009/01/18/the-staging-area.html">why the -a flag?</a>.</p>
+</li>
+<li><p class="first">When you have finished, check you have committed all your
+changes:</p>
+<div class="highlight-python"><div class="highlight"><pre>git status
+</pre></div>
+</div>
+</li>
+<li><p class="first">Finally, make your commits into patches.  You want all the
+commits since you branched from the <tt class="docutils literal"><span class="pre">master</span></tt> branch:</p>
+<div class="highlight-python"><div class="highlight"><pre>git format-patch -M -C master
+</pre></div>
+</div>
+<p>You will now have several files named for the commits:</p>
+<div class="highlight-python"><div class="highlight"><pre>0001-BF-added-tests-for-Funny-bug.patch
+0002-BF-added-fix-for-Funny-bug.patch
+</pre></div>
+</div>
+<p>Send these files to the <a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/matplotlib-devel">matplotlib mailing list</a>.</p>
+</li>
+</ol>
+<p>When you are done, to switch back to the main copy of the
+code, just return to the <tt class="docutils literal"><span class="pre">master</span></tt> branch:</p>
+<div class="highlight-python"><div class="highlight"><pre>git checkout master
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the matplotlib development team; 2012 - 2014 The matplotlib development team.
+      Last updated on Sep 02, 2014.
+      Created using <a
+href="http://sphinx-doc.org/">Sphinx</a> 1.3a0.
+    </div>
+
+</body>
+</html>
