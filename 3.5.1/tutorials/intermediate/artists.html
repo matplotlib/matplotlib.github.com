@@ -10,8 +10,9 @@
 
     <title>Artist tutorial &#8212; Matplotlib 3.5.1 documentation</title>
     
-  <link href="../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -21,10 +22,6 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/style.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -36,9 +33,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mpl.css?v3.5.1-2-g0b9384b0ff" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mpl.css?v3.5.1-27-g178ed0233d" />
     
-  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -46,6 +44,7 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
+    <link rel="canonical" href="https://matplotlib.org/stable/tutorials/intermediate/artists.html" />
     <link rel="search" type="application/opensearchdescription+xml"
           title="Search within Matplotlib 3.5.1 documentation"
           href="../../_static/opensearch.xml"/>
@@ -70,7 +69,7 @@
                     </script>
 
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
     
     <div class="container-fluid" id="banner"></div>
 
@@ -170,7 +169,8 @@
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
@@ -419,6 +419,20 @@
 
   </div>
 </nav>
+              </div>
+              <div class="sidebar-end-items"><div class="sidebar-announcement">
+  <h3>Matplotlib is Hiring!</h3>
+  <p>We have support for a 3-year Research Software Engineer Position via
+  a <a href="https://discourse.matplotlib.org/t/maplotlib-selected-for-nasa-roses-ostfl-2020/22303">grant
+      from NASA.</a>
+  </p>
+  <p>Please
+      see <a href="https://discourse.matplotlib.org/t/research-software-engineer-roses-2020-position/22597">
+      the job posting</a> for more details and how to apply.</p>
+  <p><strong>Applications will close April 15, 2022.</strong></p>
+
+</div>
+              </div>
             </div>
             
           
@@ -429,7 +443,7 @@
               
               <div class="toc-item">
                 
-<div class="tocsection onthispage pt-5 pb-3">
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
     <i class="fas fa-list"></i> On this page
 </div>
 
@@ -568,11 +582,11 @@ coordinates:</p>
 </pre></div>
 </div>
 <p>In this example, <code class="docutils literal notranslate"><span class="pre">ax</span></code> is the <code class="docutils literal notranslate"><span class="pre">Axes</span></code> instance created by the
-<code class="docutils literal notranslate"><span class="pre">fig.add_subplot</span></code> call above (remember <code class="docutils literal notranslate"><span class="pre">Subplot</span></code> is just a
-subclass of <code class="docutils literal notranslate"><span class="pre">Axes</span></code>) and when you call <code class="docutils literal notranslate"><span class="pre">ax.plot</span></code>, it creates a
-<code class="docutils literal notranslate"><span class="pre">Line2D</span></code> instance and adds it to the <code class="xref py py-attr docutils literal notranslate"><span class="pre">Axes.lines</span></code> list.  In the interactive <a class="reference external" href="https://ipython.org/">IPython</a> session below, you can see that the
-<code class="docutils literal notranslate"><span class="pre">Axes.lines</span></code> list is length one and contains the same line that was
-returned by the <code class="docutils literal notranslate"><span class="pre">line,</span> <span class="pre">=</span> <span class="pre">ax.plot...</span></code> call:</p>
+<code class="docutils literal notranslate"><span class="pre">fig.add_subplot</span></code> call above (remember <code class="docutils literal notranslate"><span class="pre">Subplot</span></code> is just a subclass of
+<code class="docutils literal notranslate"><span class="pre">Axes</span></code>) and when you call <code class="docutils literal notranslate"><span class="pre">ax.plot</span></code>, it creates a <code class="docutils literal notranslate"><span class="pre">Line2D</span></code> instance and
+adds it to the <code class="docutils literal notranslate"><span class="pre">Axes</span></code>.  In the interactive <a class="reference external" href="https://ipython.org/">IPython</a>
+session below, you can see that the <code class="docutils literal notranslate"><span class="pre">Axes.lines</span></code> list is length one and
+contains the same line that was returned by the <code class="docutils literal notranslate"><span class="pre">line,</span> <span class="pre">=</span> <span class="pre">ax.plot...</span></code> call:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [101]: </span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="gh">Out[101]: </span><span class="go">&lt;matplotlib.lines.Line2D at 0x19a95710&gt;</span>
 
@@ -582,10 +596,9 @@ returned by the <code class="docutils literal notranslate"><span class="pre">lin
 </div>
 <p>If you make subsequent calls to <code class="docutils literal notranslate"><span class="pre">ax.plot</span></code> (and the hold state is &quot;on&quot;
 which is the default) then additional lines will be added to the list.
-You can remove lines later simply by calling the list methods; either
-of these will work:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><a href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D" class="sphx-glr-backref-module-matplotlib-lines sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">line</span></a><span class="p">)</span>  <span class="c1"># one or the other, not both!</span>
+You can remove a line later by calling its <code class="docutils literal notranslate"><span class="pre">remove</span></code> method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D" class="sphx-glr-backref-module-matplotlib-lines sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">line</span></a> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D" class="sphx-glr-backref-module-matplotlib-lines sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">line</span></a><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The Axes also has helper methods to configure and decorate the x-axis
@@ -900,10 +913,10 @@ determines the shape, background and border of the plotting region:</p>
 </pre></div>
 </div>
 <p>When you call a plotting method, e.g., the canonical
-<a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">plot()</span></code></a> and pass in arrays or lists of
-values, the method will create a <a class="reference internal" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.lines.Line2D()</span></code></a>
-instance, update the line with all the <code class="docutils literal notranslate"><span class="pre">Line2D</span></code> properties passed as
-keyword arguments, add the line to the <code class="xref py py-attr docutils literal notranslate"><span class="pre">Axes.lines</span></code> container, and returns it to you:</p>
+<a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a> and pass in arrays or lists of values, the
+method will create a <a class="reference internal" href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.lines.Line2D</span></code></a> instance, update the line with
+all the <code class="docutils literal notranslate"><span class="pre">Line2D</span></code> properties passed as keyword arguments, add the line to
+the <code class="docutils literal notranslate"><span class="pre">Axes</span></code>, and return it to you:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [213]: </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
 <span class="gp">In [214]: </span><a href="../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D" class="sphx-glr-backref-module-matplotlib-lines sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">line</span></a><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -929,19 +942,20 @@ add the patches to the <code class="xref py py-attr docutils literal notranslate
 <span class="gh">Out[235]: </span><span class="go">50</span>
 </pre></div>
 </div>
-<p>You should not add objects directly to the <code class="docutils literal notranslate"><span class="pre">Axes.lines</span></code> or
-<code class="docutils literal notranslate"><span class="pre">Axes.patches</span></code> lists unless you know exactly what you are doing,
-because the <code class="docutils literal notranslate"><span class="pre">Axes</span></code> needs to do a few things when it creates and adds
-an object.  It sets the figure and axes property of the <code class="docutils literal notranslate"><span class="pre">Artist</span></code>, as
-well as the default <code class="docutils literal notranslate"><span class="pre">Axes</span></code> transformation (unless a transformation
-is set).  It also inspects the data contained in the <code class="docutils literal notranslate"><span class="pre">Artist</span></code> to
-update the data structures controlling auto-scaling, so that the view
-limits can be adjusted to contain the plotted data.  You can,
-nonetheless, create objects yourself and add them directly to the
-<code class="docutils literal notranslate"><span class="pre">Axes</span></code> using helper methods like
-<a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.add_line.html#matplotlib.axes.Axes.add_line" title="matplotlib.axes.Axes.add_line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_line()</span></code></a> and
-<a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.add_patch.html#matplotlib.axes.Axes.add_patch" title="matplotlib.axes.Axes.add_patch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_patch()</span></code></a>.  Here is an annotated
-interactive session illustrating what is going on:</p>
+<p>You should not add objects directly to the <code class="docutils literal notranslate"><span class="pre">Axes.lines</span></code> or <code class="docutils literal notranslate"><span class="pre">Axes.patches</span></code>
+lists, because the <code class="docutils literal notranslate"><span class="pre">Axes</span></code> needs to do a few things when it creates and adds
+an object:</p>
+<ul class="simple">
+<li><p>It sets the <code class="docutils literal notranslate"><span class="pre">figure</span></code> and <code class="docutils literal notranslate"><span class="pre">axes</span></code> property of the <code class="docutils literal notranslate"><span class="pre">Artist</span></code>;</p></li>
+<li><p>It sets the default <code class="docutils literal notranslate"><span class="pre">Axes</span></code> transformation (unless one is already set);</p></li>
+<li><p>It inspects the data contained in the <code class="docutils literal notranslate"><span class="pre">Artist</span></code> to update the data
+structures controlling auto-scaling, so that the view limits can be
+adjusted to contain the plotted data.</p></li>
+</ul>
+<p>You can, nonetheless, create objects yourself and add them directly to the
+<code class="docutils literal notranslate"><span class="pre">Axes</span></code> using helper methods like <a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.add_line.html#matplotlib.axes.Axes.add_line" title="matplotlib.axes.Axes.add_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_line</span></code></a> and
+<a class="reference internal" href="../../api/_as_gen/matplotlib.axes.Axes.add_patch.html#matplotlib.axes.Axes.add_patch" title="matplotlib.axes.Axes.add_patch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_patch</span></code></a>.  Here is an annotated interactive session
+illustrating what is going on:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [262]: </span><a href="../../api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
 
 <span class="go"># create a rectangle instance</span>
@@ -1368,7 +1382,7 @@ dollar signs and colors them green on the right side of the yaxis.</p>
 <a href="../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_dollar_ticks_001.png" srcset="../../_images/sphx_glr_dollar_ticks_001.png, ../../_images/sphx_glr_dollar_ticks_001_2_0x.png 2.0x" alt="dollar ticks" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.443 seconds)</p>
+<img src="../../_images/sphx_glr_dollar_ticks_001.png" srcset="../../_images/sphx_glr_dollar_ticks_001.png, ../../_images/sphx_glr_dollar_ticks_001_2_0x.png 2.0x" alt="dollar ticks" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.050 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-intermediate-artists-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/94252e4ed853f0ab9ceef7a07f587eb5/artists.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">artists.py</span></code></a></p>
@@ -1393,19 +1407,20 @@ dollar signs and colors them green on the right side of the yaxis.</p>
       </div>
     </div>
   
-  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
 <footer class="footer mt-5 mt-md-0">
   <div class="container">
     
     <div class="footer-item">
       <p class="copyright">
-    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2021 The Matplotlib development team.<br>
+    &copy; Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2022 The Matplotlib development team.<br>
 </p>
     </div>
     
     <div class="footer-item">
       <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
 </p>
     </div>
     
