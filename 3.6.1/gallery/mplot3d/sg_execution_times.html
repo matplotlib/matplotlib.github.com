@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Computation times &#8212; Matplotlib 3.6.1 documentation</title>
+  <script>
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=9b1a4fa89bdd0e95b23b" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=9b1a4fa89bdd0e95b23b" rel="stylesheet">
+
+  
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css?v3.6.1-2-g5a2f8bab83" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mpl.css?v3.6.1-2-g5a2f8bab83" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=9b1a4fa89bdd0e95b23b">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script src="../../_static/jquery.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script src="../../_static/underscore.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script src="../../_static/doctools.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script src="../../_static/clipboard.min.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script src="../../_static/copybutton.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script src="../../_static/design-tabs.js?v3.6.1-2-g5a2f8bab83"></script>
+    <script async="async" src="https://www.google-analytics.com/analytics.js"></script>
+    <script>
+                    window.ga = window.ga || function () {
+                        (ga.q = ga.q || []).push(arguments) };
+                    ga.l = +new Date;
+                    ga('create', 'UA-55954603-1', 'auto');
+                    ga('set', 'anonymizeIp', true);
+                    ga('send', 'pageview');
+                </script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gallery/mplot3d/sg_execution_times';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/gallery/mplot3d/sg_execution_times.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.6.1 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fas fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+   
+
+
+<a class="navbar-brand logo" href="../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../_static/images/logo2.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../../_static/images/logo_dark.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/release_notes.html">Release notes</a>
+  </li>
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      <div class="navbar-end-item navbar-end__search-button-container">
+        
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search">
+  <i class="fas fa-search"></i>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <span class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        stable  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  <div class="search-button-container--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search">
+  <i class="fas fa-search"></i>
+</button>
+  </div>
+
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/release_notes.html">Release notes</a>
+  </li>
+</ul>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <span class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        stable  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank"><span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+      </div>
+      <main class="bd-main">
+        
+        
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+            </div>
+            
+            
+            <article class="bd-article" role="main">
+              
+  <section id="computation-times">
+<span id="sphx-glr-gallery-mplot3d-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Permalink to this heading">#</a></h1>
+<p><strong>00:27.832</strong> total execution time for <strong>gallery_mplot3d</strong> files:</p>
+<table class="table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="voxels_rgb.html#sphx-glr-gallery-mplot3d-voxels-rgb-py"><span class="std std-ref">3D voxel / volumetric plot with RGB colors</span></a> (<code class="docutils literal notranslate"><span class="pre">voxels_rgb.py</span></code>)</p></td>
+<td><p>00:01.753</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="box3d.html#sphx-glr-gallery-mplot3d-box3d-py"><span class="std std-ref">3D box surface plot</span></a> (<code class="docutils literal notranslate"><span class="pre">box3d.py</span></code>)</p></td>
+<td><p>00:01.701</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="wire3d_zero_stride.html#sphx-glr-gallery-mplot3d-wire3d-zero-stride-py"><span class="std std-ref">3D wireframe plots in one direction</span></a> (<code class="docutils literal notranslate"><span class="pre">wire3d_zero_stride.py</span></code>)</p></td>
+<td><p>00:01.558</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="stem3d_demo.html#sphx-glr-gallery-mplot3d-stem3d-demo-py"><span class="std std-ref">3D stem</span></a> (<code class="docutils literal notranslate"><span class="pre">stem3d_demo.py</span></code>)</p></td>
+<td><p>00:01.495</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="voxels_torus.html#sphx-glr-gallery-mplot3d-voxels-torus-py"><span class="std std-ref">3D voxel / volumetric plot with cylindrical coordinates</span></a> (<code class="docutils literal notranslate"><span class="pre">voxels_torus.py</span></code>)</p></td>
+<td><p>00:00.988</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="trisurf3d_2.html#sphx-glr-gallery-mplot3d-trisurf3d-2-py"><span class="std std-ref">More triangular 3D surfaces</span></a> (<code class="docutils literal notranslate"><span class="pre">trisurf3d_2.py</span></code>)</p></td>
+<td><p>00:00.883</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="subplot3d.html#sphx-glr-gallery-mplot3d-subplot3d-py"><span class="std std-ref">3D plots as subplots</span></a> (<code class="docutils literal notranslate"><span class="pre">subplot3d.py</span></code>)</p></td>
+<td><p>00:00.870</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="view_planes_3d.html#sphx-glr-gallery-mplot3d-view-planes-3d-py"><span class="std std-ref">Primary 3D view planes</span></a> (<code class="docutils literal notranslate"><span class="pre">view_planes_3d.py</span></code>)</p></td>
+<td><p>00:00.849</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="custom_shaded_3d_surface.html#sphx-glr-gallery-mplot3d-custom-shaded-3d-surface-py"><span class="std std-ref">Custom hillshading in a 3D surface plot</span></a> (<code class="docutils literal notranslate"><span class="pre">custom_shaded_3d_surface.py</span></code>)</p></td>
+<td><p>00:00.742</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="offset.html#sphx-glr-gallery-mplot3d-offset-py"><span class="std std-ref">Automatic text offsetting</span></a> (<code class="docutils literal notranslate"><span class="pre">offset.py</span></code>)</p></td>
+<td><p>00:00.736</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="surface3d_3.html#sphx-glr-gallery-mplot3d-surface3d-3-py"><span class="std std-ref">3D surface (checkerboard)</span></a> (<code class="docutils literal notranslate"><span class="pre">surface3d_3.py</span></code>)</p></td>
+<td><p>00:00.704</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="surface3d_2.html#sphx-glr-gallery-mplot3d-surface3d-2-py"><span class="std std-ref">3D surface (solid color)</span></a> (<code class="docutils literal notranslate"><span class="pre">surface3d_2.py</span></code>)</p></td>
+<td><p>00:00.694</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="bars3d.html#sphx-glr-gallery-mplot3d-bars3d-py"><span class="std std-ref">Create 2D bar graphs in different planes</span></a> (<code class="docutils literal notranslate"><span class="pre">bars3d.py</span></code>)</p></td>
+<td><p>00:00.671</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="surface3d_radial.html#sphx-glr-gallery-mplot3d-surface3d-radial-py"><span class="std std-ref">3D surface with polar coordinates</span></a> (<code class="docutils literal notranslate"><span class="pre">surface3d_radial.py</span></code>)</p></td>
+<td><p>00:00.646</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mixed_subplots.html#sphx-glr-gallery-mplot3d-mixed-subplots-py"><span class="std std-ref">2D and 3D axes in same figure</span></a> (<code class="docutils literal notranslate"><span class="pre">mixed_subplots.py</span></code>)</p></td>
+<td><p>00:00.645</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="voxels_numpy_logo.html#sphx-glr-gallery-mplot3d-voxels-numpy-logo-py"><span class="std std-ref">3D voxel plot of the NumPy logo</span></a> (<code class="docutils literal notranslate"><span class="pre">voxels_numpy_logo.py</span></code>)</p></td>
+<td><p>00:00.644</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="contour3d_3.html#sphx-glr-gallery-mplot3d-contour3d-3-py"><span class="std std-ref">Project contour profiles onto a graph</span></a> (<code class="docutils literal notranslate"><span class="pre">contour3d_3.py</span></code>)</p></td>
+<td><p>00:00.613</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="lorenz_attractor.html#sphx-glr-gallery-mplot3d-lorenz-attractor-py"><span class="std std-ref">Lorenz attractor</span></a> (<code class="docutils literal notranslate"><span class="pre">lorenz_attractor.py</span></code>)</p></td>
+<td><p>00:00.604</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scatter3d.html#sphx-glr-gallery-mplot3d-scatter3d-py"><span class="std std-ref">3D scatterplot</span></a> (<code class="docutils literal notranslate"><span class="pre">scatter3d.py</span></code>)</p></td>
+<td><p>00:00.603</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="surface3d.html#sphx-glr-gallery-mplot3d-surface3d-py"><span class="std std-ref">3D surface (colormap)</span></a> (<code class="docutils literal notranslate"><span class="pre">surface3d.py</span></code>)</p></td>
+<td><p>00:00.586</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="contourf3d_2.html#sphx-glr-gallery-mplot3d-contourf3d-2-py"><span class="std std-ref">Project filled contour onto a graph</span></a> (<code class="docutils literal notranslate"><span class="pre">contourf3d_2.py</span></code>)</p></td>
+<td><p>00:00.584</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="wire3d.html#sphx-glr-gallery-mplot3d-wire3d-py"><span class="std std-ref">3D wireframe plot</span></a> (<code class="docutils literal notranslate"><span class="pre">wire3d.py</span></code>)</p></td>
+<td><p>00:00.583</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quiver3d.html#sphx-glr-gallery-mplot3d-quiver3d-py"><span class="std std-ref">3D quiver plot</span></a> (<code class="docutils literal notranslate"><span class="pre">quiver3d.py</span></code>)</p></td>
+<td><p>00:00.582</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="voxels.html#sphx-glr-gallery-mplot3d-voxels-py"><span class="std std-ref">3D voxel / volumetric plot</span></a> (<code class="docutils literal notranslate"><span class="pre">voxels.py</span></code>)</p></td>
+<td><p>00:00.578</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pathpatch3d.html#sphx-glr-gallery-mplot3d-pathpatch3d-py"><span class="std std-ref">Draw flat objects in 3D plot</span></a> (<code class="docutils literal notranslate"><span class="pre">pathpatch3d.py</span></code>)</p></td>
+<td><p>00:00.566</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="errorbar3d.html#sphx-glr-gallery-mplot3d-errorbar3d-py"><span class="std std-ref">3D errorbars</span></a> (<code class="docutils literal notranslate"><span class="pre">errorbar3d.py</span></code>)</p></td>
+<td><p>00:00.541</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="tricontour3d.html#sphx-glr-gallery-mplot3d-tricontour3d-py"><span class="std std-ref">Triangular 3D contour plot</span></a> (<code class="docutils literal notranslate"><span class="pre">tricontour3d.py</span></code>)</p></td>
+<td><p>00:00.522</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="projections.html#sphx-glr-gallery-mplot3d-projections-py"><span class="std std-ref">3D plot projection types</span></a> (<code class="docutils literal notranslate"><span class="pre">projections.py</span></code>)</p></td>
+<td><p>00:00.521</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="contour3d_2.html#sphx-glr-gallery-mplot3d-contour3d-2-py"><span class="std std-ref">Plot contour (level) curves in 3D using the extend3d option</span></a> (<code class="docutils literal notranslate"><span class="pre">contour3d_2.py</span></code>)</p></td>
+<td><p>00:00.520</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="polys3d.html#sphx-glr-gallery-mplot3d-polys3d-py"><span class="std std-ref">Generate polygons to fill under 3D line graph</span></a> (<code class="docutils literal notranslate"><span class="pre">polys3d.py</span></code>)</p></td>
+<td><p>00:00.516</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="text3d.html#sphx-glr-gallery-mplot3d-text3d-py"><span class="std std-ref">Text annotations in 3D</span></a> (<code class="docutils literal notranslate"><span class="pre">text3d.py</span></code>)</p></td>
+<td><p>00:00.510</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="contour3d.html#sphx-glr-gallery-mplot3d-contour3d-py"><span class="std std-ref">Plot contour (level) curves in 3D</span></a> (<code class="docutils literal notranslate"><span class="pre">contour3d.py</span></code>)</p></td>
+<td><p>00:00.507</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="trisurf3d.html#sphx-glr-gallery-mplot3d-trisurf3d-py"><span class="std std-ref">Triangular 3D surfaces</span></a> (<code class="docutils literal notranslate"><span class="pre">trisurf3d.py</span></code>)</p></td>
+<td><p>00:00.499</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="2dcollections3d.html#sphx-glr-gallery-mplot3d-2dcollections3d-py"><span class="std std-ref">Plot 2D data on 3D plot</span></a> (<code class="docutils literal notranslate"><span class="pre">2dcollections3d.py</span></code>)</p></td>
+<td><p>00:00.496</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="hist3d.html#sphx-glr-gallery-mplot3d-hist3d-py"><span class="std std-ref">Create 3D histogram of 2D data</span></a> (<code class="docutils literal notranslate"><span class="pre">hist3d.py</span></code>)</p></td>
+<td><p>00:00.476</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="contourf3d.html#sphx-glr-gallery-mplot3d-contourf3d-py"><span class="std std-ref">Filled contours</span></a> (<code class="docutils literal notranslate"><span class="pre">contourf3d.py</span></code>)</p></td>
+<td><p>00:00.472</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="tricontourf3d.html#sphx-glr-gallery-mplot3d-tricontourf3d-py"><span class="std std-ref">Triangular 3D filled contour plot</span></a> (<code class="docutils literal notranslate"><span class="pre">tricontourf3d.py</span></code>)</p></td>
+<td><p>00:00.467</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="lines3d.html#sphx-glr-gallery-mplot3d-lines3d-py"><span class="std std-ref">Parametric curve</span></a> (<code class="docutils literal notranslate"><span class="pre">lines3d.py</span></code>)</p></td>
+<td><p>00:00.466</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="3d_bars.html#sphx-glr-gallery-mplot3d-3d-bars-py"><span class="std std-ref">Demo of 3D bar charts</span></a> (<code class="docutils literal notranslate"><span class="pre">3d_bars.py</span></code>)</p></td>
+<td><p>00:00.440</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="rotate_axes3d_sgskip.html#sphx-glr-gallery-mplot3d-rotate-axes3d-sgskip-py"><span class="std std-ref">Rotating a 3D plot</span></a> (<code class="docutils literal notranslate"><span class="pre">rotate_axes3d_sgskip.py</span></code>)</p></td>
+<td><p>00:00.000</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="wire3d_animation_sgskip.html#sphx-glr-gallery-mplot3d-wire3d-animation-sgskip-py"><span class="std std-ref">Animate a 3D wireframe plot</span></a> (<code class="docutils literal notranslate"><span class="pre">wire3d_animation_sgskip.py</span></code>)</p></td>
+<td><p>00:00.000</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+            </article>
+            
+            
+            
+          </div>
+          
+          
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+          </div>
+        </footer>
+        
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=9b1a4fa89bdd0e95b23b"></script>
+
+  <footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2022 The Matplotlib development team.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+</p>
+
+  </div>
+  
+</div>
+  </footer>
+  </body>
+</html>
