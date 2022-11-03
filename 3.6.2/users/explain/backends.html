@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Backends &#8212; Matplotlib 3.6.2 documentation</title>
+  <script>
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1e1de1a1873e13ef5536" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1e1de1a1873e13ef5536" rel="stylesheet">
+
+  
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css?v3.6.2-2-g071bb89a8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mpl.css?v3.6.2-2-g071bb89a8c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1e1de1a1873e13ef5536">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/jquery.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/underscore.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/doctools.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/sphinx_highlight.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/clipboard.min.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/copybutton.js?v3.6.2-2-g071bb89a8c"></script>
+    <script src="../../_static/design-tabs.js?v3.6.2-2-g071bb89a8c"></script>
+    <script async="async" src="https://www.google-analytics.com/analytics.js"></script>
+    <script>
+                    window.ga = window.ga || function () {
+                        (ga.q = ga.q || []).push(arguments) };
+                    ga.l = +new Date;
+                    ga('create', 'UA-55954603-1', 'auto');
+                    ga('set', 'anonymizeIp', true);
+                    ga('send', 'pageview');
+                </script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'users/explain/backends';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/users/explain/backends.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.6.2 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Interactive figures" href="interactive.html" />
+    <link rel="prev" title="Matplotlib Application Interfaces (APIs)" href="api_interfaces.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+   
+
+
+<a class="navbar-brand logo" href="../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../_static/images/logo2.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../../_static/images/logo_dark.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../release_notes.html">Release notes</a>
+  </li>
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      <div class="navbar-end-item navbar-end__search-button-container">
+        
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <span class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" data-toggle="tooltip">
+    <a class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="fa-regular fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        stable  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  <div class="search-button-container--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+  </div>
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../release_notes.html">Release notes</a>
+  </li>
+</ul>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <span class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" data-toggle="tooltip">
+    <a class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="fa-regular fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        stable  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Section navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">
+    Section Navigation
+  </p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="api_interfaces.html">Matplotlib Application Interfaces (APIs)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Backends</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interactive.html">Interactive figures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fonts.html">Fonts in Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="event_handling.html">Event handling and picking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_guide.html">Interactive figures and asynchronous programming</a></li>
+</ul>
+
+  </div>
+</nav>
+    </div>
+  </div>
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+      </div>
+      <main class="bd-main">
+        
+        
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+            </div>
+            
+            
+            <article class="bd-article" role="main">
+              
+  <section id="backends">
+<span id="id1"></span><h1>Backends<a class="headerlink" href="#backends" title="Permalink to this heading">#</a></h1>
+<section id="what-is-a-backend">
+<span id="id2"></span><h2>What is a backend?<a class="headerlink" href="#what-is-a-backend" title="Permalink to this heading">#</a></h2>
+<p>A lot of documentation on the website and in the mailing lists refers
+to the &quot;backend&quot; and many new users are confused by this term.
+Matplotlib targets many different use cases and output formats.  Some
+people use Matplotlib interactively from the Python shell and have
+plotting windows pop up when they type commands.  Some people run
+<a class="reference external" href="https://jupyter.org">Jupyter</a> notebooks and draw inline plots for
+quick data analysis. Others embed Matplotlib into graphical user
+interfaces like PyQt or PyGObject to build rich applications.  Some
+people use Matplotlib in batch scripts to generate postscript images
+from numerical simulations, and still others run web application
+servers to dynamically serve up graphs.</p>
+<p>To support all of these use cases, Matplotlib can target different
+outputs, and each of these capabilities is called a backend; the
+&quot;frontend&quot; is the user facing code, i.e., the plotting code, whereas the
+&quot;backend&quot; does all the hard work behind-the-scenes to make the figure.
+There are two types of backends: user interface backends (for use in
+PyQt/PySide, PyGObject, Tkinter, wxPython, or macOS/Cocoa); also referred to
+as &quot;interactive backends&quot;) and hardcopy backends to make image files
+(PNG, SVG, PDF, PS; also referred to as &quot;non-interactive backends&quot;).</p>
+</section>
+<section id="selecting-a-backend">
+<h2>Selecting a backend<a class="headerlink" href="#selecting-a-backend" title="Permalink to this heading">#</a></h2>
+<p>There are three ways to configure your backend:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><a class="reference internal" href="../../tutorials/introductory/customizing.html?highlight=backend#matplotlibrc-sample"><span class="std std-ref"><span class="pre">rcParams[&quot;backend&quot;]</span></span></a></code> parameter in your <code class="file docutils literal notranslate"><span class="pre">matplotlibrc</span></code> file</p></li>
+<li><p>The <span class="target" id="index-0"></span><a class="reference internal" href="../faq/environment_variables_faq.html#envvar-MPLBACKEND"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">MPLBACKEND</span></code></a> environment variable</p></li>
+<li><p>The function <a class="reference internal" href="../../api/matplotlib_configuration_api.html#matplotlib.use" title="matplotlib.use"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.use()</span></code></a></p></li>
+</ul>
+<p>Below is a more detailed description.</p>
+<p>If there is more than one configuration present, the last one from the
+list takes precedence; e.g. calling <a class="reference internal" href="../../api/matplotlib_configuration_api.html#matplotlib.use" title="matplotlib.use"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.use()</span></code></a> will override
+the setting in your <code class="file docutils literal notranslate"><span class="pre">matplotlibrc</span></code>.</p>
+<p>Without a backend explicitly set, Matplotlib automatically detects a usable
+backend based on what is available on your system and on whether a GUI event
+loop is already running.  The first usable backend in the following list is
+selected: MacOSX, QtAgg, GTK4Agg, Gtk3Agg, TkAgg, WxAgg, Agg.  The last, Agg,
+is a non-interactive backend that can only write to files.  It is used on
+Linux, if Matplotlib cannot connect to either an X display or a Wayland
+display.</p>
+<p>Here is a detailed description of the configuration methods:</p>
+<ol class="arabic">
+<li><p>Setting <code class="docutils literal notranslate"><a class="reference internal" href="../../tutorials/introductory/customizing.html?highlight=backend#matplotlibrc-sample"><span class="std std-ref"><span class="pre">rcParams[&quot;backend&quot;]</span></span></a></code> in your <code class="file docutils literal notranslate"><span class="pre">matplotlibrc</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="p">:</span> <span class="n">qtagg</span>   <span class="c1"># use pyqt with antigrain (agg) rendering</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="../../tutorials/introductory/customizing.html"><span class="doc">Customizing Matplotlib with style sheets and rcParams</span></a>.</p>
+</li>
+<li><p>Setting the <span class="target" id="index-1"></span><a class="reference internal" href="../faq/environment_variables_faq.html#envvar-MPLBACKEND"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">MPLBACKEND</span></code></a> environment variable:</p>
+<p>You can set the environment variable either for your current shell or for
+a single script.</p>
+<p>On Unix:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">export</span> <span class="n">MPLBACKEND</span><span class="o">=</span><span class="n">qtagg</span>
+<span class="o">&gt;</span> <span class="n">python</span> <span class="n">simple_plot</span><span class="o">.</span><span class="n">py</span>
+
+<span class="o">&gt;</span> <span class="n">MPLBACKEND</span><span class="o">=</span><span class="n">qtagg</span> <span class="n">python</span> <span class="n">simple_plot</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>On Windows, only the former is possible:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="nb">set</span> <span class="n">MPLBACKEND</span><span class="o">=</span><span class="n">qtagg</span>
+<span class="o">&gt;</span> <span class="n">python</span> <span class="n">simple_plot</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Setting this environment variable will override the <code class="docutils literal notranslate"><span class="pre">backend</span></code> parameter
+in <em>any</em> <code class="file docutils literal notranslate"><span class="pre">matplotlibrc</span></code>, even if there is a <code class="file docutils literal notranslate"><span class="pre">matplotlibrc</span></code> in
+your current working directory. Therefore, setting <span class="target" id="index-2"></span><a class="reference internal" href="../faq/environment_variables_faq.html#envvar-MPLBACKEND"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">MPLBACKEND</span></code></a>
+globally, e.g. in your <code class="file docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="file docutils literal notranslate"><span class="pre">.profile</span></code>, is discouraged
+as it might lead to counter-intuitive behavior.</p>
+</li>
+<li><p>If your script depends on a specific backend you can use the function
+<a class="reference internal" href="../../api/matplotlib_configuration_api.html#matplotlib.use" title="matplotlib.use"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.use()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;qtagg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This should be done before any figure is created, otherwise Matplotlib may
+fail to switch the backend and raise an ImportError.</p>
+<p>Using <a class="reference internal" href="../../api/matplotlib_configuration_api.html#matplotlib.use" title="matplotlib.use"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use</span></code></a> will require changes in your code if users want to
+use a different backend.  Therefore, you should avoid explicitly calling
+<a class="reference internal" href="../../api/matplotlib_configuration_api.html#matplotlib.use" title="matplotlib.use"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use</span></code></a> unless absolutely necessary.</p>
+</li>
+</ol>
+</section>
+<section id="the-builtin-backends">
+<span id="id3"></span><h2>The builtin backends<a class="headerlink" href="#the-builtin-backends" title="Permalink to this heading">#</a></h2>
+<p>By default, Matplotlib should automatically select a default backend which
+allows both interactive work and plotting from scripts, with output to the
+screen and/or to a file, so at least initially, you will not need to worry
+about the backend.  The most common exception is if your Python distribution
+comes without <a class="reference external" href="https://docs.python.org/3/library/tkinter.html#module-tkinter" title="(in Python v3.11)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tkinter</span></code></a> and you have no other GUI toolkit installed.
+This happens on certain Linux distributions, where you need to install a
+Linux package named <code class="docutils literal notranslate"><span class="pre">python-tk</span></code> (or similar).</p>
+<p>If, however, you want to write graphical user interfaces, or a web
+application server
+(<a class="reference internal" href="../../gallery/user_interfaces/web_application_server_sgskip.html"><span class="doc">Embedding in a web application server (Flask)</span></a>), or need a
+better understanding of what is going on, read on. To make things easily
+more customizable for graphical user interfaces, Matplotlib separates
+the concept of the renderer (the thing that actually does the drawing)
+from the canvas (the place where the drawing goes).  The canonical
+renderer for user interfaces is <code class="docutils literal notranslate"><span class="pre">Agg</span></code> which uses the <a class="reference external" href="http://agg.sourceforge.net/antigrain.com/">Anti-Grain
+Geometry</a> C++ library to make a raster (pixel) image of the figure; it
+is used by the <code class="docutils literal notranslate"><span class="pre">QtAgg</span></code>, <code class="docutils literal notranslate"><span class="pre">GTK4Agg</span></code>, <code class="docutils literal notranslate"><span class="pre">GTK3Agg</span></code>, <code class="docutils literal notranslate"><span class="pre">wxAgg</span></code>, <code class="docutils literal notranslate"><span class="pre">TkAgg</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">macosx</span></code> backends.  An alternative renderer is based on the Cairo library,
+used by <code class="docutils literal notranslate"><span class="pre">QtCairo</span></code>, etc.</p>
+<p>For the rendering engines, users can also distinguish between <a class="reference external" href="https://en.wikipedia.org/wiki/Vector_graphics">vector</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/Raster_graphics">raster</a> renderers.  Vector
+graphics languages issue drawing commands like &quot;draw a line from this
+point to this point&quot; and hence are scale free. Raster backends
+generate a pixel representation of the line whose accuracy depends on a
+DPI setting.</p>
+<p>Here is a summary of the Matplotlib renderers (there is an eponymous
+backend for each; these are <em>non-interactive backends</em>, capable of
+writing to a file):</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Renderer</p></th>
+<th class="head"><p>Filetypes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AGG</p></td>
+<td><p>png</p></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Raster_graphics">raster</a> graphics -- high quality images using the
+<a class="reference external" href="http://agg.sourceforge.net/antigrain.com/">Anti-Grain Geometry</a> engine.</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF</p></td>
+<td><p>pdf</p></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Vector_graphics">vector</a> graphics -- <a class="reference external" href="https://en.wikipedia.org/wiki/Portable_Document_Format">Portable Document Format</a> output.</p></td>
+</tr>
+<tr class="row-even"><td><p>PS</p></td>
+<td><p>ps, eps</p></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Vector_graphics">vector</a> graphics -- <a class="reference external" href="https://en.wikipedia.org/wiki/PostScript">PostScript</a> output.</p></td>
+</tr>
+<tr class="row-odd"><td><p>SVG</p></td>
+<td><p>svg</p></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Vector_graphics">vector</a> graphics -- <a class="reference external" href="https://en.wikipedia.org/wiki/Scalable_Vector_Graphics">Scalable Vector Graphics</a> output.</p></td>
+</tr>
+<tr class="row-even"><td><p>PGF</p></td>
+<td><p>pgf, pdf</p></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Vector_graphics">vector</a> graphics -- using the <a class="reference external" href="https://ctan.org/pkg/pgf">pgf</a> package.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cairo</p></td>
+<td><p>png, ps,
+pdf, svg</p></td>
+<td><p><a class="reference external" href="https://en.wikipedia.org/wiki/Raster_graphics">raster</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/Vector_graphics">vector</a> graphics -- using the <a class="reference external" href="https://www.cairographics.org">Cairo</a> library
+(requires <a class="reference external" href="https://www.cairographics.org/pycairo/">pycairo</a> or <a class="reference external" href="https://pythonhosted.org/cairocffi/">cairocffi</a>).</p></td>
+</tr>
+</tbody>
+</table>
+<p>To save plots using the non-interactive backends, use the
+<code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot.savefig('filename')</span></code> method.</p>
+<p>These are the user interfaces and renderer combinations supported;
+these are <em>interactive backends</em>, capable of displaying to the screen
+and using appropriate renderers from the table above to write to
+a file:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Backend</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>QtAgg</p></td>
+<td><p>Agg rendering in a <a class="reference external" href="https://qt.io/">Qt</a> canvas (requires <a class="reference external" href="https://riverbankcomputing.com/software/pyqt/intro">PyQt</a> or <a class="reference external" href="https://doc.qt.io/qtforpython/">Qt for Python</a>,
+a.k.a. PySide).  This backend can be activated in IPython with
+<code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">qt</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ipympl</p></td>
+<td><p>Agg rendering embedded in a Jupyter widget (requires <a class="reference external" href="https://www.matplotlib.org/ipympl">ipympl</a>).
+This backend can be enabled in a Jupyter notebook with
+<code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">ipympl</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>GTK3Agg</p></td>
+<td><p>Agg rendering to a <a class="reference external" href="https://www.gtk.org/">GTK</a> 3.x canvas (requires <a class="reference external" href="https://wiki.gnome.org/action/show/Projects/PyGObject">PyGObject</a> and
+<a class="reference external" href="https://www.cairographics.org/pycairo/">pycairo</a>).  This backend can be activated in IPython with
+<code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">gtk3</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>GTK4Agg</p></td>
+<td><p>Agg rendering to a <a class="reference external" href="https://www.gtk.org/">GTK</a> 4.x canvas (requires <a class="reference external" href="https://wiki.gnome.org/action/show/Projects/PyGObject">PyGObject</a> and
+<a class="reference external" href="https://www.cairographics.org/pycairo/">pycairo</a>).  This backend can be activated in IPython with
+<code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">gtk4</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>macosx</p></td>
+<td><p>Agg rendering into a Cocoa canvas in OSX.  This backend can be
+activated in IPython with <code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">osx</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>TkAgg</p></td>
+<td><p>Agg rendering to a <a class="reference external" href="https://www.tcl.tk/">Tk</a> canvas (requires <a class="reference external" href="https://docs.python.org/3/library/tk.html">TkInter</a>). This
+backend can be activated in IPython with <code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">tk</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>nbAgg</p></td>
+<td><p>Embed an interactive figure in a Jupyter classic notebook.  This
+backend can be enabled in Jupyter notebooks via
+<code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">notebook</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>WebAgg</p></td>
+<td><p>On <code class="docutils literal notranslate"><span class="pre">show()</span></code> will start a tornado server with an interactive
+figure.</p></td>
+</tr>
+<tr class="row-even"><td><p>GTK3Cairo</p></td>
+<td><p>Cairo rendering to a <a class="reference external" href="https://www.gtk.org/">GTK</a> 3.x canvas (requires <a class="reference external" href="https://wiki.gnome.org/action/show/Projects/PyGObject">PyGObject</a> and
+<a class="reference external" href="https://www.cairographics.org/pycairo/">pycairo</a>).</p></td>
+</tr>
+<tr class="row-odd"><td><p>GTK4Cairo</p></td>
+<td><p>Cairo rendering to a <a class="reference external" href="https://www.gtk.org/">GTK</a> 4.x canvas (requires <a class="reference external" href="https://wiki.gnome.org/action/show/Projects/PyGObject">PyGObject</a> and
+<a class="reference external" href="https://www.cairographics.org/pycairo/">pycairo</a>).</p></td>
+</tr>
+<tr class="row-even"><td><p>wxAgg</p></td>
+<td><p>Agg rendering to a <a class="reference external" href="https://www.wxwidgets.org/">wxWidgets</a> canvas (requires <a class="reference external" href="https://www.wxpython.org/">wxPython</a> 4).
+This backend can be activated in IPython with <code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">wx</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The names of builtin backends case-insensitive; e.g., 'QtAgg' and
+'qtagg' are equivalent.</p>
+</div>
+<section id="id4">
+<h3>ipympl<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<p>The Jupyter widget ecosystem is moving too fast to support directly in
+Matplotlib.  To install ipympl:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install ipympl
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install ipympl -c conda-forge
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://matplotlib.org/ipympl/installing.html">installing ipympl</a> for more details.</p>
+</section>
+<section id="how-do-i-select-the-qt-implementation">
+<span id="qt-api-usage"></span><h3>How do I select the Qt implementation?<a class="headerlink" href="#how-do-i-select-the-qt-implementation" title="Permalink to this heading">#</a></h3>
+<p>The QtAgg and QtCairo backends support both Qt 5 and 6, as well as both Python
+bindings (<a class="reference external" href="https://riverbankcomputing.com/software/pyqt/intro">PyQt</a> or <a class="reference external" href="https://doc.qt.io/qtforpython/">Qt for Python</a>, a.k.a. PySide). If any binding has
+already been loaded, then it will be used for the Qt backend. Otherwise, the
+first available binding is used, in the order: PyQt6, PySide6, PyQt5, PySide2.</p>
+<p>The <span class="target" id="index-3"></span><a class="reference internal" href="../faq/environment_variables_faq.html#envvar-QT_API"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">QT_API</span></code></a> environment variable can be set to override the search
+when nothing has already been loaded. It may be set to (case-insensitively)
+PyQt6, PySide6, PyQt5, or PySide2 to pick the version and binding to use. If
+the chosen implementation is unavailable, the Qt backend will fail to load
+without attempting any other Qt implementations.  See <a class="reference internal" href="../../api/backend_qt_api.html#qt-bindings"><span class="std std-ref">Qt Bindings</span></a> for
+more details.</p>
+</section>
+</section>
+<section id="using-non-builtin-backends">
+<h2>Using non-builtin backends<a class="headerlink" href="#using-non-builtin-backends" title="Permalink to this heading">#</a></h2>
+<p>More generally, any importable backend can be selected by using any of the
+methods above. If <code class="docutils literal notranslate"><span class="pre">name.of.the.backend</span></code> is the module containing the
+backend, use <code class="docutils literal notranslate"><span class="pre">module://name.of.the.backend</span></code> as the backend name, e.g.
+<code class="docutils literal notranslate"><span class="pre">matplotlib.use('module://name.of.the.backend')</span></code>.</p>
+</section>
+</section>
+
+
+            </article>
+            
+            
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#what-is-a-backend">
+   What is a backend?
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#selecting-a-backend">
+   Selecting a backend
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-builtin-backends">
+   The builtin backends
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     ipympl
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-do-i-select-the-qt-implementation">
+     How do I select the Qt implementation?
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-non-builtin-backends">
+   Using non-builtin backends
+  </a>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+          </div>
+        </footer>
+        
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1e1de1a1873e13ef5536"></script>
+
+  <footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2022 The Matplotlib development team.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+
+  </div>
+  
+</div>
+  </footer>
+  </body>
+</html>
