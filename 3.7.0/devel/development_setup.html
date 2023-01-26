@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Setting up Matplotlib for development &#8212; Matplotlib 3.7.0rc1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css?v3.7.0rc1-2-g3b89bae8b5" />
+    <link rel="stylesheet" type="text/css" href="../_static/mpl.css?v3.7.0rc1-2-g3b89bae8b5" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/jquery.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/underscore.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/doctools.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/sphinx_highlight.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/clipboard.min.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/copybutton.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script src="../_static/design-tabs.js?v3.7.0rc1-2-g3b89bae8b5"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-55954603-1"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'UA-55954603-1');
+            </script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'devel/development_setup';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'devdocs';
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/devel/development_setup.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.7.0rc1 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Development workflow" href="development_workflow.html" />
+    <link rel="prev" title="Bug triaging and issue curation" href="triage.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+   
+
+
+<a class="navbar-brand logo" href="../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../_static/images/logo2.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../_static/images/logo_dark.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Release notes</a>
+  </li>
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
+      
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        devdocs  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Release notes</a>
+  </li>
+</ul>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        devdocs  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Section navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">
+    Section Navigation
+  </p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="triage.html">Bug triaging and issue curation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Setting up Matplotlib for development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development_workflow.html">Development workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documenting_mpl.html">Writing documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_guide.html">Documentation style guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding_guide.html">Pull request guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_guide.html">Release guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="min_dep_policy.html">Minimum version of dependencies policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maintainer_workflow.html">Maintainer workflow</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="MEP/index.html">Matplotlib Enhancement Proposals</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="MEP/template.html">MEP Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP08.html">MEP8: PEP8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP09.html">MEP9: Global interaction manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP10.html">MEP10: Docstring consistency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP11.html">MEP11: Third-party dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP12.html">MEP12: Improve Gallery and Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP13.html">MEP13: Use properties for Artists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP14.html">MEP14: Text handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP15.html">MEP15: Fix axis autoscaling when limits are specified for one axis only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP19.html">MEP19: Continuous Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP21.html">MEP21: color and cm refactor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP22.html">MEP22: Toolbar rewrite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP23.html">MEP23: Multiple Figures per GUI window</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP24.html">MEP24: Negative radius in polar plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP25.html">MEP25: Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP26.html">MEP26: Artist styling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP27.html">MEP27: Decouple pyplot from backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP28.html">MEP28: Remove Complexity from Axes.boxplot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP29.html">MEP29: Text light markup</a></li>
+</ul>
+</li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="license.html">Licenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_changes.html">Default color changes</a></li>
+</ul>
+
+  </div>
+</nav>
+    </div>
+  </div>
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+  
+  <div id="rtd-footer-container"></div>
+
+      </div>
+      <main id="main-content" class="bd-main">
+        
+        
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+            </div>
+            
+            
+            <article class="bd-article" role="main">
+              
+  <section id="setting-up-matplotlib-for-development">
+<span id="installing-for-devs"></span><h1>Setting up Matplotlib for development<a class="headerlink" href="#setting-up-matplotlib-for-development" title="Permalink to this heading">#</a></h1>
+<p>To set up Matplotlib for development follow these steps:</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#fork-the-matplotlib-repository" id="id1">Fork the Matplotlib repository</a></p></li>
+<li><p><a class="reference internal" href="#retrieve-the-latest-version-of-the-code" id="id2">Retrieve the latest version of the code</a></p></li>
+<li><p><a class="reference internal" href="#create-a-dedicated-environment" id="id3">Create a dedicated environment</a></p></li>
+<li><p><a class="reference internal" href="#installing-matplotlib-in-editable-mode" id="id4">Installing Matplotlib in editable mode</a></p></li>
+<li><p><a class="reference internal" href="#install-pre-commit-hooks-optional" id="id5">Install pre-commit hooks (optional)</a></p></li>
+</ul>
+</nav>
+<section id="fork-the-matplotlib-repository">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Fork the Matplotlib repository</a><a class="headerlink" href="#fork-the-matplotlib-repository" title="Permalink to this heading">#</a></h2>
+<p>Matplotlib is hosted at <a class="github reference external" href="https://github.com/matplotlib/matplotlib.git">matplotlib/matplotlib.git</a>. If you
+plan on solving issues or submit pull requests to the main Matplotlib
+repository, you should first <em>fork</em> this repository by visiting
+<a class="github reference external" href="https://github.com/matplotlib/matplotlib.git">matplotlib/matplotlib.git</a> and clicking on the
+<code class="docutils literal notranslate"><span class="pre">Fork</span></code> button on the top right of the page (see
+<a class="reference external" href="https://docs.github.com/get-started/quickstart/fork-a-repo">the GitHub documentation</a> for more details.)</p>
+</section>
+<section id="retrieve-the-latest-version-of-the-code">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Retrieve the latest version of the code</a><a class="headerlink" href="#retrieve-the-latest-version-of-the-code" title="Permalink to this heading">#</a></h2>
+<p>Now that your fork of the repository lives under your GitHub username, you can
+retrieve the latest sources with one of the following commands (where your
+should replace <code class="docutils literal notranslate"><span class="pre">&lt;your-username&gt;</span></code> with your GitHub username):</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+https</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;your-username&gt;/matplotlib.git
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+ssh</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:&lt;your-username&gt;/matplotlib.git
+</pre></div>
+</div>
+<p>This requires you to setup an <a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">SSH key</a> in advance, but saves you from
+typing your password at every connection.</p>
+</div>
+</div>
+<p>This will place the sources in a directory <code class="file docutils literal notranslate"><span class="pre">matplotlib</span></code> below your
+current working directory, set up the <code class="docutils literal notranslate"><span class="pre">origin</span></code> remote to point to your own
+fork, and set up the <code class="docutils literal notranslate"><span class="pre">upstream</span></code> remote to point to the Matplotlib main
+repository (see also <a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories">Managing remote repositories</a>.)
+Change into this directory before continuing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">matplotlib</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information on <code class="docutils literal notranslate"><span class="pre">git</span></code> and <code class="docutils literal notranslate"><span class="pre">GitHub</span></code>, check the following resources.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://git-scm.com/doc">Git documentation</a></p></li>
+<li><p><a class="reference external" href="https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project">GitHub-Contributing to a Project</a></p></li>
+<li><p><a class="reference external" href="https://lab.github.com/githubtraining/introduction-to-github">Introduction to GitHub</a></p></li>
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/dev/gitwash/gitwash.html#using-git" title="(in SciPy v1.10.0)"><span>Git for development</span></a></p></li>
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/dev/gitwash/git_resources.html#git-resources" title="(in SciPy v1.10.0)"><span>Additional Git Resources</span></a></p></li>
+<li><p><a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installing git</a></p></li>
+<li><p><a class="reference external" href="https://tacaswell.github.io/think-like-git.html">https://tacaswell.github.io/think-like-git.html</a></p></li>
+<li><p><a class="reference external" href="https://tom.preston-werner.com/2009/05/19/the-git-parable.html">https://tom.preston-werner.com/2009/05/19/the-git-parable.html</a></p></li>
+</ul>
+</div>
+</section>
+<section id="create-a-dedicated-environment">
+<span id="dev-environment"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Create a dedicated environment</a><a class="headerlink" href="#create-a-dedicated-environment" title="Permalink to this heading">#</a></h2>
+<p>You should set up a dedicated environment to decouple your Matplotlib
+development from other Python and Matplotlib installations on your system.</p>
+<p>The simplest way to do this is to use either Python's virtual environment
+<a class="reference external" href="https://docs.python.org/3/library/venv.html">venv</a> or <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html">conda</a>.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-2">
+venv environment</label><div class="sd-tab-content docutils">
+<p>Create a new <a class="reference external" href="https://docs.python.org/3/library/venv.html">venv</a> environment with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">&lt;</span><span class="n">file</span> <span class="n">folder</span> <span class="n">location</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>and activate it with one of the following</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">&lt;</span><span class="n">file</span> <span class="n">folder</span> <span class="n">location</span><span class="o">&gt;/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>  <span class="c1"># Linux/macOS</span>
+<span class="o">&lt;</span><span class="n">file</span> <span class="n">folder</span> <span class="n">location</span><span class="o">&gt;</span>\<span class="n">Scripts</span>\<span class="n">activate</span><span class="o">.</span><span class="n">bat</span>  <span class="c1"># Windows cmd.exe</span>
+<span class="o">&lt;</span><span class="n">file</span> <span class="n">folder</span> <span class="n">location</span><span class="o">&gt;</span>\<span class="n">Scripts</span>\<span class="n">Activate</span><span class="o">.</span><span class="n">ps1</span>  <span class="c1"># Windows PowerShell</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-3">
+conda environment</label><div class="sd-tab-content docutils">
+<p>Create a new <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html">conda</a> environment with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">mamba</span></code> instead of <code class="docutils literal notranslate"><span class="pre">conda</span></code> in the above command if
+you have <a class="reference external" href="https://mamba.readthedocs.io/en/latest/">mamba</a> installed.</p>
+<p>Activate the environment using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">mpl</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Remember to activate the environment whenever you start working on Matplotlib.</p>
+</section>
+<section id="installing-matplotlib-in-editable-mode">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Installing Matplotlib in editable mode</a><a class="headerlink" href="#installing-matplotlib-in-editable-mode" title="Permalink to this heading">#</a></h2>
+<p>Install Matplotlib in editable mode from the <code class="file docutils literal notranslate"><span class="pre">matplotlib</span></code> directory
+using the command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">ve</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>The 'editable/develop mode', builds everything and places links in your Python
+environment so that Python will be able to import Matplotlib from your
+development source directory.  This allows you to import your modified version
+of Matplotlib without re-installing after every change. Note that this is only
+true for <code class="docutils literal notranslate"><span class="pre">*.py</span></code> files.  If you change the C-extension source (which might
+also happen if you change branches) you will have to re-run
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-ve</span> <span class="pre">.</span></code></p>
+</section>
+<section id="install-pre-commit-hooks-optional">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Install pre-commit hooks (optional)</a><a class="headerlink" href="#install-pre-commit-hooks-optional" title="Permalink to this heading">#</a></h2>
+<p><a class="reference external" href="https://pre-commit.com/">pre-commit</a> hooks automatically check flake8 and
+other style issues when you run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code>. The hooks are defined in the
+top level <code class="docutils literal notranslate"><span class="pre">.pre-commit-config.yaml</span></code> file. To install the hooks</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">pre</span><span class="o">-</span><span class="n">commit</span>
+<span class="n">pre</span><span class="o">-</span><span class="n">commit</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>The hooks can also be run manually. All the hooks can be run, in order as
+listed in <code class="docutils literal notranslate"><span class="pre">.pre-commit-config.yaml</span></code>, against the full codebase with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pre</span><span class="o">-</span><span class="n">commit</span> <span class="n">run</span> <span class="o">--</span><span class="nb">all</span><span class="o">-</span><span class="n">files</span>
+</pre></div>
+</div>
+<p>To run a particular hook manually, run <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">run</span></code> with the hook id</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pre</span><span class="o">-</span><span class="n">commit</span> <span class="n">run</span> <span class="o">&lt;</span><span class="n">hook</span> <span class="nb">id</span><span class="o">&gt;</span> <span class="o">--</span><span class="nb">all</span><span class="o">-</span><span class="n">files</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            </article>
+            
+            
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fork-the-matplotlib-repository">
+   Fork the Matplotlib repository
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#retrieve-the-latest-version-of-the-code">
+   Retrieve the latest version of the code
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-a-dedicated-environment">
+   Create a dedicated environment
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#installing-matplotlib-in-editable-mode">
+   Installing Matplotlib in editable mode
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-pre-commit-hooks-optional">
+   Install pre-commit hooks (optional)
+  </a>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+          </div>
+        </footer>
+        
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
+
+  <footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2023 The Matplotlib development team.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="theme-version">
+    Built with the
+    <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">
+        PyData Sphinx Theme
+    </a>
+    0.12.0.
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+
+  </div>
+  
+</div>
+  </footer>
+  </body>
+</html>
