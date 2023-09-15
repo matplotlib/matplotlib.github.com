@@ -28,7 +28,7 @@ Artist within an artist
 Override basic methods so an artist can contain another
 artist.  In this case, the line contains a Text instance to label it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-66
+.. GENERATED FROM PYTHON SOURCE LINES 9-68
 
 .. code-block:: default
 
@@ -54,9 +54,11 @@ artist.  In this case, the line contains a Text instance to label it.
             self.text.set_figure(figure)
             super().set_figure(figure)
 
-        def set_axes(self, axes):
-            self.text.set_axes(axes)
-            super().set_axes(axes)
+        # Override the axes property setter to set Axes on our children as well.
+        @lines.Line2D.axes.setter
+        def axes(self, new_axes):
+            self.text.axes = new_axes
+            lines.Line2D.axes.fset(self, new_axes)  # Call the superclass property setter.
 
         def set_transform(self, transform):
             # 2 pixel offset
@@ -101,7 +103,7 @@ artist.  In this case, the line contains a Text instance to label it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-87
+.. GENERATED FROM PYTHON SOURCE LINES 69-89
 
 .. admonition:: References
 

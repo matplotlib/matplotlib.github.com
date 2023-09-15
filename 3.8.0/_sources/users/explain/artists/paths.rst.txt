@@ -39,10 +39,12 @@ with a (N, 2) array of (x, y) vertices, and an N-length array of path
 codes.  For example to draw the unit rectangle from (0, 0) to (1, 1), we
 could use this code:
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-52
+.. GENERATED FROM PYTHON SOURCE LINES 20-54
 
 .. code-block:: default
 
+
+    import numpy as np
 
     import matplotlib.pyplot as plt
 
@@ -87,7 +89,7 @@ could use this code:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-91
+.. GENERATED FROM PYTHON SOURCE LINES 55-93
 
 The following path codes are recognized
 
@@ -128,7 +130,7 @@ CURVE4 Bézier spline -- the Bézier curve will be contained in the
 convex hull of the start point, the two control points, and the end
 point
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-124
+.. GENERATED FROM PYTHON SOURCE LINES 93-126
 
 .. code-block:: default
 
@@ -177,7 +179,7 @@ point
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-193
+.. GENERATED FROM PYTHON SOURCE LINES 127-195
 
 .. compound_paths:
 
@@ -248,15 +250,10 @@ All that remains is to create the path, attach it to a
       edgecolor='yellow', alpha=0.5)
     ax.add_patch(patch)
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-237
+.. GENERATED FROM PYTHON SOURCE LINES 195-234
 
 .. code-block:: default
 
-
-    import numpy as np
-
-    import matplotlib.patches as patches
-    import matplotlib.path as path
 
     fig, ax = plt.subplots()
     # Fixing random state for reproducibility
@@ -275,9 +272,9 @@ All that remains is to create the path, attach it to a
 
     nverts = nrects*(1+3+1)
     verts = np.zeros((nverts, 2))
-    codes = np.ones(nverts, int) * path.Path.LINETO
-    codes[0::5] = path.Path.MOVETO
-    codes[4::5] = path.Path.CLOSEPOLY
+    codes = np.full(nverts, Path.LINETO, dtype=int)
+    codes[0::5] = Path.MOVETO
+    codes[4::5] = Path.CLOSEPOLY
     verts[0::5, 0] = left
     verts[0::5, 1] = bottom
     verts[1::5, 0] = left
@@ -287,7 +284,7 @@ All that remains is to create the path, attach it to a
     verts[3::5, 0] = right
     verts[3::5, 1] = bottom
 
-    barpath = path.Path(verts, codes)
+    barpath = Path(verts, codes)
     patch = patches.PathPatch(barpath, facecolor='green',
                               edgecolor='yellow', alpha=0.5)
     ax.add_patch(patch)
