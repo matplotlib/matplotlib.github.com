@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Maintainer workflow &#8212; Matplotlib 3.7.4 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=86e00652" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css?v=7f9a90b1" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/mpl.css?v=ee6d1e4d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
+
+    <script src="../_static/documentation_options.js?v=46bf15d4"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=ccdb6887"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-55954603-1"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'UA-55954603-1');
+            </script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'UA-55954603-1');
+            </script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'devel/maintainer_workflow';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.7.4-2-g03947d07cf';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/devel/maintainer_workflow.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.7.4 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Matplotlib Enhancement Proposals" href="MEP/index.html" />
+    <link rel="prev" title="Minimum version of dependencies policy" href="min_dep_policy.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+   
+
+
+<a class="navbar-brand logo" href="../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../_static/images/logo2.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../_static/images/logo_dark.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Releases</a>
+  </li>
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
+      
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        stable  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Develop</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Releases</a>
+  </li>
+</ul>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown">
+        stable  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Section navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">
+    Section Navigation
+  </p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="triage.html">Bug triaging and issue curation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development_setup.html">Setting up Matplotlib for development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development_workflow.html">Development workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documenting_mpl.html">Writing documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_guide.html">Documentation style guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding_guide.html">Pull request guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_guide.html">Release guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="min_dep_policy.html">Minimum version of dependencies policy</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Maintainer workflow</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="MEP/index.html">Matplotlib Enhancement Proposals</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="MEP/template.html">MEP Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP08.html">MEP8: PEP8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP09.html">MEP9: Global interaction manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP10.html">MEP10: Docstring consistency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP11.html">MEP11: Third-party dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP12.html">MEP12: Improve Gallery and Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP13.html">MEP13: Use properties for Artists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP14.html">MEP14: Text handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP15.html">MEP15: Fix axis autoscaling when limits are specified for one axis only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP19.html">MEP19: Continuous Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP21.html">MEP21: color and cm refactor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP22.html">MEP22: Toolbar rewrite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP23.html">MEP23: Multiple Figures per GUI window</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP24.html">MEP24: Negative radius in polar plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP25.html">MEP25: Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP26.html">MEP26: Artist styling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP27.html">MEP27: Decouple pyplot from backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP28.html">MEP28: Remove Complexity from Axes.boxplot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP29.html">MEP29: Text light markup</a></li>
+</ul>
+</li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="license.html">Licenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_changes.html">Default color changes</a></li>
+</ul>
+
+  </div>
+</nav>
+    </div>
+  </div>
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+  
+  <div id="rtd-footer-container"></div>
+
+      </div>
+      <main id="main-content" class="bd-main">
+        
+        
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+            </div>
+            
+            
+            <article class="bd-article" role="main">
+              
+  <section id="maintainer-workflow">
+<span id="id1"></span><h1>Maintainer workflow<a class="headerlink" href="#maintainer-workflow" title="Link to this heading">#</a></h1>
+<p>This page is for maintainers — those of us who merge our own or other
+peoples' changes into the upstream repository.</p>
+<p>Being as how you're a maintainer, you are completely on top of the basic stuff
+in <a class="reference internal" href="development_workflow.html#development-workflow"><span class="std std-ref">Development workflow</span></a>.</p>
+<p>The instructions in <a class="reference external" href="https://docs.scipy.org/doc/scipy/dev/gitwash/development_setup.html#linking-to-upstream" title="(in SciPy v1.11.3)"><span>Linking your repository to the upstream repo</span></a> add a remote that has read-only
+access to the upstream repo.  Being a maintainer, you've got read-write access.</p>
+<p>It's good to have your upstream remote have a scary name, to remind you that
+it's a read-write remote:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream-rw<span class="w"> </span>git@github.com:matplotlib/matplotlib.git
+git<span class="w"> </span>fetch<span class="w"> </span>upstream-rw
+</pre></div>
+</div>
+<section id="integrating-changes">
+<h2>Integrating changes<a class="headerlink" href="#integrating-changes" title="Link to this heading">#</a></h2>
+<p>Let's say you have some changes that need to go into trunk
+(<code class="docutils literal notranslate"><span class="pre">upstream-rw/main</span></code>).</p>
+<p>The changes are in some branch that you are currently on.  For example, you are
+looking at someone's changes like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>someone<span class="w"> </span>https://github.com/someone/matplotlib.git
+git<span class="w"> </span>fetch<span class="w"> </span>someone
+git<span class="w"> </span>branch<span class="w"> </span>cool-feature<span class="w"> </span>--track<span class="w"> </span>someone/cool-feature
+git<span class="w"> </span>checkout<span class="w"> </span>cool-feature
+</pre></div>
+</div>
+<p>So now you are on the branch with the changes to be incorporated upstream.  The
+rest of this section assumes you are on this branch.</p>
+<section id="a-few-commits">
+<h3>A few commits<a class="headerlink" href="#a-few-commits" title="Link to this heading">#</a></h3>
+<p>If there are only a few commits, consider rebasing to upstream:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch upstream changes</span>
+git<span class="w"> </span>fetch<span class="w"> </span>upstream-rw
+<span class="c1"># rebase</span>
+git<span class="w"> </span>rebase<span class="w"> </span>upstream-rw/main
+</pre></div>
+</div>
+<p>Remember that, if you do a rebase, and push that, you'll have to close any
+GitHub pull requests manually, because GitHub will not be able to detect the
+changes have already been merged.</p>
+</section>
+<section id="a-long-series-of-commits">
+<h3>A long series of commits<a class="headerlink" href="#a-long-series-of-commits" title="Link to this heading">#</a></h3>
+<p>If there are a longer series of related commits, consider a merge instead:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>fetch<span class="w"> </span>upstream-rw
+git<span class="w"> </span>merge<span class="w"> </span>--no-ff<span class="w"> </span>upstream-rw/main
+</pre></div>
+</div>
+<p>The merge will be detected by GitHub, and should close any related pull requests
+automatically.</p>
+<p>Note the <code class="docutils literal notranslate"><span class="pre">--no-ff</span></code> above.  This forces git to make a merge commit, rather than
+doing a fast-forward, so that these set of commits branch off trunk then rejoin
+the main history with a merge, rather than appearing to have been made directly
+on top of trunk.</p>
+</section>
+<section id="check-the-history">
+<h3>Check the history<a class="headerlink" href="#check-the-history" title="Link to this heading">#</a></h3>
+<p>Now, in either case, you should check that the history is sensible and you have
+the right commits:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>--graph
+git<span class="w"> </span>log<span class="w"> </span>-p<span class="w"> </span>upstream-rw/main..
+</pre></div>
+</div>
+<p>The first line above just shows the history in a compact way, with a text
+representation of the history graph. The second line shows the log of commits
+excluding those that can be reached from trunk (<code class="docutils literal notranslate"><span class="pre">upstream-rw/main</span></code>), and
+including those that can be reached from current HEAD (implied with the <code class="docutils literal notranslate"><span class="pre">..</span></code>
+at the end). So, it shows the commits unique to this branch compared to trunk.
+The <code class="docutils literal notranslate"><span class="pre">-p</span></code> option shows the diff for these commits in patch form.</p>
+</section>
+<section id="push-to-trunk">
+<h3>Push to trunk<a class="headerlink" href="#push-to-trunk" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>upstream-rw<span class="w"> </span>my-new-feature:main
+</pre></div>
+</div>
+<p>This pushes the <code class="docutils literal notranslate"><span class="pre">my-new-feature</span></code> branch in this repository to the <code class="docutils literal notranslate"><span class="pre">main</span></code>
+branch in the <code class="docutils literal notranslate"><span class="pre">upstream-rw</span></code> repository.</p>
+</section>
+</section>
+</section>
+
+
+            </article>
+            
+            
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#integrating-changes">
+   Integrating changes
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-few-commits">
+     A few commits
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-long-series-of-commits">
+     A long series of commits
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#check-the-history">
+     Check the history
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#push-to-trunk">
+     Push to trunk
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+          </div>
+        </footer>
+        
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
+
+  <footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2023 The Matplotlib development team.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br>
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="sphinx-version">
+    Built from v3.7.4-2-g03947d07cf.
+    <br/>
+  </p>
+
+  </div>
+  
+</div>
+  </footer>
+  </body>
+</html>
