@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/25436d50dae3ce2bba2488034e123a3e/pyplot_mathtext.py

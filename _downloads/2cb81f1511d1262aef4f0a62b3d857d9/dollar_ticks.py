@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/2cb81f1511d1262aef4f0a62b3d857d9/dollar_ticks.py

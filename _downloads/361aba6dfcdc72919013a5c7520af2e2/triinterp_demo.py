@@ -1,1 +1,0 @@
-../../stable/_downloads/361aba6dfcdc72919013a5c7520af2e2/triinterp_demo.py

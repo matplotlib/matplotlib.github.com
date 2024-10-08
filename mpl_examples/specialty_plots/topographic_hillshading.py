@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/specialty_plots/topographic_hillshading.py

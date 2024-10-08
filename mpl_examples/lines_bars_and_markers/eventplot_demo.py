@@ -1,1 +1,0 @@
-../../2.1.2/mpl_examples/lines_bars_and_markers/eventplot_demo.py

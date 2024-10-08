@@ -1,1 +1,0 @@
-../../2.0.2/examples/widgets/rectangle_selector.py

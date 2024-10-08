@@ -1,1 +1,0 @@
-../../stable/_downloads/12927e05bde893cbae7f16aaed1b87eb/demo_floating_axis.py

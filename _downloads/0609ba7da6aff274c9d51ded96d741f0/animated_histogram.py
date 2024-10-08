@@ -1,1 +1,0 @@
-../../stable/_downloads/0609ba7da6aff274c9d51ded96d741f0/animated_histogram.py

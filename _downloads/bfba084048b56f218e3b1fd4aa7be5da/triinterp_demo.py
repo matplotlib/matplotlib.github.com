@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/bfba084048b56f218e3b1fd4aa7be5da/triinterp_demo.py

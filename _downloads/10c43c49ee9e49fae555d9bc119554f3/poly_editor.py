@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/10c43c49ee9e49fae555d9bc119554f3/poly_editor.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/fb498376a4f52d3e7e49f9367638b72d/mathtext_asarray.py

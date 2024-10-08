@@ -1,1 +1,0 @@
-../2.2.2/_downloads/ellipse_rotated.py

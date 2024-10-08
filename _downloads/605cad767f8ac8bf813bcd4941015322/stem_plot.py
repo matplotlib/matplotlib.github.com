@@ -1,1 +1,0 @@
-../../stable/_downloads/605cad767f8ac8bf813bcd4941015322/stem_plot.py

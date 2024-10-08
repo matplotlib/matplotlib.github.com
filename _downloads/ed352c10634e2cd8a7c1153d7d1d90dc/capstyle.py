@@ -1,1 +1,0 @@
-../../stable/_downloads/ed352c10634e2cd8a7c1153d7d1d90dc/capstyle.py

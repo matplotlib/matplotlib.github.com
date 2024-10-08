@@ -1,1 +1,0 @@
-../../stable/_downloads/743ad63e9e395c77c01d02248326773a/ftface_props.py

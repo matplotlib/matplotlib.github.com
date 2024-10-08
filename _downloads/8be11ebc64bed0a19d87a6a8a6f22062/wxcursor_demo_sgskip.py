@@ -1,1 +1,0 @@
-../../stable/_downloads/8be11ebc64bed0a19d87a6a8a6f22062/wxcursor_demo_sgskip.py

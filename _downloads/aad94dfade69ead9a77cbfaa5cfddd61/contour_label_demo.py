@@ -1,1 +1,0 @@
-../../stable/_downloads/aad94dfade69ead9a77cbfaa5cfddd61/contour_label_demo.py

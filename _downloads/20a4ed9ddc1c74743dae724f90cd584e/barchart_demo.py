@@ -1,1 +1,0 @@
-../../stable/_downloads/20a4ed9ddc1c74743dae724f90cd584e/barchart_demo.py

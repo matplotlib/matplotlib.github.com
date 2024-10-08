@@ -1,1 +1,0 @@
-../../stable/_downloads/e83fa918d4012d4ca7e2bd48e7ab0935/gradient_bar.py

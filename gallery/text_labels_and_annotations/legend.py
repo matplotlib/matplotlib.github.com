@@ -1,1 +1,0 @@
-../../stable/gallery/text_labels_and_annotations/legend.py

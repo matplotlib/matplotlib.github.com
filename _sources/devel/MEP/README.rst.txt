@@ -1,1 +1,0 @@
-../../../stable/_sources/devel/MEP/README.rst.txt

@@ -1,1 +1,0 @@
-../../3.1.0/_downloads/bf019ccca63ca62c8a12b2dc9a8c2edf/leftventricle_bulleye.py

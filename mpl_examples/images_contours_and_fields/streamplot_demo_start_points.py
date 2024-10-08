@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/images_contours_and_fields/streamplot_demo_start_points.py

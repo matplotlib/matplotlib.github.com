@@ -1,1 +1,0 @@
-../../2.0.2/examples/pyplots/fig_axes_customize_simple.py

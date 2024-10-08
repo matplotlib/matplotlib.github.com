@@ -1,1 +1,0 @@
-../../stable/_downloads/10139578672ab6e375bdd67b9504f4d6/demo_ticklabel_alignment.py

@@ -1,1 +1,0 @@
-../2.2.3/_downloads/compound_path_demo.py

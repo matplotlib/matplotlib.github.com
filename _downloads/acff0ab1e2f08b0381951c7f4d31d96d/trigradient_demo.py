@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/acff0ab1e2f08b0381951c7f4d31d96d/trigradient_demo.py

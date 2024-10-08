@@ -1,1 +1,0 @@
-../../stable/_downloads/8f8964e173a4b95160a8595de75794d4/demo_annotation_box.py

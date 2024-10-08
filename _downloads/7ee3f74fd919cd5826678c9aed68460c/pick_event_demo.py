@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/7ee3f74fd919cd5826678c9aed68460c/pick_event_demo.py

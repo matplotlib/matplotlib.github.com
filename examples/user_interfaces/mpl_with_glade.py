@@ -1,1 +1,0 @@
-../../2.0.2/examples/user_interfaces/mpl_with_glade.py

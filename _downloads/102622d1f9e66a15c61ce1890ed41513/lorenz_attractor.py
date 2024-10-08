@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/102622d1f9e66a15c61ce1890ed41513/lorenz_attractor.py

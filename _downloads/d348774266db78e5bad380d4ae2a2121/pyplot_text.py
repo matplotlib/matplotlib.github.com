@@ -1,1 +1,0 @@
-../../stable/_downloads/d348774266db78e5bad380d4ae2a2121/pyplot_text.py

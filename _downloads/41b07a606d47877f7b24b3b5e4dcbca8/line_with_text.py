@@ -1,1 +1,0 @@
-../../stable/_downloads/41b07a606d47877f7b24b3b5e4dcbca8/line_with_text.py

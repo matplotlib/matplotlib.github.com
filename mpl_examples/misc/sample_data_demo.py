@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/misc/sample_data_demo.py

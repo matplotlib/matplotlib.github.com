@@ -1,1 +1,0 @@
-../../stable/_downloads/986997c8a8bb17b365f417251e167454/demo_text_path.py

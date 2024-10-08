@@ -1,1 +1,0 @@
-../../stable/_downloads/26217c4473de44985babfe2e37d1d431/text_fontdict.py

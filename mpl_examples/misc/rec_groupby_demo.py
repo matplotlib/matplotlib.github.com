@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/misc/rec_groupby_demo.py

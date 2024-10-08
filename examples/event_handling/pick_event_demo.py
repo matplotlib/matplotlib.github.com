@@ -1,1 +1,0 @@
-../../2.0.2/examples/event_handling/pick_event_demo.py

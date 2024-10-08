@@ -1,1 +1,0 @@
-../../stable/_downloads/eb8a5b3f06e2e2fb80de0739d2d380ac/pyplot_formatstr.py

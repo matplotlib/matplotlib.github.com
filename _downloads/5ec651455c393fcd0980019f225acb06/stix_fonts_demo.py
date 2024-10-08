@@ -1,1 +1,0 @@
-../../3.1.0/_downloads/5ec651455c393fcd0980019f225acb06/stix_fonts_demo.py

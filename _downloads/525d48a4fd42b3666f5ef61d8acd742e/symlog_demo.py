@@ -1,1 +1,0 @@
-../../stable/_downloads/525d48a4fd42b3666f5ef61d8acd742e/symlog_demo.py

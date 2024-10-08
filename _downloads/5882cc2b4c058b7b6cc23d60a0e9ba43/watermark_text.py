@@ -1,1 +1,0 @@
-../../stable/_downloads/5882cc2b4c058b7b6cc23d60a0e9ba43/watermark_text.py
