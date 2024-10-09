@@ -1,1 +1,0 @@
-../../stable/_downloads/5c12d4b66c26fc9c8cdfd42f3e8008a7/fancyarrow_demo.py

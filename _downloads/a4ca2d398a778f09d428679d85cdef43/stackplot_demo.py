@@ -1,1 +1,0 @@
-../../stable/_downloads/a4ca2d398a778f09d428679d85cdef43/stackplot_demo.py

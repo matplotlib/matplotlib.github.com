@@ -1,1 +1,0 @@
-../../stable/_downloads/ee266dc4f781adee6f25e7723fd7089c/demo_bboximage.py

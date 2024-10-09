@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/pylab_examples/demo_text_rotation_mode.py

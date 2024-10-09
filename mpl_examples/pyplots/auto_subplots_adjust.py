@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/pyplots/auto_subplots_adjust.py

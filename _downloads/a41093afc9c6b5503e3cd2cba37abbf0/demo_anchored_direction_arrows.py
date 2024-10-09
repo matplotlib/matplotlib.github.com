@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/a41093afc9c6b5503e3cd2cba37abbf0/demo_anchored_direction_arrows.py

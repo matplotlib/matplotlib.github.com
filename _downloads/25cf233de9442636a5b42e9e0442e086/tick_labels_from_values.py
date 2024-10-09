@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/25cf233de9442636a5b42e9e0442e086/tick_labels_from_values.py

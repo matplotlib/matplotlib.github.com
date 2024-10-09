@@ -1,1 +1,0 @@
-../../stable/_downloads/2ac62a2edbb00a99e8a853b17387ef14/bar_stacked.py

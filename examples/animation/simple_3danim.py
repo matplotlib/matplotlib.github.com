@@ -1,1 +1,0 @@
-../../2.0.2/examples/animation/simple_3danim.py

@@ -1,1 +1,0 @@
-../stable/_static/copybutton_funcs.js

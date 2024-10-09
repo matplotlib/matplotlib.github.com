@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/01dce454644b9f81fc43abbf31182af5/fancybox_demo.py

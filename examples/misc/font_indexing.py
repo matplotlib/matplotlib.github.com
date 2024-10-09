@@ -1,1 +1,0 @@
-../../1.5.3/examples/misc/font_indexing.py

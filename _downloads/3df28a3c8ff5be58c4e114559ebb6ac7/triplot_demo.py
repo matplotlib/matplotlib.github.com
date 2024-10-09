@@ -1,1 +1,0 @@
-../../stable/_downloads/3df28a3c8ff5be58c4e114559ebb6ac7/triplot_demo.py

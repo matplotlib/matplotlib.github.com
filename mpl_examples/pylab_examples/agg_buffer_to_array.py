@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/pylab_examples/agg_buffer_to_array.py

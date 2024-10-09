@@ -1,1 +1,0 @@
-../../stable/gallery/mplot3d/errorbar3d.py

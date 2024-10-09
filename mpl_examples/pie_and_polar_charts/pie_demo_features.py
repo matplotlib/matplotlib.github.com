@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/pie_and_polar_charts/pie_demo_features.py

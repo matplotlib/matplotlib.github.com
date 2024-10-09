@@ -1,1 +1,0 @@
-../../stable/_downloads/285cf9001b13973e75842eb0b810371f/masked_demo.py

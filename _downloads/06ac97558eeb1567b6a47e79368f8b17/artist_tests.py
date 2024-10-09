@@ -1,1 +1,0 @@
-../../stable/_downloads/06ac97558eeb1567b6a47e79368f8b17/artist_tests.py

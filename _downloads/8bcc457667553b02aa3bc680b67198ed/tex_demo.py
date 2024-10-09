@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/8bcc457667553b02aa3bc680b67198ed/tex_demo.py

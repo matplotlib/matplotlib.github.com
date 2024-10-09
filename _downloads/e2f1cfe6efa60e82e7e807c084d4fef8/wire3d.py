@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/e2f1cfe6efa60e82e7e807c084d4fef8/wire3d.py

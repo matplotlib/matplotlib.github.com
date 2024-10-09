@@ -1,1 +1,0 @@
-../../stable/_downloads/0d107edc8c3e240a5bc4f7486b23afc1/usetex.py

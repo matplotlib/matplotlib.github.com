@@ -1,1 +1,0 @@
-../../stable/_downloads/ec2716e1888eee027c7e9752b6db8fff/plot_solarizedlight2.py

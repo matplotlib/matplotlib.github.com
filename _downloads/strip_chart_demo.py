@@ -1,1 +1,0 @@
-../2.1.2/_downloads/strip_chart_demo.py

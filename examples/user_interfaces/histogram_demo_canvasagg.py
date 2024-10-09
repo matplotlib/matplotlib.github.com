@@ -1,1 +1,0 @@
-../../2.0.2/examples/user_interfaces/histogram_demo_canvasagg.py

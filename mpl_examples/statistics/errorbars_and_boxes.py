@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/statistics/errorbars_and_boxes.py

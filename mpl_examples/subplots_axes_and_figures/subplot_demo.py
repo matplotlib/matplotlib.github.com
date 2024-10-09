@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/subplots_axes_and_figures/subplot_demo.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/3550061d5afe70e08dd0570c9d63725d/connect_simple01.py

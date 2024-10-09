@@ -1,1 +1,0 @@
-../../stable/_downloads/784e624667ea437932f1b7daca5c5e2f/ginput_manual_clabel_sgskip.py

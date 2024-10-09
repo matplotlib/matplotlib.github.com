@@ -1,1 +1,0 @@
-../../stable/_downloads/2093d89024338e445161580da8e68837/compound_path.py

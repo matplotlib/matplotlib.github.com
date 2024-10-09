@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/ac08119b26c44e0a321992f71fab4d70/mandelbrot.py

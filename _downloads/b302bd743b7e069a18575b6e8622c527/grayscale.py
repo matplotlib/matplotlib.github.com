@@ -1,1 +1,0 @@
-../../stable/_downloads/b302bd743b7e069a18575b6e8622c527/grayscale.py

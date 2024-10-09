@@ -1,1 +1,0 @@
-../../stable/_downloads/4095e40bfdaeea40b5ebf921dca65a60/findobj_demo.py

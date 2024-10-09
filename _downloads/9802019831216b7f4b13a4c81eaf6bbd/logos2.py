@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/9802019831216b7f4b13a4c81eaf6bbd/logos2.py

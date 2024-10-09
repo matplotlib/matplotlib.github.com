@@ -1,1 +1,0 @@
-../../stable/_downloads/455c7369df685db431cee2fd16862fdd/image_masked.py

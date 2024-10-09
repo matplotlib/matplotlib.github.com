@@ -1,1 +1,0 @@
-../../stable/_downloads/a2b801f410afc3c47aa5b22d4e188707/bar_label_demo.py

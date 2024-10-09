@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/93fb938ca1674b609c1d06e5d44dde8f/custom_ticker1.py

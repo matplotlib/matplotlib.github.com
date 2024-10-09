@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/text_labels_and_annotations/text_demo_fontdict.py

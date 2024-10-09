@@ -1,1 +1,0 @@
-../../2.0.2/examples/pyplots/auto_subplots_adjust.py

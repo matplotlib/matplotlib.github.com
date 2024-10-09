@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/c81c470f513bf64e2135c73bad035b3a/mathtext.py

@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/api/barchart_demo.py

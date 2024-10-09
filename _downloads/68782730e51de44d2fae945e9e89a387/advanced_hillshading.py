@@ -1,1 +1,0 @@
-../../stable/_downloads/68782730e51de44d2fae945e9e89a387/advanced_hillshading.py

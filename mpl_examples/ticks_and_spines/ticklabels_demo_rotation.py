@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/ticks_and_spines/ticklabels_demo_rotation.py

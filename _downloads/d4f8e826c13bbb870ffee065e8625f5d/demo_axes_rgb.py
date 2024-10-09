@@ -1,1 +1,0 @@
-../../stable/_downloads/d4f8e826c13bbb870ffee065e8625f5d/demo_axes_rgb.py

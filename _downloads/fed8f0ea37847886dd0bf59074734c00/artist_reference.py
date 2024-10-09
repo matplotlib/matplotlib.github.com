@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/fed8f0ea37847886dd0bf59074734c00/artist_reference.py

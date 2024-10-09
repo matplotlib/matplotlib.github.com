@@ -1,1 +1,0 @@
-../../2.0.2/examples/pylab_examples/font_table_ttf.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/31fa58ec8d6c8fd749693c492182e91e/ellipse_demo.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/b14f56c0ed0bf29c1b150290df6f369a/bar_of_pie.py

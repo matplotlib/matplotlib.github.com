@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/54e2b5014ba2d5b19650d640ebe79970/xkcd.py

@@ -1,1 +1,0 @@
-../../2.0.2/examples/event_handling/figure_axes_enter_leave.py

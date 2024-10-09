@@ -1,1 +1,0 @@
-../../stable/_downloads/8001758ca7a6a0a62185dff602f25056/hatch_style_reference.py

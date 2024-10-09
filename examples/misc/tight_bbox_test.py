@@ -1,1 +1,0 @@
-../../1.5.3/examples/misc/tight_bbox_test.py

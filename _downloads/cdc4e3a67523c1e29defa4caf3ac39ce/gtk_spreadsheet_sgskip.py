@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/cdc4e3a67523c1e29defa4caf3ac39ce/gtk_spreadsheet_sgskip.py

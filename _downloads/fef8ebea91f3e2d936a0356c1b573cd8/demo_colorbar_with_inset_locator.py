@@ -1,1 +1,0 @@
-../../stable/_downloads/fef8ebea91f3e2d936a0356c1b573cd8/demo_colorbar_with_inset_locator.py

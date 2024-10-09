@@ -1,1 +1,0 @@
-../../stable/_downloads/c5f51daa3012869b5b1ccefc69266cab/bar_demo2.py

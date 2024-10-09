@@ -1,1 +1,0 @@
-../../stable/_downloads/71f6f1571f197ea4d33c60225bfb2213/polar_demo.py

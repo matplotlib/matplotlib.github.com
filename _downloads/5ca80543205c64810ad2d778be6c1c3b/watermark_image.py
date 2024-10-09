@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/5ca80543205c64810ad2d778be6c1c3b/watermark_image.py

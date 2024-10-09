@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/63a26c66c097a1f2c95d7a823fe57b31/strip_chart.py

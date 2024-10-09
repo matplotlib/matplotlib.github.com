@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/units/ellipse_with_units.py

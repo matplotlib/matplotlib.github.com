@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/mplot3d/pathpatch3d_demo.py

@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/40a8f263f4e7dcfdb37c3e52e1ea5395/simple_anchored_artists.py

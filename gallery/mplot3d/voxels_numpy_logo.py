@@ -1,1 +1,0 @@
-../../stable/gallery/mplot3d/voxels_numpy_logo.py

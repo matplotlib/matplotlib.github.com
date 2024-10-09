@@ -1,1 +1,0 @@
-../../stable/_downloads/c9c14c6b496e6dd6d8f9bf431740b76a/firefox.py

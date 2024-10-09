@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/eb9d3ef76358db1547b3a33312e2ded9/rectangle_selector.py

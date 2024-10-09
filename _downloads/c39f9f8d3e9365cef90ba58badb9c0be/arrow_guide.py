@@ -1,1 +1,0 @@
-../../stable/_downloads/c39f9f8d3e9365cef90ba58badb9c0be/arrow_guide.py

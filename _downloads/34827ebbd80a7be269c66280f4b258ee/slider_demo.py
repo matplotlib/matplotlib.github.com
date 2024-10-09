@@ -1,1 +1,0 @@
-../../stable/_downloads/34827ebbd80a7be269c66280f4b258ee/slider_demo.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/0846c3e5d114c457e124451aea9e558a/logos2.py

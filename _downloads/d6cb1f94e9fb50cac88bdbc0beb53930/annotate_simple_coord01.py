@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/d6cb1f94e9fb50cac88bdbc0beb53930/annotate_simple_coord01.py

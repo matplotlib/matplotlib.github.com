@@ -1,1 +1,0 @@
-../../stable/_downloads/867a604be5ec8886b7254918995d5a2a/voxels_numpy_logo.py

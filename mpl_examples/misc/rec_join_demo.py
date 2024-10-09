@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/misc/rec_join_demo.py

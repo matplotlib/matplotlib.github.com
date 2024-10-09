@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/pylab_examples/colorbar_tick_labelling_demo.py

@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/e061a9a800f083630abcf40c46d83e80/demo_text_rotation_mode.py

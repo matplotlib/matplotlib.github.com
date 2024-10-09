@@ -1,1 +1,0 @@
-../../stable/gallery/misc/histogram_path.py

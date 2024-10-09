@@ -1,1 +1,0 @@
-../../stable/_downloads/a34ce712bfa4dbed78c5388cfff389d8/axis_equal_demo.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/3269caad4b186ff2ba73f725b2cb5a12/lines_with_ticks_demo.py

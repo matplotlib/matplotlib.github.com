@@ -1,1 +1,0 @@
-../../stable/_downloads/8ee22af689f150f3c8eb06591249b5c1/text_rotation.py

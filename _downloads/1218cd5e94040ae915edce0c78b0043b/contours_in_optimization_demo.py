@@ -1,1 +1,0 @@
-../../stable/_downloads/1218cd5e94040ae915edce0c78b0043b/contours_in_optimization_demo.py

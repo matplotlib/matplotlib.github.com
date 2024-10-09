@@ -1,1 +1,0 @@
-../../stable/_downloads/dd314a83577f446493e34d27a1ed8451/colormap_reference.py

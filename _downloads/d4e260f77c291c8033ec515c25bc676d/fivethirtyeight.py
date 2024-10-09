@@ -1,1 +1,0 @@
-../../stable/_downloads/d4e260f77c291c8033ec515c25bc676d/fivethirtyeight.py

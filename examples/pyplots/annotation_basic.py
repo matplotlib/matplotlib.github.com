@@ -1,1 +1,0 @@
-../../2.0.2/examples/pyplots/annotation_basic.py

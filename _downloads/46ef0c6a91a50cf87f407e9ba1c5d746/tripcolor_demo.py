@@ -1,1 +1,0 @@
-../../stable/_downloads/46ef0c6a91a50cf87f407e9ba1c5d746/tripcolor_demo.py

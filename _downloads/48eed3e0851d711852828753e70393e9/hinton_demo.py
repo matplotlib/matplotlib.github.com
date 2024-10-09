@@ -1,1 +1,0 @@
-../../stable/_downloads/48eed3e0851d711852828753e70393e9/hinton_demo.py

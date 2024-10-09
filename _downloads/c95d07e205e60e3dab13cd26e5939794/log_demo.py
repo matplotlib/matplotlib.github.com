@@ -1,1 +1,0 @@
-../../stable/_downloads/c95d07e205e60e3dab13cd26e5939794/log_demo.py

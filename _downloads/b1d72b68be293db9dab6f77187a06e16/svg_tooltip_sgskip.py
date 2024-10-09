@@ -1,1 +1,0 @@
-../../stable/_downloads/b1d72b68be293db9dab6f77187a06e16/svg_tooltip_sgskip.py

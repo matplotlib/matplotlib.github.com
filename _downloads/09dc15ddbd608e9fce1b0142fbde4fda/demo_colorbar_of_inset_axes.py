@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/09dc15ddbd608e9fce1b0142fbde4fda/demo_colorbar_of_inset_axes.py

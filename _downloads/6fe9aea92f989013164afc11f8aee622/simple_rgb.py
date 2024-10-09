@@ -1,1 +1,0 @@
-../../3.2.2/_downloads/6fe9aea92f989013164afc11f8aee622/simple_rgb.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/1403c9176f441d71ec67e54e239b695e/patheffect_demo.py

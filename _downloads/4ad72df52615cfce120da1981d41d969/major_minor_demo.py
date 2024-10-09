@@ -1,1 +1,0 @@
-../../stable/_downloads/4ad72df52615cfce120da1981d41d969/major_minor_demo.py

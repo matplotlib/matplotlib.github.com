@@ -1,1 +1,0 @@
-../../stable/_downloads/5a48ca1008ec889cb849275558b036a9/quiver_simple_demo.py

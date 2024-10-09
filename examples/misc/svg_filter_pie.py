@@ -1,1 +1,0 @@
-../../1.5.3/examples/misc/svg_filter_pie.py

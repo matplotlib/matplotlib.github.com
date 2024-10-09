@@ -1,1 +1,0 @@
-../../3.1.0/_downloads/176dc777a1b21298d60ffe7e0f2b5fb0/usetex_fonteffects.py

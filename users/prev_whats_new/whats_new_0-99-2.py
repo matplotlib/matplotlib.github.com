@@ -1,1 +1,0 @@
-../../stable/users/prev_whats_new/whats_new_0-99-2.py

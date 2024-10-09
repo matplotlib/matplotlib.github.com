@@ -1,1 +1,0 @@
-../../3.2.2/_downloads/9cf6066b36e31b8cf31bd9fd081d1dba/usetex_demo.py

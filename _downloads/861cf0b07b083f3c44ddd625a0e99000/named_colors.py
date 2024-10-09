@@ -1,1 +1,0 @@
-../../stable/_downloads/861cf0b07b083f3c44ddd625a0e99000/named_colors.py

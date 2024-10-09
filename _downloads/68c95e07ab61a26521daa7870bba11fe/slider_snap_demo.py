@@ -1,1 +1,0 @@
-../../stable/_downloads/68c95e07ab61a26521daa7870bba11fe/slider_snap_demo.py

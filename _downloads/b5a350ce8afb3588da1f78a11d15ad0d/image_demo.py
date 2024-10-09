@@ -1,1 +1,0 @@
-../../stable/_downloads/b5a350ce8afb3588da1f78a11d15ad0d/image_demo.py

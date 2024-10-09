@@ -1,1 +1,0 @@
-../../3.1.0/_downloads/fe3aae01c56bfe2fca079e7fc09daddc/patheffects_guide.py

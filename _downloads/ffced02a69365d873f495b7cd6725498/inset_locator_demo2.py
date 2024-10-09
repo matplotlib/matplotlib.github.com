@@ -1,1 +1,0 @@
-../../stable/_downloads/ffced02a69365d873f495b7cd6725498/inset_locator_demo2.py
