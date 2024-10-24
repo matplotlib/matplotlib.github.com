@@ -1,1 +1,0 @@
-../../2.0.2/examples/event_handling/path_editor.py

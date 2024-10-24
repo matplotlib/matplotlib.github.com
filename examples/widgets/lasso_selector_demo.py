@@ -1,1 +1,0 @@
-../../2.0.2/examples/widgets/lasso_selector_demo.py

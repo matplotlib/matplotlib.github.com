@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/46e2aba8b1fbd2f2b54f553ae837850d/demo_ticklabel_direction.py

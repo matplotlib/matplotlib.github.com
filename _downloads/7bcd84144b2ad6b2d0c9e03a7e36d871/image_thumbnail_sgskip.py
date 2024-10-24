@@ -1,1 +1,0 @@
-../../stable/_downloads/7bcd84144b2ad6b2d0c9e03a7e36d871/image_thumbnail_sgskip.py

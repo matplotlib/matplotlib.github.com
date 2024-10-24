@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/f33fd9fb36efaea28fe7355e3746bedc/image_clip_path.py

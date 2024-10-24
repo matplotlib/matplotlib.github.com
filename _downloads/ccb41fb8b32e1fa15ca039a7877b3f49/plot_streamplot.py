@@ -1,1 +1,0 @@
-../../stable/_downloads/ccb41fb8b32e1fa15ca039a7877b3f49/plot_streamplot.py

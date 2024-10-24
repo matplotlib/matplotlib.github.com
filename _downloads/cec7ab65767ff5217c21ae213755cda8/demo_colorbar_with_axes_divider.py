@@ -1,1 +1,0 @@
-../../stable/_downloads/cec7ab65767ff5217c21ae213755cda8/demo_colorbar_with_axes_divider.py

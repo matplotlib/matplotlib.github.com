@@ -1,1 +1,0 @@
-../../stable/_downloads/33afb12cc8627dba1bc2540f3e949b70/pythonic_matplotlib.py

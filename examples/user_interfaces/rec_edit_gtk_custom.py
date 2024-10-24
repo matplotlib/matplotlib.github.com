@@ -1,1 +1,0 @@
-../../2.0.2/examples/user_interfaces/rec_edit_gtk_custom.py

@@ -1,1 +1,0 @@
-../2.1.2/_downloads/tricontour_vs_griddata.py

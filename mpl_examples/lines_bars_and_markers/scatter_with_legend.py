@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/lines_bars_and_markers/scatter_with_legend.py

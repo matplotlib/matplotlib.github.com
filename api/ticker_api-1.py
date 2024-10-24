@@ -1,1 +1,0 @@
-../stable/api/ticker_api-1.py

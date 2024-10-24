@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/pyplots/whats_new_98_4_fancy.py

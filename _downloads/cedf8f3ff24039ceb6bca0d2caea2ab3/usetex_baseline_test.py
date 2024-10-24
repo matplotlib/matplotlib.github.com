@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/cedf8f3ff24039ceb6bca0d2caea2ab3/usetex_baseline_test.py

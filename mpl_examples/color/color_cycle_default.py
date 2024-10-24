@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/color/color_cycle_default.py

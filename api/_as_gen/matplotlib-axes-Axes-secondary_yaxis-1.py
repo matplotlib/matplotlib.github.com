@@ -1,1 +1,0 @@
-../../stable/api/_as_gen/matplotlib-axes-Axes-secondary_yaxis-1.py

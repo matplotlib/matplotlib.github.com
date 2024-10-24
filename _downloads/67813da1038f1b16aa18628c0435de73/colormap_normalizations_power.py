@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/67813da1038f1b16aa18628c0435de73/colormap_normalizations_power.py

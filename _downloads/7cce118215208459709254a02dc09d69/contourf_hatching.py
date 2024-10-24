@@ -1,1 +1,0 @@
-../../stable/_downloads/7cce118215208459709254a02dc09d69/contourf_hatching.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/7aecd0ee1c8d945fad9779db5ebd3185/rasterization_demo.py

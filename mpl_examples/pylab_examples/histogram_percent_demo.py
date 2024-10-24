@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/pylab_examples/histogram_percent_demo.py

@@ -1,1 +1,0 @@
-../../stable/_downloads/2d93c172a0e3842ed12e6211628fe0f5/fancytextbox_demo.py

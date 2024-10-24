@@ -1,1 +1,0 @@
-../../stable/_downloads/4b2e21f970611c05a07574bf0ea97293/annotate_text_arrow.py

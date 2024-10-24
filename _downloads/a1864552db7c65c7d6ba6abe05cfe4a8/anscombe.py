@@ -1,1 +1,0 @@
-../../stable/_downloads/a1864552db7c65c7d6ba6abe05cfe4a8/anscombe.py

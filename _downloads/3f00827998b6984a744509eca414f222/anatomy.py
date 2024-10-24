@@ -1,1 +1,0 @@
-../../stable/_downloads/3f00827998b6984a744509eca414f222/anatomy.py

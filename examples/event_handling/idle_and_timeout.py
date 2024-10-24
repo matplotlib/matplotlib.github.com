@@ -1,1 +1,0 @@
-../../2.0.2/examples/event_handling/idle_and_timeout.py

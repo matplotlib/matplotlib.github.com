@@ -1,1 +1,0 @@
-../../2.0.2/examples/animation/strip_chart_demo.py

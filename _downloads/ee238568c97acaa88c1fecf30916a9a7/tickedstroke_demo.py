@@ -1,1 +1,0 @@
-../../stable/_downloads/ee238568c97acaa88c1fecf30916a9a7/tickedstroke_demo.py

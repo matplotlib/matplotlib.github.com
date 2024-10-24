@@ -1,1 +1,0 @@
-../../1.5.3/examples/pylab_examples/movie_demo.py

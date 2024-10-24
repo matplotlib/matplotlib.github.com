@@ -1,1 +1,0 @@
-../../stable/_downloads/51f72ac52a09ab1afd7282dc56b96fb3/shading_example.py

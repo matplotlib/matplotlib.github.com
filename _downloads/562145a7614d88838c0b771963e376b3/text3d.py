@@ -1,1 +1,0 @@
-../../stable/_downloads/562145a7614d88838c0b771963e376b3/text3d.py

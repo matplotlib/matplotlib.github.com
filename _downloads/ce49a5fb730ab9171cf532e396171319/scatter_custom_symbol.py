@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/ce49a5fb730ab9171cf532e396171319/scatter_custom_symbol.py

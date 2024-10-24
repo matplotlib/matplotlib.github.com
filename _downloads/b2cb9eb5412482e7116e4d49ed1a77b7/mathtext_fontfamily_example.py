@@ -1,1 +1,0 @@
-../../stable/_downloads/b2cb9eb5412482e7116e4d49ed1a77b7/mathtext_fontfamily_example.py

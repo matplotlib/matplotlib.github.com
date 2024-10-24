@@ -1,1 +1,0 @@
-../../3.1.3/_downloads/ea7f00b0aa6db1b76f3cc7f3ca2db6f3/embedding_in_gtk3_panzoom_sgskip.py

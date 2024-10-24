@@ -1,1 +1,0 @@
-../../3.1.1/_downloads/a8f81680f5392f79c832534ab3444007/wire3d_zero_stride.py

@@ -1,1 +1,0 @@
-../2.2.3/_downloads/embedding_in_gtk2_sgskip.py

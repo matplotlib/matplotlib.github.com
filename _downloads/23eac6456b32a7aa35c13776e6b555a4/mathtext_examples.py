@@ -1,1 +1,0 @@
-../../stable/_downloads/23eac6456b32a7aa35c13776e6b555a4/mathtext_examples.py

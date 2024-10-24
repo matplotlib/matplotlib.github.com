@@ -1,1 +1,0 @@
-../../stable/_downloads/233af54bee28814ae4bb34817226f0ea/color_cycle_default.py

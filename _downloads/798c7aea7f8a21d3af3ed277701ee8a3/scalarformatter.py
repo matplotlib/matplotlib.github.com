@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/798c7aea7f8a21d3af3ed277701ee8a3/scalarformatter.py

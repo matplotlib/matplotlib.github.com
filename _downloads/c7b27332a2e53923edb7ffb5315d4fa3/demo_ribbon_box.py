@@ -1,1 +1,0 @@
-../../stable/_downloads/c7b27332a2e53923edb7ffb5315d4fa3/demo_ribbon_box.py

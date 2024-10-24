@@ -1,1 +1,0 @@
-../../3.1.0/_downloads/e7b4a2f082c9ba00c81b18b6141a830f/polygon_selector_demo.py

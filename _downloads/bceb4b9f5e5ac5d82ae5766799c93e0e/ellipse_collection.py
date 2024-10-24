@@ -1,1 +1,0 @@
-../../stable/_downloads/bceb4b9f5e5ac5d82ae5766799c93e0e/ellipse_collection.py

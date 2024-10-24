@@ -1,1 +1,0 @@
-../../stable/_downloads/b6df01615e62198a6e6b651c4b836b36/span_selector.py

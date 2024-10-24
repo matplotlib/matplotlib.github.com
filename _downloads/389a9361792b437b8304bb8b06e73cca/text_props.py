@@ -1,1 +1,0 @@
-../../stable/_downloads/389a9361792b437b8304bb8b06e73cca/text_props.py

@@ -1,1 +1,0 @@
-../../2.0.2/examples/user_interfaces/embedding_in_gtk2.py

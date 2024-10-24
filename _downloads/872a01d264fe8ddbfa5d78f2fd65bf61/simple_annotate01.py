@@ -1,1 +1,0 @@
-../../stable/_downloads/872a01d264fe8ddbfa5d78f2fd65bf61/simple_annotate01.py

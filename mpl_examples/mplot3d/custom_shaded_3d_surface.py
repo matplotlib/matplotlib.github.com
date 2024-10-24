@@ -1,1 +1,0 @@
-../../2.0.2/mpl_examples/mplot3d/custom_shaded_3d_surface.py

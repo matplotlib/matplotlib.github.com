@@ -1,1 +1,0 @@
-../../3.0.3/_downloads/90e0b0d4cafadba1a90bfbb5a4c0ebbd/rainbow_text.py
