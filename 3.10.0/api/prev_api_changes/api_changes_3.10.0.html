@@ -31,7 +31,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=86e00652" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css?v=7f9a90b1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -55,7 +55,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/prev_api_changes/api_changes_3.10.0';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-9-g51950c0b15';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-24-g1b80cd3c0b';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '3.10.0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
@@ -821,13 +821,116 @@ document.write(`
 <h1>API Changes for 3.10.0<a class="headerlink" href="#api-changes-for-3-10-0" title="Link to this heading">#</a></h1>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#deprecations" id="id1">Deprecations</a></p></li>
-<li><p><a class="reference internal" href="#removals" id="id2">Removals</a></p></li>
-<li><p><a class="reference internal" href="#development-changes" id="id3">Development changes</a></p></li>
+<li><p><a class="reference internal" href="#behavior-changes" id="id1">Behavior Changes</a></p></li>
+<li><p><a class="reference internal" href="#deprecations" id="id2">Deprecations</a></p></li>
+<li><p><a class="reference internal" href="#removals" id="id3">Removals</a></p></li>
+<li><p><a class="reference internal" href="#development-changes" id="id4">Development changes</a></p></li>
 </ul>
 </nav>
+<section id="behavior-changes">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Behavior Changes</a><a class="headerlink" href="#behavior-changes" title="Link to this heading">#</a></h2>
+<section id="onselect-argument-to-selector-widgets-made-optional">
+<h3>onselect argument to selector widgets made optional<a class="headerlink" href="#onselect-argument-to-selector-widgets-made-optional" title="Link to this heading">#</a></h3>
+<p>The <em>onselect</em> argument to <a class="reference internal" href="../widgets_api.html#matplotlib.widgets.EllipseSelector" title="matplotlib.widgets.EllipseSelector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EllipseSelector</span></code></a>, <a class="reference internal" href="../widgets_api.html#matplotlib.widgets.LassoSelector" title="matplotlib.widgets.LassoSelector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LassoSelector</span></code></a>, <a class="reference internal" href="../widgets_api.html#matplotlib.widgets.PolygonSelector" title="matplotlib.widgets.PolygonSelector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolygonSelector</span></code></a>, and
+<a class="reference internal" href="../widgets_api.html#matplotlib.widgets.RectangleSelector" title="matplotlib.widgets.RectangleSelector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectangleSelector</span></code></a> is no longer required.</p>
+</section>
+<section id="navigationtoolbar2-save-figure-now-returns-filepath-of-saved-figure">
+<h3><code class="docutils literal notranslate"><span class="pre">NavigationToolbar2.save_figure</span></code> now returns filepath of saved figure<a class="headerlink" href="#navigationtoolbar2-save-figure-now-returns-filepath-of-saved-figure" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">NavigationToolbar2.save_figure</span></code> function may return the filename of the saved figure.</p>
+<p>If a backend implements this functionality it should return <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>
+in the case where no figure is actually saved (because the user closed the dialog without saving).</p>
+<p>If the backend does not or can not implement this functionality (currently the Gtk4 backends
+and webagg backends do not) this method will return <code class="docutils literal notranslate"><span class="pre">NavigationToolbar2.UNKNOWN_SAVED_STATUS</span></code>.</p>
+</section>
+<section id="svg-output-improved-reproducibility">
+<h3>SVG output: improved reproducibility<a class="headerlink" href="#svg-output-improved-reproducibility" title="Link to this heading">#</a></h3>
+<p>Some SVG-format plots <a class="reference external" href="https://github.com/matplotlib/matplotlib/issues/27831">produced different output on each render</a>, even with a static <code class="docutils literal notranslate"><span class="pre">svg.hashsalt</span></code> value configured.</p>
+<p>The problem was a non-deterministic ID-generation scheme for clip paths; the fix introduces a repeatable, monotonically increasing integer ID scheme as a replacement.</p>
+<p>Provided that plots add clip paths themselves in deterministic order, this enables repeatable (a.k.a. reproducible, deterministic) SVG output.</p>
+</section>
+<section id="ft2font-classes-are-now-final">
+<h3>ft2font classes are now final<a class="headerlink" href="#ft2font-classes-are-now-final" title="Link to this heading">#</a></h3>
+<p>The ft2font classes <a class="reference internal" href="../ft2font.html#matplotlib.ft2font.FT2Font" title="matplotlib.ft2font.FT2Font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ft2font.FT2Font</span></code></a>, and <a class="reference internal" href="../ft2font.html#matplotlib.ft2font.FT2Image" title="matplotlib.ft2font.FT2Image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ft2font.FT2Image</span></code></a> are now final
+and can no longer be subclassed.</p>
+</section>
+<section id="insetindicator-artist">
+<h3><code class="docutils literal notranslate"><span class="pre">InsetIndicator</span></code> artist<a class="headerlink" href="#insetindicator-artist" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="../_as_gen/matplotlib.axes.Axes.indicate_inset.html#matplotlib.axes.Axes.indicate_inset" title="matplotlib.axes.Axes.indicate_inset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">indicate_inset</span></code></a> and <a class="reference internal" href="../_as_gen/matplotlib.axes.Axes.indicate_inset_zoom.html#matplotlib.axes.Axes.indicate_inset_zoom" title="matplotlib.axes.Axes.indicate_inset_zoom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">indicate_inset_zoom</span></code></a> now return an instance
+of <a class="reference internal" href="../inset_api.html#matplotlib.inset.InsetIndicator" title="matplotlib.inset.InsetIndicator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InsetIndicator</span></code></a>.  Use the
+<a class="reference internal" href="../inset_api.html#matplotlib.inset.InsetIndicator.rectangle" title="matplotlib.inset.InsetIndicator.rectangle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rectangle</span></code></a> and
+<a class="reference internal" href="../inset_api.html#matplotlib.inset.InsetIndicator.connectors" title="matplotlib.inset.InsetIndicator.connectors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectors</span></code></a> properties of this artist to
+access the objects that were previously returned directly.</p>
+</section>
+<section id="imshow-interpolation-stage-default-changed-to-auto">
+<h3><code class="docutils literal notranslate"><span class="pre">imshow</span></code> <em>interpolation_stage</em> default changed to 'auto'<a class="headerlink" href="#imshow-interpolation-stage-default-changed-to-auto" title="Link to this heading">#</a></h3>
+<p>The <em>interpolation_stage</em> parameter of  <a class="reference internal" href="../_as_gen/matplotlib.axes.Axes.imshow.html#matplotlib.axes.Axes.imshow" title="matplotlib.axes.Axes.imshow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">imshow</span></code></a> has a new default
+value 'auto'.  For images that are up-sampled less than a factor of
+three or down-sampled, image interpolation will occur in 'rgba' space.  For images
+that are up-sampled by a factor of 3 or more, then image interpolation occurs
+in 'data' space.</p>
+<p>The previous default was 'data', so down-sampled images may change subtly with
+the new default.  However, the new default also avoids floating point artifacts
+at sharp boundaries in a colormap when down-sampling.</p>
+<p>The previous behavior can achieved by setting the <em>interpolation_stage</em> parameter
+or <code class="docutils literal notranslate"><a class="reference internal" href="../../users/explain/customizing.html?highlight=image.interpolation_stage#matplotlibrc-sample"><span class="std std-ref"><span class="pre">rcParams[&quot;image.interpolation_stage&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">'auto'</span></code>) to 'data'.</p>
+</section>
+<section id="imshow-default-interpolation-changed-to-auto">
+<h3>imshow default <em>interpolation</em> changed to 'auto'<a class="headerlink" href="#imshow-default-interpolation-changed-to-auto" title="Link to this heading">#</a></h3>
+<p>The <em>interpolation</em> parameter of <a class="reference internal" href="../_as_gen/matplotlib.axes.Axes.imshow.html#matplotlib.axes.Axes.imshow" title="matplotlib.axes.Axes.imshow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">imshow</span></code></a> has a new default
+value 'auto', changed from 'antialiased', for consistency with <em>interpolation_stage</em>
+and because the interpolation is only anti-aliasing during down-sampling.  Passing
+'antialiased' still works, and behaves exactly the same as 'auto', but is discouraged.</p>
+</section>
+<section id="dark-background-and-fivethirtyeight-styles-no-longer-set-savefig-facecolor-and-savefig-edgecolor">
+<h3>dark_background and fivethirtyeight styles no longer set <code class="docutils literal notranslate"><span class="pre">savefig.facecolor</span></code> and <code class="docutils literal notranslate"><span class="pre">savefig.edgecolor</span></code><a class="headerlink" href="#dark-background-and-fivethirtyeight-styles-no-longer-set-savefig-facecolor-and-savefig-edgecolor" title="Link to this heading">#</a></h3>
+<p>When using these styles, <code class="docutils literal notranslate"><a class="reference internal" href="../../users/explain/customizing.html?highlight=savefig.facecolor#matplotlibrc-sample"><span class="std std-ref"><span class="pre">rcParams[&quot;savefig.facecolor&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">'auto'</span></code>) and <code class="docutils literal notranslate"><a class="reference internal" href="../../users/explain/customizing.html?highlight=savefig.edgecolor#matplotlibrc-sample"><span class="std std-ref"><span class="pre">rcParams[&quot;savefig.edgecolor&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">'auto'</span></code>)
+now inherit the global default value of &quot;auto&quot;, which means that the actual
+figure colors will be used.  Previously, these rcParams were set to the same
+values as <code class="docutils literal notranslate"><a class="reference internal" href="../../users/explain/customizing.html?highlight=figure.facecolor#matplotlibrc-sample"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.facecolor&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">'white'</span></code>) and <code class="docutils literal notranslate"><a class="reference internal" href="../../users/explain/customizing.html?highlight=figure.edgecolor#matplotlibrc-sample"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.edgecolor&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">'white'</span></code>), i.e. a saved
+figure would always use the theme colors even if the user manually overrode
+them; this is no longer the case.</p>
+<p>This change should have no impact for users that do not manually set the figure
+face and edge colors.</p>
+</section>
+<section id="add-zorder-option-in-quiverkey">
+<h3>Add zorder option in QuiverKey<a class="headerlink" href="#add-zorder-option-in-quiverkey" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">zorder</span></code> can be used as a keyword argument to <a class="reference internal" href="../_as_gen/matplotlib.quiver.QuiverKey.html#matplotlib.quiver.QuiverKey" title="matplotlib.quiver.QuiverKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QuiverKey</span></code></a>. Previously,
+that parameter did not have any effect because the zorder was hard coded.</p>
+</section>
+<section id="subfigures">
+<h3>Subfigures<a class="headerlink" href="#subfigures" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="../_as_gen/matplotlib.figure.Figure.subfigures.html#matplotlib.figure.Figure.subfigures" title="matplotlib.figure.Figure.subfigures"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Figure.subfigures</span></code></a> are now added in row-major order to be consistent with
+<a class="reference internal" href="../_as_gen/matplotlib.figure.Figure.subplots.html#matplotlib.figure.Figure.subplots" title="matplotlib.figure.Figure.subplots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Figure.subplots</span></code></a>.  The return value of <a class="reference internal" href="../_as_gen/matplotlib.figure.Figure.subfigures.html#matplotlib.figure.Figure.subfigures" title="matplotlib.figure.Figure.subfigures"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subfigures</span></code></a> is not changed,
+but the order of <code class="docutils literal notranslate"><span class="pre">fig.subfigs</span></code> is.</p>
+</section>
+<section id="sub-figure-get-figure">
+<h3>(Sub)Figure.get_figure<a class="headerlink" href="#sub-figure-get-figure" title="Link to this heading">#</a></h3>
+<p>...in future will by default return the direct parent figure, which may be a SubFigure.
+This will make the default behavior consistent with the
+<a class="reference internal" href="../_as_gen/matplotlib.artist.Artist.get_figure.html#matplotlib.artist.Artist.get_figure" title="matplotlib.artist.Artist.get_figure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_figure</span></code></a> method of other artists.  To control the
+behavior, use the newly introduced <em>root</em> parameter.</p>
+</section>
+<section id="transforms-affinedeltatransform-updates-correctly-on-axis-limit-changes">
+<h3><code class="docutils literal notranslate"><span class="pre">transforms.AffineDeltaTransform</span></code> updates correctly on axis limit changes<a class="headerlink" href="#transforms-affinedeltatransform-updates-correctly-on-axis-limit-changes" title="Link to this heading">#</a></h3>
+<p>Before this change, transform sub-graphs with <code class="docutils literal notranslate"><span class="pre">AffineDeltaTransform</span></code> did not update correctly.
+This PR ensures that changes to the child transform are passed through correctly.</p>
+</section>
+<section id="the-offset-string-associated-with-concisedateformatter-will-now-invert-when-the-axis-is-inverted">
+<h3>The offset string associated with ConciseDateFormatter will now invert when the axis is inverted<a class="headerlink" href="#the-offset-string-associated-with-concisedateformatter-will-now-invert-when-the-axis-is-inverted" title="Link to this heading">#</a></h3>
+<p>Previously, when the axis was inverted, the offset string associated with ConciseDateFormatter would not change,
+so the offset string indicated the axis was oriented in the wrong direction. Now, when the axis is inverted, the offset
+string is oriented correctly.</p>
+</section>
+<section id="suptitle-in-compressed-layout">
+<h3><code class="docutils literal notranslate"><span class="pre">suptitle</span></code> in compressed layout<a class="headerlink" href="#suptitle-in-compressed-layout" title="Link to this heading">#</a></h3>
+<p>Compressed layout now automatically positions the <a class="reference internal" href="../_as_gen/matplotlib.figure.Figure.suptitle.html#matplotlib.figure.Figure.suptitle" title="matplotlib.figure.Figure.suptitle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">suptitle</span></code></a> just
+above the top row of axes.  To keep this title in its previous position,
+either pass <code class="docutils literal notranslate"><span class="pre">in_layout=False</span></code> or explicitly set <code class="docutils literal notranslate"><span class="pre">y=0.98</span></code> in the
+<a class="reference internal" href="../_as_gen/matplotlib.figure.Figure.suptitle.html#matplotlib.figure.Figure.suptitle" title="matplotlib.figure.Figure.suptitle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">suptitle</span></code></a> call.</p>
+</section>
+</section>
 <section id="deprecations">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Deprecations</a><a class="headerlink" href="#deprecations" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Deprecations</a><a class="headerlink" href="#deprecations" title="Link to this heading">#</a></h2>
 <section id="positional-parameters-in-plotting-functions">
 <h3>Positional parameters in plotting functions<a class="headerlink" href="#positional-parameters-in-plotting-functions" title="Link to this heading">#</a></h3>
 <p>Many plotting functions will restrict positional arguments to the first few parameters
@@ -977,7 +1080,7 @@ consistency.</p>
 </section>
 </section>
 <section id="removals">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Removals</a><a class="headerlink" href="#removals" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Removals</a><a class="headerlink" href="#removals" title="Link to this heading">#</a></h2>
 <section id="ttconv-removed">
 <h3>ttconv removed<a class="headerlink" href="#ttconv-removed" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">matplotlib._ttconv</span></code> extension has been removed. Most of its
@@ -1208,7 +1311,7 @@ call the method instead.</p>
 </section>
 </section>
 <section id="development-changes">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Development changes</a><a class="headerlink" href="#development-changes" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Development changes</a><a class="headerlink" href="#development-changes" title="Link to this heading">#</a></h2>
 <section id="documentation-specific-custom-sphinx-roles-are-now-semi-public">
 <h3>Documentation-specific custom Sphinx roles are now semi-public<a class="headerlink" href="#documentation-specific-custom-sphinx-roles-are-now-semi-public" title="Link to this heading">#</a></h3>
 <p>For third-party packages that derive types from Matplotlib, our use of custom roles may
@@ -1262,6 +1365,23 @@ being bumped:</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavior-changes">Behavior Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#onselect-argument-to-selector-widgets-made-optional">onselect argument to selector widgets made optional</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#navigationtoolbar2-save-figure-now-returns-filepath-of-saved-figure"><code class="docutils literal notranslate"><span class="pre">NavigationToolbar2.save_figure</span></code> now returns filepath of saved figure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#svg-output-improved-reproducibility">SVG output: improved reproducibility</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ft2font-classes-are-now-final">ft2font classes are now final</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#insetindicator-artist"><code class="docutils literal notranslate"><span class="pre">InsetIndicator</span></code> artist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imshow-interpolation-stage-default-changed-to-auto"><code class="docutils literal notranslate"><span class="pre">imshow</span></code> <em>interpolation_stage</em> default changed to 'auto'</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imshow-default-interpolation-changed-to-auto">imshow default <em>interpolation</em> changed to 'auto'</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dark-background-and-fivethirtyeight-styles-no-longer-set-savefig-facecolor-and-savefig-edgecolor">dark_background and fivethirtyeight styles no longer set <code class="docutils literal notranslate"><span class="pre">savefig.facecolor</span></code> and <code class="docutils literal notranslate"><span class="pre">savefig.edgecolor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-zorder-option-in-quiverkey">Add zorder option in QuiverKey</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subfigures">Subfigures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sub-figure-get-figure">(Sub)Figure.get_figure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transforms-affinedeltatransform-updates-correctly-on-axis-limit-changes"><code class="docutils literal notranslate"><span class="pre">transforms.AffineDeltaTransform</span></code> updates correctly on axis limit changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-offset-string-associated-with-concisedateformatter-will-now-invert-when-the-axis-is-inverted">The offset string associated with ConciseDateFormatter will now invert when the axis is inverted</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#suptitle-in-compressed-layout"><code class="docutils literal notranslate"><span class="pre">suptitle</span></code> in compressed layout</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deprecations">Deprecations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#positional-parameters-in-plotting-functions">Positional parameters in plotting functions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pdffile-hatchpatterns"><code class="docutils literal notranslate"><span class="pre">PdfFile.hatchPatterns</span></code></a></li>
@@ -1366,7 +1486,7 @@ being bumped:</p>
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Built from v3.10.0-9-g51950c0b15.
+    Built from v3.10.0-24-g1b80cd3c0b.
     <br/>
   </p>
 </div>

@@ -1,15 +1,19 @@
-N = 50
-theta = np.linspace(0, 2*np.pi, N)
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
 
-x1 = np.cos(theta)
-y1 = np.sin(theta)
-z1 = 0.1 * np.sin(6 * theta)
+x = np.linspace(-2, 2, 50)[np.newaxis, :]
+y = np.linspace(-2, 2, 50)[:, np.newaxis]
+im_0 = 1 * np.exp( - (x**2 + y**2 - x * y))
+im_1 = 2 * np.exp( - (x**2 + y**2 + x * y))
 
-x2 = 0.6 * np.cos(theta)
-y2 = 0.6 * np.sin(theta)
-z2 = 2  # Note that scalar values work in addition to length N arrays
+colorizer = mpl.colorizer.Colorizer()
+fig, axes = plt.subplots(1, 2, figsize=(6, 2))
+cim_0 = axes[0].imshow(im_0, colorizer=colorizer)
+fig.colorbar(cim_0)
+cim_1 = axes[1].imshow(im_1, colorizer=colorizer)
+fig.colorbar(cim_1)
 
-fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
-ax.fill_between(x1, y1, z1, x2, y2, z2,
-                alpha=0.5, edgecolor='k')
+colorizer.vmin = 0.5
+colorizer.vmax = 2
+colorizer.cmap = 'RdBu'
