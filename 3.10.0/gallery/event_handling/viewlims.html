@@ -7,6 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="codex" name="keywords" />
 
     <title>Viewlims &#8212; Matplotlib 3.10.0 documentation</title>
   
@@ -28,10 +29,10 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=86e00652" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css?v=7f9a90b1" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -55,7 +56,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'gallery/event_handling/viewlims';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-8-g90ca931035';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-9-g51950c0b15';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '3.10.0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
@@ -69,7 +70,7 @@
     <link rel="prev" title="Trifinder Event Demo" href="trifinder_event_demo.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Dec 18, 2024"/>
+    <meta name="docbuild:last-update" content="Jan 24, 2025"/>
   </head>
   
   
@@ -1120,26 +1121,26 @@ machine to see the interactivity.</p>
 <p>You can copy and paste individual parts, or download the entire example
 using the link at the bottom of the page.</p>
 </div>
-<img src="../../_images/sphx_glr_viewlims_001.png" srcset="../../_images/sphx_glr_viewlims_001.png, ../../_images/sphx_glr_viewlims_001_2_00x.png 2.00x" alt="Zoom here" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">functools</span>
+<img src="../../_images/sphx_glr_viewlims_001.png" srcset="../../_images/sphx_glr_viewlims_001.png, ../../_images/sphx_glr_viewlims_001_2_00x.png 2.00x" alt="Zoom here" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <a href="../../api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle" class="sphx-glr-backref-module-matplotlib-patches sphx-glr-backref-type-py-class"><span class="n">Rectangle</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle" class="sphx-glr-backref-module-matplotlib-patches sphx-glr-backref-type-py-class"><span class="n">Rectangle</span></a>
 
 
 <span class="c1"># A class that will regenerate a fractal set as we zoom in, so that you</span>
 <span class="c1"># can actually see the increasing detail.  A box in the left panel will show</span>
 <span class="c1"># the area to which we are zoomed.</span>
-<span class="k">class</span> <span class="nc">MandelbrotDisplay</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MandelbrotDisplay</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">h</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">w</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">niter</span> <span class="o">=</span> <span class="n">niter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
 
-    <span class="k">def</span> <span class="nf">compute_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">*</span><span class="n">xlim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">*</span><span class="n">ylim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="mf">1.0</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
@@ -1152,7 +1153,7 @@ using the link at the bottom of the page.</p>
             <span class="n">threshold_time</span> <span class="o">+=</span> <span class="n">mask</span>
         <span class="k">return</span> <span class="n">threshold_time</span>
 
-    <span class="k">def</span> <span class="nf">ax_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ax_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_autoscale_on</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Otherwise, infinite loop</span>
         <span class="c1"># Get the number of points from the number of pixels in the window</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -1173,7 +1174,7 @@ using the link at the bottom of the page.</p>
 <a href="../../api/_as_gen/matplotlib.axes.Axes.add_patch.html#matplotlib.axes.Axes.add_patch" title="matplotlib.axes.Axes.add_patch" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax_full</span><span class="o">.</span><span class="n">add_patch</span></a><span class="p">(</span><a href="../../api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle" class="sphx-glr-backref-module-matplotlib-patches sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rect</span></a><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">update_rect</span><span class="p">(</span><a href="../../api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle" class="sphx-glr-backref-module-matplotlib-patches sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rect</span></a><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>  <span class="c1"># Let the rectangle track the bounds of the zoom axes.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_rect</span><span class="p">(</span><a href="../../api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle" title="matplotlib.patches.Rectangle" class="sphx-glr-backref-module-matplotlib-patches sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rect</span></a><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>  <span class="c1"># Let the rectangle track the bounds of the zoom axes.</span>
     <span class="n">xlo</span><span class="p">,</span> <span class="n">xhi</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
     <span class="n">ylo</span><span class="p">,</span> <span class="n">yhi</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
     <a href="../../api/_as_gen/matplotlib.patches.Rectangle.html#matplotlib.patches.Rectangle.set_bounds" title="matplotlib.patches.Rectangle.set_bounds" class="sphx-glr-backref-module-matplotlib-patches sphx-glr-backref-type-py-method"><span class="n">rect</span><span class="o">.</span><span class="n">set_bounds</span></a><span class="p">((</span><span class="n">xlo</span><span class="p">,</span> <span class="n">ylo</span><span class="p">,</span> <span class="n">xhi</span> <span class="o">-</span> <span class="n">xlo</span><span class="p">,</span> <span class="n">yhi</span> <span class="o">-</span> <span class="n">ylo</span><span class="p">))</span>
@@ -1245,7 +1246,7 @@ using the link at the bottom of the page.</p>
 
   <p class="copyright">
     
-      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2024 The Matplotlib development team.
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2025 The Matplotlib development team.
       <br/>
     
   </p>
@@ -1261,7 +1262,7 @@ using the link at the bottom of the page.</p>
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Built from v3.10.0-8-g90ca931035.
+    Built from v3.10.0-9-g51950c0b15.
     <br/>
   </p>
 </div>

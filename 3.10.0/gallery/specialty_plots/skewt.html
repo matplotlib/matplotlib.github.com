@@ -7,6 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="codex" name="keywords" />
 
     <title>SkewT-logP diagram: using transforms and custom projections &#8212; Matplotlib 3.10.0 documentation</title>
   
@@ -28,10 +29,10 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=86e00652" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css?v=7f9a90b1" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -55,7 +56,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'gallery/specialty_plots/skewt';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-8-g90ca931035';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-9-g51950c0b15';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '3.10.0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
@@ -69,7 +70,7 @@
     <link rel="prev" title="Rankine power cycle" href="sankey_rankine.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Dec 18, 2024"/>
+    <meta name="docbuild:last-update" content="Jan 24, 2025"/>
   </head>
   
   
@@ -1118,19 +1119,19 @@ axes that are not orthogonal. This is handled by including a skew component to
 the basic Axes transforms. Additional complexity comes in handling the fact
 that the upper and lower X-axes have different data ranges, which necessitates
 a bunch of custom classes for ticks, spines, and axis to handle this.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack" title="contextlib.ExitStack" class="sphx-glr-backref-module-contextlib sphx-glr-backref-type-py-class"><span class="n">ExitStack</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack" title="contextlib.ExitStack" class="sphx-glr-backref-module-contextlib sphx-glr-backref-type-py-class"><span class="n">ExitStack</span></a>
 
-<span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <a href="../../api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class"><span class="n">Axes</span></a>
-<span class="kn">import</span> <span class="nn">matplotlib.axis</span> <span class="k">as</span> <span class="nn">maxis</span>
-<span class="kn">from</span> <span class="nn">matplotlib.projections</span> <span class="kn">import</span> <a href="../../api/projections_api.html#matplotlib.projections.register_projection" title="matplotlib.projections.register_projection" class="sphx-glr-backref-module-matplotlib-projections sphx-glr-backref-type-py-function"><span class="n">register_projection</span></a>
-<span class="kn">import</span> <span class="nn">matplotlib.spines</span> <span class="k">as</span> <span class="nn">mspines</span>
-<span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">transforms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class"><span class="n">Axes</span></a>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.axis</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">maxis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.projections</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/projections_api.html#matplotlib.projections.register_projection" title="matplotlib.projections.register_projection" class="sphx-glr-backref-module-matplotlib-projections sphx-glr-backref-type-py-function"><span class="n">register_projection</span></a>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.spines</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mspines</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.transforms</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">transforms</span>
 
 
 <span class="c1"># The sole purpose of this class is to look at the upper, lower, or total</span>
 <span class="c1"># interval as appropriate and see what parts of the tick to draw, if any.</span>
-<span class="k">class</span> <span class="nc">SkewXTick</span><span class="p">(</span><a href="../../api/axis_api.html#matplotlib.axis.XTick" title="matplotlib.axis.XTick" class="sphx-glr-backref-module-matplotlib-axis sphx-glr-backref-type-py-class"><span class="n">maxis</span><span class="o">.</span><span class="n">XTick</span></a><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SkewXTick</span><span class="p">(</span><a href="../../api/axis_api.html#matplotlib.axis.XTick" title="matplotlib.axis.XTick" class="sphx-glr-backref-module-matplotlib-axis sphx-glr-backref-type-py-class"><span class="n">maxis</span><span class="o">.</span><span class="n">XTick</span></a><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
         <span class="c1"># When adding the callbacks with `stack.callback`, we fetch the current</span>
         <span class="c1"># visibility state of the artist with `get_visible`; the ExitStack will</span>
         <span class="c1"># restore these states (`set_visible`) at the end of the block (after</span>
@@ -1153,25 +1154,25 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">label2</span><span class="o">.</span><span class="n">get_visible</span><span class="p">()</span> <span class="ow">and</span> <span class="n">needs_upper</span><span class="p">)</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_view_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_view_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_view_interval</span><span class="p">()</span>
 
 
 <span class="c1"># This class exists to provide two separate sets of intervals to the tick,</span>
 <span class="c1"># as well as create instances of the custom tick</span>
-<span class="k">class</span> <span class="nc">SkewXAxis</span><span class="p">(</span><a href="../../api/axis_api.html#matplotlib.axis.XAxis" title="matplotlib.axis.XAxis" class="sphx-glr-backref-module-matplotlib-axis sphx-glr-backref-type-py-class"><span class="n">maxis</span><span class="o">.</span><span class="n">XAxis</span></a><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_get_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">major</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SkewXAxis</span><span class="p">(</span><a href="../../api/axis_api.html#matplotlib.axis.XAxis" title="matplotlib.axis.XAxis" class="sphx-glr-backref-module-matplotlib-axis sphx-glr-backref-type-py-class"><span class="n">maxis</span><span class="o">.</span><span class="n">XAxis</span></a><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">major</span><span class="p">):</span>
         <span class="k">return</span> <a href="../../api/axis_api.html#matplotlib.axis.XTick" title="matplotlib.axis.XTick" class="sphx-glr-backref-module-matplotlib-axis sphx-glr-backref-type-py-class"><span class="n">SkewXTick</span></a><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="n">major</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_view_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_view_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">upper_xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">lower_xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 
 <span class="c1"># This class exists to calculate the separate data range of the</span>
 <span class="c1"># upper X-axis and draw the spine there. It also provides this range</span>
 <span class="c1"># to the X-axis artist for ticking and gridlines</span>
-<span class="k">class</span> <span class="nc">SkewSpine</span><span class="p">(</span><a href="../../api/spines_api.html#matplotlib.spines.Spine" title="matplotlib.spines.Spine" class="sphx-glr-backref-module-matplotlib-spines sphx-glr-backref-type-py-class"><span class="n">mspines</span><span class="o">.</span><span class="n">Spine</span></a><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_adjust_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SkewSpine</span><span class="p">(</span><a href="../../api/spines_api.html#matplotlib.spines.Spine" title="matplotlib.spines.Spine" class="sphx-glr-backref-module-matplotlib-spines sphx-glr-backref-type-py-class"><span class="n">mspines</span><span class="o">.</span><span class="n">Spine</span></a><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_adjust_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">vertices</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spine_type</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
             <span class="n">pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">upper_xlim</span>
@@ -1182,12 +1183,12 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
 <span class="c1"># This class handles registration of the skew-xaxes as a projection as well</span>
 <span class="c1"># as setting up the appropriate transformations. It also overrides standard</span>
 <span class="c1"># spines and axes instances as appropriate.</span>
-<span class="k">class</span> <span class="nc">SkewXAxes</span><span class="p">(</span><a href="../../api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class"><span class="n">Axes</span></a><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SkewXAxes</span><span class="p">(</span><a href="../../api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class"><span class="n">Axes</span></a><span class="p">):</span>
     <span class="c1"># The projection must specify a name.  This will be used be the</span>
     <span class="c1"># user to select the projection, i.e. ``subplot(projection=&#39;skewx&#39;)``.</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;skewx&#39;</span>
 
-    <span class="k">def</span> <span class="nf">_init_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Taken from Axes and modified to use our modified X-axis</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span> <span class="o">=</span> <a href="../../api/axis_api.html#matplotlib.axis.XAxis" title="matplotlib.axis.XAxis" class="sphx-glr-backref-module-matplotlib-axis sphx-glr-backref-type-py-class"><span class="n">SkewXAxis</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">register_axis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xaxis</span><span class="p">)</span>
@@ -1196,14 +1197,14 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">register_axis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">register_axis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yaxis</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_gen_axes_spines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gen_axes_spines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">spines</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span> <a href="../../api/spines_api.html#matplotlib.spines.Spine.linear_spine" title="matplotlib.spines.Spine.linear_spine" class="sphx-glr-backref-module-matplotlib-spines sphx-glr-backref-type-py-method"><span class="n">SkewSpine</span><span class="o">.</span><span class="n">linear_spine</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">),</span>
                   <span class="s1">&#39;bottom&#39;</span><span class="p">:</span> <a href="../../api/spines_api.html#matplotlib.spines.Spine.linear_spine" title="matplotlib.spines.Spine.linear_spine" class="sphx-glr-backref-module-matplotlib-spines sphx-glr-backref-type-py-method"><span class="n">mspines</span><span class="o">.</span><span class="n">Spine</span><span class="o">.</span><span class="n">linear_spine</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">),</span>
                   <span class="s1">&#39;left&#39;</span><span class="p">:</span> <a href="../../api/spines_api.html#matplotlib.spines.Spine.linear_spine" title="matplotlib.spines.Spine.linear_spine" class="sphx-glr-backref-module-matplotlib-spines sphx-glr-backref-type-py-method"><span class="n">mspines</span><span class="o">.</span><span class="n">Spine</span><span class="o">.</span><span class="n">linear_spine</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">),</span>
                   <span class="s1">&#39;right&#39;</span><span class="p">:</span> <a href="../../api/spines_api.html#matplotlib.spines.Spine.linear_spine" title="matplotlib.spines.Spine.linear_spine" class="sphx-glr-backref-module-matplotlib-spines sphx-glr-backref-type-py-method"><span class="n">mspines</span><span class="o">.</span><span class="n">Spine</span><span class="o">.</span><span class="n">linear_spine</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">)}</span>
         <span class="k">return</span> <span class="n">spines</span>
 
-    <span class="k">def</span> <span class="nf">_set_lim_and_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_lim_and_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is called once when the plot is created to set up all the</span>
 <span class="sd">        transforms for the data, text and grids.</span>
@@ -1237,11 +1238,11 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">lower_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lower_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">viewLim</span><span class="o">.</span><span class="n">intervalx</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">upper_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upper_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">pts</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transDataToAxes</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pts</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
 
@@ -1251,12 +1252,12 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="c1"># Now make a simple example using the custom projection.</span>
-    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/io.html#io.StringIO" title="io.StringIO" class="sphx-glr-backref-module-io sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StringIO</span></a>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/io.html#io.StringIO" title="io.StringIO" class="sphx-glr-backref-module-io sphx-glr-backref-type-py-class"><span class="n">StringIO</span></a>
 
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-    <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator" title="matplotlib.ticker.MultipleLocator" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-class"><span class="n">MultipleLocator</span></a><span class="p">,</span> <a href="../../api/ticker_api.html#matplotlib.ticker.NullFormatter" title="matplotlib.ticker.NullFormatter" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-class"><span class="n">NullFormatter</span></a><span class="p">,</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><a href="../../api/ticker_api.html#matplotlib.ticker.MultipleLocator" title="matplotlib.ticker.MultipleLocator" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-class"><span class="n">MultipleLocator</span></a><span class="p">,</span> <a href="../../api/ticker_api.html#matplotlib.ticker.NullFormatter" title="matplotlib.ticker.NullFormatter" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-class"><span class="n">NullFormatter</span></a><span class="p">,</span>
                                    <a href="../../api/ticker_api.html#matplotlib.ticker.ScalarFormatter" title="matplotlib.ticker.ScalarFormatter" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-class"><span class="n">ScalarFormatter</span></a><span class="p">)</span>
 
     <span class="c1"># Some example data.</span>
@@ -1337,8 +1338,8 @@ a bunch of custom classes for ticks, spines, and axis to handle this.</p>
 <span class="s1">    &#39;&#39;&#39;</span>
 
     <span class="c1"># Parse the data</span>
-    <span class="n">sound_data</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/io.html#io.StringIO" title="io.StringIO" class="sphx-glr-backref-module-io sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StringIO</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_txt</span></a><span class="p">)</span>
-    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">T</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Td</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.loadtxt.html#numpy.loadtxt" title="numpy.loadtxt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span></a><span class="p">(</span><span class="n">sound_data</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/io.html#io.StringIO" title="io.StringIO" class="sphx-glr-backref-module-io sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sound_data</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/io.html#io.StringIO" title="io.StringIO" class="sphx-glr-backref-module-io sphx-glr-backref-type-py-class"><span class="n">StringIO</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_txt</span></a><span class="p">)</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">T</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Td</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.loadtxt.html#numpy.loadtxt" title="numpy.loadtxt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/io.html#io.StringIO" title="io.StringIO" class="sphx-glr-backref-module-io sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sound_data</span></a><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Create a new figure. The dimensions here give a good aspect ratio</span>
     <a href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <a href="../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.5875</span><span class="p">,</span> <span class="mf">6.2125</span><span class="p">))</span>
@@ -1379,7 +1380,6 @@ in this example:</p>
 <li><p><a class="reference internal" href="../../api/projections_api.html#matplotlib.projections.register_projection" title="matplotlib.projections.register_projection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.projections.register_projection</span></code></a></p></li>
 </ul>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.168 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-gallery-specialty-plots-skewt-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/11cd5287e12be054c10233b646917055/skewt.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">skewt.ipynb</span></code></a></p>
@@ -1428,7 +1428,7 @@ in this example:</p>
 
   <p class="copyright">
     
-      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2024 The Matplotlib development team.
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2025 The Matplotlib development team.
       <br/>
     
   </p>
@@ -1444,7 +1444,7 @@ in this example:</p>
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Built from v3.10.0-8-g90ca931035.
+    Built from v3.10.0-9-g51950c0b15.
     <br/>
   </p>
 </div>

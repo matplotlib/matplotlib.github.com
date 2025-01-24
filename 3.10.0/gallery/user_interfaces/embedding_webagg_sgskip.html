@@ -7,6 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="codex" name="keywords" />
 
     <title>Embedding WebAgg &#8212; Matplotlib 3.10.0 documentation</title>
   
@@ -28,10 +29,10 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=86e00652" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css?v=7f9a90b1" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -55,7 +56,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'gallery/user_interfaces/embedding_webagg_sgskip';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-8-g90ca931035';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.0-9-g51950c0b15';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '3.10.0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
@@ -69,7 +70,7 @@
     <link rel="prev" title="Embed in wx #5" href="embedding_in_wx5_sgskip.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Dec 18, 2024"/>
+    <meta name="docbuild:last-update" content="Jan 24, 2025"/>
   </head>
   
   
@@ -1115,32 +1116,32 @@ in your own web application and framework.  It is not necessary to do all this
 if you merely want to display a plot in a browser or use Matplotlib's built-in
 Tornado-based server &quot;on the side&quot;.</p>
 <p>The framework being used must support web sockets.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">mimetypes</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a>
-<span class="kn">import</span> <span class="nn">signal</span>
-<span class="kn">import</span> <span class="nn">socket</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mimetypes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a>
+<span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">socket</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">tornado</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tornado</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;This example requires tornado.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;This example requires tornado.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
 <span class="kn">import</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpserver</span>
-<span class="kn">import</span> <span class="nn">tornado.ioloop</span>
-<span class="kn">import</span> <span class="nn">tornado.web</span>
-<span class="kn">import</span> <span class="nn">tornado.websocket</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tornado.ioloop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tornado.web</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tornado.websocket</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_webagg</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.backends.backend_webagg</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FigureManagerWebAgg</span><span class="p">,</span> <span class="n">new_figure_manager_given_figure</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <a href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Figure</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Figure</span></a>
 
 
-<span class="k">def</span> <span class="nf">create_figure</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_figure</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a simple example figure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1217,20 +1218,20 @@ Tornado-based server &quot;on the side&quot;.</p>
 <span class="s2">&quot;&quot;&quot;</span>
 
 
-<span class="k">class</span> <span class="nc">MyApplication</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.Application" title="tornado.web.Application" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">Application</span></a><span class="p">):</span>
-    <span class="k">class</span> <span class="nc">MainPage</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.RequestHandler" title="tornado.web.RequestHandler" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span></a><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyApplication</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.Application" title="tornado.web.Application" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">Application</span></a><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">MainPage</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.RequestHandler" title="tornado.web.RequestHandler" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span></a><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serves the main HTML page.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">manager</span>
             <span class="n">ws_uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ws://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">/&quot;</span>
             <span class="n">content</span> <span class="o">=</span> <span class="n">html_content</span> <span class="o">%</span> <span class="p">{</span>
                 <span class="s2">&quot;ws_uri&quot;</span><span class="p">:</span> <span class="n">ws_uri</span><span class="p">,</span> <span class="s2">&quot;fig_id&quot;</span><span class="p">:</span> <span class="n">manager</span><span class="o">.</span><span class="n">num</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
 
-    <span class="k">class</span> <span class="nc">MplJs</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.RequestHandler" title="tornado.web.RequestHandler" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span></a><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">MplJs</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.RequestHandler" title="tornado.web.RequestHandler" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span></a><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serves the generated matplotlib javascript file.  The content</span>
 <span class="sd">        is dynamically generated based on which toolbar functions the</span>
@@ -1238,18 +1239,18 @@ Tornado-based server &quot;on the side&quot;.</p>
 <span class="sd">        content.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;application/javascript&#39;</span><span class="p">)</span>
             <span class="n">js_content</span> <span class="o">=</span> <span class="n">FigureManagerWebAgg</span><span class="o">.</span><span class="n">get_javascript</span><span class="p">()</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">js_content</span><span class="p">)</span>
 
-    <span class="k">class</span> <span class="nc">Download</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.RequestHandler" title="tornado.web.RequestHandler" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span></a><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Download</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/web.html#tornado.web.RequestHandler" title="tornado.web.RequestHandler" class="sphx-glr-backref-module-tornado-web sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span></a><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handles downloading of the figure in various file formats.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">manager</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span>
                 <span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="n">mimetypes</span><span class="o">.</span><span class="n">types_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="s1">&#39;binary&#39;</span><span class="p">))</span>
@@ -1257,7 +1258,7 @@ Tornado-based server &quot;on the side&quot;.</p>
             <span class="n">manager</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">buff</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
 
-    <span class="k">class</span> <span class="nc">WebSocket</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/websocket.html#tornado.websocket.WebSocketHandler" title="tornado.websocket.WebSocketHandler" class="sphx-glr-backref-module-tornado-websocket sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">WebSocketHandler</span></a><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">WebSocket</span><span class="p">(</span><a href="https://www.tornadoweb.org/en/stable/websocket.html#tornado.websocket.WebSocketHandler" title="tornado.websocket.WebSocketHandler" class="sphx-glr-backref-module-tornado-websocket sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tornado</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">WebSocketHandler</span></a><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A websocket for interactive communication between the plot in</span>
 <span class="sd">        the browser and the server.</span>
@@ -1276,20 +1277,20 @@ Tornado-based server &quot;on the side&quot;.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">supports_binary</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="c1"># Register the websocket with the FigureManager.</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">manager</span>
             <span class="n">manager</span><span class="o">.</span><span class="n">add_web_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;set_nodelay&#39;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_nodelay</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="c1"># When the socket is closed, deregister the websocket with</span>
             <span class="c1"># the FigureManager.</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">manager</span>
             <span class="n">manager</span><span class="o">.</span><span class="n">remove_web_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
             <span class="c1"># The &#39;supports_binary&#39; message is relevant to the</span>
             <span class="c1"># websocket itself.  The other messages get passed along</span>
             <span class="c1"># to matplotlib as-is.</span>
@@ -1302,10 +1303,10 @@ Tornado-based server &quot;on the side&quot;.</p>
                 <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">manager</span>
                 <span class="n">manager</span><span class="o">.</span><span class="n">handle_json</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">send_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">send_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write_message</span><span class="p">(</span><a href="https://docs.python.org/3/library/json.html#json.dumps" title="json.dumps" class="sphx-glr-backref-module-json sphx-glr-backref-type-py-function"><span class="n">json</span><span class="o">.</span><span class="n">dumps</span></a><span class="p">(</span><span class="n">content</span><span class="p">))</span>
 
-        <span class="k">def</span> <span class="nf">send_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">send_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">supports_binary</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_message</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1313,7 +1314,7 @@ Tornado-based server &quot;on the side&quot;.</p>
                             <span class="n">blob</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_message</span><span class="p">(</span><span class="n">data_uri</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="n">figure</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">new_figure_manager_given_figure</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">figure</span><span class="p">),</span> <span class="n">figure</span><span class="p">)</span>
 
@@ -1364,7 +1365,7 @@ Tornado-based server &quot;on the side&quot;.</p>
 
     <span class="n">ioloop</span> <span class="o">=</span> <a href="https://www.tornadoweb.org/en/stable/ioloop.html#tornado.ioloop.IOLoop.instance" title="tornado.ioloop.IOLoop.instance" class="sphx-glr-backref-module-tornado-ioloop-IOLoop sphx-glr-backref-type-py-method"><span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span></a><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">():</span>
         <span class="n">ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Server stopped&quot;</span><span class="p">)</span>
 
@@ -1426,7 +1427,7 @@ Tornado-based server &quot;on the side&quot;.</p>
 
   <p class="copyright">
     
-      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2024 The Matplotlib development team.
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2025 The Matplotlib development team.
       <br/>
     
   </p>
@@ -1442,7 +1443,7 @@ Tornado-based server &quot;on the side&quot;.</p>
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Built from v3.10.0-8-g90ca931035.
+    Built from v3.10.0-9-g51950c0b15.
     <br/>
   </p>
 </div>
