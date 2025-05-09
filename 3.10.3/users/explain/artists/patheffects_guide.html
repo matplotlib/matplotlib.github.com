@@ -1,0 +1,820 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Path effects guide &#8212; Matplotlib 3.10.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/style.css?v=86e00652" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mpl.css?v=d3052f62" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=cf2814c6"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=ccdb6887"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="matplotlib.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'users/explain/artists/patheffects_guide';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.3-2-g3b85ba4365';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '3.10.3';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/users/explain/artists/patheffects_guide.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.10.3 documentation"
+          href="../../../_static/opensearch.xml"/>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="origin and extent in imshow" href="imshow_extent.html" />
+    <link rel="prev" title="Path Tutorial" href="paths.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="May 09, 2025"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="https://matplotlib.org/stable/">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo_light.svg" class="logo__image only-light" alt="Matplotlib 3.10.3 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/logo_dark.svg" class="logo__image only-dark" alt="Matplotlib 3.10.3 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../release_notes.html">Releases</a>
+  </li>
+</ul></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../release_notes.html">Releases</a>
+  </li>
+</ul></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-3"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-3"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-3"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-3">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start guide</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../figure/index.html">Figures and backends</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../figure/figure_intro.html">Introduction to figures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../figure/backends.html">Output backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../figure/api_interfaces.html">Matplotlib Application Interfaces (APIs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../figure/interactive.html">Interacting with figures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../figure/interactive_guide.html">Interactive figures and asynchronous programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../figure/event_handling.html">Event handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../figure/writing_a_backend_pyplot_interface.html">Writing a backend -- the pyplot interface</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../axes/index.html">Axes and subplots</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../axes/axes_intro.html">Introduction to Axes (or Subplots)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/arranging_axes.html">Arranging multiple Axes in a Figure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/colorbar_placement.html">Placing colorbars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/autoscale.html">Autoscaling axes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/axes_scales.html">Axis scales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/axes_ticks.html">Axis ticks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/axes_units.html">Plotting dates and strings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/legend_guide.html">Legends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/mosaic.html">Subplot mosaic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/constrainedlayout_guide.html">Constrained layout guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../axes/tight_layout_guide.html">Tight layout guide (mildly discouraged)</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Artists</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="artist_intro.html">Introduction to Artists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="color_cycle.html">Automated color cycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html">Optimizing Artists for performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paths.html">Paths</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Path effects guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imshow_extent.html">Understanding the extent keyword argument of imshow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms_tutorial.html">Transformations Tutorial</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../customizing.html">Customizing Matplotlib with style sheets and rcParams</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../colors/index.html">Colors</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../colors/colors.html">Specifying colors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../colors/colorbar_only.html">Customized Colorbars Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../colors/colormap-manipulation.html">Creating Colormaps in Matplotlib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../colors/colormapnorms.html">Colormap normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../colors/colormaps.html">Choosing Colormaps in Matplotlib</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../text/index.html">Text</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../text/text_intro.html">Text in Matplotlib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../text/text_props.html">Text properties and layout</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../text/annotations.html">Annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../text/fonts.html">Fonts in Matplotlib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../text/mathtext.html">Writing mathematical expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../text/pgf.html">Text rendering with XeLaTeX/LuaLaTeX via the <code class="docutils literal notranslate"><span class="pre">pgf</span></code> backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../text/usetex.html">Text rendering with LaTeX</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../animations/index.html">Animations using Matplotlib</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../animations/animations.html">Animations using Matplotlib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../animations/blitting.html">Faster rendering by using blitting</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../toolkits/index.html">User Toolkits</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../toolkits/axisartist.html">The axisartist toolkit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolkits/axes_grid.html">The axes_grid1 toolkit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolkits/mplot3d.html">The mplot3d toolkit</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../install/index.html">Installation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/environment_variables_faq.html">Environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/dependencies.html">Dependencies</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Using Matplotlib</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Artists</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Path effects guide</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-users-explain-artists-patheffects-guide-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="path-effects-guide">
+<span id="patheffects-guide"></span><span id="sphx-glr-users-explain-artists-patheffects-guide-py"></span><h1>Path effects guide<a class="headerlink" href="#path-effects-guide" title="Link to this heading">#</a></h1>
+<p>Defining paths that objects follow on a canvas.</p>
+<p>Matplotlib's <a class="reference internal" href="../../../api/patheffects_api.html#module-matplotlib.patheffects" title="matplotlib.patheffects"><code class="xref py py-mod docutils literal notranslate"><span class="pre">patheffects</span></code></a> module provides functionality to apply a
+multiple draw stage to any Artist which can be rendered via a <a class="reference internal" href="../../../api/path_api.html#matplotlib.path.Path" title="matplotlib.path.Path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path.Path</span></code></a>.</p>
+<p>Artists which can have a path effect applied to them include <a class="reference internal" href="../../../api/_as_gen/matplotlib.patches.Patch.html#matplotlib.patches.Patch" title="matplotlib.patches.Patch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">patches.Patch</span></code></a>,
+<a class="reference internal" href="../../../api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="matplotlib.lines.Line2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lines.Line2D</span></code></a>, <a class="reference internal" href="../../../api/collections_api.html#matplotlib.collections.Collection" title="matplotlib.collections.Collection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.Collection</span></code></a> and even <a class="reference internal" href="../../../api/text_api.html#matplotlib.text.Text" title="matplotlib.text.Text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">text.Text</span></code></a>. Each artist's
+path effects can be controlled via the <a class="reference internal" href="../../../api/_as_gen/matplotlib.artist.Artist.set_path_effects.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Artist.set_path_effects</span></code></a> method,
+which takes an iterable of <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.AbstractPathEffect" title="matplotlib.patheffects.AbstractPathEffect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractPathEffect</span></code></a> instances.</p>
+<p>The simplest path effect is the <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.Normal" title="matplotlib.patheffects.Normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Normal</span></code></a> effect, which simply draws the artist
+without any effect:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">path_effects</span>
+
+<a href="../../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <a href="../../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
+<a href="../../../api/text_api.html#matplotlib.text.Text" title="matplotlib.text.Text" class="sphx-glr-backref-module-matplotlib-text sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">text</span></a> <span class="o">=</span> <a href="../../../api/_as_gen/matplotlib.figure.Figure.text.html#matplotlib.figure.Figure.text" title="matplotlib.figure.Figure.text" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Hello path effects world!</span><span class="se">\n</span><span class="s1">This is the normal &#39;</span>
+                          <span class="s1">&#39;path effect.</span><span class="se">\n</span><span class="s1">Pretty dull, huh?&#39;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<a href="../../../api/_as_gen/matplotlib.artist.Artist.set_path_effects.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects" class="sphx-glr-backref-module-matplotlib-artist sphx-glr-backref-type-py-method"><span class="n">text</span><span class="o">.</span><span class="n">set_path_effects</span></a><span class="p">([</span><a href="../../../api/patheffects_api.html#matplotlib.patheffects.Normal" title="matplotlib.patheffects.Normal" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">Normal</span></a><span class="p">()])</span>
+<a href="../../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_patheffects_guide_001.png" srcset="../../../_images/sphx_glr_patheffects_guide_001.png, ../../../_images/sphx_glr_patheffects_guide_001_2_00x.png 2.00x" alt="patheffects guide" class = "sphx-glr-single-img"/><p>Whilst the plot doesn't look any different to what you would expect without
+any path effects, the drawing of the text has now been changed to use the
+path effects framework, opening up the possibilities for more interesting
+examples.</p>
+<section id="adding-a-shadow">
+<h2>Adding a shadow<a class="headerlink" href="#adding-a-shadow" title="Link to this heading">#</a></h2>
+<p>A far more interesting path effect than <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.Normal" title="matplotlib.patheffects.Normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Normal</span></code></a> is the drop-shadow, which we
+can apply to any of our path based artists. The classes <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.SimplePatchShadow" title="matplotlib.patheffects.SimplePatchShadow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimplePatchShadow</span></code></a>
+and <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.SimpleLineShadow" title="matplotlib.patheffects.SimpleLineShadow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimpleLineShadow</span></code></a> do precisely this by drawing either a filled patch or
+a line patch below the original artist:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">path_effects</span>
+
+<a href="../../../api/text_api.html#matplotlib.text.Text" title="matplotlib.text.Text" class="sphx-glr-backref-module-matplotlib-text sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">text</span></a> <span class="o">=</span> <a href="../../../api/_as_gen/matplotlib.pyplot.text.html#matplotlib.pyplot.text" title="matplotlib.pyplot.text" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Hello path effects world!&#39;</span><span class="p">,</span>
+                <span class="n">path_effects</span><span class="o">=</span><span class="p">[</span><a href="../../../api/patheffects_api.html#matplotlib.patheffects.withSimplePatchShadow" title="matplotlib.patheffects.withSimplePatchShadow" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">withSimplePatchShadow</span></a><span class="p">()])</span>
+
+<a href="../../../api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+         <span class="n">path_effects</span><span class="o">=</span><span class="p">[</span><a href="../../../api/patheffects_api.html#matplotlib.patheffects.SimpleLineShadow" title="matplotlib.patheffects.SimpleLineShadow" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">SimpleLineShadow</span></a><span class="p">(),</span>
+                       <a href="../../../api/patheffects_api.html#matplotlib.patheffects.Normal" title="matplotlib.patheffects.Normal" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">Normal</span></a><span class="p">()])</span>
+<a href="../../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_patheffects_guide_002.png" srcset="../../../_images/sphx_glr_patheffects_guide_002.png, ../../../_images/sphx_glr_patheffects_guide_002_2_00x.png 2.00x" alt="patheffects guide" class = "sphx-glr-single-img"/><p>Notice the two approaches to setting the path effects in this example. The
+first uses the <code class="docutils literal notranslate"><span class="pre">with*</span></code> classes to include the desired functionality
+automatically followed with the &quot;normal&quot; effect, whereas the latter
+explicitly defines the two path effects to draw.</p>
+</section>
+<section id="making-an-artist-stand-out">
+<h2>Making an Artist stand out<a class="headerlink" href="#making-an-artist-stand-out" title="Link to this heading">#</a></h2>
+<p>One nice way of making artists visually stand out is to draw an outline in
+a bold color below the actual artist. The <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.Stroke" title="matplotlib.patheffects.Stroke"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stroke</span></code></a> path effect makes
+this a relatively simple task:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <a href="../../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<a href="../../../api/text_api.html#matplotlib.text.Text" title="matplotlib.text.Text" class="sphx-glr-backref-module-matplotlib-text sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">text</span></a> <span class="o">=</span> <a href="../../../api/_as_gen/matplotlib.figure.Figure.text.html#matplotlib.figure.Figure.text" title="matplotlib.figure.Figure.text" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;This text stands out because of</span><span class="se">\n</span><span class="s1">&#39;</span>
+                          <span class="s1">&#39;its black border.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+                          <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<a href="../../../api/_as_gen/matplotlib.artist.Artist.set_path_effects.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects" class="sphx-glr-backref-module-matplotlib-artist sphx-glr-backref-type-py-method"><span class="n">text</span><span class="o">.</span><span class="n">set_path_effects</span></a><span class="p">([</span><a href="../../../api/patheffects_api.html#matplotlib.patheffects.Stroke" title="matplotlib.patheffects.Stroke" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">Stroke</span></a><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">foreground</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">),</span>
+                       <a href="../../../api/patheffects_api.html#matplotlib.patheffects.Normal" title="matplotlib.patheffects.Normal" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">Normal</span></a><span class="p">()])</span>
+<a href="../../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_patheffects_guide_003.png" srcset="../../../_images/sphx_glr_patheffects_guide_003.png, ../../../_images/sphx_glr_patheffects_guide_003_2_00x.png 2.00x" alt="patheffects guide" class = "sphx-glr-single-img"/><p>It is important to note that this effect only works because we have drawn
+the text path twice; once with a thick black line, and then once with the
+original text path on top.</p>
+<p>You may have noticed that the keywords to <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.Stroke" title="matplotlib.patheffects.Stroke"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stroke</span></code></a> and <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.SimplePatchShadow" title="matplotlib.patheffects.SimplePatchShadow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimplePatchShadow</span></code></a>
+and <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.SimpleLineShadow" title="matplotlib.patheffects.SimpleLineShadow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimpleLineShadow</span></code></a> are not the usual Artist keywords (<em>facecolor</em>
+<em>edgecolor</em>, etc.). This is because with these path effects we are operating
+at lower level of Matplotlib. In fact, the keywords which are accepted are
+those for a <a class="reference internal" href="../../../api/backend_bases_api.html#matplotlib.backend_bases.GraphicsContextBase" title="matplotlib.backend_bases.GraphicsContextBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.backend_bases.GraphicsContextBase</span></code></a> instance, which
+have been designed for making it easy to create new backends - and not for
+its user interface.</p>
+</section>
+<section id="greater-control-of-the-path-effect-artist">
+<h2>Greater control of the path effect Artist<a class="headerlink" href="#greater-control-of-the-path-effect-artist" title="Link to this heading">#</a></h2>
+<p>As already mentioned, some of the path effects operate at a lower level
+than most users will be used to, meaning that setting keywords such as
+<em>facecolor</em> and <em>edgecolor</em> raise an AttributeError. Luckily there is a
+generic <a class="reference internal" href="../../../api/patheffects_api.html#matplotlib.patheffects.PathPatchEffect" title="matplotlib.patheffects.PathPatchEffect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathPatchEffect</span></code></a> path effect which creates a <a class="reference internal" href="../../../api/_as_gen/matplotlib.patches.PathPatch.html#matplotlib.patches.PathPatch" title="matplotlib.patches.PathPatch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">patches.PathPatch</span></code></a>
+class with the original path.  The keywords to this effect are identical to
+those of <a class="reference internal" href="../../../api/_as_gen/matplotlib.patches.PathPatch.html#matplotlib.patches.PathPatch" title="matplotlib.patches.PathPatch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">patches.PathPatch</span></code></a>:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <a href="../../../api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<a href="../../../api/text_api.html#matplotlib.text.Text" title="matplotlib.text.Text" class="sphx-glr-backref-module-matplotlib-text sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t</span></a> <span class="o">=</span> <a href="../../../api/_as_gen/matplotlib.figure.Figure.text.html#matplotlib.figure.Figure.text" title="matplotlib.figure.Figure.text" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Hatch shadow&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<a href="../../../api/_as_gen/matplotlib.artist.Artist.set_path_effects.html#matplotlib.artist.Artist.set_path_effects" title="matplotlib.artist.Artist.set_path_effects" class="sphx-glr-backref-module-matplotlib-artist sphx-glr-backref-type-py-method"><span class="n">t</span><span class="o">.</span><span class="n">set_path_effects</span></a><span class="p">([</span>
+    <a href="../../../api/patheffects_api.html#matplotlib.patheffects.PathPatchEffect" title="matplotlib.patheffects.PathPatchEffect" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">PathPatchEffect</span></a><span class="p">(</span>
+        <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">),</span> <span class="n">hatch</span><span class="o">=</span><span class="s1">&#39;xxxx&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">),</span>
+    <a href="../../../api/patheffects_api.html#matplotlib.patheffects.PathPatchEffect" title="matplotlib.patheffects.PathPatchEffect" class="sphx-glr-backref-module-matplotlib-patheffects sphx-glr-backref-type-py-class"><span class="n">path_effects</span><span class="o">.</span><span class="n">PathPatchEffect</span></a><span class="p">(</span>
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)])</span>
+<a href="../../../api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_patheffects_guide_004.png" srcset="../../../_images/sphx_glr_patheffects_guide_004.png, ../../../_images/sphx_glr_patheffects_guide_004_2_00x.png 2.00x" alt="patheffects guide" class = "sphx-glr-single-img"/><div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-users-explain-artists-patheffects-guide-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/b65d6b33e40d6e4514bfbd585d16bf06/patheffects_guide.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">patheffects_guide.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/d83c9d326d1def2bc076a8958cb7d12c/patheffects_guide.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">patheffects_guide.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/a756c01cee4d49484c737f5961a1694f/patheffects_guide.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">patheffects_guide.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-a-shadow">Adding a shadow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#making-an-artist-stand-out">Making an Artist stand out</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#greater-control-of-the-path-effect-artist">Greater control of the path effect Artist</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2025 The Matplotlib development team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Built from v3.10.3-2-g3b85ba4365.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
