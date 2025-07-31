@@ -1,0 +1,980 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pull request guidelines &#8212; Matplotlib 3.10.5 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=86e00652" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mpl.css?v=d3052f62" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=a0d90012"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=ccdb6887"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="matplotlib.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'devel/pr_guide';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.10.5-19-gb17b062388';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '3.10.5';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/devel/pr_guide.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.10.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Release guide" href="release_guide.html" />
+    <link rel="prev" title="Bug triaging and issue curation" href="triage.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jul 31, 2025"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="https://matplotlib.org/stable/">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo_light.svg" class="logo__image only-light" alt="Matplotlib 3.10.5 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_dark.svg" class="logo__image only-dark" alt="Matplotlib 3.10.5 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-3"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-3"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-3"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-3">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/matplotlib/" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing guide</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="development_setup.html">Setting up Matplotlib for development</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="development_workflow.html">Development workflow</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="coding_guide.html">Coding guidelines</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html">Licenses for contributed code</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="api_changes.html">API guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="document.html">Write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_guide.html">Documentation style guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tag_guidelines.html">Tagging guidelines</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="tag_glossary.html">Tag Glossary</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="triage.html">Bug triaging and issue curation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Pull request guidelines</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="release_guide.html">Release guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="communication_guide.html">Community management guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="min_dep_policy.html">Dependency version policy</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="MEP/index.html">Matplotlib Enhancement Proposals</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="MEP/template.html">MEP Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP08.html">MEP8: PEP8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP09.html">MEP9: Global interaction manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP10.html">MEP10: Docstring consistency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP11.html">MEP11: Third-party dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP12.html">MEP12: Improve Gallery and Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP13.html">MEP13: Use properties for Artists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP14.html">MEP14: Text handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP15.html">MEP15: Fix axis autoscaling when limits are specified for one axis only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP19.html">MEP19: Continuous Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP21.html">MEP21: color and cm refactor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP22.html">MEP22: Toolbar rewrite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP23.html">MEP23: Multiple Figures per GUI window</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP24.html">MEP24: Negative radius in polar plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP25.html">MEP25: Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP26.html">MEP26: Artist styling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP27.html">MEP27: Decouple pyplot from backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP28.html">MEP28: Remove Complexity from Axes.boxplot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEP/MEP29.html">MEP29: Text light markup</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Contribute</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Pull...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pull-request-guidelines">
+<span id="pr-guidelines"></span><h1>Pull request guidelines<a class="headerlink" href="#pull-request-guidelines" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://docs.github.com/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">Pull requests (PRs) on GitHub</a>
+are the mechanism for contributing to Matplotlib's code and documentation.</p>
+<p>We value contributions from people with all levels of experience. In particular,
+if this is your first PR not everything has to be perfect. We'll guide you
+through the PR process. Nevertheless, please try to follow our guidelines as well
+as you can to help make the PR process quick and smooth. If your pull request is
+incomplete or a work-in-progress, please mark it as a <a class="reference external" href="https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#draft-pull-requests">draft pull requests</a>
+on GitHub and specify what feedback from the developers would be helpful.</p>
+<p>Please be patient with reviewers. We try our best to respond quickly, but we have
+limited bandwidth. If there is no feedback within a couple of days, please ping
+us by posting a comment to your PR or reaching out on a <a class="reference internal" href="communication_guide.html#communication-channels"><span class="std std-ref">communication channel</span></a></p>
+<section id="summary-for-pull-request-authors">
+<span id="pr-author-guidelines"></span><h2>Summary for pull request authors<a class="headerlink" href="#summary-for-pull-request-authors" title="Link to this heading">#</a></h2>
+<p>We recommend that you check that your contribution complies with the following
+guidelines before submitting a pull request:</p>
+<ul class="checklist simple">
+<li><p>Changes, both new features and bugfixes, should have good test coverage. See
+<a class="reference internal" href="testing.html#testing"><span class="std std-ref">Testing</span></a> for more details.</p></li>
+<li><p>Update the <a class="reference internal" href="#pr-documentation"><span class="std std-ref">documentation</span></a> if necessary.</p></li>
+<li><p>All public methods should have informative docstrings with sample usage when
+appropriate. Use the <a class="reference internal" href="document.html#writing-docstrings"><span class="std std-ref">docstring standards</span></a>.</p></li>
+<li><p>For high-level plotting functions, consider adding a small example to the
+<a class="reference internal" href="../gallery/index.html#gallery"><span class="std std-ref">examples gallery</span></a>.</p></li>
+<li><p>If you add a major new feature or change the API in a backward-incompatible
+way, please document it as described in <a class="reference internal" href="api_changes.html#api-changes"><span class="std std-ref">API guidelines</span></a>.</p></li>
+<li><p>Code should follow our conventions as documented in our <a class="reference internal" href="coding_guide.html#coding-guidelines"><span class="std std-ref">Coding guidelines</span></a>.</p></li>
+<li><p>When adding or changing public function signatures, add <a class="reference internal" href="coding_guide.html#type-hints"><span class="std std-ref">type hints</span></a>.</p></li>
+<li><p>When adding keyword arguments, see our guide to <a class="reference internal" href="coding_guide.html#keyword-argument-processing"><span class="std std-ref">Keyword argument processing</span></a>.</p></li>
+</ul>
+<p>When opening a pull request on Github, please ensure that:</p>
+<ul class="checklist simple">
+<li><p>Changes were made on a <a class="reference internal" href="development_workflow.html#make-feature-branch"><span class="std std-ref">feature branch</span></a>.</p></li>
+<li><p><a class="reference internal" href="development_setup.html#pre-commit-hooks"><span class="std std-ref">pre-commit</span></a> checks for spelling, formatting, etc pass</p></li>
+<li><p>The pull request targets the <a class="reference internal" href="#pr-branch-selection"><span class="std std-ref">main branch</span></a></p></li>
+<li><p>If your pull request addresses an issue, please use the title to describe the
+issue (e.g. &quot;Add ability to plot timedeltas&quot;) and mention the issue number
+in the pull request description to ensure that a link is created to the
+original issue (e.g. &quot;Closes #8869&quot; or &quot;Fixes #8869&quot;). This will ensure the
+original issue mentioned is automatically closed when your PR is merged. For more
+details, see <a class="reference external" href="https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue">linking an issue and pull request</a>.</p></li>
+<li><p><a class="reference internal" href="#pr-automated-tests"><span class="std std-ref">Automated tests</span></a> pass</p></li>
+</ul>
+<p>For guidance on creating and managing a pull request, please see our
+<a class="reference internal" href="contribute.html#contributing"><span class="std std-ref">contributing</span></a> and <a class="reference internal" href="development_workflow.html#edit-flow"><span class="std std-ref">pull request workflow</span></a>
+guides.</p>
+</section>
+<section id="summary-for-pull-request-reviewers">
+<h2>Summary for pull request reviewers<a class="headerlink" href="#summary-for-pull-request-reviewers" title="Link to this heading">#</a></h2>
+<p><strong>Please help review and merge PRs!</strong></p>
+<p>If you have commit rights, then you are trusted to use them. Please be patient
+and <a class="reference external" href="https://youtu.be/tzFWz5fiVKU?t=49m30s">kind</a> with contributors.</p>
+<p>When reviewing, please ensure that the pull request satisfies the following
+requirements before merging it:</p>
+<section id="content">
+<h3>Content<a class="headerlink" href="#content" title="Link to this heading">#</a></h3>
+<ul class="checklist simple">
+<li><p>Is the feature / bugfix reasonable?</p></li>
+<li><p>Does the PR conform with the <a class="reference internal" href="coding_guide.html#coding-guidelines"><span class="std std-ref">Coding guidelines</span></a>?</p></li>
+<li><p>Is the <a class="reference internal" href="#pr-documentation"><span class="std std-ref">documentation</span></a> (docstrings, examples,
+what's new, API changes) updated?</p></li>
+<li><p>Is the change purely stylistic? Generally, such changes are discouraged when
+not part of other non-stylistic work because it obscures the git history of
+functional changes to the code. Reflowing a method or docstring as part of a
+larger refactor/rewrite is acceptable.</p></li>
+</ul>
+</section>
+<section id="workflow">
+<h3>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">#</a></h3>
+<ul class="checklist simple">
+<li><p>Make sure all <a class="reference internal" href="#pr-automated-tests"><span class="std std-ref">automated tests</span></a> pass.</p></li>
+<li><p>The PR should <a class="reference internal" href="#pr-branch-selection"><span class="std std-ref">target the main branch</span></a>.</p></li>
+<li><p>Tag with descriptive <a class="reference internal" href="#pr-labels"><span class="std std-ref">labels</span></a>.</p></li>
+<li><p>Set the <a class="reference internal" href="#pr-milestones"><span class="std std-ref">milestone</span></a>.</p></li>
+<li><p>Keep an eye on the <a class="reference internal" href="#pr-squashing"><span class="std std-ref">number of commits</span></a>.</p></li>
+<li><p>Approve if all of the above topics are handled.</p></li>
+<li><p><a class="reference internal" href="#pr-merging"><span class="std std-ref">Merge</span></a> if a sufficient number of approvals is reached.</p></li>
+</ul>
+</section>
+</section>
+<section id="detailed-guidelines">
+<span id="pr-guidelines-details"></span><h2>Detailed guidelines<a class="headerlink" href="#detailed-guidelines" title="Link to this heading">#</a></h2>
+<section id="documentation">
+<span id="pr-documentation"></span><h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Every new feature should be documented.  If it's a new module, don't
+forget to add a new rst file to the API docs.</p></li>
+<li><p>Each high-level plotting function should have a small example in
+the <code class="docutils literal notranslate"><span class="pre">Examples</span></code> section of the docstring.  This should be as simple as
+possible to demonstrate the method.  More complex examples should go into
+a dedicated example file in the <code class="file docutils literal notranslate"><span class="pre">examples</span></code> directory, which will be
+rendered to the examples gallery in the documentation.</p></li>
+<li><p>Build the docs and make sure all formatting warnings are addressed.</p></li>
+<li><p>See <a class="reference internal" href="document.html#documenting-matplotlib"><span class="std std-ref">Write documentation</span></a> for our documentation style guide.</p></li>
+</ul>
+</section>
+<section id="labels">
+<span id="pr-labels"></span><h3>Labels<a class="headerlink" href="#labels" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>If you have the rights to set labels, tag the PR with descriptive labels.
+See the <a class="reference external" href="https://github.com/matplotlib/matplotlib/labels">list of labels</a>.</p></li>
+<li><p>If the PR makes changes to the wheel building Action, add the
+&quot;Run cibuildwheel&quot; label to enable testing wheels.</p></li>
+</ul>
+</section>
+<section id="milestones">
+<span id="pr-milestones"></span><h3>Milestones<a class="headerlink" href="#milestones" title="Link to this heading">#</a></h3>
+<p>Set the milestone according to these guidelines:</p>
+<ul class="simple">
+<li><p><em>New features and API changes</em> are milestoned for the next meso release
+<code class="docutils literal notranslate"><span class="pre">v3.N.0</span></code>.</p></li>
+<li><p><em>Bugfixes, tests for released code, and docstring changes</em> may be milestoned
+for the next micro release <code class="docutils literal notranslate"><span class="pre">v3.N.M</span></code>.</p></li>
+<li><p><em>Documentation changes</em> (only .rst files and examples) may be milestoned
+<code class="docutils literal notranslate"><span class="pre">v3.N-doc</span></code>.</p></li>
+</ul>
+<p>If multiple rules apply, choose the first matching from the above list.  See
+<a class="reference internal" href="#backport-strategy"><span class="std std-ref">Backport strategy</span></a> for detailed guidance on what should or should not be
+backported.</p>
+<p>The milestone marks the release a PR should go into.  It states intent, but can
+be changed because of release planning or re-evaluation of the PR scope and
+maturity.</p>
+<p>All Pull Requests should target the main branch. The milestone tag triggers
+an <a class="reference internal" href="#automated-backports"><span class="std std-ref">automatic backport</span></a> for milestones which have
+a corresponding branch.</p>
+</section>
+<section id="merging">
+<span id="pr-merging"></span><h3>Merging<a class="headerlink" href="#merging" title="Link to this heading">#</a></h3>
+<p>As a guiding principle, we require two <a class="reference external" href="https://docs.github.com/en/github/collaborating-with-pull-requests/reviewing-changes-in-pull-requests">approvals</a> from core developers (those
+with commit rights) before merging a pull request. This two-pairs-of-eyes
+strategy shall ensure a consistent project direction and prevent accidental
+mistakes. It is permissible to merge with one approval if the change is not
+fundamental and can easily be reverted at any time in the future.</p>
+<p>Some explicit rules following from this:</p>
+<ul>
+<li><p><em>Documentation and examples</em> may be merged with a single approval.  Use
+the threshold &quot;is this better than it was?&quot; as the review criteria.</p></li>
+<li><p>Minor <em>infrastructure updates</em>, e.g. temporary pinning of broken dependencies
+or small changes to the CI configuration, may be merged with a single
+approval.</p></li>
+<li><p><em>Code changes</em> (anything in <code class="docutils literal notranslate"><span class="pre">src</span></code> or <code class="docutils literal notranslate"><span class="pre">lib</span></code>) must have two approvals.</p>
+<p>Ensure that all API changes are documented in a file in one of the
+subdirectories of <code class="file docutils literal notranslate"><span class="pre">doc/api/next_api_changes</span></code>, and significant new
+features have an entry in <code class="file docutils literal notranslate"><span class="pre">doc/user/whats_new</span></code>.</p>
+<ul>
+<li><p>If a PR already has a positive review, a core developer (e.g. the first
+reviewer, but not necessarily) may champion that PR for merging.  In order
+to do so, they should ping all core devs both on GitHub and on the dev
+mailing list, and label the PR with the &quot;Merge with single review?&quot; label.
+Other core devs can then either review the PR and merge or reject it, or
+simply request that it gets a second review before being merged.  If no one
+asks for such a second review within a week, the PR can then be merged on
+the basis of that single review.</p>
+<p>A core dev should only champion one PR at a time and we should try to keep
+the flow of championed PRs reasonable.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>After giving the last required approval, the author of the approval should
+merge the PR. PR authors should not self-merge except for when another reviewer
+explicitly allows it (e.g., &quot;Approve modulo CI passing, may self merge when
+green&quot;, or &quot;Take or leave the comments. You may self merge&quot;.).</p>
+</section>
+<section id="automated-tests">
+<span id="pr-automated-tests"></span><h3>Automated tests<a class="headerlink" href="#automated-tests" title="Link to this heading">#</a></h3>
+<p>Before being merged, a PR should pass the <a class="reference internal" href="development_workflow.html#automated-tests"><span class="std std-ref">Automated tests</span></a>. If you are
+unsure why a test is failing, ask on the PR or in our <a class="reference internal" href="communication_guide.html#communication-channels"><span class="std std-ref">Official communication channels</span></a></p>
+</section>
+<section id="number-of-commits-and-squashing">
+<span id="pr-squashing"></span><h3>Number of commits and squashing<a class="headerlink" href="#number-of-commits-and-squashing" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Squashing is case-by-case.  The balance is between burden on the
+contributor, keeping a relatively clean history, and keeping a
+history usable for bisecting.  The only time we are really strict
+about it is to eliminate binary files (ex multiple test image
+re-generations) and to remove upstream merges.</p></li>
+<li><p>Do not let perfect be the enemy of the good, particularly for
+documentation or example PRs.  If you find yourself making many
+small suggestions, either open a PR against the original branch,
+push changes to the contributor branch, or merge the PR and then
+open a new PR against upstream.</p></li>
+<li><p>If you push to a contributor branch leave a comment explaining what
+you did, ex &quot;I took the liberty of pushing a small clean-up PR to
+your branch, thanks for your work.&quot;.  If you are going to make
+substantial changes to the code or intent of the PR please check
+with the contributor first.</p></li>
+</ul>
+</section>
+</section>
+<section id="branches-and-backports">
+<span id="id1"></span><h2>Branches and backports<a class="headerlink" href="#branches-and-backports" title="Link to this heading">#</a></h2>
+<section id="current-branches">
+<h3>Current branches<a class="headerlink" href="#current-branches" title="Link to this heading">#</a></h3>
+<p>The current active branches are</p>
+<dl class="simple">
+<dt><em>main</em></dt><dd><p>The current development version. Future meso (<em>v3.N.0</em>) or macro (<em>v4.0.0</em>) will be
+branched from this.</p>
+</dd>
+<dt><em>v3.N.x</em></dt><dd><p>Maintenance branch for Matplotlib 3.N. Future micro releases will be
+tagged from this.</p>
+</dd>
+<dt><em>v3.N.M-doc</em></dt><dd><p>Documentation for the current micro release.  On a micro release, this will be
+replaced by a properly named branch for the new release.</p>
+</dd>
+</dl>
+</section>
+<section id="branch-selection-for-pull-requests">
+<span id="pr-branch-selection"></span><h3>Branch selection for pull requests<a class="headerlink" href="#branch-selection-for-pull-requests" title="Link to this heading">#</a></h3>
+<p>Generally, all pull requests should target the main branch.</p>
+<p>Other branches are fed through <a class="reference internal" href="#automated-backports"><span class="std std-ref">automatic</span></a> or
+<a class="reference internal" href="#manual-backports"><span class="std std-ref">manual</span></a>. Directly
+targeting other branches is only rarely necessary for special maintenance
+work.</p>
+</section>
+<section id="backport-strategy">
+<span id="id2"></span><h3>Backport strategy<a class="headerlink" href="#backport-strategy" title="Link to this heading">#</a></h3>
+<p>Backports to the micro release branch (<em>v3.N.x</em>) are the changes that will be
+included in the next patch (aka bug-fix) release.  The goal of the patch
+releases is to fix bugs without adding any new regressions or behavior changes.
+We will always attempt to backport:</p>
+<ul class="simple">
+<li><p>critical bug fixes (segfault, failure to import, things that the
+user cannot work around)</p></li>
+<li><p>fixes for regressions introduced in the last two meso releases</p></li>
+</ul>
+<p>and may attempt to backport fixes for regressions introduced in older releases.</p>
+<p>In the case where the backport is not clean, for example if the bug fix is
+built on top of other code changes we do not want to backport, balance the
+effort and risk of re-implementing the bug fix vs the severity of the bug.
+When in doubt, err on the side of not backporting.</p>
+<p>When backporting a Pull Request fails or is declined, re-milestone the original
+PR to the next meso release and leave a comment explaining why.</p>
+<p>The only changes backported to the documentation branch (<em>v3.N.M-doc</em>)
+are changes to <code class="file docutils literal notranslate"><span class="pre">doc</span></code> or <code class="file docutils literal notranslate"><span class="pre">galleries</span></code>.  Any changes to <code class="file docutils literal notranslate"><span class="pre">lib</span></code>
+or <code class="file docutils literal notranslate"><span class="pre">src</span></code>, including docstring-only changes, must not be backported to
+this branch.</p>
+</section>
+<section id="automated-backports">
+<span id="id3"></span><h3>Automated backports<a class="headerlink" href="#automated-backports" title="Link to this heading">#</a></h3>
+<p>We use MeeseeksDev bot to automatically backport merges to the correct
+maintenance branch base on the milestone.  To work properly the
+milestone must be set before merging.  If you have commit rights, the
+bot can also be manually triggered after a merge by leaving a message
+<code class="docutils literal notranslate"><span class="pre">&#64;meeseeksdev</span> <span class="pre">backport</span> <span class="pre">to</span> <span class="pre">BRANCH</span></code> on the PR.  If there are conflicts
+MeeseeksDev will inform you that the backport needs to be done
+manually.</p>
+<p>The target branch is configured by putting <code class="docutils literal notranslate"><span class="pre">on-merge:</span> <span class="pre">backport</span> <span class="pre">to</span>
+<span class="pre">TARGETBRANCH</span></code> in the milestone description on it's own line.</p>
+<p>If the bot is not working as expected, please report issues to
+<a class="reference external" href="https://github.com/MeeseeksBox/MeeseeksDev">MeeseeksDev</a>.</p>
+</section>
+<section id="manual-backports">
+<span id="id4"></span><h3>Manual backports<a class="headerlink" href="#manual-backports" title="Link to this heading">#</a></h3>
+<p>When doing backports please copy the form used by MeeseeksDev,
+<code class="docutils literal notranslate"><span class="pre">Backport</span> <span class="pre">PR</span> <span class="pre">#XXXX:</span> <span class="pre">TITLE</span> <span class="pre">OF</span> <span class="pre">PR</span></code>.  If you need to manually resolve
+conflicts make note of them and how you resolved them in the commit
+message.</p>
+<p>We do a backport from main to v2.2.x assuming:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> is a read-only remote branch of the matplotlib/matplotlib repo</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">TARGET_SHA</span></code> is the hash of the merge commit you would like to
+backport.  This can be read off of the GitHub PR page (in the UI with
+the merge notification) or through the git CLI tools.</p>
+<p>Assuming that you already have a local branch <code class="docutils literal notranslate"><span class="pre">v2.2.x</span></code> (if not, then
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">v2.2.x</span></code>), and that your remote pointing to
+<code class="docutils literal notranslate"><span class="pre">https://github.com/matplotlib/matplotlib</span></code> is called <code class="docutils literal notranslate"><span class="pre">upstream</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>fetch<span class="w"> </span>upstream
+git<span class="w"> </span>checkout<span class="w"> </span>v2.2.x<span class="w">  </span><span class="c1"># or include -b if you don&#39;t already have this.</span>
+git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>upstream/v2.2.x
+git<span class="w"> </span>cherry-pick<span class="w"> </span>-m<span class="w"> </span><span class="m">1</span><span class="w"> </span>TARGET_SHA
+<span class="c1"># resolve conflicts and commit if required</span>
+</pre></div>
+</div>
+<p>Files with conflicts can be listed by <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code>,
+and will have to be fixed by hand (search on <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;&gt;&gt;</span></code>).  Once
+the conflict is resolved, you will have to re-add the file(s) to the branch
+and then continue the cherry pick:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>lib/matplotlib/conflicted_file.py
+git<span class="w"> </span>add<span class="w"> </span>lib/matplotlib/conflicted_file2.py
+git<span class="w"> </span>cherry-pick<span class="w"> </span>--continue
+</pre></div>
+</div>
+<p>Use your discretion to push directly to upstream or to open a PR; be
+sure to push or PR against the <code class="docutils literal notranslate"><span class="pre">v2.2.x</span></code> upstream branch, not <code class="docutils literal notranslate"><span class="pre">main</span></code>!</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-for-pull-request-authors">Summary for pull request authors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-for-pull-request-reviewers">Summary for pull request reviewers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content">Content</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#detailed-guidelines">Detailed guidelines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#labels">Labels</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#milestones">Milestones</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#merging">Merging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-tests">Automated tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-commits-and-squashing">Number of commits and squashing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#branches-and-backports">Branches and backports</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#current-branches">Current branches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#branch-selection-for-pull-requests">Branch selection for pull requests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backport-strategy">Backport strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-backports">Automated backports</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-backports">Manual backports</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2025 The Matplotlib development team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Built from v3.10.5-19-gb17b062388.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
