@@ -1,0 +1,988 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>matplotlib.layout_engine &#8212; Matplotlib 3.11.0rc1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=522e7f4d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mpl.css?v=5a7e13c8" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=6987601a"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=ccdb6887"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/layout_engine_api';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.11.0rc1-1-g3217fe2227';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/api/layout_engine_api.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.11.0rc1 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="matplotlib.legend" href="legend_api.html" />
+    <link rel="prev" title="matplotlib.inset" href="inset_api.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="3.11.0rc1" />
+    <meta name="docbuild:last-update" content="Apr 24, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  
+  <div class="bd-header-announcement container-fluid" id="unreleased-message">
+    <div class="bd-header-announcement__content">
+      You are reading documentation for the unreleased version of Matplotlib.
+      <a href="https://matplotlib.org/search.html?q=matplotlib.layout_engine&amp;check_keywords=yes&amp;area=default">
+        Try searching for the released version of this page instead?
+      </a>
+    </div>
+  </div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="https://matplotlib.org/stable/">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo_light.svg" class="logo__image only-light" alt="Matplotlib 3.11.0rc1 documentation - Home"/>
+    <img src="../_static/logo_dark.svg" class="logo__image only-dark pst-js-only" alt="Matplotlib 3.11.0rc1 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="matplotlib_configuration_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.animation</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="artist_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.artist</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="axes_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.axes</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="axis_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.axis</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="backend_bases_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.backend_bases</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="backend_managers_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.backend_managers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="backend_tools_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.backend_tools</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="index_backend_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.backends</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bezier_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.bezier</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="category_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.category</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="cbook_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.cbook</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="cm_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.collections</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="colorbar_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.colorbar</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="colorizer_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.colorizer</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="colors_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="container_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.container</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="contour_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.contour</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="dates_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.dates</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="dviread.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.dviread</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="figure_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.figure</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="font_manager_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.font_manager</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="ft2font.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.ft2font</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gridspec_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.gridspec</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="hatch_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.hatch</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.image</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="inset_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.inset</span></code></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">matplotlib.layout_engine</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="legend_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.legend</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="legend_handler_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.legend_handler</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="lines_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.lines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="markers_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.markers</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="mathtext_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.mathtext</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlab_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.mlab</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="offsetbox_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.offsetbox</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="patches_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.patches</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="path_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.path</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="patheffects_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.patheffects</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyplot_summary.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="projections_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.projections</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="quiver_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.quiver</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="rcsetup_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.rcsetup</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sankey_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.sankey</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="scale_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.scale</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sphinxext_mathmpl_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.sphinxext.mathmpl</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sphinxext_plot_directive_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.sphinxext.plot_directive</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sphinxext_figmpl_directive_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.sphinxext.figmpl_directive</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sphinxext_roles.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.sphinxext.roles</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="spines_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.spines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.style</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="table_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.testing</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.text</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="texmanager_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.texmanager</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="ticker_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.ticker</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="transformations.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.transforms</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tri_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.tri</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="typing_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.typing</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="units_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.units</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib.widgets</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="_afm_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib._afm</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="_api_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib._api</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="_docstring_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib._docstring</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="_enums_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib._enums</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="_type1font.html"><code class="docutils literal notranslate"><span class="pre">matplotlib._type1font</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="_tight_bbox_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib._tight_bbox</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="_tight_layout_api.html"><code class="docutils literal notranslate"><span class="pre">matplotlib._tight_layout</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="toolkits/mplot3d.html"><code class="docutils literal notranslate"><span class="pre">mpl_toolkits.mplot3d</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="toolkits/axes_grid1.html"><code class="docutils literal notranslate"><span class="pre">mpl_toolkits.axes_grid1</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="toolkits/axisartist.html"><code class="docutils literal notranslate"><span class="pre">mpl_toolkits.axisartist</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pylab.html"><code class="docutils literal notranslate"><span class="pre">pylab</span></code></a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><code class="docutils literal notranslate"><span class="pre">matplotlib.layout_engine</span></code></span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-matplotlib.layout_engine">
+<span id="matplotlib-layout-engine"></span><h1><code class="docutils literal notranslate"><span class="pre">matplotlib.layout_engine</span></code><a class="headerlink" href="#module-matplotlib.layout_engine" title="Link to this heading">#</a></h1>
+<p>Classes to layout elements in a <a class="reference internal" href="_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Figure</span></code></a>.</p>
+<p>Figures have a <code class="docutils literal notranslate"><span class="pre">layout_engine</span></code> property that holds a subclass of
+<a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine" title="matplotlib.layout_engine.LayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine</span></code></a> defined here (or <em>None</em> for no layout).  At draw time
+<code class="docutils literal notranslate"><span class="pre">figure.get_layout_engine().execute()</span></code> is called, the goal of which is
+usually to rearrange Axes on the figure to produce a pleasing layout. This is
+like a <code class="docutils literal notranslate"><span class="pre">draw</span></code> callback but with two differences.  First, when printing we
+disable the layout engine for the final draw. Second, it is useful to know the
+layout engine while the figure is being created.  In particular, colorbars are
+made differently with different layout engines (for historical reasons).</p>
+<p>Matplotlib has two built-in layout engines:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#matplotlib.layout_engine.TightLayoutEngine" title="matplotlib.layout_engine.TightLayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TightLayoutEngine</span></code></a> was the first layout engine added to Matplotlib.
+See also <a class="reference internal" href="../users/explain/axes/tight_layout_guide.html#tight-layout-guide"><span class="std std-ref">Tight layout guide</span></a>.</p></li>
+<li><p><a class="reference internal" href="#matplotlib.layout_engine.ConstrainedLayoutEngine" title="matplotlib.layout_engine.ConstrainedLayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstrainedLayoutEngine</span></code></a> is more modern and generally gives better results.
+See also <a class="reference internal" href="../users/explain/axes/constrainedlayout_guide.html#constrainedlayout-guide"><span class="std std-ref">Constrained layout guide</span></a>.</p></li>
+</ul>
+<p>Third parties can create their own layout engine by subclassing <a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine" title="matplotlib.layout_engine.LayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine</span></code></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.ConstrainedLayoutEngine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">matplotlib.layout_engine.</span></span><span class="sig-name descname"><span class="pre">ConstrainedLayoutEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L216-L309"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.ConstrainedLayoutEngine" title="Link to this definition">#</a></dt>
+<dd><p>Implements the <code class="docutils literal notranslate"><span class="pre">constrained_layout</span></code> geometry management.  See
+<a class="reference internal" href="../users/explain/axes/constrainedlayout_guide.html#constrainedlayout-guide"><span class="std std-ref">Constrained layout guide</span></a> for details.</p>
+<p>Initialize <code class="docutils literal notranslate"><span class="pre">constrained_layout</span></code> settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>h_pad, w_pad</strong><span class="classifier">float</span></dt><dd><p>Padding around the Axes elements in inches.
+Default to <code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.h_pad#rcparam-figure-constrained-layout-h-pad"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.h_pad&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.04167</span></code>) and
+<code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.w_pad#rcparam-figure-constrained-layout-w-pad"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.w_pad&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.04167</span></code>).</p>
+</dd>
+<dt><strong>hspace, wspace</strong><span class="classifier">float</span></dt><dd><p>Fraction of the figure to dedicate to space between the
+axes.  These are evenly spread between the gaps between the Axes.
+A value of 0.2 for a three-column layout would have a space
+of 0.1 of the figure width between each column.
+If h/wspace &lt; h/w_pad, then the pads are used instead.
+Default to <code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.hspace#rcparam-figure-constrained-layout-hspace"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.hspace&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.02</span></code>) and
+<code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.wspace#rcparam-figure-constrained-layout-wspace"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.wspace&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.02</span></code>).</p>
+</dd>
+<dt><strong>rect</strong><span class="classifier">tuple of 4 floats</span></dt><dd><p>Rectangle in figure coordinates to perform constrained layout in
+(left, bottom, width, height), each from 0-1.</p>
+</dd>
+<dt><strong>compress</strong><span class="classifier">bool</span></dt><dd><p>Whether to shift Axes so that white space in between them is
+removed. This is useful for simple grids of fixed-aspect Axes (e.g.
+a grid of images).  See <a class="reference internal" href="../users/explain/axes/constrainedlayout_guide.html#compressed-layout"><span class="std std-ref">Grids of fixed aspect-ratio Axes: &quot;compressed&quot; layout</span></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.ConstrainedLayoutEngine.adjust_compatible">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">adjust_compatible</span></span><a class="headerlink" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.adjust_compatible" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine is compatible with
+<a class="reference internal" href="_as_gen/matplotlib.figure.Figure.subplots_adjust.html#matplotlib.figure.Figure.subplots_adjust" title="matplotlib.figure.Figure.subplots_adjust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subplots_adjust</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.ConstrainedLayoutEngine.colorbar_gridspec">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">colorbar_gridspec</span></span><a class="headerlink" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.colorbar_gridspec" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine creates colorbars using a
+gridspec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.ConstrainedLayoutEngine.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L265-L282"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.execute" title="Link to this definition">#</a></dt>
+<dd><p>Perform constrained_layout and move and resize Axes accordingly.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>fig</strong><span class="classifier"><a class="reference internal" href="_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Figure</span></code></a> to perform layout on.</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.ConstrainedLayoutEngine.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L97-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.get" title="Link to this definition">#</a></dt>
+<dd><p>Return copy of the parameters for the layout engine.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.ConstrainedLayoutEngine.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L284-L309"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.set" title="Link to this definition">#</a></dt>
+<dd><p>Set the pads for constrained_layout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>h_pad, w_pad</strong><span class="classifier">float</span></dt><dd><p>Padding around the Axes elements in inches.
+Default to <code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.h_pad#rcparam-figure-constrained-layout-h-pad"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.h_pad&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.04167</span></code>) and
+<code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.w_pad#rcparam-figure-constrained-layout-w-pad"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.w_pad&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.04167</span></code>).</p>
+</dd>
+<dt><strong>hspace, wspace</strong><span class="classifier">float</span></dt><dd><p>Fraction of the figure to dedicate to space between the
+axes.  These are evenly spread between the gaps between the Axes.
+A value of 0.2 for a three-column layout would have a space
+of 0.1 of the figure width between each column.
+If h/wspace &lt; h/w_pad, then the pads are used instead.
+Default to <code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.hspace#rcparam-figure-constrained-layout-hspace"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.hspace&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.02</span></code>) and
+<code class="docutils literal notranslate"><a class="reference internal" href="../users/explain/configuration.html?highlight=figure.constrained_layout.wspace#rcparam-figure-constrained-layout-wspace"><span class="std std-ref"><span class="pre">rcParams[&quot;figure.constrained_layout.wspace&quot;]</span></span></a></code> (default: <code class="docutils literal notranslate"><span class="pre">0.02</span></code>).</p>
+</dd>
+<dt><strong>rect</strong><span class="classifier">tuple of 4 floats</span></dt><dd><p>Rectangle in figure coordinates to perform constrained layout in
+(left, bottom, width, height), each from 0-1.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.LayoutEngine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">matplotlib.layout_engine.</span></span><span class="sig-name descname"><span class="pre">LayoutEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L32-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.LayoutEngine" title="Link to this definition">#</a></dt>
+<dd><p>Base class for Matplotlib layout engines.</p>
+<p>A layout engine can be passed to a figure at instantiation or at any time
+with <a class="reference internal" href="_as_gen/matplotlib.figure.Figure.set_layout_engine.html#matplotlib.figure.Figure.set_layout_engine" title="matplotlib.figure.Figure.set_layout_engine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_layout_engine</span></code></a>.  Once attached to a figure, the
+layout engine <code class="docutils literal notranslate"><span class="pre">execute</span></code> function is called at draw time by
+<a class="reference internal" href="_as_gen/matplotlib.figure.Figure.draw.html#matplotlib.figure.Figure.draw" title="matplotlib.figure.Figure.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>, providing a special draw-time hook.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>However, note that layout engines affect the creation of colorbars, so
+<a class="reference internal" href="_as_gen/matplotlib.figure.Figure.set_layout_engine.html#matplotlib.figure.Figure.set_layout_engine" title="matplotlib.figure.Figure.set_layout_engine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_layout_engine</span></code></a> should be called before any
+colorbars are created.</p>
+</div>
+<p>Currently, there are two properties of <a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine" title="matplotlib.layout_engine.LayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine</span></code></a> classes that are
+consulted while manipulating the figure:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">engine.colorbar_gridspec</span></code> tells <a class="reference internal" href="_as_gen/matplotlib.figure.Figure.colorbar.html#matplotlib.figure.Figure.colorbar" title="matplotlib.figure.Figure.colorbar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Figure.colorbar</span></code></a> whether to make the</dt><dd><p>axes using the gridspec method (see <a class="reference internal" href="colorbar_api.html#matplotlib.colorbar.make_axes_gridspec" title="matplotlib.colorbar.make_axes_gridspec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">colorbar.make_axes_gridspec</span></code></a>) or
+not (see <a class="reference internal" href="colorbar_api.html#matplotlib.colorbar.make_axes" title="matplotlib.colorbar.make_axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">colorbar.make_axes</span></code></a>);</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">engine.adjust_compatible</span></code> stops <a class="reference internal" href="_as_gen/matplotlib.figure.Figure.subplots_adjust.html#matplotlib.figure.Figure.subplots_adjust" title="matplotlib.figure.Figure.subplots_adjust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Figure.subplots_adjust</span></code></a> from being</dt><dd><p>run if it is not compatible with the layout engine.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>To implement a custom <a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine" title="matplotlib.layout_engine.LayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine</span></code></a>:</p>
+<ol class="arabic simple">
+<li><p>override <code class="docutils literal notranslate"><span class="pre">_adjust_compatible</span></code> and <code class="docutils literal notranslate"><span class="pre">_colorbar_gridspec</span></code></p></li>
+<li><p>override <a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine.set" title="matplotlib.layout_engine.LayoutEngine.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine.set</span></code></a> to update <em>self._params</em></p></li>
+<li><p>override <a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine.execute" title="matplotlib.layout_engine.LayoutEngine.execute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine.execute</span></code></a> with your implementation</p></li>
+</ol>
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.LayoutEngine.adjust_compatible">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">adjust_compatible</span></span><a class="headerlink" href="#matplotlib.layout_engine.LayoutEngine.adjust_compatible" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine is compatible with
+<a class="reference internal" href="_as_gen/matplotlib.figure.Figure.subplots_adjust.html#matplotlib.figure.Figure.subplots_adjust" title="matplotlib.figure.Figure.subplots_adjust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subplots_adjust</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.LayoutEngine.colorbar_gridspec">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">colorbar_gridspec</span></span><a class="headerlink" href="#matplotlib.layout_engine.LayoutEngine.colorbar_gridspec" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine creates colorbars using a
+gridspec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.LayoutEngine.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L103-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.LayoutEngine.execute" title="Link to this definition">#</a></dt>
+<dd><p>Execute the layout on the figure given by <em>fig</em>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.LayoutEngine.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L97-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.LayoutEngine.get" title="Link to this definition">#</a></dt>
+<dd><p>Return copy of the parameters for the layout engine.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.LayoutEngine.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L71-L75"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.LayoutEngine.set" title="Link to this definition">#</a></dt>
+<dd><p>Set the parameters for the layout engine.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.PlaceHolderLayoutEngine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">matplotlib.layout_engine.</span></span><span class="sig-name descname"><span class="pre">PlaceHolderLayoutEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjust_compatible</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar_gridspec</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L111-L134"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine" title="Link to this definition">#</a></dt>
+<dd><p>This layout engine does not adjust the figure layout at all.</p>
+<p>The purpose of this <a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine" title="matplotlib.layout_engine.LayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine</span></code></a> is to act as a placeholder when the user removes
+a layout engine to ensure an incompatible <a class="reference internal" href="#matplotlib.layout_engine.LayoutEngine" title="matplotlib.layout_engine.LayoutEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LayoutEngine</span></code></a> cannot be set later.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>adjust_compatible, colorbar_gridspec</strong><span class="classifier">bool</span></dt><dd><p>Allow the PlaceHolderLayoutEngine to mirror the behavior of whatever
+layout engine it is replacing.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.PlaceHolderLayoutEngine.adjust_compatible">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">adjust_compatible</span></span><a class="headerlink" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.adjust_compatible" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine is compatible with
+<a class="reference internal" href="_as_gen/matplotlib.figure.Figure.subplots_adjust.html#matplotlib.figure.Figure.subplots_adjust" title="matplotlib.figure.Figure.subplots_adjust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subplots_adjust</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.PlaceHolderLayoutEngine.colorbar_gridspec">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">colorbar_gridspec</span></span><a class="headerlink" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.colorbar_gridspec" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine creates colorbars using a
+gridspec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.PlaceHolderLayoutEngine.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L130-L134"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.execute" title="Link to this definition">#</a></dt>
+<dd><p>Do nothing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.PlaceHolderLayoutEngine.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L97-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.get" title="Link to this definition">#</a></dt>
+<dd><p>Return copy of the parameters for the layout engine.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.PlaceHolderLayoutEngine.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L71-L75"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.set" title="Link to this definition">#</a></dt>
+<dd><p>Set the parameters for the layout engine.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.TightLayoutEngine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">matplotlib.layout_engine.</span></span><span class="sig-name descname"><span class="pre">TightLayoutEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L137-L213"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.TightLayoutEngine" title="Link to this definition">#</a></dt>
+<dd><p>Implements the <code class="docutils literal notranslate"><span class="pre">tight_layout</span></code> geometry management.  See
+<a class="reference internal" href="../users/explain/axes/tight_layout_guide.html#tight-layout-guide"><span class="std std-ref">Tight layout guide</span></a> for details.</p>
+<p>Initialize tight_layout engine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pad</strong><span class="classifier">float, default: 1.08</span></dt><dd><p>Padding between the figure edge and the edges of subplots, as a
+fraction of the font size.</p>
+</dd>
+<dt><strong>h_pad, w_pad</strong><span class="classifier">float</span></dt><dd><p>Padding (height/width) between edges of adjacent subplots.
+Defaults to <em>pad</em>.</p>
+</dd>
+<dt><strong>rect</strong><span class="classifier">tuple (left, bottom, right, top), default: (0, 0, 1, 1).</span></dt><dd><p>rectangle in normalized figure coordinates that the subplots
+(including labels) will fit into.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.TightLayoutEngine.adjust_compatible">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">adjust_compatible</span></span><a class="headerlink" href="#matplotlib.layout_engine.TightLayoutEngine.adjust_compatible" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine is compatible with
+<a class="reference internal" href="_as_gen/matplotlib.figure.Figure.subplots_adjust.html#matplotlib.figure.Figure.subplots_adjust" title="matplotlib.figure.Figure.subplots_adjust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subplots_adjust</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.TightLayoutEngine.colorbar_gridspec">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">colorbar_gridspec</span></span><a class="headerlink" href="#matplotlib.layout_engine.TightLayoutEngine.colorbar_gridspec" title="Link to this definition">#</a></dt>
+<dd><p>Return a boolean if the layout engine creates colorbars using a
+gridspec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.TightLayoutEngine.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L168-L193"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.TightLayoutEngine.execute" title="Link to this definition">#</a></dt>
+<dd><p>Execute tight_layout.</p>
+<p>This decides the subplot parameters given the padding that
+will allow the Axes labels to not be covered by other labels
+and Axes.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>fig</strong><span class="classifier"><a class="reference internal" href="_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Figure</span></code></a> to perform layout on.</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="_as_gen/matplotlib.figure.Figure.tight_layout.html#matplotlib.figure.Figure.tight_layout" title="matplotlib.figure.Figure.tight_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">figure.Figure.tight_layout</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyplot.tight_layout</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.TightLayoutEngine.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L97-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.TightLayoutEngine.get" title="Link to this definition">#</a></dt>
+<dd><p>Return copy of the parameters for the layout engine.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="matplotlib.layout_engine.TightLayoutEngine.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/v3.11.0rc1/lib/matplotlib/layout_engine.py#L195-L213"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#matplotlib.layout_engine.TightLayoutEngine.set" title="Link to this definition">#</a></dt>
+<dd><p>Set the pads for tight_layout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pad</strong><span class="classifier">float</span></dt><dd><p>Padding between the figure edge and the edges of subplots, as a
+fraction of the font size.</p>
+</dd>
+<dt><strong>w_pad, h_pad</strong><span class="classifier">float</span></dt><dd><p>Padding (width/height) between edges of adjacent subplots.
+Defaults to <em>pad</em>.</p>
+</dd>
+<dt><strong>rect</strong><span class="classifier">tuple (left, bottom, right, top)</span></dt><dd><p>rectangle in normalized figure coordinates that the subplots
+(including labels) will fit into.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.ConstrainedLayoutEngine"><code class="docutils literal notranslate"><span class="pre">ConstrainedLayoutEngine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.adjust_compatible"><code class="docutils literal notranslate"><span class="pre">ConstrainedLayoutEngine.adjust_compatible</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.colorbar_gridspec"><code class="docutils literal notranslate"><span class="pre">ConstrainedLayoutEngine.colorbar_gridspec</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.execute"><code class="docutils literal notranslate"><span class="pre">ConstrainedLayoutEngine.execute()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.get"><code class="docutils literal notranslate"><span class="pre">ConstrainedLayoutEngine.get()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.ConstrainedLayoutEngine.set"><code class="docutils literal notranslate"><span class="pre">ConstrainedLayoutEngine.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.LayoutEngine"><code class="docutils literal notranslate"><span class="pre">LayoutEngine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.LayoutEngine.adjust_compatible"><code class="docutils literal notranslate"><span class="pre">LayoutEngine.adjust_compatible</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.LayoutEngine.colorbar_gridspec"><code class="docutils literal notranslate"><span class="pre">LayoutEngine.colorbar_gridspec</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.LayoutEngine.execute"><code class="docutils literal notranslate"><span class="pre">LayoutEngine.execute()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.LayoutEngine.get"><code class="docutils literal notranslate"><span class="pre">LayoutEngine.get()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.LayoutEngine.set"><code class="docutils literal notranslate"><span class="pre">LayoutEngine.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine"><code class="docutils literal notranslate"><span class="pre">PlaceHolderLayoutEngine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.adjust_compatible"><code class="docutils literal notranslate"><span class="pre">PlaceHolderLayoutEngine.adjust_compatible</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.colorbar_gridspec"><code class="docutils literal notranslate"><span class="pre">PlaceHolderLayoutEngine.colorbar_gridspec</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.execute"><code class="docutils literal notranslate"><span class="pre">PlaceHolderLayoutEngine.execute()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.get"><code class="docutils literal notranslate"><span class="pre">PlaceHolderLayoutEngine.get()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.PlaceHolderLayoutEngine.set"><code class="docutils literal notranslate"><span class="pre">PlaceHolderLayoutEngine.set()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.TightLayoutEngine"><code class="docutils literal notranslate"><span class="pre">TightLayoutEngine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.TightLayoutEngine.adjust_compatible"><code class="docutils literal notranslate"><span class="pre">TightLayoutEngine.adjust_compatible</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.TightLayoutEngine.colorbar_gridspec"><code class="docutils literal notranslate"><span class="pre">TightLayoutEngine.colorbar_gridspec</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.TightLayoutEngine.execute"><code class="docutils literal notranslate"><span class="pre">TightLayoutEngine.execute()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.TightLayoutEngine.get"><code class="docutils literal notranslate"><span class="pre">TightLayoutEngine.get()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib.layout_engine.TightLayoutEngine.set"><code class="docutils literal notranslate"><span class="pre">TightLayoutEngine.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2026 The Matplotlib development team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Built from v3.11.0rc1-1-g3217fe2227.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

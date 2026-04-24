@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>New environment variable to ignore system fonts &#8212; Matplotlib 3.11.0rc1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=522e7f4d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mpl.css?v=5a7e13c8" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=6987601a"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=ccdb6887"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'release/next_whats_new/ignore_system_fonts';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.11.0rc1-1-g3217fe2227';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/release/next_whats_new/ignore_system_fonts.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.11.0rc1 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Missing glyphs use Last Resort font" href="last_resort_font.html" />
+    <link rel="prev" title="hist() supports a single color for multiple datasets" href="hist_color.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="3.11.0rc1" />
+    <meta name="docbuild:last-update" content="Apr 24, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  
+  <div class="bd-header-announcement container-fluid" id="unreleased-message">
+    <div class="bd-header-announcement__content">
+      You are reading documentation for the unreleased version of Matplotlib.
+      <a href="https://matplotlib.org/search.html?q=New%20environment%20variable%20to%20ignore%20system%20fonts&amp;check_keywords=yes&amp;area=default">
+        Try searching for the released version of this page instead?
+      </a>
+    </div>
+  </div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="https://matplotlib.org/stable/">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo_light.svg" class="logo__image only-light" alt="Matplotlib 3.11.0rc1 documentation - Home"/>
+    <img src="../../_static/logo_dark.svg" class="logo__image only-dark pst-js-only" alt="Matplotlib 3.11.0rc1 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../gallery/index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="3d_scales.html">Non-linear scales on 3D axes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3d_speedups.html">3D performance improvements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Instructions for writing "What's new" entries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="axis_inversion.html">Standard getters/setters for axis inversion state</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bar_label_padding_update.html"><code class="docutils literal notranslate"><span class="pre">bar_label</span></code> supports individual padding per label</a></li>
+<li class="toctree-l1"><a class="reference internal" href="barcontainer_properties.html"><code class="docutils literal notranslate"><span class="pre">BarContainer</span></code> properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="box_arrow_size_controls.html">Arrow-style sub-classes of <code class="docutils literal notranslate"><span class="pre">BoxStyle</span></code> support arrow head resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="broken_barh_align.html"><code class="docutils literal notranslate"><span class="pre">broken_barh()</span></code> vertical alignment though <code class="docutils literal notranslate"><span class="pre">align</span></code> parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="callback_registry_disconnect_func.html"><code class="docutils literal notranslate"><span class="pre">CallbackRegistry.disconnect</span></code> allows directly callbacks by function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_cycle_from_sequence.html">Setting the default color cycle to a named color sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="colormap_bad_under_over.html">Colormaps support giving colors for bad, under and over values on creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="colormap_with_alpha.html">Tuning transparency of colormaps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cycler_rcparam_security.html"><code class="docutils literal notranslate"><span class="pre">axes.prop_cycle</span></code> rcParam security improvements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="depthshading_improvement.html">3D depth-shading fix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="figsize_unit.html">Figure size units</a></li>
+<li class="toctree-l1"><a class="reference internal" href="font_alt_family_names.html">Fonts addressable by all their SFNT family names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="font_features.html">Specifying font feature tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gif_savefig.html">Saving figures as GIF works again</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grouped_bar.html">Grouped bar charts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hist_color.html"><code class="docutils literal notranslate"><span class="pre">hist()</span></code> supports a single color for multiple datasets</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">New environment variable to ignore system fonts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="last_resort_font.html">Missing glyphs use Last Resort font</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legend_line_width.html"><code class="docutils literal notranslate"><span class="pre">legend.linewidth</span></code> rcParam and parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libraqm.html">Complex text layout with libraqm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="log_contour_levels.html">Maximum levels on log-scaled contour plots are now respected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logticks.html">Improved selection of log-scale ticks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mathnormal.html">Mathtext distinguishes <em>italic</em> and <em>normal</em> font</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new_rcparams_grid_options.html">Separate styling options for major/minor grid line in rcParams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="okabe_ito_colormap.html">Okabe-Ito accessible color sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partial_figsize_none.html">Partial <code class="docutils literal notranslate"><span class="pre">figsize</span></code> specification at figure creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patch_edgegapcolor.html"><code class="docutils literal notranslate"><span class="pre">edgegapcolor</span></code> for Patches</a></li>
+<li class="toctree-l1"><a class="reference internal" href="patchcollection_legend.html"><code class="docutils literal notranslate"><span class="pre">PatchCollection</span></code> legends now supported</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pdf_fonts.html">Improved font embedding in PDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pie_label.html">Adding labels to pie chart wedges</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyplot-register-figure.html">Figures can be attached to and removed from pyplot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="radio_buttons_2d_grid.html">RadioButtons and CheckButtons widgets support flexible layouts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scroll_to_zoom.html">Zooming using mouse wheel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="separated_hatchcolor.html">Separated <code class="docutils literal notranslate"><span class="pre">hatchcolor</span></code> from <code class="docutils literal notranslate"><span class="pre">edgecolor</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="six_and_eight_color_petroff_color_cycles.html">Six and eight color Petroff color cycles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sliders_callable_valfmt.html">Callable <em>valfmt</em> for <code class="docutils literal notranslate"><span class="pre">Slider</span></code> and <code class="docutils literal notranslate"><span class="pre">RangeSlider</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="snap_rotation.html">Snapping 3D rotation angles with Control key</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stackplot_style_sequences.html">Stackplot styling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamplot_integration_control.html">Streamplot integration control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamplot_multiple_arrows.html">Multiple arrows on a streamline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subplots_adjust.html">Resetting the subplot parameters for figure.clear()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tex_phantoms.html">mathtext support for <code class="docutils literal notranslate"><span class="pre">\phantom</span></code>, <code class="docutils literal notranslate"><span class="pre">\llap</span></code>, <code class="docutils literal notranslate"><span class="pre">\rlap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_language.html">Specifying text language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ttc_fonts.html">Support for loading TrueType Collection fonts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="twin_axes_zorder.html">Twin Axes <code class="docutils literal notranslate"><span class="pre">delta_zorder</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="type1_subset.html">PDF files created with usetex now embed subsets of Type 1 fonts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="underline-23616.html">Underlining text while using Mathtext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updated_borderpad_parameter.html"><code class="docutils literal notranslate"><span class="pre">borderpad</span></code> accepts a tuple for separate x/y padding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="violin_stats.html"><code class="docutils literal notranslate"><span class="pre">violin_stats</span></code> simpler <em>method</em> parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="violinplot_colors.html"><code class="docutils literal notranslate"><span class="pre">violinplot</span></code> now accepts color arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webagg_capture_scroll.html">WebAgg scroll capture control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xtick_ytick_rotation_modes.html"><code class="docutils literal notranslate"><span class="pre">xtick</span></code> and <code class="docutils literal notranslate"><span class="pre">ytick</span></code> rotation modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zoom_boxes.html">Consistent zoom boxes</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../release_notes.html" class="nav-link">Release notes</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../next_whats_new.html" class="nav-link">Next what's new?</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">New environment variable to ignore system fonts</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="new-environment-variable-to-ignore-system-fonts">
+<h1>New environment variable to ignore system fonts<a class="headerlink" href="#new-environment-variable-to-ignore-system-fonts" title="Link to this heading">#</a></h1>
+<p>System fonts may be ignored by setting the <span class="target" id="index-0"></span><a class="reference internal" href="../../install/environment_variables_faq.html#envvar-MPL_IGNORE_SYSTEM_FONTS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">MPL_IGNORE_SYSTEM_FONTS</span></code></a>; this
+suppresses searching for system fonts (in known directories or via some
+platform-specific subprocess) as well as limiting the results from <a class="reference internal" href="../../api/font_manager_api.html#matplotlib.font_manager.FontManager.findfont" title="matplotlib.font_manager.FontManager.findfont"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FontManager.findfont</span></code></a>.</p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2026 The Matplotlib development team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Built from v3.11.0rc1-1-g3217fe2227.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
