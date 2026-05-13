@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Embedding Matplotlib in graphical user interfaces &#8212; Matplotlib 3.11.0rc2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=522e7f4d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mpl.css?v=5a7e13c8" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=5e7fea70"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=ccdb6887"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gallery/user_interfaces/index';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://matplotlib.org/devdocs/_static/switcher.json?v3.11.0rc2-1-g7c4bea5491';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <link rel="canonical" href="https://matplotlib.org/stable/gallery/user_interfaces/index.html" />
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Matplotlib 3.11.0rc2 documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CanvasAgg demo" href="canvasagg.html" />
+    <link rel="prev" title="Unit handling" href="../units/units_scatter.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="3.11.0rc2" />
+    <meta name="docbuild:last-update" content="May 12, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  
+  <div class="bd-header-announcement container-fluid" id="unreleased-message">
+    <div class="bd-header-announcement__content">
+      You are reading documentation for the unreleased version of Matplotlib.
+      <a href="https://matplotlib.org/search.html?q=Embedding%20Matplotlib%20in%20graphical%20user%20interfaces&amp;check_keywords=yes&amp;area=default">
+        Try searching for the released version of this page instead?
+      </a>
+    </div>
+  </div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="https://matplotlib.org/stable/">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo_light.svg" class="logo__image only-light" alt="Matplotlib 3.11.0rc2 documentation - Home"/>
+    <img src="../../_static/logo_dark.svg" class="logo__image only-dark pst-js-only" alt="Matplotlib 3.11.0rc2 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item"><ul id="navbar-main-elements" class="navbar-nav">
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../plot_types/index.html">Plot types</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/index.html">User guide</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../tutorials/index.html">Tutorials</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../index.html">Examples</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../api/index.html">Reference</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../devel/index.html">Contribute</a>
+  </li>
+  <li class="nav-item">
+    <a class="reference internal nav-link" href="../../users/release_notes.html">Releases</a>
+  </li>
+</ul></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/matplotlib/matplotlib" title="Gitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-gitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Gitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.matplotlib.org" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/matplotlib" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../lines_bars_and_markers/index.html">Lines, bars and markers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../images_contours_and_fields/index.html">Images, contours and fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subplots_axes_and_figures/index.html">Subplots, axes and figures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pie_and_polar_charts/index.html">Pie and polar charts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text_labels_and_annotations/index.html">Text, labels and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../color/index.html">Color</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../shapes_and_collections/index.html">Shapes and collections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../style_sheets/index.html">Style sheets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyplots/index.html">Module - pyplot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../axes_grid1/index.html">Module - axes_grid1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../axisartist/index.html">Module - axisartist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../showcase/index.html">Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../animation/index.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../event_handling/index.html">Event handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/index.html">Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mplot3d/index.html">3D plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scales/index.html">Scales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../specialty_plots/index.html">Specialty plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spines/index.html">Spines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ticks/index.html">Ticks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../units/index.html">Units</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Embedding Matplotlib in graphical user interfaces</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="canvasagg.html">CanvasAgg demo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_gtk3_panzoom_sgskip.html">Embed in GTK3 with a navigation toolbar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_gtk3_sgskip.html">Embed in GTK3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_gtk4_panzoom_sgskip.html">Embed in GTK4 with a navigation toolbar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_gtk4_sgskip.html">Embed in GTK4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_qt_sgskip.html">Embed in Qt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_tk_sgskip.html">Embed in Tk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_wx2_sgskip.html">Embed in wx #2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_wx3_sgskip.html">Embed in wx #3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_wx4_sgskip.html">Embed in wx #4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_in_wx5_sgskip.html">Embed in wx #5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding_webagg_sgskip.html">Embedding WebAgg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fourier_demo_wx_sgskip.html">Fourier Demo WX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtk3_spreadsheet_sgskip.html">GTK3 spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtk4_spreadsheet_sgskip.html">GTK4 spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mathtext_wx_sgskip.html">Display mathtext in WX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpl_with_glade3_sgskip.html">Matplotlib with Glade 3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mplcvd.html">mplcvd -- an example of figure hook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pylab_with_gtk3_sgskip.html">pyplot with GTK3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pylab_with_gtk4_sgskip.html">pyplot with GTK4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg_histogram_sgskip.html">SVG Histogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg_tooltip_sgskip.html">SVG Tooltip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolmanager_sgskip.html">Tool Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web_application_server_sgskip.html">Embed in a web application server (Flask)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wxcursor_demo_sgskip.html">Add a cursor in WX</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../widgets/index.html">Widgets</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Embedding Matplotlib in graphical user interfaces</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="embedding-matplotlib-in-graphical-user-interfaces">
+<span id="user-interfaces"></span><span id="sphx-glr-gallery-user-interfaces"></span><h1>Embedding Matplotlib in graphical user interfaces<a class="headerlink" href="#embedding-matplotlib-in-graphical-user-interfaces" title="Link to this heading">#</a></h1>
+<p>You can embed Matplotlib directly into a user interface application by
+following the embedding_in_SOMEGUI.py examples here. Currently
+Matplotlib supports PyQt/PySide, PyGObject, Tkinter, and wxPython.</p>
+<p>When embedding Matplotlib in a GUI, you must use the Matplotlib API
+directly rather than the pylab/pyplot procedural interface, so take a
+look at the examples/api directory for some example code working with
+the API.</p>
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example shows how to use the agg backend directly to create images, which may be of use to web application developers who want full control over their code without using the pyplot interface to manage figures, figure closing etc."><img alt="" loading="lazy" src="../../_images/sphx_glr_canvasagg_thumb.png" />
+<p><a class="reference internal" href="canvasagg.html"><span class="doc">CanvasAgg demo</span></a></p>
+  <div class="sphx-glr-thumbnail-title">CanvasAgg demo</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrate NavigationToolbar with GTK3 accessed via pygobject."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_gtk3_panzoom_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_gtk3_panzoom_sgskip.html"><span class="doc">Embed in GTK3 with a navigation toolbar</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in GTK3 with a navigation toolbar</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrate adding a FigureCanvasGTK3Agg widget to a Gtk.ScrolledWindow using GTK3 accessed via pygobject."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_gtk3_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_gtk3_sgskip.html"><span class="doc">Embed in GTK3</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in GTK3</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrate NavigationToolbar with GTK4 accessed via pygobject."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_gtk4_panzoom_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_gtk4_panzoom_sgskip.html"><span class="doc">Embed in GTK4 with a navigation toolbar</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in GTK4 with a navigation toolbar</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrate adding a FigureCanvasGTK4Agg widget to a Gtk.ScrolledWindow using GTK4 accessed via pygobject."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_gtk4_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_gtk4_sgskip.html"><span class="doc">Embed in GTK4</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in GTK4</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simple Qt application embedding Matplotlib canvases.  This program will work equally well using any Qt binding (PyQt6, PySide6, PyQt5, PySide2).  The binding can be selected by setting the QT_API environment variable to the binding name, or by first importing it."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_qt_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_qt_sgskip.html"><span class="doc">Embed in Qt</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in Qt</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Embed in Tk"><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_tk_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_tk_sgskip.html"><span class="doc">Embed in Tk</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in Tk</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An example of how to use wxagg in an application with the new toolbar - comment out the add_toolbar line for no toolbar."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_wx2_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_wx2_sgskip.html"><span class="doc">Embed in wx #2</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in wx #2</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Copyright (C) 2003-2004 Andrew Straw, Jeremy O&#x27;Donoghue and others"><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_wx3_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_wx3_sgskip.html"><span class="doc">Embed in wx #3</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in wx #3</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An example of how to use wxagg in a wx application with a custom toolbar."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_wx4_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_wx4_sgskip.html"><span class="doc">Embed in wx #4</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in wx #4</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="    As a development and debugging aid, you can replace wx.App     by wx.lib.mixins.inspection.InspectableApp.     This adds the capability to start the Widget Inspection Tool         via Ctrl-Alt-I."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_in_wx5_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_in_wx5_sgskip.html"><span class="doc">Embed in wx #5</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in wx #5</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to embed Matplotlib WebAgg interactive plotting in your own web application and framework.  It is not necessary to do all this if you merely want to display a plot in a browser or use Matplotlib&#x27;s built-in Tornado-based server &quot;on the side&quot;."><img alt="" loading="lazy" src="../../_images/sphx_glr_embedding_webagg_sgskip_thumb.png" />
+<p><a class="reference internal" href="embedding_webagg_sgskip.html"><span class="doc">Embedding WebAgg</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embedding WebAgg</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Fourier Demo WX"><img alt="" loading="lazy" src="../../_images/sphx_glr_fourier_demo_wx_sgskip_thumb.png" />
+<p><a class="reference internal" href="fourier_demo_wx_sgskip.html"><span class="doc">Fourier Demo WX</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Fourier Demo WX</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Example of embedding Matplotlib in an application and interacting with a treeview to store data.  Double-click on an entry to update plot data."><img alt="" loading="lazy" src="../../_images/sphx_glr_gtk3_spreadsheet_sgskip_thumb.png" />
+<p><a class="reference internal" href="gtk3_spreadsheet_sgskip.html"><span class="doc">GTK3 spreadsheet</span></a></p>
+  <div class="sphx-glr-thumbnail-title">GTK3 spreadsheet</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Example of embedding Matplotlib in an application and interacting with a treeview to store data.  Double-click on an entry to update plot data."><img alt="" loading="lazy" src="../../_images/sphx_glr_gtk4_spreadsheet_sgskip_thumb.png" />
+<p><a class="reference internal" href="gtk4_spreadsheet_sgskip.html"><span class="doc">GTK4 spreadsheet</span></a></p>
+  <div class="sphx-glr-thumbnail-title">GTK4 spreadsheet</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates how to convert (math)text to a wx.Bitmap for display in various controls on wxPython."><img alt="" loading="lazy" src="../../_images/sphx_glr_mathtext_wx_sgskip_thumb.png" />
+<p><a class="reference internal" href="mathtext_wx_sgskip.html"><span class="doc">Display mathtext in WX</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Display mathtext in WX</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Matplotlib with Glade 3"><img alt="" loading="lazy" src="../../_images/sphx_glr_mpl_with_glade3_sgskip_thumb.png" />
+<p><a class="reference internal" href="mpl_with_glade3_sgskip.html"><span class="doc">Matplotlib with Glade 3</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Matplotlib with Glade 3</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="To use this hook, ensure that this module is in your PYTHONPATH, and set rcParams[&quot;figure.hooks&quot;] = [&quot;mplcvd:setup&quot;].  This hook depends on the colorspacious third-party module."><img alt="" loading="lazy" src="../../_images/sphx_glr_mplcvd_thumb.png" />
+<p><a class="reference internal" href="mplcvd.html"><span class="doc">mplcvd -- an example of figure hook</span></a></p>
+  <div class="sphx-glr-thumbnail-title">mplcvd -- an example of figure hook</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An example of how to use pyplot to manage your figure windows, but modify the GUI by accessing the underlying GTK widgets."><img alt="" loading="lazy" src="../../_images/sphx_glr_pylab_with_gtk3_sgskip_thumb.png" />
+<p><a class="reference internal" href="pylab_with_gtk3_sgskip.html"><span class="doc">pyplot with GTK3</span></a></p>
+  <div class="sphx-glr-thumbnail-title">pyplot with GTK3</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An example of how to use pyplot to manage your figure windows, but modify the GUI by accessing the underlying GTK widgets."><img alt="" loading="lazy" src="../../_images/sphx_glr_pylab_with_gtk4_sgskip_thumb.png" />
+<p><a class="reference internal" href="pylab_with_gtk4_sgskip.html"><span class="doc">pyplot with GTK4</span></a></p>
+  <div class="sphx-glr-thumbnail-title">pyplot with GTK4</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrate how to create an interactive histogram, in which bars are hidden or shown by clicking on legend markers."><img alt="" loading="lazy" src="../../_images/sphx_glr_svg_histogram_sgskip_thumb.svg" />
+<p><a class="reference internal" href="svg_histogram_sgskip.html"><span class="doc">SVG Histogram</span></a></p>
+  <div class="sphx-glr-thumbnail-title">SVG Histogram</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows how to create a tooltip that will show up when hovering over a matplotlib patch."><img alt="" loading="lazy" src="../../_images/sphx_glr_svg_tooltip_sgskip_thumb.svg" />
+<p><a class="reference internal" href="svg_tooltip_sgskip.html"><span class="doc">SVG Tooltip</span></a></p>
+  <div class="sphx-glr-thumbnail-title">SVG Tooltip</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to"><img alt="" loading="lazy" src="../../_images/sphx_glr_toolmanager_sgskip_thumb.png" />
+<p><a class="reference internal" href="toolmanager_sgskip.html"><span class="doc">Tool Manager</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Tool Manager</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="When using Matplotlib in a web server it is strongly recommended to not use pyplot (pyplot maintains references to the opened figures to make show work, but this will cause memory leaks unless the figures are properly closed)."><img alt="" loading="lazy" src="../../_images/sphx_glr_web_application_server_sgskip_thumb.png" />
+<p><a class="reference internal" href="web_application_server_sgskip.html"><span class="doc">Embed in a web application server (Flask)</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Embed in a web application server (Flask)</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Example to draw a cursor and report the data coords in wx."><img alt="" loading="lazy" src="../../_images/sphx_glr_wxcursor_demo_sgskip_thumb.png" />
+<p><a class="reference internal" href="wxcursor_demo_sgskip.html"><span class="doc">Add a cursor in WX</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Add a cursor in WX</div>
+</div></div><div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2002–2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012–2026 The Matplotlib development team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Built from v3.11.0rc2-1-g7c4bea5491.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
